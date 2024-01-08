@@ -176,18 +176,19 @@ double EmberEntity::getHeight(const WFMath::Point<2>& localPosition) const {
 }
 
 void EmberEntity::onTalk(const Atlas::Objects::Operation::RootOperation& talkArgs) {
-	EntityTalk entityTalk(talkArgs);
+	auto entityTalk = EntityTalk::parse(talkArgs);
 
 	//some talk operations come with a predefined set of suitable responses, so we'll store those so that they can later on be queried by the GUI for example
-	mSuggestedResponses = entityTalk.getSuggestedResponses();
+	mSuggestedResponses = entityTalk.suggestedResponses;
 
-	logger->debug("Entity {} says: \"{}\"", *this, entityTalk.getMessage());
+	if (!entityTalk.sound.empty()) {
+		logger->debug("Entity {} makes the sound: \"{}\"", *this, entityTalk.sound);
+	} else if (!entityTalk.message.empty()) {
+		logger->debug("Entity {} says: \"{}\"", *this, entityTalk.message);
+	}
 
 	EventTalk.emit(entityTalk);
 
-	// Make a sound in OpenAL -- mafm: call doesn't exist
-	//	SoundService::getSingleton().playTalk(msg,
-	//		getPosition(),getOrientation());
 
 	// Call the method of the base class (since we've overloaded it)
 	Eris::ViewEntity::onTalk(talkArgs);

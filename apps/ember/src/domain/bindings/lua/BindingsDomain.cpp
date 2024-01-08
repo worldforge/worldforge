@@ -83,12 +83,12 @@ void registerBindingsDomain(sol::state_view& lua) {
 
 
 	Ember.new_usertype<EntityTalk>("EntityTalk", sol::no_constructor,
-								   "getMessage", &EntityTalk::getMessage,
+								   "message", &EntityTalk::message,
 								   "isAddressedToNone", &EntityTalk::isAddressedToNone,
 								   "isAddressedToEntity", &EntityTalk::isAddressedToEntity,
 								   "isAddressedToEntityOrNone", &EntityTalk::isAddressedToEntityOrNone,
-								   "getAddressedEntityIds", &EntityTalk::getAddressedEntityIds,
-								   "getSuggestedResponses", &EntityTalk::getSuggestedResponses
+								   "addressedEntityIds", &EntityTalk::addressedEntityIds,
+								   "suggestedResponses", &EntityTalk::suggestedResponses
 	);
 
 	Ember.new_usertype<IGraphicalRepresentation>("IGraphicalRepresentation", sol::no_constructor,

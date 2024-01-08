@@ -269,17 +269,14 @@ protected:
 
 
 	/**
-	 * A list of queued up Acted ops to be processed when the Model is loaded. This is mainly to handle the case where
-	 * we receive Acted ops before we've had time to load the Model. We don't want to miss out on any of them.
+	 * A list of operation to process once the Model has completed loading.
 	 */
-	std::vector<std::string> mPendingActed;
+	std::vector<Atlas::Objects::Operation::RootOperation> mPendingEntityOperations;
 
 	/**
 	 * @brief The type name for the class.
 	 */
 	static std::string sTypeName;
-
-	void setClientVisible(bool visible);
 
 	/**
 	 *   creates EmberEntityUserObjects, connects them and sets up the collision detection system
@@ -289,28 +286,17 @@ protected:
 
 	void entity_Changed(const std::set<std::string>& attributeIds);
 
-//	void entity_TaskAdded(const std::string& id, Eris::Task* task);
-//	void entity_TaskRemoved(const std::string& id, Eris::Task* task);
 
 	void entity_PositioningModeChanged(EmberEntity::PositioningMode newMode);
 
-	/**
-	 * @brief Creates a new action for the supplied task (if any is found).
-	 * @param task The task to create an action for.
-	 */
-	//void createActionForTask(const Eris::Task& task);
 
-	/**
-	 *    Overridden from Eris::Entity
-	 * @param str
-	 * @param v
-	 */
 	void attrChanged(const std::string& str, const Atlas::Message::Element& v);
 
-	void entity_Acted(const Atlas::Objects::Operation::RootOperation& act, const Eris::TypeInfo& typeInfo);
+	void entity_Operation(const Atlas::Objects::Operation::RootOperation& op);
 
 	void entity_ActionsChanged(const std::vector<ActionChange>& actionChanges);
 
+	Action* getActionForOperation(const Atlas::Objects::Operation::RootOperation& op) const;
 
 	/**
 	 * @brief When the Model is reloaded we need to update with the new values.
@@ -364,7 +350,10 @@ protected:
 
 	void playSoundForAction(const SoundAction& soundAction);
 
-	void processActed(const std::string& activityName);
+
+	Action* processEntityOperation(const Atlas::Objects::Operation::RootOperation& op);
+
+	Action* processActivation(ActivationDefinition::Type type, const std::string& activityName);
 
 	void processAddedAction(const std::string& actionName);
 };

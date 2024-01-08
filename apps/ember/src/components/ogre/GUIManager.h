@@ -72,7 +72,7 @@ class MainLoopController;
 
 class EmberEntity;
 
-class EntityTalk;
+struct EntityTalk;
 namespace Cegui {
 class ColouredRenderedStringParser;
 

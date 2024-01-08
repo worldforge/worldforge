@@ -34,7 +34,7 @@
 namespace Ember {
 class EmberEntity;
 
-class EntityTalk;
+struct EntityTalk;
 namespace OgreView {
 
 class Avatar;

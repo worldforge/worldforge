@@ -25,6 +25,7 @@
 #include "framework/MainLoopController.h"
 #include "ModelDefinition.h"
 #include "ModelBackgroundLoader.h"
+#include "framework/Tokeniser.h"
 
 #include <utility>
 #include "Model.h"
@@ -190,7 +191,33 @@ void ModelDefinition::removeSubModelDefinition(size_t index) {
 }
 
 void ModelDefinition::addActionDefinition(ActionDefinition def) {
+	for (auto& activation: def.activations) {
+		if (activation.type == ActivationDefinition::Type::OPERATION) {
+			auto opsSegments = Tokeniser::split(activation.trigger, ".");
+			if (!opsSegments.empty()) {
+				OperationsMatch opsMatch;
+				auto I = opsSegments.begin();
+				for (const auto& segment: opsSegments) {
+					opsMatch.operationMatches.emplace_back(segment);
+				}
+				//Check if the last segment also contained entity attributes
+				auto& lastOp = opsMatch.operationMatches.back();
+				auto parenthesisStart = lastOp.find('(');
+				if (parenthesisStart != std::string::npos) {
+					auto attributeSegments = Tokeniser::split(lastOp.substr(parenthesisStart + 1, lastOp.length() - parenthesisStart - 2), "=");
+					opsMatch.entityAttributeMatches.emplace_back(attributeSegments[0], attributeSegments[1]);
+					lastOp = lastOp.substr(0, parenthesisStart);
+				}
+
+				mOperationsToActionsMapping.emplace_back(opsMatch, def.name);
+			}
+		}
+	}
 	mActions.emplace_back(std::move(def));
+}
+
+const std::vector<OperationsToActionMapping>& ModelDefinition::getOperationsToActionMappings() const {
+	return mOperationsToActionsMapping;
 }
 
 
@@ -215,6 +242,7 @@ void ModelDefinition::addAttachPointDefinition(const AttachPointDefinition& defi
 void ModelDefinition::removeActionDefinition(size_t index) {
 	mActions.erase(mActions.begin() + index);
 }
+
 
 template<typename T, typename T1>
 void ModelDefinition::removeDefinition(T* def, T1& store) {

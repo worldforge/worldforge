@@ -33,20 +33,9 @@ namespace Ember {
  * In addition, it can be addressed to zero or many entities.
  * Just because it's addressed to entities different from the user's avatar doesn't mean that the it can't be heard, but usually it means that the message isn't of that much important to the user.
  */
-class EntityTalk {
-public:
+struct EntityTalk {
 
-	/**
-	 * @brief Ctor.
-	 * @param talkArgs
-	 */
-	explicit EntityTalk(const Atlas::Objects::Operation::RootOperation& talkArgs);
-
-	/**
-	 * @brief Gets the message.
-	 * @return Gets the message.
-	 */
-	const std::string& getMessage() const;
+	static EntityTalk parse(const Atlas::Objects::Operation::RootOperation& talkArgs);
 
 	/**
 	 * @brief Checks if the message isn't addressed to anyone in particular.
@@ -68,34 +57,26 @@ public:
 	 */
 	bool isAddressedToEntityOrNone(const std::string& entityId) const;
 
-	/**
-	 * @brief Gets a list of the addressed entities.
-	 * @return A list of the addressed entities. If none is addressed this list will be empty.
-	 */
-	const std::vector<std::string>& getAddressedEntityIds() const;
 
 	/**
-	 * @brief Gets a list of any suggested responses.
-	 * @return A list of any suggested responses.
+	 * Any message that's being said.
 	 */
-	const std::vector<std::string>& getSuggestedResponses() const;
-
-private:
+	std::string message;
 
 	/**
-	 * @brief The message.
+	 * Any sound that's made.
 	 */
-	std::string mMessage;
+	std::string sound;
 
 	/**
 	 * @brief A list of suggested responses. This might be empty if there are none.
 	 */
-	std::vector<std::string> mSuggestedResponses;
+	std::vector<std::string> suggestedResponses;
 
 	/**
 	 * @brief A list of the addressed entities. This might be empty is the message isn't addressed to anyone in particular.
 	 */
-	std::vector<std::string> mAddressedEntityIds;
+	std::vector<std::string> addressedEntityIds;
 };
 } /* namespace Ember */
 #endif /* ENTITYTALK_H_ */

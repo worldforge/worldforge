@@ -427,13 +427,13 @@ void XMLModelDefinitionSerializer::readActivations(TiXmlElement* activationsNode
 
 			ActivationDefinition def{};
 			if (typeString == "movement") {
-				def.type = ActivationDefinition::MOVEMENT;
+				def.type = ActivationDefinition::Type::MOVEMENT;
 			} else if (typeString == "action") {
-				def.type = ActivationDefinition::ACTION;
-			} else if (typeString == "acted") {
-				def.type = ActivationDefinition::ACTED;
+				def.type = ActivationDefinition::Type::ACTION;
 			} else if (typeString == "lifecycle") {
-				def.type = ActivationDefinition::LIFECYCLE;
+				def.type = ActivationDefinition::Type::LIFECYCLE;
+			} else if (typeString == "operation") {
+				def.type = ActivationDefinition::Type::OPERATION;
 			} else {
 				logger->warn("No recognized activation type: {}", typeString);
 				continue;
@@ -1020,17 +1020,17 @@ void XMLModelDefinitionSerializer::exportActions(const ModelDefinitionPtr& model
 			TiXmlElement activationElem("activation");
 			std::string type;
 			switch (activationDef.type) {
-				case ActivationDefinition::MOVEMENT:
+				case ActivationDefinition::Type::MOVEMENT:
 					type = "movement";
 					break;
-				case ActivationDefinition::ACTION:
+				case ActivationDefinition::Type::ACTION:
 					type = "action";
 					break;
-				case ActivationDefinition::ACTED:
-					type = "acted";
-					break;
-				case ActivationDefinition::LIFECYCLE:
+				case ActivationDefinition::Type::LIFECYCLE:
 					type = "lifecycle";
+					break;
+				case ActivationDefinition::Type::OPERATION:
+					type = "operation";
 					break;
 			}
 			activationElem.SetAttribute("type", type);

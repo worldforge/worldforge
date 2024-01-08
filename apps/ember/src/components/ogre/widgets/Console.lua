@@ -240,7 +240,9 @@ end
 --handler for In Game chat events
 --appends given text to the bottom of the Chat/Game tab
 function Console:appendIGChatLine(entityTalk, entity)
-	self:appendChatMessage(entityTalk:getMessage(), entity, "<", ">", entityTalk)
+	if (entityTalk.message ~= "") then
+		self:appendChatMessage(entityTalk.message, entity, "<", ">", entityTalk)
+	end
 end
 
 function Console:appendAvatarImaginary(line)

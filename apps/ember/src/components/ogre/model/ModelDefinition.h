@@ -308,26 +308,31 @@ struct ActivationDefinition {
 	/**
 	 * @brief The type of activation.
 	 */
-	enum Type {
+	enum class Type {
 		/**
 		 * @brief Activation through change of movement type.
 		 */
 		MOVEMENT,
 
 		/**
-		 * @brief Activation through an entity action.
+		 * @brief Activation through an entity action, as stored in the "actions" property of the entity.
 		 */
 		ACTION,
 
 		/**
-		 * @brief Activation through an entity acting
+		 * @brief Activation for an entity's lifecycle.
 		 */
-		ACTED,
+		LIFECYCLE,
 
 		/**
-		 * @brief Activation through an entity acting
+		 * Activation though an Operation being emitted from the entity.
+		 *  The format is operation names separated by periods, with an optional entity attribute match enclosed in parenthesis at the end.
+		 * For example:
+		 * "sight.wave"
+		 * "sound.talk"
+		 * "sound.talk(sound=grunt)"
 		 */
-		LIFECYCLE
+		OPERATION
 
 	};
 
@@ -342,6 +347,29 @@ struct ActivationDefinition {
 	 * The interpretation of this value is dependent on the type.
 	 */
 	std::string trigger;
+};
+
+struct AttributeMatch {
+	std::string name;
+	std::string value;
+};
+
+struct OperationsMatch {
+	std::vector<std::string> operationMatches;
+	std::vector<AttributeMatch> entityAttributeMatches;
+};
+
+/**
+ * A simple structure for mapping operations to actions.
+ * The format is operation names separated by periods, with an optional entity attribute match enclosed in parenthesis at the end.
+ * For example:
+ * "sight.wave"
+ * "sound.talk"
+ * "sound.talk(sound=grunt)"
+ */
+struct OperationsToActionMapping {
+	OperationsMatch operationsMatch;
+	std::string actionName;
 };
 
 /**
@@ -517,6 +545,8 @@ public:
 	 */
 	void removeActionDefinition(size_t index);
 
+	const std::vector<OperationsToActionMapping>& getOperationsToActionMappings() const;
+
 	/**
 	 * @brief Gets all attach point definitions.
 	 * @return All attach point definitions.
@@ -680,6 +710,7 @@ private:
 
 	SubModelDefinitionsStore mSubModels;
 	ActionDefinitionsStore mActions;
+	std::vector<OperationsToActionMapping> mOperationsToActionsMapping;
 	ParticleSystemSet mParticleSystems;
 	LightSet mLights;
 	BoneGroupDefinitionStore mBoneGroups;

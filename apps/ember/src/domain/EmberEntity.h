@@ -41,7 +41,7 @@ struct IEntityControlDelegate;
 struct IEntityVisitor;
 struct IHeightProvider;
 
-class EntityTalk;
+struct EntityTalk;
 
 struct ActionEntry {
 	ActionEntry(std::string actionName_,

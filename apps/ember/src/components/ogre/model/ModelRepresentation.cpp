@@ -38,6 +38,7 @@
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 #include <OgreParticleSystem.h>
+#include "domain/EntityTalk.h"
 
 #include <Eris/Task.h>
 #include "framework/IResourceProvider.h"
@@ -78,7 +79,7 @@ ModelRepresentation::ModelRepresentation(EmberEntity& entity, std::unique_ptr<Mo
 	//Only connect if we have actions to act on
 	if (!mModel->getDefinition()->getActionDefinitions().empty()) {
 		mEntity.EventActionsChanged.connect(sigc::mem_fun(*this, &ModelRepresentation::entity_ActionsChanged));
-		mEntity.Acted.connect(sigc::mem_fun(*this, &ModelRepresentation::entity_Acted));
+		mEntity.OperationFrom.connect(sigc::mem_fun(*this, &ModelRepresentation::entity_Operation));
 	}
 	//Only connect if we have particles
 	if (mModel->hasParticles()) {
@@ -152,13 +153,6 @@ void ModelRepresentation::setModelPartShown(const std::string& partName, bool vi
 	}
 }
 
-void ModelRepresentation::setClientVisible(bool visible) {
-	//It appears that lights aren't disabled even when they're detached from the node tree (which will happen if the visibity is disabled as the lights are attached to the scale node), so we need to disable them ourselves.
-	for (auto& I: mModel->getLights()) {
-		I.light->setVisible(visible);
-	}
-}
-
 void ModelRepresentation::initFromModel() {
 	connectEntities();
 
@@ -176,9 +170,9 @@ void ModelRepresentation::initFromModel() {
 
 	/** If there's an idle animation, we'll randomize the entry value for that so we don't end up with too many similar
 	 * entities with synchronized animations (such as when you enter the world at origo and have 20 settlers doing the exact same motions. */
-	Action* idleaction = mModel->getAction(ActivationDefinition::MOVEMENT, ACTION_STAND);
-	if (idleaction) {
-		idleaction->animations.addTime(Ogre::Math::RangeRandom(0, 15));
+	auto idleAction = mModel->getAction(ActivationDefinition::Type::MOVEMENT, ACTION_STAND);
+	if (idleAction) {
+		idleAction->animations.addTime(Ogre::Math::RangeRandom(0, 15));
 	}
 
 	//If there are particles, update the bindings.
@@ -205,19 +199,14 @@ void ModelRepresentation::connectEntities() {
 void ModelRepresentation::model_Reloaded() {
 	initFromModel();
 	reactivatePartActions();
-	//Check if there's any ongoing tasks which we should create an action for.
-	//TODO: look for any ongoing "actions" and create actions for them.
-//	if (!mEntity.getTasks().empty()) {
-//		//select the first available task
-////		createActionForTask(*mEntity.getTasks().begin()->second);
-//	}
 	//Retrigger a movement change so that animations can be stopped and started now that the model has changed.
 	parseMovementMode(mEntity.getVelocity());
 	updateCollisionDetection();
-	//See if we got any acted ops while we were loading the model.
-	for (const auto& acted: mPendingActed) {
-		processActed(acted);
+	//See if we have any pending ops that we need to check for actions.
+	for (const auto& op: mPendingEntityOperations) {
+		processEntityOperation(op);
 	}
+	mPendingEntityOperations.clear();
 	//And also see if we should activate any actions again.
 	auto actionsProp = mEntity.ptrOfProperty("actions");
 	if (actionsProp && actionsProp->isMap()) {
@@ -225,7 +214,6 @@ void ModelRepresentation::model_Reloaded() {
 			processAddedAction(entry.first);
 		}
 	}
-	mPendingActed.clear();
 }
 
 void ModelRepresentation::model_Resetting() {
@@ -266,14 +254,14 @@ Action* ModelRepresentation::getActionForMovement(const WFMath::Vector<3>& veloc
 
 	if (mEntity.getPositioningMode() == EmberEntity::PositioningMode::SUBMERGED || mEntity.getPositioningMode() == EmberEntity::PositioningMode::FLOATING) {
 		if (mag < 0.01) {
-			return getFirstAvailableAction(ActivationDefinition::MOVEMENT, {ACTION_TREAD_WATER, ACTION_SWIM, ACTION_WALK});
+			return getFirstAvailableAction(ActivationDefinition::Type::MOVEMENT, {ACTION_TREAD_WATER, ACTION_SWIM, ACTION_WALK});
 		} else {
-			return getFirstAvailableAction(ActivationDefinition::MOVEMENT, {ACTION_SWIM, ACTION_TREAD_WATER, ACTION_WALK});
+			return getFirstAvailableAction(ActivationDefinition::Type::MOVEMENT, {ACTION_SWIM, ACTION_TREAD_WATER, ACTION_WALK});
 		}
 	} else {
 
 		if (mag < 0.01) {
-			return mModel->getAction(ActivationDefinition::MOVEMENT, ACTION_STAND);
+			return mModel->getAction(ActivationDefinition::Type::MOVEMENT, ACTION_STAND);
 		} else {
 
 			//The model is moving in some direction; we need to figure out both the direction, and the speed.
@@ -285,30 +273,30 @@ Action* ModelRepresentation::getActionForMovement(const WFMath::Vector<3>& veloc
 			if (atan <= 0.7 && atan >= -0.7) {
 				//moving forwards
 				if (isRunning) {
-					return getFirstAvailableAction(ActivationDefinition::MOVEMENT, {ACTION_RUN, ACTION_WALK});
+					return getFirstAvailableAction(ActivationDefinition::Type::MOVEMENT, {ACTION_RUN, ACTION_WALK});
 				} else {
-					return getFirstAvailableAction(ActivationDefinition::MOVEMENT, {ACTION_WALK, ACTION_RUN});
+					return getFirstAvailableAction(ActivationDefinition::Type::MOVEMENT, {ACTION_WALK, ACTION_RUN});
 				}
 			} else if (atan >= 2.4 || atan <= -2.4) {
 				//moving backwards
 				if (isRunning) {
-					return getFirstAvailableAction(ActivationDefinition::MOVEMENT, {ACTION_RUN_BACKWARDS, ACTION_WALK_BACKWARDS});
+					return getFirstAvailableAction(ActivationDefinition::Type::MOVEMENT, {ACTION_RUN_BACKWARDS, ACTION_WALK_BACKWARDS});
 				} else {
-					return getFirstAvailableAction(ActivationDefinition::MOVEMENT, {ACTION_WALK_BACKWARDS, ACTION_RUN_BACKWARDS});
+					return getFirstAvailableAction(ActivationDefinition::Type::MOVEMENT, {ACTION_WALK_BACKWARDS, ACTION_RUN_BACKWARDS});
 				}
 			} else if (atan > 0.7) {
 				//moving to the left
 				if (isRunning) {
-					return getFirstAvailableAction(ActivationDefinition::MOVEMENT, {ACTION_RUN_LEFT, ACTION_WALK_LEFT, ACTION_RUN, ACTION_WALK});
+					return getFirstAvailableAction(ActivationDefinition::Type::MOVEMENT, {ACTION_RUN_LEFT, ACTION_WALK_LEFT, ACTION_RUN, ACTION_WALK});
 				} else {
-					return getFirstAvailableAction(ActivationDefinition::MOVEMENT, {ACTION_WALK_LEFT, ACTION_RUN_LEFT, ACTION_WALK, ACTION_RUN});
+					return getFirstAvailableAction(ActivationDefinition::Type::MOVEMENT, {ACTION_WALK_LEFT, ACTION_RUN_LEFT, ACTION_WALK, ACTION_RUN});
 				}
 			} else {
 				//moving to the right
 				if (isRunning) {
-					return getFirstAvailableAction(ActivationDefinition::MOVEMENT, {ACTION_RUN_RIGHT, ACTION_WALK_RIGHT, ACTION_RUN, ACTION_WALK});
+					return getFirstAvailableAction(ActivationDefinition::Type::MOVEMENT, {ACTION_RUN_RIGHT, ACTION_WALK_RIGHT, ACTION_RUN, ACTION_WALK});
 				} else {
-					return getFirstAvailableAction(ActivationDefinition::MOVEMENT, {ACTION_WALK_RIGHT, ACTION_RUN_RIGHT, ACTION_WALK, ACTION_RUN});
+					return getFirstAvailableAction(ActivationDefinition::Type::MOVEMENT, {ACTION_WALK_RIGHT, ACTION_RUN_RIGHT, ACTION_WALK, ACTION_RUN});
 				}
 			}
 		}
@@ -345,15 +333,6 @@ void ModelRepresentation::parseMovementMode(const WFMath::Vector<3>& velocity) {
 		}
 	}
 
-	// Lets inform the sound entity of our movement change.
-	//TODO: should this really be here, and not in the sound entity? this places a binding from this class to the sound entity which perhaps could be avoided
-//	if (mSoundEntity) {
-//		mSoundEntity->playMovementSound(actionName);
-//	}
-
-
-//	EventMovementModeChanged.emit(newMode);
-//	mMovementMode = newMode;
 }
 
 void ModelRepresentation::setLocalVelocity(const WFMath::Vector<3>& velocity) {
@@ -402,36 +381,90 @@ void ModelRepresentation::resetAnimations() {
 	}
 }
 
-void ModelRepresentation::entity_Acted(const Atlas::Objects::Operation::RootOperation& op, const Eris::TypeInfo&) {
+Action* ModelRepresentation::getActionForOperation(const Atlas::Objects::Operation::RootOperation& op) const {
+	for (const auto& mapping: mModel->getDefinition()->getOperationsToActionMappings()) {
+		auto compareOp = op;
+		bool keepOn = true;
+		auto I = mapping.operationsMatch.operationMatches.begin();
+		while (keepOn && I != mapping.operationsMatch.operationMatches.end()) {
+			if (*I != compareOp->getParent()) {
+				keepOn = false;
+				break;
+			}
+			I++;
+			if (I != mapping.operationsMatch.operationMatches.end()) {
+				if (compareOp->getArgs().empty()) {
+					keepOn = false;
+					break;
+				} else {
+					auto childOp = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Operation::RootOperation>(compareOp->getArgs().front());
+					if (childOp) {
+						compareOp = childOp;
+					} else {
+						keepOn = false;
+						break;
+					}
+				}
+			}
+		}
 
-	std::string activityName = op->getParent();
-	if (!op->getArgs().empty()) {
-		auto arg = op->getArgs().front();
-		if (arg.isValid() && arg->hasAttr("action")) {
-			auto actionAttr = arg->getAttr("action");
-			if (actionAttr.isString()) {
-				activityName += ":";
-				activityName += actionAttr.String();
+		if (keepOn) {
+			//So far there's a match for the operations. Check if we also need to check for any contained Entity attributes
+			if (!mapping.operationsMatch.entityAttributeMatches.empty()) {
+				auto entity = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Entity::RootEntity>(compareOp->getArgs().front());
+
+				for (auto& attrMatcher: mapping.operationsMatch.entityAttributeMatches) {
+					Atlas::Message::Element attrValue;
+					if (entity->copyAttr(attrMatcher.name, attrValue) == 1) {
+						keepOn = false;
+						break;
+					}
+					if (attrValue != attrMatcher.value) {
+						keepOn = false;
+						break;
+					}
+				}
+
+
+			}
+			if (keepOn) {
+				return mModel->getAction(mapping.actionName);
 			}
 		}
 	}
-
-	if (!mModel->isLoaded()) {
-		mPendingActed.emplace_back(activityName);
-	} else {
-		processActed(activityName);
-	}
-
+	return nullptr;
 }
 
-void ModelRepresentation::processActed(const std::string& activityName) {
-	Action* newAction = mModel->getAction(ActivationDefinition::ACTED, activityName);
+void ModelRepresentation::entity_Operation(const Atlas::Objects::Operation::RootOperation& op) {
+	if (!mModel->isLoaded()) {
+		mPendingEntityOperations.emplace_back(op);
+	} else {
+		processEntityOperation(op);
+	}
+}
+
+Action* ModelRepresentation::processEntityOperation(const Atlas::Objects::Operation::RootOperation& op) {
+	auto action = getActionForOperation(op);
+	if (action) {
+		MotionManager::getSingleton().addAnimated(mEntity.getId(), this);
+		mActiveAction = action;
+		resetAnimations();
+		playSoundForAction(action->soundAction);
+	}
+	return action;
+}
+
+
+Action* ModelRepresentation::processActivation(ActivationDefinition::Type type, const std::string& activityName) {
+	Action* newAction = mModel->getAction(type, activityName);
 	if (newAction) {
 		MotionManager::getSingleton().addAnimated(mEntity.getId(), this);
 		mActiveAction = newAction;
 		resetAnimations();
 		playSoundForAction(newAction->soundAction);
+		return newAction;
 	}
+	return nullptr;
 }
 
 void ModelRepresentation::entity_ActionsChanged(const std::vector<ActionChange>& actionChanges) {
@@ -457,32 +490,14 @@ void ModelRepresentation::entity_ActionsChanged(const std::vector<ActionChange>&
 }
 
 void ModelRepresentation::processAddedAction(const std::string& actionName) {
-	Action* newAction = mModel->getAction(ActivationDefinition::ACTION, actionName);
+	auto result = processActivation(ActivationDefinition::Type::ACTION, actionName);
 
 	//If there's no action found, try to see if we have a "default action" defined to play instead.
-	if (!newAction) {
-		newAction = mModel->getAction(ActivationDefinition::ACTION, "default_action");
+	if (!result) {
+		processActivation(ActivationDefinition::Type::ACTION, "default_action");
 	}
 
-	if (newAction) {
-		MotionManager::getSingleton().addAnimated(mEntity.getId(), this);
-		mActiveAction = newAction;
-		resetAnimations();
-		playSoundForAction(newAction->soundAction);
-	}
 }
-
-
-//
-//void ModelRepresentation::createActionForTask(const Eris::Task& task) {
-//	Action* newAction = mModel->getAction(ActivationDefinition::TASK, task.name());
-//	if (newAction) {
-//		MotionManager::getSingleton().addAnimated(mEntity.getId(), this);
-//		mTaskAction = newAction;
-//		resetAnimations();
-//	}
-//}
-
 
 void ModelRepresentation::entity_PositioningModeChanged(EmberEntity::PositioningMode newMode) {
 	if (newMode == EmberEntity::PositioningMode::PROJECTILE) {

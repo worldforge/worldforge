@@ -24,7 +24,8 @@
 
 namespace Ember {
 
-EntityTalk::EntityTalk(const Atlas::Objects::Operation::RootOperation& talkArgs) {
+EntityTalk EntityTalk::parse(const Atlas::Objects::Operation::RootOperation& talkArgs) {
+	EntityTalk entityTalk;
 	const std::vector<Atlas::Objects::Root>& args = talkArgs->getArgs();
 	if (!args.empty()) {
 
@@ -32,17 +33,22 @@ EntityTalk::EntityTalk(const Atlas::Objects::Operation::RootOperation& talkArgs)
 
 		Atlas::Message::Element sayAttrib;
 		if (!talk->copyAttr("say", sayAttrib) && sayAttrib.isString()) {
-			mMessage = talk->getAttr("say").asString();
+			entityTalk.message = sayAttrib.String();
+		}
+
+		Atlas::Message::Element soundAttrib;
+		if (!talk->copyAttr("sound", soundAttrib) && soundAttrib.isString()) {
+			entityTalk.sound = soundAttrib.String();
 		}
 
 		Atlas::Message::Element responseAttrib;
 		//some talk operations come with a predefined set of suitable responses, so we'll store those so that they can later on be queried by the GUI for example
 		if (!talk->copyAttr("responses", responseAttrib) && responseAttrib.isList()) {
-			const Atlas::Message::ListType& responseList = responseAttrib.asList();
+			const Atlas::Message::ListType& responseList = responseAttrib.List();
 			auto I = responseList.begin();
 			for (; I != responseList.end(); ++I) {
 				if (I->isString()) {
-					mSuggestedResponses.push_back(I->asString());
+					entityTalk.suggestedResponses.emplace_back(I->String());
 				}
 			}
 		}
@@ -50,40 +56,30 @@ EntityTalk::EntityTalk(const Atlas::Objects::Operation::RootOperation& talkArgs)
 		Atlas::Message::Element addressAttrib;
 		//some talk operations come with a predefined set of suitable responses, so we'll store those so that they can later on be queried by the GUI for example
 		if (!talk->copyAttr("address", addressAttrib) && addressAttrib.isList()) {
-			const Atlas::Message::ListType& addressList = addressAttrib.asList();
+			const Atlas::Message::ListType& addressList = addressAttrib.List();
 			auto I = addressList.begin();
 			for (; I != addressList.end(); ++I) {
 				if (I->isString()) {
-					mAddressedEntityIds.push_back(I->asString());
+					entityTalk.addressedEntityIds.emplace_back(I->String());
 				}
 			}
 		}
 	}
-
+	return entityTalk;
 }
 
-const std::string& EntityTalk::getMessage() const {
-	return mMessage;
-}
 
 bool EntityTalk::isAddressedToNone() const {
-	return mAddressedEntityIds.empty();
+	return addressedEntityIds.empty();
 }
 
 bool EntityTalk::isAddressedToEntity(const std::string& entityId) const {
-	return std::find(mAddressedEntityIds.begin(), mAddressedEntityIds.end(), entityId) != mAddressedEntityIds.end();
+	return std::find(addressedEntityIds.begin(), addressedEntityIds.end(), entityId) != addressedEntityIds.end();
 }
 
 bool EntityTalk::isAddressedToEntityOrNone(const std::string& entityId) const {
 	return isAddressedToNone() || isAddressedToEntity(entityId);
 }
 
-const std::vector<std::string>& EntityTalk::getAddressedEntityIds() const {
-	return mAddressedEntityIds;
-}
-
-const std::vector<std::string>& EntityTalk::getSuggestedResponses() const {
-	return mSuggestedResponses;
-}
 
 }
