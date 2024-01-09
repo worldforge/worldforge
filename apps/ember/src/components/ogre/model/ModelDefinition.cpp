@@ -196,7 +196,6 @@ void ModelDefinition::addActionDefinition(ActionDefinition def) {
 			auto opsSegments = Tokeniser::split(activation.trigger, ".");
 			if (!opsSegments.empty()) {
 				OperationsMatch opsMatch;
-				auto I = opsSegments.begin();
 				for (const auto& segment: opsSegments) {
 					opsMatch.operationMatches.emplace_back(segment);
 				}

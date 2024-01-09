@@ -23,7 +23,6 @@
 #include "framework/Log.h"
 
 #include "SoundSample.h"
-#include "SoundInstance.h"
 #include "al.h"
 #include "alc.h"
 
@@ -86,7 +85,7 @@ SoundService::SoundService(ConfigService& configService)
 						//Only need to handle one buffer
 						auto& firstSound = soundGroup.sounds.front();
 						auto buffer = firstSound.soundSample->getBuffers()[0];
-						alSourcei(alSource, AL_BUFFER, buffer);
+						alSourcei(alSource, AL_BUFFER, (ALint) buffer);
 						SoundGeneral::checkAlError("Binding sound source to static sound buffer.");
 						soundEntry->currentlyPlaying = 0;
 					} else {
@@ -118,7 +117,7 @@ SoundService::SoundService(ConfigService& configService)
 									alSourceUnqueueBuffers(alSource, processed, &buffer);
 									soundEntry->currentlyPlaying += processed;
 									//We now need to queue new buffers. This is done differently depending on whether we're repeating or not.
-									if (soundGroup.sounds.size() > soundEntry->currentlyPlaying) {
+									if (soundGroup.sounds.size() > (size_t) soundEntry->currentlyPlaying) {
 										std::array<ALuint, 1> buffers{soundGroup.sounds[soundEntry->currentlyPlaying + 1].soundSample->getBuffers()[0]};
 										alSourceQueueBuffers(alSource, 1, buffers.data());
 									} else {
@@ -155,11 +154,6 @@ SoundService::SoundService(ConfigService& configService)
 }
 
 SoundService::~SoundService() {
-	if (!mInstances.empty()) {
-		logger->warn(
-				"Found a still registered SoundInstance when shutting down sound service. This shouldn't normally happen, since all instances should be handled by their proper owners and removed well in advance of the SoundService shutting down. We'll now delete the instance, which might lead to a segfault or similar problem as the instance owner might still expect it to be existing.");
-	}
-	mInstances.clear();
 
 	mBaseSamples.clear();
 
@@ -192,13 +186,7 @@ void SoundService::updateListenerPosition(const WFMath::Point<3>& pos, const WFM
 }
 
 void SoundService::cycle() {
-	for (auto I = mInstances.begin(); I != mInstances.end();) {
-		//We do the iteration this way to allow for instances to be removed inside the iteration.
-		//A typical example would be a sound instance that has played to its completion and thus should be destroyed. The signal for this is emitted as a result of calling SoundInstance::update().
-		auto instance = I->get();
-		++I;
-		instance->update();
-	}
+
 }
 
 BaseSoundSample* SoundService::createOrRetrieveSoundSample(const std::string& soundPath) {
@@ -219,23 +207,6 @@ BaseSoundSample* SoundService::createOrRetrieveSoundSample(const std::string& so
 	return nullptr;
 }
 
-SoundInstance* SoundService::createInstance() {
-	if (!isEnabled()) {
-		return nullptr;
-	}
-	auto instance = std::make_unique<SoundInstance>();
-	mInstances.emplace_back(std::move(instance));
-	return mInstances.back().get();
-}
-
-bool SoundService::destroyInstance(SoundInstance* instance) {
-	auto I = std::find_if(mInstances.begin(), mInstances.end(), [instance](const std::unique_ptr<SoundInstance>& entry) { return entry.get() == instance; });
-	if (I != mInstances.end()) {
-		mInstances.erase(I);
-		return true;
-	}
-	return false;
-}
 
 IResourceProvider* SoundService::getResourceProvider() {
 	return mResourceProvider;

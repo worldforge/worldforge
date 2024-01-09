@@ -20,7 +20,6 @@
 #define SOUND_SAMPLE_H
 
 #include "SoundGeneral.h"
-#include "SoundBinding.h"
 #include "framework/IResourceProvider.h"
 #include <vector>
 
@@ -62,18 +61,6 @@ public:
 	 * @return A store of OpenAL buffer identifiers.
 	 */
 	virtual std::vector<ALuint> getBuffers() const = 0;
-
-	/**
-	 * @brief Creates a new binding to this buffer, to be used together with an instance of SoundInstance.
-	 * If you want the sound held by this buffer to be played, one way would be to call this to create a
-	 * binding which you then feed to an instance of SoundInstance.
-	 * Note that ownership of the created binding is transferred to the caller, and thus it's the caller's
-	 * responsibility to make sure it's properly deleted. Under normal circumstances that will be taken care of by SoundInstance however.
-	 * @see SoundInstance::bind()
-	 * @param source The sound source to which we should bind this sound sample.
-	 * @return A new sound binding instance.
-	 */
-	virtual std::unique_ptr<SoundBinding> createBinding(SoundSource& source) = 0;
 
 protected:
 
@@ -119,11 +106,6 @@ public:
 	unsigned int getNumberOfBuffers() const override;
 
 	/**
-	 * @copydoc BaseSoundSample::createBinding()
-	 */
-	std::unique_ptr<SoundBinding> createBinding(SoundSource& source) override;
-
-	/**
 	 * @copydoc BaseSoundSample::getBuffers()
 	 */
 	std::vector<ALuint> getBuffers() const override;
@@ -134,41 +116,6 @@ private:
 	 */
 	ALuint mBuffer;
 
-};
-
-
-/**
- * @brief A binding to a "static" sound source, i.e. a sound source which doesn't have to be updated.
- * A "static" sound is one that is small enough to fit into one continuous buffer, and thus doesn't need to be dynamically
- * updated as is the case with "streaming" sounds.
- * As a result, this binding is very simple and will just bind the sound data to the source in the constructor,
- * without having to provide any functionality in the update() method.
- * @author Erik Ogenvik <erik@ogenvik.org>
- */
-class StaticSoundBinding : public SoundBinding {
-public:
-
-	/**
-	 * @brief Ctor. All bindings between the buffer and the sound source will occur here.
-	 * @param source The sound source.
-	 * @param sample The static sound sample to bind to the source.
-	 */
-	StaticSoundBinding(SoundSource& source, StaticSoundSample& sample);
-
-	/**
-	 * @copydoc SoundBinding::update()
-	 */
-	void update() override {
-		// Since it's a static sound we don't need to update anything.
-	}
-
-protected:
-
-	/**
-	 * @brief The static sound sample used for binding.
-	 * There's really no need to keep this around here, since the binding will occur in the constructor, but hey, someday we might provide some kind of dynamic unloading/reloading...
-	 */
-	StaticSoundSample& mSample;
 };
 
 

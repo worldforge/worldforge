@@ -87,13 +87,6 @@ add_library(ember-ogre STATIC
         model/ModelBoneProvider.cpp
         model/ModelPartReactivatorVisitor.cpp
 
-        sound/SoundAction.cpp
-        sound/SoundDefinitionManager.cpp
-        sound/SoundEntity.cpp
-        sound/SoundGroup.cpp
-        sound/XMLSoundDefParser.cpp
-
-
         Avatar.cpp
         AvatarCameraWarper.cpp
         MovementController.cpp

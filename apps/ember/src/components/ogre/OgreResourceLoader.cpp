@@ -24,7 +24,6 @@
 #include "framework/Tokeniser.h"
 #include "services/config/ConfigService.h"
 #include "model/ModelDefinitionManager.h"
-#include "sound/XMLSoundDefParser.h"
 
 #include "EmberOgreFileSystem.h"
 

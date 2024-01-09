@@ -24,12 +24,6 @@
 
 namespace Ember {
 
-StaticSoundBinding::StaticSoundBinding(SoundSource& source, StaticSoundSample& sample)
-		: SoundBinding(source), mSample(sample) {
-	// Bind it to the buffer.
-	alSourcei(source.getALSource(), AL_BUFFER, sample.getBuffer());
-	SoundGeneral::checkAlError("Binding sound source to static sound buffer.");
-}
 
 SoundGeneral::SoundSampleType BaseSoundSample::getType() const {
 	return mType;
@@ -59,10 +53,6 @@ std::vector<ALuint> StaticSoundSample::getBuffers() const {
 }
 
 
-std::unique_ptr<SoundBinding> StaticSoundSample::createBinding(SoundSource& source) {
-	return std::make_unique<StaticSoundBinding>(source, *this);
-}
-
 unsigned int StaticSoundSample::getNumberOfBuffers() const {
 	return 1;
 }
@@ -72,7 +62,7 @@ std::unique_ptr<StaticSoundSample> StaticSoundSample::create(const ResourceWrapp
 	Uint8* audio_buf = nullptr;
 	Uint32 audio_len = 0;
 	auto resourceSize = resource.getSize();
-	auto sdlRW = SDL_RWFromConstMem((void*) resource.getDataPtr(), (int) resourceSize);
+	auto sdlRW = SDL_RWFromConstMem((const void*) resource.getDataPtr(), (int) resourceSize);
 	auto resultSpec = SDL_LoadWAV_RW(sdlRW, 0, &spec, &audio_buf, &audio_len);
 
 	if (resultSpec) {
@@ -110,7 +100,7 @@ std::unique_ptr<StaticSoundSample> StaticSoundSample::create(const ResourceWrapp
 		auto errorMessage = SDL_GetError();
 		logger->error("Error when loading sound resource from {}: {}", resource.getName(), errorMessage);
 	}
-
+	return {};
 }
 
 // Streamed (OGG)

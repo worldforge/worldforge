@@ -49,8 +49,6 @@ struct IResourceProvider;
 
 class StreamedSoundSample;
 
-class SoundInstance;
-
 class BaseSoundSample;
 
 /**
@@ -127,31 +125,6 @@ public:
 	 */
 	void cycle();
 
-
-	/**
-	 * @brief Creates a new SoundInstance.
-	 * Every time you want to play a sound you must create a SoundInstance and use that to play it.
-	 * The only way to (normally) create such an instance is through this method.
-	 * The sound service will keep track of all SoundInstance instances that are created,
-	 * and will call SoundInstance::update() each frame, granted that SoundService::cycle() is called.
-	 * Ownership of the SoundInstance is held by the sound service, and as soon as you're finished with it you should
-	 * immediately return it to the sound service through destroyInstance(). Under normal operations it's expected
-	 * that there will only be a few SoundInstances in play at once.
-	 * @note If the sound system is disabled this will always return null, so make sure to check what you receive when calling this.
-	 * @return A new SoundInstance instance, or null if no instance could be created or the sound system is disabled.
-	 * Before you can play it, through SoundInstance::play(), you must bind it to a SoundSample.
-	 */
-	SoundInstance* createInstance();
-
-	/**
-	 * @brief Destroys a SoundInstance.
-	 * Once you're done with a sound instance, for example when the sound has completed, you are expected to return it to the sound service.
-	 * This method will take care of releasing the resources allocated by the SoundInstance (either destroying them or returning them to a pool, depending on the implementation).
-	 * @param instance The instance which shuold be destroyed. If null, nothing will happen.
-	 * @return True if the instance could be properly destroyed, else false. The behaviour if the destruction fails is undefined, and you should probably throw some kind of exception, or just mark the SoundInstance as a memory/resource leak and carry on.
-	 */
-	bool destroyInstance(SoundInstance* instance);
-
 	/**
 	 * @brief Gets the resource provider for this service.
 	 * @return The resource provider registered for this service, or null if none has been registered.
@@ -188,13 +161,6 @@ private:
 	 * @brief The main OpenAL device.
 	 */
 	ALCdevice* mDevice;
-
-	/**
-	 * @brief Stores all SoundInstances.
-	 * These are owned by the service and should be destroyed when the service is stopped.
-	 * @note This is a list because we want to allow removal or insertion in the list while we're iterating over it (which isn't allowed with a vector).
-	 */
-	std::list<std::unique_ptr<SoundInstance>> mInstances;
 
 	std::mutex mSoundEntriesMutex;
 

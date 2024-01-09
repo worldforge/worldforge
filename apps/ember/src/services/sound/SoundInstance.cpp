@@ -37,14 +37,6 @@ SoundInstance::~SoundInstance() {
 	stop();
 }
 
-void SoundInstance::bind(std::unique_ptr<SoundBinding> binding) {
-	if (mBinding) {
-		//TODO: handle calling this when there's already a binder
-	}
-	mBinding = std::move(binding);
-
-}
-
 SoundSource& SoundInstance::getSource() {
 	return *mSource;
 }

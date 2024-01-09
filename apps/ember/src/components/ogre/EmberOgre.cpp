@@ -43,8 +43,6 @@
 
 #include "terrain/TerrainLayerDefinitionManager.h"
 
-#include "sound/SoundDefinitionManager.h"
-
 #include "GUIManager.h"
 
 #include "meshtree/TParameters.h"
@@ -68,8 +66,6 @@
 #include "authoring/ConsoleDevTools.h"
 
 #include "widgets/LoadingBar.h"
-
-#include "sound/XMLSoundDefParser.h"
 
 #include "OgreSetup.h"
 #include "Screen.h"
@@ -141,7 +137,6 @@ EmberOgre::EmberOgre(MainLoopController& mainLoopController,
 		mShaderManager(std::make_unique<ShaderManager>(mAutomaticGraphicsLevelManager->getGraphicalAdapter())),
 		mShaderDetailManager(std::make_unique<ShaderDetailManager>(mAutomaticGraphicsLevelManager->getGraphicalAdapter(), *mShaderManager)),
 		mGeneralCommandMapper(std::make_unique<InputCommandMapper>("general")),
-		mSoundManager(std::make_unique<SoundDefinitionManager>()),
 		mGUIManager(nullptr),
 		mModelDefinitionManager(nullptr),
 		mEntityMappingManager(std::make_unique<Mapping::EmberEntityMappingManager>()),

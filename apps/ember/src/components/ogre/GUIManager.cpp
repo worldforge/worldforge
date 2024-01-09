@@ -47,7 +47,6 @@
 #include "services/config/ConfigService.h"
 #include "services/server/ServerServiceSignals.h"
 #include "services/sound/SoundService.h"
-#include "services/sound/SoundInstance.h"
 #include "services/sound/SoundSample.h"
 
 #include "framework/IResourceProvider.h"

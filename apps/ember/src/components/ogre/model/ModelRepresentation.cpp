@@ -26,8 +26,6 @@
 
 #include "EmberEntityMappingManager.h"
 
-#include "components/ogre/sound/SoundEntity.h"
-
 #include "components/ogre/MousePicker.h"
 #include "components/ogre/MotionManager.h"
 #include "components/ogre/Scene.h"

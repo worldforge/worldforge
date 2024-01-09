@@ -32,8 +32,6 @@ class SoundSource;
 
 class BaseSoundSample;
 
-class SoundBinding;
-
 class SoundService;
 
 /**
@@ -100,15 +98,6 @@ public:
 	SoundSource& getSource();
 
 	/**
-	 * @brief Binds this sound instance to sound data.
-	 * Before a sound can be played it must be bound to one or many sound data buffers. The SoundBinding class is responsible for this binding.
-	 * In addition, every frame the SoundBinding instance will be asked to update itself. This is to handle those cases where the sound buffers are streaming, and should be filled with new data.
-	 * Upon calling this ownership of the SoundBinding will be transferred to this class, and it will be deleted when this instance is deleted.
-	 * @param binding The instance which binds the SoundSource held by this class to one or many sound data buffers.
-	 */
-	void bind(std::unique_ptr<SoundBinding> binding);
-
-	/**
 	 * @brief Registers a motion provider for this sound instance.
 	 * Some sounds, for example those that represents world entities, needs to have their position, velocity and orientation updated continously.
 	 * Those sounds should therefore register an instance of ISoundMotionProvider through this method. The ISoundMotionProvider will be asked every frame for updates.
@@ -165,15 +154,6 @@ protected:
 	 * It's created and destroyed together with the instance.
 	 */
 	std::unique_ptr<SoundSource> mSource;
-
-	/**
-	 * @brief The sound binding, which binds one or many sound data buffers to the sound source.
-	 * The actual binding of sound data buffers aren't handled by this class, but by an instance of SoundBinding which is responsible for setting up the buffers and connecting them to the sound source.
-	 * In addition, every frame the SoundBinding::update() method will be called through this class.
-	 * The sound binding will be owned by this instance once it's been registered, and thus deleted when this instance is deleted.
-	 * @see update()
-	 */
-	std::unique_ptr<SoundBinding> mBinding;
 
 	/**
 	 * @brief An optional sound motion provider.

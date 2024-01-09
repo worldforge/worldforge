@@ -29,9 +29,7 @@ add_library(ember-services STATIC
         server/AssetsSyncNeededState.cpp
         serversettings/ServerSettings.cpp
         serversettings/ServerSettingsCredentials.cpp
-        sound/SoundBinding.cpp
         sound/SoundGeneral.cpp
-        sound/SoundInstance.cpp
         sound/SoundSample.cpp
         sound/SoundService.cpp
         sound/SoundSource.cpp

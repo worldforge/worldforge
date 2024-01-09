@@ -301,11 +301,6 @@ protected:
 	std::unique_ptr<InputCommandMapper> mGeneralCommandMapper;
 
 	/**
-	 * @brief Responsible for handling sound loading
-	 */
-	std::unique_ptr<SoundDefinitionManager> mSoundManager;
-
-	/**
 	 * @brief Responsible for the GUI.
 	 */
 	std::unique_ptr<GUIManager> mGUIManager;
