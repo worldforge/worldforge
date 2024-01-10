@@ -18,308 +18,90 @@
 
 #include "SoundSample.h"
 
-#include "SoundSource.h"
+#include "SoundGeneral.h"
 #include "framework/Log.h"
-#include <SDL_audio.h>
+#include <vorbis/codec.h>
+#include <vorbis/vorbisfile.h>
+
 
 namespace Ember {
 
 
-SoundGeneral::SoundSampleType BaseSoundSample::getType() const {
-	return mType;
-}
-
-
-StaticSoundSample::StaticSoundSample(ALuint buffer)
-		: BaseSoundSample(SoundGeneral::SAMPLE_WAV),
-		  mBuffer(buffer) {
-}
-
-StaticSoundSample::~StaticSoundSample() {
-	if (alIsBuffer(mBuffer)) {
-		alDeleteBuffers(1, &mBuffer);
-		SoundGeneral::checkAlError("Deleting static sound buffers.");
+std::unique_ptr<SoundSample> SoundSample::create(const std::filesystem::path& filename) {
+	auto vorbisFile = std::make_unique<OggVorbis_File>();
+	auto status = ov_fopen(filename.c_str(), vorbisFile.get());
+	if (status != 0) {
+		logger->warn("Error when trying to open sound file '{}': {}", filename.string(), status);
+		return {};
 	}
-}
 
-ALuint StaticSoundSample::getBuffer() const {
-	return mBuffer;
-}
-
-std::vector<ALuint> StaticSoundSample::getBuffers() const {
-	std::vector<ALuint> buffers;
-	buffers.push_back(mBuffer);
-	return buffers;
+	return std::make_unique<SoundSample>(std::move(vorbisFile));
 }
 
 
-unsigned int StaticSoundSample::getNumberOfBuffers() const {
-	return 1;
-}
+SoundSample::SoundSample(std::unique_ptr<OggVorbis_File> vorbisFile) :
+		mVorbisFile(std::move(vorbisFile)),
+		mPosition(0),
+		mCurrentOffset(0) {
 
-std::unique_ptr<StaticSoundSample> StaticSoundSample::create(const ResourceWrapper& resource) {
-	SDL_AudioSpec spec{};
-	Uint8* audio_buf = nullptr;
-	Uint32 audio_len = 0;
-	auto resourceSize = resource.getSize();
-	auto sdlRW = SDL_RWFromConstMem((const void*) resource.getDataPtr(), (int) resourceSize);
-	auto resultSpec = SDL_LoadWAV_RW(sdlRW, 0, &spec, &audio_buf, &audio_len);
-
-	if (resultSpec) {
-
-
-		ALenum format = 0;
-
-		if (resultSpec->channels == 1 && SDL_AUDIO_BITSIZE(resultSpec->format) == 8) {
-			format = AL_FORMAT_MONO8;
-		} else if (resultSpec->channels == 1 && SDL_AUDIO_BITSIZE(resultSpec->format) == 16) {
-			format = AL_FORMAT_MONO16;
-		} else if (resultSpec->channels == 2 && SDL_AUDIO_BITSIZE(resultSpec->format) == 8) {
-			format = AL_FORMAT_STEREO8;
-		} else if (resultSpec->channels == 2 && SDL_AUDIO_BITSIZE(resultSpec->format) == 16) {
-			format = AL_FORMAT_STEREO16;
-		}
-		if (format != 0) {
-
-			ALuint buffer;
-			alGenBuffers(1, &buffer);
-			alBufferData(buffer, format, (void*) audio_buf, (ALsizei) audio_len, spec.freq);
-
-			SDL_RWclose(sdlRW);
-			SDL_FreeWAV(audio_buf);
-
-			if (!SoundGeneral::checkAlError("Generated buffer for static sample.")) {
-				alDeleteBuffers(1, &buffer);
-			} else {
-				return std::make_unique<StaticSoundSample>(buffer);
-			}
-		} else {
-			logger->warn("Could not recognize format of sound file {}.", resource.getName());
-		}
+	vorbis_info* oggInfo = ov_info(mVorbisFile.get(), -1);
+	if (oggInfo->channels == 1) {
+		mFormat = AL_FORMAT_MONO16;
 	} else {
-		auto errorMessage = SDL_GetError();
-		logger->error("Error when loading sound resource from {}: {}", resource.getName(), errorMessage);
+		mFormat = AL_FORMAT_STEREO16;
 	}
-	return {};
+
+	mRate = oggInfo->rate;
+	//Data is always 16 bits, so multiply by two.
+	mTotalBytes = ov_pcm_total(mVorbisFile.get(), -1) * oggInfo->channels * 2;
 }
 
-// Streamed (OGG)
-// 	StreamedSoundSample::StreamedSoundSample(const std::string& filename, bool playsLocal, float volume)
-// 	{
-// 		mPlaying = false;
-// 		mType = SAMPLE_OGG;
-// 
-// 		FILE* newFile = fopen(filename.c_str(), "rb");
-// 		if (!newFile)
-// 		{
-// 			logger->error("Failed to open file(" + filename + ") to stream.");
-// 			return;
-// 		}
-// 
-// 		mFile = newFile;
-// 		mFilename = filename;
-// 
-// 		if (ov_open(newFile, &mStream, nullptr, 0) < 0)
-// 		{
-// 			logger->error("Failed to bind ogg stream to sound sample.");
-// 
-// 			fclose(newFile);
-// 			return;
-// 		}
-// 
-// 		vorbis_info* oggInfo = ov_info(&mStream, -1);
-// 		if (oggInfo->channels == 1)
-// 		{
-// 			mFormat = AL_FORMAT_MONO16;
-// 		}
-// 		else
-// 		{
-// 			mFormat = AL_FORMAT_STEREO16;
-// 		}
-// 
-// 		mRate = oggInfo->rate;
-// 
-// 		alGenBuffers(2, mBuffers);
-// 		if (alGetError() != AL_NO_ERROR)
-// 		{
-// 			logger->error("Failed to bind ogg stream to sound sample.");
-// 
-// 			fclose(newFile);
-// 			return;
-// 		}
-// 
-// 		alGenSources(1, &mSource);
-// 		if (alGetError() != AL_NO_ERROR)
-// 		{
-// 			logger->error("Failed to bind ogg stream to sound sample.");
-// 
-// 			alDeleteBuffers(2, mBuffers);
-// 			fclose(newFile);
-// 
-// 			return;
-// 		}
-// 
-// 		alSourcef(mSource, AL_PITCH, 1.0);
-// 		alSourcef(mSource, AL_GAIN, volume);
-// 		alSource3f(mSource, AL_POSITION, 0, 0, 0);
-// 		alSource3f(mSource, AL_VELOCITY, 0, 0, 0);
-// 		alSourcei(mSource, AL_LOOPING, false);
-// 
-// 		if (playsLocal == PLAY_LOCAL)
-// 			alSourcei(mSource, AL_SOURCE_RELATIVE, true);
-// 
-// 		// Ask the Sound Service to register us
-// 		// that we way we keep playing =]
-// 		SoundService::getSingleton().registerStream(this);
-// 	}
-// 
-// 	StreamedSoundSample::~StreamedSoundSample()
-// 	{
-// 		SoundService::getSingleton().unregisterStream(this);
-// 
-// 		alSourceStop(mSource);
-// 		checkAlError();
-// 
-// 		alDeleteSources(1, &mSource);
-// 		checkAlError();
-// 
-// 		alDeleteBuffers(2, mBuffers);
-// 		checkAlError();
-// 
-// 		ov_clear(&mStream);
-// 	}
-// 
-// 	const std::string& StreamedSoundSample::getFilename()
-// 	{
-// 		return mFilename;
-// 	}
-// 
-// 	void StreamedSoundSample::setPlaying(bool play)
-// 	{
-// 		mPlaying = play;
-// 	}
-// 
-// 	OggVorbis_File* StreamedSoundSample::getStreamPtr()
-// 	{
-// 		return &mStream;
-// 	}
-// 
-// 	ALuint* StreamedSoundSample::getBufferPtr()
-// 	{
-// 		return mBuffers;
-// 	}
-// 
-// 	bool StreamedSoundSample::isPlaying()
-// 	{
-// 		return mPlaying;
-// 	}
-// 
-// 	unsigned int StreamedSoundSample::getNumberOfBuffers()
-// 	{
-// 		return 2;
-// 	}
-// 
-// 	void StreamedSoundSample::cycle()
-// 	{
-// 		ALint processed;
-// 		bool active = true;
-// 		
-// 		alGetSourcei(mSource, AL_BUFFERS_PROCESSED, &processed);
-// 		checkAlError();
-// 		while (processed > 0)
-// 		{
-// 			ALuint buffer;
-// 
-// 			alSourceUnqueueBuffers(mSource, 1, &buffer);
-// 			checkAlError();
-// 
-// 			active = stream(buffer);
-// 			if (!active)
-// 				break;
-// 
-// 			alSourceQueueBuffers(mSource, 1, &buffer);
-// 			checkAlError();
-// 
-// 			alGetSourcei(mSource, AL_BUFFERS_PROCESSED, &processed);
-// 			checkAlError();
-// 		}
-// 	}
-// 
-// 	bool StreamedSoundSample::stream(ALuint buffer)
-// 	{
-// 		char data[OGG_BUFFER_SIZE];
-// 		unsigned int size = 0;
-// 		int section;
-// 		int result;
-// 
-// 		while (size < OGG_BUFFER_SIZE)
-// 		{
-// 			#ifndef LITTLE_ENDIAN
-// 				result = ov_read(&mStream, data + size, OGG_BUFFER_SIZE - size, 1, 2, 1, &section);
-// 			#else
-// 				result = ov_read(&mStream, data + size, OGG_BUFFER_SIZE - size, 0, 2, 1, &section);
-// 			#endif
-// 
-// 			if (result > 0)
-// 			{
-// 				size += result;
-// 			}
-// 			else
-// 			{
-// 				if (result < 0)
-// 				{
-// 					logger->error("Failed to read from ogg stream.");
-// 					return false;
-// 				}
-// 				else break;
-// 			}
-// 		}
-// 
-// 		// Stream is over
-// 		if (!size)
-// 		{
-// 			mPlaying = false;
-// 			return false;
-// 		}
-// 
-// 		alBufferData(buffer, mFormat, data, size, mRate);
-// 		checkAlError();
-// 
-// 		return true;
-// 	}
-// 		
-// 	void StreamedSoundSample::play()
-// 	{
-// 		// Already Playing
-// 		if (isPlaying())
-// 		{
-// 			return;
-// 		}
-// 
-// 		if (!stream(mBuffers[0]))
-// 		{
-// 			return;
-// 		}
-// 
-// 		if (!stream(mBuffers[1]))
-// 		{
-// 			return;
-// 		}
-// 
-// 		mPlaying = true;
-// 		alSourceQueueBuffers(mSource, 2, mBuffers);
-// 		checkAlError();
-// 
-// 		alSourcePlay(mSource);
-// 		checkAlError();
-// 	}
-// 
-// 	void StreamedSoundSample::stop()
-// 	{
-// 		mPlaying = false;
-// 		alSourceStop(mSource);
-// 		checkAlError();
-// 	}
+SoundSample::~SoundSample() {
+	ov_clear(mVorbisFile.get());
+}
+
+void SoundSample::reset() {
+	ov_raw_seek(mVorbisFile.get(), 0);
+	mCurrentOffset = 0;
+}
+
+SoundSample::BufferFillStatus SoundSample::fillBuffer(ALuint buffer) {
+#ifndef LITTLE_ENDIAN
+	auto endian = 1;
+#else
+	auto endian = 0;
+#endif
+	std::array<char, 65'536> dataBuffer{};
+
+	int section;
+
+	unsigned int offset = 0;
+	while (offset < dataBuffer.size()) {
+		auto result = ov_read(mVorbisFile.get(), dataBuffer.data() + offset, (int) std::min(4096UL, dataBuffer.size() - offset), endian, 2, 1, &section);
+		if (result > 0) {
+			offset += result;
+		} else {
+			if (result < 0) {
+				logger->error("Failed to read from ogg stream.");
+				return BufferFillStatus::ERROR;
+			} else break;
+		}
+	}
+
+	mCurrentOffset += offset;
+
+	alBufferData(buffer, mFormat, (void*) dataBuffer.data(), (ALsizei) offset, (ALint) mRate);
+	if (!SoundGeneral::checkAlError("Generated buffer for static sample from OGG file.")) {
+		return SoundSample::BufferFillStatus::ERROR;
+	}
+
+	if (mCurrentOffset < mTotalBytes) {
+		return SoundSample::BufferFillStatus::HAS_MORE_DATA;
+	} else {
+		return SoundSample::BufferFillStatus::NO_MORE_DATA;
+	}
+
+}
 
 }
 

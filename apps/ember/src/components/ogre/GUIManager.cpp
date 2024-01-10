@@ -414,19 +414,24 @@ CEGUI::Renderer* GUIManager::getGuiRenderer() const {
 
 void GUIManager::setupUISounds() {
 
+	auto sharedMediaPath = ConfigService::getSingleton().getSharedDataDirectory();
+
+
 	//Hardcoded for now. If need arises we'll put it into config.
 	std::map<std::string, std::vector<std::string>> uiSounds = {
-			{"ember/sounds/448086__breviceps__normal-click.wav", {"PushButton/Clicked", "TabButton/Clicked", "Combobox/DropListDisplayed"}}};
+			{"ember/sounds/448086__breviceps__normal-click.ogg", {"PushButton/Clicked", "TabButton/Clicked", "Combobox/DropListDisplayed"}}};
 
 	for (const auto& entry: uiSounds) {
-		auto resWrapper = SoundService::getSingleton().getResourceProvider()->getResource(entry.first);
 
-		std::shared_ptr<StaticSoundSample> sample = StaticSoundSample::create(resWrapper);
+		auto filePath = sharedMediaPath / "data" / "ui" / entry.first;
+
+		std::shared_ptr<SoundSample> sample = SoundSample::create(filePath);
 
 		if (sample) {
 			for (const auto& event: entry.second) {
 				logger->debug("Registering UI event '{}' to play sound '{}'.", event, entry.first);
 				CEGUI::GlobalEventSet::getSingleton().subscribeEvent(event, [sample](const EventArgs&) {
+					sample->reset();
 					SoundService::SoundGroup soundGroup{.sounds={SoundService::Sound{.soundSample = sample}}, .repeating=false};
 					SoundService::getSingleton().playSound(soundGroup);
 					return true;

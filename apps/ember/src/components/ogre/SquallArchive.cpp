@@ -23,8 +23,41 @@
 
 
 namespace {
-std::optional<std::filesystem::path> resolveFile(const Squall::Repository& repository, Squall::Manifest manifest, const std::filesystem::path& path) {
-	auto activeManifest = manifest;
+
+
+std::unique_ptr<std::regex> regexFromPattern(const std::string& pattern) {
+	if (pattern != "*") {
+		auto patternEscaped = pattern;
+		boost::replace_all(patternEscaped, "\\", "\\\\");
+		boost::replace_all(patternEscaped, "^", "\\^");
+		boost::replace_all(patternEscaped, ".", "\\.");
+		boost::replace_all(patternEscaped, "$", "\\$");
+		boost::replace_all(patternEscaped, "|", "\\|");
+		boost::replace_all(patternEscaped, "(", "\\(");
+		boost::replace_all(patternEscaped, ")", "\\)");
+		boost::replace_all(patternEscaped, "[", "\\[");
+		boost::replace_all(patternEscaped, "]", "\\]");
+		boost::replace_all(patternEscaped, "*", "\\*");
+		boost::replace_all(patternEscaped, "+", "\\+");
+		boost::replace_all(patternEscaped, "?", "\\?");
+		boost::replace_all(patternEscaped, "/", "\\/");
+		boost::replace_all(patternEscaped, "{", "\\{");
+		boost::replace_all(patternEscaped, "}", "\\}");
+
+		boost::replace_all(patternEscaped, "\\?", ".");
+		boost::replace_all(patternEscaped, "\\*", ".*");
+
+		return std::make_unique<std::regex>(patternEscaped);
+	}
+	return {};
+}
+
+}
+
+namespace Ember::OgreView {
+
+std::optional<std::filesystem::path> SquallArchive::resolveFile(const Squall::Repository& repository, Squall::Manifest manifest, const std::filesystem::path& path) {
+	auto activeManifest = std::move(manifest);
 
 	std::vector<std::string> elements;
 	for (const auto& subpath: path) {
@@ -67,37 +100,6 @@ std::optional<std::filesystem::path> resolveFile(const Squall::Repository& repos
 
 	return {};
 }
-
-std::unique_ptr<std::regex> regexFromPattern(const std::string& pattern) {
-	if (pattern != "*") {
-		auto patternEscaped = pattern;
-		boost::replace_all(patternEscaped, "\\", "\\\\");
-		boost::replace_all(patternEscaped, "^", "\\^");
-		boost::replace_all(patternEscaped, ".", "\\.");
-		boost::replace_all(patternEscaped, "$", "\\$");
-		boost::replace_all(patternEscaped, "|", "\\|");
-		boost::replace_all(patternEscaped, "(", "\\(");
-		boost::replace_all(patternEscaped, ")", "\\)");
-		boost::replace_all(patternEscaped, "[", "\\[");
-		boost::replace_all(patternEscaped, "]", "\\]");
-		boost::replace_all(patternEscaped, "*", "\\*");
-		boost::replace_all(patternEscaped, "+", "\\+");
-		boost::replace_all(patternEscaped, "?", "\\?");
-		boost::replace_all(patternEscaped, "/", "\\/");
-		boost::replace_all(patternEscaped, "{", "\\{");
-		boost::replace_all(patternEscaped, "}", "\\}");
-
-		boost::replace_all(patternEscaped, "\\?", ".");
-		boost::replace_all(patternEscaped, "\\*", ".*");
-
-		return std::make_unique<std::regex>(patternEscaped);
-	}
-	return {};
-}
-
-}
-
-namespace Ember::OgreView {
 
 SquallArchive::SquallArchive(Squall::Repository repository, Squall::Signature rootSignature)
 		: Archive(std::string("squall:/") + rootSignature.str(), "Squall"),

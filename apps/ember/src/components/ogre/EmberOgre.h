@@ -229,6 +229,13 @@ public:
 
 	std::future<void> loadAssets(Squall::Signature signature);
 
+	/**
+	 * Resolve the local file path from the Squall repo, using the path within the virtual Squall filesystem.
+	 * @param virtualPath
+	 * @return
+	 */
+	std::optional<std::filesystem::path> resolveFileInSquallRepository(const std::filesystem::path& virtualPath) const;
+
 protected:
 
 	/**
@@ -240,6 +247,9 @@ protected:
 
 
 	std::unique_ptr<OgreLogRouter> mOgreLogRouter;
+
+	Squall::Repository mRepository;
+	std::optional<Squall::Manifest> mServerManifest;
 
 
 	/**

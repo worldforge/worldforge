@@ -38,8 +38,6 @@ namespace Ember {
  * @author Erik Ogenvik <erik@ogenvik.org>
  */
 class SoundSource {
-	friend class SoundInstance;
-
 public:
 
 	/**
@@ -85,7 +83,6 @@ public:
 	ALuint getALSource() const;
 
 protected:
-
 
 	/**
 	 * @brief The OpenAL source which this class represents.

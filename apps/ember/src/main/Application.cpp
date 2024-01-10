@@ -332,7 +332,6 @@ void Application::mainLoop() {
 				frameActionMask |= MainLoopController::FA_GRAPHICS;
 			}
 
-			mServices->soundService->cycle();
 			frameActionMask |= MainLoopController::FA_SOUND;
 
 			//Execute IO handlers for two milliseconds, if there are any.

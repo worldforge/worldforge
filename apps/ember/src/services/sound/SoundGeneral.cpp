@@ -50,7 +50,7 @@ bool SoundGeneral::checkAlError(const std::string& description) {
 		if (description.empty()) {
 			logger->error("OpenAl error: {}", errorString);
 		} else {
-			logger->error("OpenAl error: {}\nDescription: {}", errorString, description);
+			logger->error("OpenAl error when doing '{}': {}", description, errorString);
 		}
 		return false;
 	}

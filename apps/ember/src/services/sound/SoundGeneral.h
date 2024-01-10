@@ -26,12 +26,6 @@
 namespace Ember {
 class SoundGeneral {
 public:
-	enum SoundSampleType {
-		SAMPLE_NONE, // Try To guess by file extension
-		SAMPLE_PCM,
-		SAMPLE_WAV,
-		SAMPLE_OGG
-	};
 
 	/**
 	 * @brief Checks for any errors in the OpenAL context.

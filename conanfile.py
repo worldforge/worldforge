@@ -60,6 +60,8 @@ class Worldforge(ConanFile):
             self.requires("ogre/14.1.0@worldforge")
             self.requires("sdl/2.28.5")
             self.requires("lua/5.3.6")
+            self.requires("vorbis/1.3.7")
+
             if not is_msvc(self):
                 self.requires("libunwind/1.7.2")
 

@@ -47,9 +47,9 @@ class ConfigService;
 
 struct IResourceProvider;
 
-class StreamedSoundSample;
+class SoundSample;
 
-class BaseSoundSample;
+class SoundSample;
 
 /**
  * @brief A service responsible for playing and managing sounds.
@@ -67,7 +67,7 @@ class SoundService : public Service, public Singleton<SoundService> {
 public:
 
 	struct Sound {
-		std::shared_ptr<BaseSoundSample> soundSample;
+		std::shared_ptr<SoundSample> soundSample;
 	};
 
 	struct SoundGroup {
@@ -79,14 +79,29 @@ public:
 	};
 
 	struct SoundEntry {
+		~SoundEntry();
+
 		SoundGroup soundGroup;
 		std::unique_ptr<SoundSource> source;
-		int currentlyPlaying = -1;
+		size_t currentlyPlaying;
+		std::array<ALuint, 2> buffers;
 	};
 
+	/**
+	 * Used by other components to control the sounds being played.
+	 */
 	struct SoundControl {
+		/**
+		 * Stop the sound. Once done the sound can't be interacted with anymore and will be cleaned up.
+		 */
 		std::function<void()> stop;
+		/**
+		 * Sets the position of the sound, in the world.
+		 */
 		std::function<void(WFMath::Point<3>)> setPosition;
+		/**
+		 * Sets the velocity of the sound, in the world.
+		 */
 		std::function<void(WFMath::Vector<3>)> setVelocity;
 	};
 
@@ -100,43 +115,12 @@ public:
 	std::shared_ptr<SoundControl> playSound(SoundGroup soundGroup);
 
 	/**
-	 * @brief Attempts to retrieve, or create if not already existing, the sound sample with the supplied identifier.
-	 * Each sound sample is identified through the path to it, within the Ember resource system. This method will first look within the already allocated sound samples, and if the sought after sound sample is found there it will be returned.
-	 * If not, it will try to create a new sound sample and return it. If no sound sample could be created (for example if no resource could be found) a null ref will be returned.
-	 * @param soundPath The path to the sound data within the resource system.
-	 * @return A sound sample, or null if none could be created.
-	 */
-	BaseSoundSample* createOrRetrieveSoundSample(const std::string& soundPath);
-
-
-	/**
 	 * @brief Update the position (in world coordinates) of the listener
 	 * @param position The new listener position.
 	 * @param direction The direction vector of the listener.
 	 * @param up The up vector of the listener.
 	 */
-	void updateListenerPosition(const WFMath::Point<3>& pos, const WFMath::Vector<3>& direction, const WFMath::Vector<3>& up);
-
-	/**
-	 * @brief Call this each frame to update the sound samples.
-	 * Through a call of this all registered and active SoundInstance instances will be asked to update themselves.
-	 * Such an update could involve updating streaming buffers in the case of a streaming sound,
-	 * or update the position of the sound if it's positioned within the 3d world.
-	 */
-	void cycle();
-
-	/**
-	 * @brief Gets the resource provider for this service.
-	 * @return The resource provider registered for this service, or null if none has been registered.
-	 */
-	IResourceProvider* getResourceProvider();
-
-	/**
-	 * @brief Sets the resource provider which should be used for this service.
-	 * It's through the resource provider that all sound data is loaded, so this must be called in order to have a properly functioning service.
-	 * @param resourceProvider A pointer to the resource provider to use. Ownership will not be transferred to this service.
-	 */
-	void setResourceProvider(IResourceProvider* resourceProvider);
+	void updateListenerPosition(const WFMath::Point<3>& pos, const WFMath::Vector<3>& direction, const WFMath::Vector<3>& up) const;
 
 	/**
 	 * @brief Returns true if the sound system is enabled.
@@ -146,11 +130,6 @@ public:
 
 private:
 
-	/**
-	 * @brief All the samples registered with the service are stored here.
-	 * These are owned by the service and should be destroyed when the service is stopped.
-	 */
-	std::unordered_map<std::string, std::unique_ptr<BaseSoundSample>> mBaseSamples;
 
 	/**
 	 * @brief The main OpenAL context.
@@ -164,13 +143,11 @@ private:
 
 	std::mutex mSoundEntriesMutex;
 
-	std::vector<std::shared_ptr<SoundEntry>> mSoundEntries;
-
 	/**
-	 * @brief The resource provider used for loading resources.
-	 * This is not owned by the service and won't be destroyed when the service shuts down.
+	 * New sounds entries will be put in this vector, to be picked off by the background sound thread.
 	 */
-	IResourceProvider* mResourceProvider;
+	std::vector<std::shared_ptr<SoundEntry>> mNewSoundEntries;
+
 
 	/**
 	 * @brief True if the sound system is enabled.

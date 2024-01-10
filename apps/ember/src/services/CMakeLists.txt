@@ -1,3 +1,5 @@
+find_package(Vorbis REQUIRED)
+
 add_library(ember-services STATIC
         config/ConfigListener.cpp
         config/ConfigListenerContainer.cpp
@@ -39,6 +41,7 @@ target_link_libraries(ember-services PUBLIC
         ember-framework
         ember-external-mojoal
         varconf
+        Vorbis::vorbisfile
 )
 
 

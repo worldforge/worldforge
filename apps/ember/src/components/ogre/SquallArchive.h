@@ -28,6 +28,10 @@
 namespace Ember::OgreView {
 class SquallArchive : public Ogre::Archive {
 public:
+	static std::optional<std::filesystem::path> resolveFile(const Squall::Repository& repository,
+															Squall::Manifest manifest,
+															const std::filesystem::path& path);
+
 	SquallArchive(Squall::Repository repository, Squall::Signature rootSignature);
 
 	~SquallArchive() override = default;

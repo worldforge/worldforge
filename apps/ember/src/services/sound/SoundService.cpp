@@ -18,23 +18,25 @@
 */
 
 #include "SoundService.h"
+#include "SoundGeneral.h"
+#include "SoundSample.h"
 
 #include "services/config/ConfigService.h"
 #include "framework/Log.h"
 
-#include "SoundSample.h"
 #include "al.h"
 #include "alc.h"
 
-#include <algorithm>
 #include <thread>
-#include <future>
 
 using namespace std::literals::chrono_literals;
 
 namespace Ember {
 SoundService::SoundService(ConfigService& configService)
-		: Service("Sound"), mContext(nullptr), mDevice(nullptr), mResourceProvider(nullptr), mEnabled(false) {
+		: Service("Sound"),
+		  mContext(nullptr),
+		  mDevice(nullptr),
+		  mEnabled(false) {
 	logger->info("Sound Service starting");
 
 	if (configService.hasItem("audio", "enabled")
@@ -69,82 +71,74 @@ SoundService::SoundService(ConfigService& configService)
 
 	//Create a background thread which loops through any active sound entries and updates them.
 	mSoundProcessingThread = std::jthread{[this](std::stop_token stopToken) {
+		std::vector<std::shared_ptr<SoundEntry>> soundEntries;
+
 		while (!stopToken.stop_requested()) {
+			//Start collecting any new sound entries and adding them to the active list.
 			std::unique_lock l(mSoundEntriesMutex);
-			auto soundEntriesCopy = mSoundEntries;
+			soundEntries.insert(soundEntries.end(), mNewSoundEntries.begin(), mNewSoundEntries.end());
+			mNewSoundEntries.clear();
 			l.unlock();
 
-			std::vector<std::shared_ptr<SoundEntry>> completedEntries;
 
-			for (auto& soundEntry: soundEntriesCopy) {
+			for (auto I = soundEntries.begin(); I != soundEntries.end();) {
+				auto soundEntry = *I;
 				auto& soundGroup = soundEntry->soundGroup;
 				auto alSource = soundEntry->source->getALSource();
-				if (soundEntry->currentlyPlaying == -1) {
-					//Need to set up everything
-					if (soundGroup.sounds.size() == 1) {
-						//Only need to handle one buffer
-						auto& firstSound = soundGroup.sounds.front();
-						auto buffer = firstSound.soundSample->getBuffers()[0];
-						alSourcei(alSource, AL_BUFFER, (ALint) buffer);
-						SoundGeneral::checkAlError("Binding sound source to static sound buffer.");
-						soundEntry->currentlyPlaying = 0;
-					} else {
-						//Need to queue buffers. Start with the first two.
-						std::array<ALuint, 2> buffers{soundGroup.sounds[0].soundSample->getBuffers()[0], soundGroup.sounds[1].soundSample->getBuffers()[0]};
-						alSourceQueueBuffers(alSource, 2, buffers.data());
-						SoundGeneral::checkAlError("Queuing buffers.");
-					}
-					soundEntry->currentlyPlaying = 0;
-					alSourcePlay(alSource);
-					SoundGeneral::checkAlError("Playing sound instance.");
+
+				std::array<ALuint, 2> buffers{}; //At most two buffers.
+				size_t numberOfBuffersToQueue = 0;
+				//Check if we've completed playing and if so remove the entry.
+				ALint alNewState;
+				alGetSourcei(alSource, AL_SOURCE_STATE, &alNewState);
+				SoundGeneral::checkAlError("Checking source state.");
+				if (alNewState == AL_INITIAL) {
+					numberOfBuffersToQueue = soundEntry->buffers.size();
+					buffers = soundEntry->buffers;
 				} else {
-					//Check status.
-					if (!soundGroup.repeating) {
-						//Check if we've completed playing and if so remove the entry.
-						ALint alNewState;
-						alGetSourcei(alSource, AL_SOURCE_STATE, &alNewState);
-						SoundGeneral::checkAlError("Checking source state.");
-						if (alNewState == AL_STOPPED) {
-							completedEntries.emplace_back(soundEntry);
-						} else {
-							if (soundGroup.sounds.size() > 1) {
-								//Check if we need to cycle buffers
-								ALint processed;
-								alGetSourcei(alSource, AL_BUFFERS_PROCESSED, &processed);
-								SoundGeneral::checkAlError("Checking buffers processed.");
-								if (processed > 0) {
-									ALuint buffer;
-									alSourceUnqueueBuffers(alSource, processed, &buffer);
-									soundEntry->currentlyPlaying += processed;
-									//We now need to queue new buffers. This is done differently depending on whether we're repeating or not.
-									if (soundGroup.sounds.size() > (size_t) soundEntry->currentlyPlaying) {
-										std::array<ALuint, 1> buffers{soundGroup.sounds[soundEntry->currentlyPlaying + 1].soundSample->getBuffers()[0]};
-										alSourceQueueBuffers(alSource, 1, buffers.data());
-									} else {
-										if (soundGroup.repeating) {
-											//Go back to the first sound
-											std::array<ALuint, 1> buffers{soundGroup.sounds[0].soundSample->getBuffers()[0]};
-											alSourceQueueBuffers(alSource, 1, buffers.data());
-										}
+					ALint processed = 0;
+					alGetSourcei(alSource, AL_BUFFERS_PROCESSED, &processed);
+					SoundGeneral::checkAlError("Checking buffers processed.");
+					if (processed > 0) {
+						alSourceUnqueueBuffers(alSource, processed, buffers.data());
+						numberOfBuffersToQueue = processed;
+					}
+				}
+
+				if (alNewState != AL_STOPPED) {
+					//Check if we need to cycle buffers
+					for (size_t i = 0; i < numberOfBuffersToQueue; ++i) {
+						if (soundEntry->currentlyPlaying < soundGroup.sounds.size()) {
+							auto result = soundGroup.sounds[soundEntry->currentlyPlaying].soundSample->fillBuffer(buffers[i]);
+							if (result != SoundSample::BufferFillStatus::ERROR) {
+								alSourceQueueBuffers(alSource, 1, &buffers[i]);
+								SoundGeneral::checkAlError("Queuing buffers.");
+								if (result == SoundSample::BufferFillStatus::NO_MORE_DATA) {
+									soundEntry->currentlyPlaying++;
+									if (soundEntry->currentlyPlaying > soundGroup.sounds.size() && soundGroup.repeating) {
+										soundEntry->currentlyPlaying = 0;
+									}
+									if (soundEntry->currentlyPlaying < soundGroup.sounds.size()) {
+										soundEntry->soundGroup.sounds[soundEntry->currentlyPlaying].soundSample->reset();
 									}
 								}
 							}
 						}
 					}
 				}
+
+				if (alNewState == AL_INITIAL) {
+					alSourcePlay(alSource);
+					SoundGeneral::checkAlError("Playing sound instance.");
+				}
+				if (alNewState == AL_STOPPED) {
+					I = soundEntries.erase(I);
+				} else {
+					I++;
+				}
+
 			}
 
-			if (!completedEntries.empty()) {
-				{
-					l.lock();
-					for (auto& completedEntry: completedEntries) {
-						auto I = std::find(mSoundEntries.begin(), mSoundEntries.end(), completedEntry);
-						if (I != mSoundEntries.end()) {
-							mSoundEntries.erase(I);
-						}
-					}
-				}
-			}
 
 			std::this_thread::sleep_for(1ms);
 		}
@@ -154,9 +148,8 @@ SoundService::SoundService(ConfigService& configService)
 }
 
 SoundService::~SoundService() {
-
-	mBaseSamples.clear();
-
+	mSoundProcessingThread.request_stop();
+	mSoundProcessingThread.join();
 	if (isEnabled()) {
 		alcMakeContextCurrent(nullptr);
 		alcDestroyContext(mContext);
@@ -169,7 +162,7 @@ bool SoundService::isEnabled() const {
 	return mEnabled;
 }
 
-void SoundService::updateListenerPosition(const WFMath::Point<3>& pos, const WFMath::Vector<3>& direction, const WFMath::Vector<3>& up) {
+void SoundService::updateListenerPosition(const WFMath::Point<3>& pos, const WFMath::Vector<3>& direction, const WFMath::Vector<3>& up) const {
 	if (!isEnabled()) {
 		return;
 	}
@@ -185,39 +178,12 @@ void SoundService::updateListenerPosition(const WFMath::Point<3>& pos, const WFM
 	SoundGeneral::checkAlError("Setting the listener orientation.");
 }
 
-void SoundService::cycle() {
-
-}
-
-BaseSoundSample* SoundService::createOrRetrieveSoundSample(const std::string& soundPath) {
-	auto I = mBaseSamples.find(soundPath);
-	if (I != mBaseSamples.end()) {
-		return I->second.get();
-	}
-	if (mResourceProvider) {
-		ResourceWrapper resWrapper = mResourceProvider->getResource(soundPath);
-		if (resWrapper.hasData()) {
-			auto sample = StaticSoundSample::create(resWrapper);
-			auto result = mBaseSamples.emplace(soundPath, std::move(sample));
-			if (result.second) {
-				return result.first->second.get();
-			}
-		}
-	}
-	return nullptr;
-}
-
-
-IResourceProvider* SoundService::getResourceProvider() {
-	return mResourceProvider;
-}
-
-void SoundService::setResourceProvider(IResourceProvider* resourceProvider) {
-	mResourceProvider = resourceProvider;
-}
-
 std::shared_ptr<SoundService::SoundControl> SoundService::playSound(SoundService::SoundGroup soundGroup) {
-	auto soundEntry = std::make_shared<SoundEntry>(soundGroup, std::make_unique<SoundSource>());
+	std::array<ALuint, 2> buffers{};
+	alGenBuffers(2, buffers.data());
+
+	auto soundEntry = std::make_shared<SoundEntry>(soundGroup, std::make_unique<SoundSource>(), 0, buffers);
+
 	if (soundGroup.gain) {
 		soundEntry->source->setGain(*soundGroup.gain);
 	}
@@ -236,18 +202,16 @@ std::shared_ptr<SoundService::SoundControl> SoundService::playSound(SoundService
 
 	{
 		std::unique_lock l(mSoundEntriesMutex);
-		mSoundEntries.emplace_back(soundEntry);
+		mNewSoundEntries.emplace_back(soundEntry);
 	}
 	auto weak = std::weak_ptr(soundEntry);
 
-	auto control = std::make_shared<SoundService::SoundControl>([this, weak]() {
+	auto control = std::make_shared<SoundService::SoundControl>([weak]() {
 		auto shared = weak.lock();
 		if (shared) {
-			std::unique_lock l(mSoundEntriesMutex);
-			auto I = std::find(mSoundEntries.begin(), mSoundEntries.end(), shared);
-			if (I != mSoundEntries.end()) {
-				mSoundEntries.erase(I);
-			}
+			//Just stop it; the background thread will take care of cleaning up.
+			alSourceStop(shared->source->getALSource());
+			SoundGeneral::checkAlError("Stopping sound instance.");
 		}
 	}, [weak](WFMath::Point<3> pos) {
 		auto shared = weak.lock();
@@ -264,6 +228,11 @@ std::shared_ptr<SoundService::SoundControl> SoundService::playSound(SoundService
 	});
 
 	return control;
+}
+
+SoundService::SoundEntry::~SoundEntry() {
+	alDeleteBuffers(2, buffers.data());
+	SoundGeneral::checkAlError("Deleting sound buffers.");
 }
 
 } // namespace Ember

@@ -39,8 +39,8 @@
 #include "domain/EntityTalk.h"
 
 #include <Eris/Task.h>
-#include "framework/IResourceProvider.h"
 #include "services/sound/SoundSample.h"
+#include "EmberOgre.h"
 
 
 namespace Ember::OgreView::Model {
@@ -580,18 +580,18 @@ void ModelRepresentation::playSoundForMovementAction(Action* action) {
 
 			//Get one at random.
 			auto random_value = std::rand() / ((RAND_MAX + 1u) / action->soundAction.definition.sounds.size());
-			auto resWrapper = SoundService::getSingleton().getResourceProvider()->getResource(action->soundAction.definition.sounds[random_value].resourceName);
-			if (resWrapper.hasData()) {
-				std::shared_ptr<StaticSoundSample> sample = StaticSoundSample::create(resWrapper);
+			auto fileNameOnDisk = EmberOgre::getSingleton().resolveFileInSquallRepository(action->soundAction.definition.sounds[random_value].resourceName);
+			if (fileNameOnDisk) {
+				std::shared_ptr<SoundSample> sample = SoundSample::create(*fileNameOnDisk);
 				if (sample) {
 					soundGroup.sounds.emplace_back(SoundService::Sound{.soundSample= sample});
 				}
 			}
 		} else {
 			for (const auto& soundDef: action->soundAction.definition.sounds) {
-				auto resWrapper = SoundService::getSingleton().getResourceProvider()->getResource(soundDef.resourceName);
-				if (resWrapper.hasData()) {
-					std::shared_ptr<StaticSoundSample> sample = StaticSoundSample::create(resWrapper);
+				auto fileNameOnDisk = EmberOgre::getSingleton().resolveFileInSquallRepository(soundDef.resourceName);
+				if (fileNameOnDisk) {
+					std::shared_ptr<SoundSample> sample = SoundSample::create(*fileNameOnDisk);
 					if (sample) {
 						soundGroup.sounds.emplace_back(SoundService::Sound{.soundSample= sample});
 					}
@@ -625,18 +625,18 @@ void ModelRepresentation::playSoundForAction(const SoundAction& soundAction) {
 
 			//Get one at random.
 			auto random_value = std::rand() / ((RAND_MAX + 1u) / soundAction.definition.sounds.size());
-			auto resWrapper = SoundService::getSingleton().getResourceProvider()->getResource(soundAction.definition.sounds[random_value].resourceName);
-			if (resWrapper.hasData()) {
-				std::shared_ptr<StaticSoundSample> sample = StaticSoundSample::create(resWrapper);
+			auto fileNameOnDisk = EmberOgre::getSingleton().resolveFileInSquallRepository(soundAction.definition.sounds[random_value].resourceName);
+			if (fileNameOnDisk) {
+				std::shared_ptr<SoundSample> sample = SoundSample::create(*fileNameOnDisk);
 				if (sample) {
 					soundGroup.sounds.emplace_back(SoundService::Sound{.soundSample= sample});
 				}
 			}
 		} else {
 			for (const auto& soundDef: soundAction.definition.sounds) {
-				auto resWrapper = SoundService::getSingleton().getResourceProvider()->getResource(soundDef.resourceName);
-				if (resWrapper.hasData()) {
-					std::shared_ptr<StaticSoundSample> sample = StaticSoundSample::create(resWrapper);
+				auto fileNameOnDisk = EmberOgre::getSingleton().resolveFileInSquallRepository(soundDef.resourceName);
+				if (fileNameOnDisk) {
+					std::shared_ptr<SoundSample> sample = SoundSample::create(*fileNameOnDisk);
 					if (sample) {
 						soundGroup.sounds.emplace_back(SoundService::Sound{.soundSample= sample});
 					}

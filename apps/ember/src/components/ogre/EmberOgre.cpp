@@ -76,6 +76,7 @@
 #include "Version.h"
 #include "components/cegui/CEGUISetup.h"
 #include "framework/LogExtensions.h"
+#include "SquallArchive.h"
 #include <squall/core/Difference.h>
 
 #include <Eris/Connection.h>
@@ -126,6 +127,7 @@ EmberOgre::EmberOgre(MainLoopController& mainLoopController,
 		mInput(input),
 		mServerService(serverService),
 		mOgreLogRouter(std::make_unique<OgreLogRouter>()),
+		mRepository(repository),
 		mResourceLoader(std::make_unique<OgreResourceLoader>(repository)),
 		mOgreSetup(std::make_unique<OgreSetup>()),
 		mRoot(mOgreSetup->getRoot()),
@@ -156,9 +158,6 @@ EmberOgre::EmberOgre(MainLoopController& mainLoopController,
 		account->AvatarDeactivated.connect([this](const std::string& avatarId) { destroyWorld(); });
 	});
 	serverService.GotView.connect(sigc::mem_fun(*this, &EmberOgre::Server_GotView));
-
-	soundService.setResourceProvider(mSoundResourceProvider.get());
-
 
 	ConfigService& configSrv = ConfigService::getSingleton();
 
@@ -230,8 +229,6 @@ EmberOgre::~EmberOgre() {
 	if (mSceneManagerOutOfWorld && mOgreSetup) {
 		mSceneManagerOutOfWorld->removeRenderQueueListener(mOgreSetup->getOverlaySystem());
 	}
-
-	SoundService::getSingleton().setResourceProvider(nullptr);
 
 	EventGUIManagerBeingDestroyed();
 }
@@ -496,42 +493,54 @@ std::future<void> EmberOgre::loadAssets(Squall::Signature signature) {
 //		mResourceLoader->addSquallMedia(signature, "world");
 //	});
 
-	auto& resourceGroupManager = Ogre::ResourceGroupManager::getSingleton();
-	if (resourceGroupManager.resourceGroupExists("world") && resourceGroupManager.isResourceGroupInitialised("world")) {
-		//Media is already loaded, we need to perform an inject-and-replace action where we go through all new, changed or removed media.
-		mResourceLoader->replaceSquallMedia(signature);
-		std::promise<void> promise{};
-		promise.set_value();
-		return promise.get_future();
-	} else {
-		//We would preferably do this in a background thread, but alas we can't, since the call to "initialiseResourceGroup" will
-		// need to load any shaders it detects, and this can only be done on the main thread (at least with OpenGL).
-		//So instead we interleave it with updates of the render.
-		mResourceLoader->addSquallMedia(signature);
-		struct : Ogre::ResourceGroupListener {
-			EmberOgre* parent = nullptr;
-			TimeFrame timeFrame = TimeFrame{std::chrono::milliseconds{16}};
+	auto result = mRepository.fetchManifest(signature);
+	if (result.manifest) {
+		mServerManifest = result.manifest;
 
-			//Each time a resource is created we check if we should render, with 60 fps.
-			void resourceCreated(const Ogre::ResourcePtr&) override {
-				if (!timeFrame.isTimeLeft()) {
-					parent->mInput.processInput(timeFrame.mStartTime);
-					parent->renderOneFrame(timeFrame);
-					timeFrame = TimeFrame{std::chrono::milliseconds{16}};
+		auto& resourceGroupManager = Ogre::ResourceGroupManager::getSingleton();
+		if (resourceGroupManager.resourceGroupExists("world") && resourceGroupManager.isResourceGroupInitialised("world")) {
+			//Media is already loaded, we need to perform an inject-and-replace action where we go through all new, changed or removed media.
+			mResourceLoader->replaceSquallMedia(signature);
+		} else {
+			//We would preferably do this in a background thread, but alas we can't, since the call to "initialiseResourceGroup" will
+			// need to load any shaders it detects, and this can only be done on the main thread (at least with OpenGL).
+			//So instead we interleave it with updates of the render.
+			mResourceLoader->addSquallMedia(signature);
+			struct : Ogre::ResourceGroupListener {
+				EmberOgre* parent = nullptr;
+				TimeFrame timeFrame = TimeFrame{std::chrono::milliseconds{16}};
+
+				//Each time a resource is created we check if we should render, with 60 fps.
+				void resourceCreated(const Ogre::ResourcePtr&) override {
+					if (!timeFrame.isTimeLeft()) {
+						parent->mInput.processInput(timeFrame.mStartTime);
+						parent->renderOneFrame(timeFrame);
+						timeFrame = TimeFrame{std::chrono::milliseconds{16}};
+					}
 				}
+			} listener;
+			listener.parent = this;
+			if (Ogre::ResourceGroupManager::getSingleton().resourceGroupExists("world")) {
+				Ogre::ResourceGroupManager::getSingleton().addResourceGroupListener(&listener);
+				Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("world");
+				Ogre::ResourceGroupManager::getSingleton().removeResourceGroupListener(&listener);
 			}
-		} listener;
-		listener.parent = this;
-		if (Ogre::ResourceGroupManager::getSingleton().resourceGroupExists("world")) {
-			Ogre::ResourceGroupManager::getSingleton().addResourceGroupListener(&listener);
-			Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("world");
-			Ogre::ResourceGroupManager::getSingleton().removeResourceGroupListener(&listener);
-		}
 
-		std::promise<void> promise{};
-		promise.set_value();
-		return promise.get_future();
+
+		}
+	}
+	std::promise<void> promise{};
+	promise.set_value();
+	return promise.get_future();
+}
+
+std::optional<std::filesystem::path> EmberOgre::resolveFileInSquallRepository(const std::filesystem::path& virtualPath) const {
+	if (mServerManifest) {
+		return SquallArchive::resolveFile(mRepository, *mServerManifest, virtualPath);
+	} else {
+		return {};
 	}
 }
+
 
 }
