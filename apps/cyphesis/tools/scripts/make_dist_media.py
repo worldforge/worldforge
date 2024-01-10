@@ -161,7 +161,7 @@ OPTIONS
     # Some extra precaution.
     if os.path.basename(src_media_dir) != "trunk":
         print(
-            "The first parameter should be a directory names 'trunk', as that's the root of the Subversion media repository.")
+            "The first parameter should be a directory named 'trunk', as that's the root of the Subversion media repository.")
         sys.exit(1)
 
     src_assets_dir = os.path.join(src_media_dir, "assets")
@@ -189,7 +189,7 @@ OPTIONS
         for filename in files:
             if filename.endswith(('.modeldef', '.entitymap', '.jpg', '.png', '.dds', '.skeleton', '.mesh', '.ttf',
                                   '.material', '.program', '.cg', '.glsl', '.vert', '.frag', '.hlsl', '.overlay',
-                                  '.compositor', '.fontdef')):
+                                  '.compositor', '.fontdef', '.ogg')):
                 assets.add(os.path.relpath(os.path.join(dirpath, filename), src_assets_dir))
 
     licenses = set()
