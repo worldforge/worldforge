@@ -22,14 +22,14 @@
 #include "framework/Log.h"
 #include <vorbis/codec.h>
 #include <vorbis/vorbisfile.h>
-
+#include <array>
 
 namespace Ember {
 
 
 std::unique_ptr<SoundSample> SoundSample::create(const std::filesystem::path& filename) {
 	auto vorbisFile = std::make_unique<OggVorbis_File>();
-	auto status = ov_fopen(filename.c_str(), vorbisFile.get());
+	auto status = ov_fopen(filename.generic_string().c_str(), vorbisFile.get());
 	if (status != 0) {
 		logger->warn("Error when trying to open sound file '{}': {}", filename.string(), status);
 		return {};
@@ -75,9 +75,9 @@ SoundSample::BufferFillStatus SoundSample::fillBuffer(ALuint buffer) {
 
 	int section;
 
-	unsigned int offset = 0;
+	size_t offset = 0;
 	while (offset < dataBuffer.size()) {
-		auto result = ov_read(mVorbisFile.get(), dataBuffer.data() + offset, (int) std::min(4096UL, dataBuffer.size() - offset), endian, 2, 1, &section);
+		auto result = ov_read(mVorbisFile.get(), dataBuffer.data() + offset, (int) std::min(4096UL, dataBuffer.size() - (size_t) offset), endian, 2, 1, &section);
 		if (result > 0) {
 			offset += result;
 		} else {

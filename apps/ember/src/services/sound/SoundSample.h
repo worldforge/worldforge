@@ -19,13 +19,12 @@
 #ifndef SOUND_SAMPLE_H
 #define SOUND_SAMPLE_H
 
-#include <vector>
-#include <filesystem>
 #include <vorbis/vorbisfile.h>
 
 #include "al.h"
-
-
+#include <vector>
+#include <filesystem>
+#include <memory>
 namespace Ember {
 
 /**

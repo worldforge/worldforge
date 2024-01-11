@@ -37,6 +37,7 @@
 #include <filesystem>
 #include <thread>
 #include <optional>
+#include <array>
 
 typedef struct ALCdevice_struct ALCdevice;
 typedef struct ALCcontext_struct ALCcontext;

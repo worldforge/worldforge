@@ -373,7 +373,7 @@ void GUIManager::EmberOgre_WorldCreated(World& world) {
 	mEntityTooltip = std::make_unique<EntityTooltip>(world, std::move(tooltipWindow), *mIconManager);
 	mCursorWorldListener = std::make_unique<CursorWorldListener>(mMainLoopController, *mSheet, world);
 
-	UniqueWindowPtr<CEGUI::Window> labelWindow(WindowManager::getSingleton().loadLayoutFromFile(GUIManager::getSingleton().getLayoutDir() + "Hit.layout"));
+	UniqueWindowPtr<CEGUI::Window> labelWindow(WindowManager::getSingleton().loadLayoutFromFile(GUIManager::getLayoutDir() + std::string("Hit.layout")));
 
 	mHitDisplayer = std::make_unique<HitDisplayer>(*mSheet, labelWindow, world.getMainCamera().getCamera(), world.getView(), world.getSceneManager());
 }

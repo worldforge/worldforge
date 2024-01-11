@@ -96,12 +96,12 @@ SoundService::SoundService(ConfigService& configService)
 					numberOfBuffersToQueue = soundEntry->buffers.size();
 					buffers = soundEntry->buffers;
 				} else {
-					ALint processed = 0;
+					ALsizei processed = 0;
 					alGetSourcei(alSource, AL_BUFFERS_PROCESSED, &processed);
 					SoundGeneral::checkAlError("Checking buffers processed.");
 					if (processed > 0) {
 						alSourceUnqueueBuffers(alSource, processed, buffers.data());
-						numberOfBuffersToQueue = processed;
+						numberOfBuffersToQueue = (size_t) processed;
 					}
 				}
 
