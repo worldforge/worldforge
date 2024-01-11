@@ -25,7 +25,7 @@ class ConfigService;
 
 class ServerService;
 
-class EmberServices;
+struct EmberServices;
 
 class Input;
 

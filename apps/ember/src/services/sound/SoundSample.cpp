@@ -77,13 +77,13 @@ SoundSample::BufferFillStatus SoundSample::fillBuffer(ALuint buffer) {
 
 	size_t offset = 0;
 	while (offset < dataBuffer.size()) {
-		auto result = ov_read(mVorbisFile.get(), dataBuffer.data() + offset, (int) std::min(4096UL, dataBuffer.size() - (size_t) offset), endian, 2, 1, &section);
+		auto result = ov_read(mVorbisFile.get(), dataBuffer.data() + offset, (int) std::min(4096, (int)(dataBuffer.size() - offset)), endian, 2, 1, &section);
 		if (result > 0) {
 			offset += result;
 		} else {
 			if (result < 0) {
 				logger->error("Failed to read from ogg stream.");
-				return BufferFillStatus::ERROR;
+				return BufferFillStatus::HAD_ERROR;
 			} else break;
 		}
 	}
@@ -92,7 +92,7 @@ SoundSample::BufferFillStatus SoundSample::fillBuffer(ALuint buffer) {
 
 	alBufferData(buffer, mFormat, (void*) dataBuffer.data(), (ALsizei) offset, (ALint) mRate);
 	if (!SoundGeneral::checkAlError("Generated buffer for static sample from OGG file.")) {
-		return SoundSample::BufferFillStatus::ERROR;
+		return SoundSample::BufferFillStatus::HAD_ERROR;
 	}
 
 	if (mCurrentOffset < mTotalBytes) {

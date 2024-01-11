@@ -38,6 +38,7 @@
 #include <thread>
 #include <optional>
 #include <array>
+#include <mutex>
 
 typedef struct ALCdevice_struct ALCdevice;
 typedef struct ALCcontext_struct ALCcontext;

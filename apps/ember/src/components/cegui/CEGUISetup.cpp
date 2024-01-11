@@ -59,7 +59,7 @@ CEGUI::OgreRenderer& CEGUISetup::createRenderer(Ogre::RenderWindow* renderWindow
 		}
 #endif
 		//We need to set the current directory to the prefix before trying to load CEGUI.
-		if (chdir(configService.getPrefix().c_str())) {
+		if (chdir(configService.getPrefix().generic_string().c_str())) {
 			logger->warn("Failed to change to the prefix directory '{}'. Gui loading might fail.", configService.getPrefix().string());
 		}
 	}

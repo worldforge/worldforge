@@ -1,5 +1,4 @@
 /*
-    Copyright (C) 2008 Romulo Fernandes Machado (nightz)
     Copyright (C) 2008 Erik Ogenvik <erik@ogenvik.org>
 
     This program is free software; you can redistribute it and/or modify
@@ -110,7 +109,7 @@ SoundService::SoundService(ConfigService& configService)
 					for (size_t i = 0; i < numberOfBuffersToQueue; ++i) {
 						if (soundEntry->currentlyPlaying < soundGroup.sounds.size()) {
 							auto result = soundGroup.sounds[soundEntry->currentlyPlaying].soundSample->fillBuffer(buffers[i]);
-							if (result != SoundSample::BufferFillStatus::ERROR) {
+							if (result != SoundSample::BufferFillStatus::HAD_ERROR) {
 								alSourceQueueBuffers(alSource, 1, &buffers[i]);
 								SoundGeneral::checkAlError("Queuing buffers.");
 								if (result == SoundSample::BufferFillStatus::NO_MORE_DATA) {

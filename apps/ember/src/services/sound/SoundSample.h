@@ -35,7 +35,7 @@ public:
 	enum class BufferFillStatus {
 		HAS_MORE_DATA,
 		NO_MORE_DATA,
-		ERROR
+		HAD_ERROR
 	};
 	static std::unique_ptr<SoundSample> create(const std::filesystem::path& filename);
 

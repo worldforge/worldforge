@@ -101,7 +101,7 @@ class EmberOgre;
 
 class FileSystemObserver;
 
-class EmberServices;
+struct EmberServices;
 
 struct IResourceProvider;
 
