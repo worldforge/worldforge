@@ -141,7 +141,7 @@ Router::RouterResult View::handleOperation(const Atlas::Objects::Operation::Root
 						auto gent = smart_dynamic_cast<RootEntity>(op->getArgs().front());
 						auto type = getTypeService().getTypeByName(gent->getParent());
 						if (type->isBound()) {
-							ent = initialSight(smart_dynamic_cast<RootEntity>(op->getArgs().front()), true);
+							ent = initialSight(smart_dynamic_cast<RootEntity>(op->getArgs().front()));
 							EntitySeen.emit(ent);
 							for (auto& queuedOp: pendingI->second.queuedFromOps) {
 								handleOperation(queuedOp);
@@ -284,8 +284,6 @@ void View::appear(const std::string& eid, std::chrono::milliseconds stamp) {
 		if (stamp > ent->getStamp()) {
 			// local data is out of data, re-look
 			getEntityFromServer(eid);
-		} else {
-			ent->setVisible(true);
 		}
 	}
 }
@@ -298,11 +296,10 @@ void View::disappear(const std::string& eid) {
 }
 
 
-ViewEntity* View::initialSight(const RootEntity& gent, bool isVisible) {
+ViewEntity* View::initialSight(const RootEntity& gent) {
 	assert(m_contents.count(gent->getId()) == 0);
 
 	auto entity = createEntity(gent);
-	entity->setVisible(isVisible);
 
 	auto entityPtr = entity.get();
 	//Don't store connection as lifetime of entity is bound to the view.

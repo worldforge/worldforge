@@ -115,19 +115,7 @@ protected:
 	 */
 	void setupListeners();
 
-	/**
-	 * @brief When the visibility of the entity is changed, we need to alter the visibility of the node.
-	 * @param visible Whether the entity is visible or not.
-	 */
-	void entity_VisibilityChanged(bool visible);
-
 	void entity_PositioningModeChanged(EmberEntity::PositioningMode newMode);
-
-	/**
-	 * @brief Sets the visibility of the attachment.
-	 * The implementation in NodeAttachment will ask the node provider to set the visibility, but there's an option for any subclass to do additional work.
-	 */
-	virtual void setVisible(bool visible);
 
 	void setControlDelegateImpl(IEntityControlDelegate* controllerDelegate);
 

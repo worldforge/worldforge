@@ -47,14 +47,8 @@ NodeAttachment::~NodeAttachment() = default;
 
 
 void NodeAttachment::setupListeners() {
-	mChildEntity.VisibilityChanged.connect(sigc::mem_fun(*this, &NodeAttachment::entity_VisibilityChanged));
 	mChildEntity.EventPositioningModeChanged.connect(sigc::mem_fun(*this, &NodeAttachment::entity_PositioningModeChanged));
 }
-
-void NodeAttachment::entity_VisibilityChanged(bool visible) {
-	setVisible(visible);
-}
-
 void NodeAttachment::entity_PositioningModeChanged(EmberEntity::PositioningMode newMode) {
 //	if (newMode == EmberEntity::PositioningMode::PROJECTILE) {
 //		mScene.registerEntityWithTechnique(mEntity, "projectile");
@@ -63,9 +57,6 @@ void NodeAttachment::entity_PositioningModeChanged(EmberEntity::PositioningMode 
 //	}
 }
 
-void NodeAttachment::setVisible(bool visible) {
-	mNodeProvider.setVisible(visible);
-}
 
 void NodeAttachment::setControlDelegate(IEntityControlDelegate* controllerDelegate) {
 	setControlDelegateImpl(controllerDelegate);

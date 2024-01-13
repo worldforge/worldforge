@@ -54,7 +54,6 @@ Entity::Entity(std::string id, TypeInfo* ty) :
 		m_location(nullptr),
 		m_id(std::move(id)),
 		m_stamp(-1),
-		m_visible(false),
 		m_waitingForParentBind(false),
 		m_angularMag(0),
 		m_updateLevel(0),
@@ -701,13 +700,11 @@ void Entity::setLocationFromAtlas(const std::string& locId) {
 	if (!newLocation) {
 
 		m_waitingForParentBind = true;
-		setVisible(false); // fire disappearance, VisChanged if necessary
 
 		if (m_location) {
 			removeFromLocation();
 		}
 		m_location = nullptr;
-		assert(!m_visible);
 		return;
 	}
 
@@ -722,7 +719,6 @@ void Entity::setLocation(Entity* newLocation, bool removeFromOldLocation) {
 	}
 
 // do the actual member updating
-	bool wasVisible = isVisible();
 	if (m_location && removeFromOldLocation) {
 		removeFromLocation();
 	}
@@ -731,9 +727,6 @@ void Entity::setLocation(Entity* newLocation, bool removeFromOldLocation) {
 	m_location = newLocation;
 
 	onLocationChanged(oldLocation);
-
-// fire VisChanged and Appearance/Disappearance signals
-	updateCalculatedVisibility(wasVisible);
 
 	if (m_location) {
 		addToLocation();
@@ -777,7 +770,6 @@ void Entity::setContentsFromAtlas(const std::vector<std::string>& contents) {
 			}
 
 			if (child->m_waitingForParentBind) {
-				assert(!child->m_visible);
 				child->m_waitingForParentBind = false;
 			}
 
@@ -785,13 +777,7 @@ void Entity::setContentsFromAtlas(const std::vector<std::string>& contents) {
 			child->setLocation(this);
 		}
 
-		child->setVisible(true);
 	} // of contents list iteration
-
-// mark previous contents which are not in new contents as invisible
-	for (auto& entry: oldContents) {
-		entry.second->setVisible(false);
-	}
 }
 
 bool Entity::hasChild(const std::string& eid) const {
@@ -822,57 +808,6 @@ void Entity::removeChild(Entity* e) {
 	logger->error("child {} of entity {} not found doing remove", e->getId(), m_id);
 }
 
-// visiblity related methods
-
-void Entity::setVisible(bool vis) {
-	// force visibility to false if in limbo; necessary for the character entity,
-	// which otherwise gets double appearances on activation
-	if (m_waitingForParentBind) vis = false;
-
-	bool wasVisible = isVisible(); // store before we update m_visible
-	m_visible = vis;
-
-	updateCalculatedVisibility(wasVisible);
-}
-
-bool Entity::isVisible() const {
-	if (m_waitingForParentBind) return false;
-
-	if (m_location) {
-		return m_visible && m_location->isVisible();
-	} else {
-		return m_visible; // only for the root entity
-	}
-}
-
-void Entity::updateCalculatedVisibility(bool wasVisible) {
-	bool nowVisible = isVisible();
-	if (nowVisible == wasVisible) return;
-
-	/* the following code looks odd, so remember that only one of nowVisible and
-	wasVisible can ever be true. The structure is necessary so that we fire
-	Appearances top-down, but Disappearances bottom-up. */
-
-	if (nowVisible) {
-		onVisibilityChanged(true);
-	}
-
-	for (auto& item: m_contents) {
-		/* in case this isn't clear; if we were visible, then child visibility
-		was simply it's locally set value; if we were invisible, that the
-		child must also have been invisible too. */
-		bool childWasVisible = wasVisible && item->m_visible;
-		item->updateCalculatedVisibility(childWasVisible);
-	}
-
-	if (wasVisible) {
-		onVisibilityChanged(false);
-	}
-}
-
-void Entity::onVisibilityChanged(bool vis) {
-	VisibilityChanged.emit(vis);
-}
 
 std::optional<std::string> Entity::extractEntityId(const Atlas::Message::Element& element) {
 	if (element.isString()) {

@@ -161,8 +161,6 @@ protected:
 	 */
 	void reattachEntities();
 
-	void setVisible(bool visible) override;
-
 	void model_Reloaded();
 };
 

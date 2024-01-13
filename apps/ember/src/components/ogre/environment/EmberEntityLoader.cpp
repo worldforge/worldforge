@@ -32,8 +32,6 @@
 #include <sigc++/bind.h>
 
 
-
-
 namespace Ember::OgreView::Environment {
 
 EmberEntityLoader::EmberEntityLoader(::Forests::PagedGeometry& geom, unsigned int batchSize) :
@@ -54,7 +52,6 @@ EmberEntityLoader::~EmberEntityLoader() {
 #else
 	for (auto& entity: mEntities) {
 		entity.second.movedConnection.disconnect();
-		entity.second.visibilityChangedConnection.disconnect();
 	}
 #endif
 }
@@ -67,7 +64,6 @@ void EmberEntityLoader::addEmberEntity(Model::ModelRepresentation* modelRepresen
 	EmberEntity& entity = modelRepresentation->getEntity();
 	ModelRepresentationInstance instance;
 	instance.movedConnection = entity.Moved.connect(sigc::bind(sigc::mem_fun(*this, &EmberEntityLoader::EmberEntity_Moved), &entity));
-	instance.visibilityChangedConnection = entity.VisibilityChanged.connect(sigc::bind(sigc::mem_fun(*this, &EmberEntityLoader::EmberEntity_VisibilityChanged), &entity));
 	instance.modelRepresentation = modelRepresentation;
 
 	auto pos = entity.getPosition();
@@ -127,7 +123,6 @@ void EmberEntityLoader::removeEmberEntity(EmberEntity* entity) {
 		ModelRepresentationInstance& instance(I->second);
 		//Model::ModelRepresentation* modelRepresentation(instance.modelRepresentation);
 		instance.movedConnection.disconnect();
-		instance.visibilityChangedConnection.disconnect();
 		//Reset the rendering distance to the one set by the model def.
 		//FIXME: this should be handled differently
 		//modelRepresentation->getModel().setRenderingDistance(modelRepresentation->getModel().getDefinition()->getRenderingDistance());
@@ -180,15 +175,13 @@ void EmberEntityLoader::loadPage(::Forests::PageInfo& page) {
 		auto* nodeProvider = modelRepresentation->getModel().getNodeProvider();
 		EmberEntity& emberEntity = modelRepresentation->getEntity();
 		if (nodeProvider) {
-			if (emberEntity.isVisible()) {
-				Ogre::Node* node = nodeProvider->getNode();
-				const Ogre::Vector3& pos = node->_getDerivedPosition();
-				const Ogre::Quaternion& orient = node->_getDerivedOrientation();
-				if (!pos.isNaN() && !orient.isNaN()) {
-					Model::Model& model = modelRepresentation->getModel();
-					if (pos.x > page.bounds.left && pos.x < page.bounds.right && pos.z > page.bounds.top && pos.z < page.bounds.bottom && model.getBoundingBox().isFinite()) {
-						addModel(&model, pos, orient, modelRepresentation->getScale(), colour);
-					}
+			Ogre::Node* node = nodeProvider->getNode();
+			const Ogre::Vector3& pos = node->_getDerivedPosition();
+			const Ogre::Quaternion& orient = node->_getDerivedOrientation();
+			if (!pos.isNaN() && !orient.isNaN()) {
+				Model::Model& model = modelRepresentation->getModel();
+				if (pos.x > page.bounds.left && pos.x < page.bounds.right && pos.z > page.bounds.top && pos.z < page.bounds.bottom && model.getBoundingBox().isFinite()) {
+					addModel(&model, pos, orient, modelRepresentation->getScale(), colour);
 				}
 			}
 		}
@@ -210,14 +203,6 @@ void EmberEntityLoader::EmberEntity_Moved(EmberEntity* entity) {
 				instance.lastPosition = Convert::toOgre(pos);
 			}
 		}
-	}
-}
-
-void EmberEntityLoader::EmberEntity_VisibilityChanged(bool, EmberEntity* entity) {
-	auto& pos = entity->getPosition();
-	if (pos.isValid()) {
-		//When the visibility changes, we only need to reload the page the entity is on.
-		mGeom.reloadGeometryPage(Convert::toOgre(pos));
 	}
 }
 

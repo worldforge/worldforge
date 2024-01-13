@@ -193,7 +193,7 @@ protected:
 	void taskRateChanged(Task*);
 
 private:
-	ViewEntity* initialSight(const Atlas::Objects::Entity::RootEntity& ge, bool isVisible);
+	ViewEntity* initialSight(const Atlas::Objects::Entity::RootEntity& ge);
 
 	void getEntityFromServer(const std::string& eid);
 

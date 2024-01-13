@@ -425,22 +425,21 @@ bool Awareness::avoidObstacles(const WFMath::Point<2>& position, const WFMath::V
 
 	for (auto entity: mMovingEntities) {
 
-		if (entity->isVisible()) {
 
-			//All of the entities have the same location as we have, so we don't need to resolve the position in the world.
+		//All of the entities have the same location as we have, so we don't need to resolve the position in the world.
 
-			WFMath::Point<3> pos = entity->getPredictedPos();
-			if (!pos.isValid()) {
-				continue;
-			}
-
-			WFMath::Point<2> entityView2dPos(pos.x(), pos.z());
-			WFMath::Ball<2> entityViewRadius(entityView2dPos, entity->getBBox().boundingSphereSloppy().radius());
-
-			if (WFMath::Intersect(playerRadius, entityViewRadius, false) || WFMath::Contains(playerRadius, entityViewRadius, false)) {
-				nearestEntities.push(EntityCollisionEntry({static_cast<float>(WFMath::Distance(position, entityView2dPos)), entity, entityView2dPos, entityViewRadius}));
-			}
+		WFMath::Point<3> pos = entity->getPredictedPos();
+		if (!pos.isValid()) {
+			continue;
 		}
+
+		WFMath::Point<2> entityView2dPos(pos.x(), pos.z());
+		WFMath::Ball<2> entityViewRadius(entityView2dPos, entity->getBBox().boundingSphereSloppy().radius());
+
+		if (WFMath::Intersect(playerRadius, entityViewRadius, false) || WFMath::Contains(playerRadius, entityViewRadius, false)) {
+			nearestEntities.push(EntityCollisionEntry({static_cast<float>(WFMath::Distance(position, entityView2dPos)), entity, entityView2dPos, entityViewRadius}));
+		}
+
 
 	}
 

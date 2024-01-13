@@ -125,38 +125,18 @@ void TerrainEntityManager::entityTerrainAttrChanged(EmberEntity& entity, const A
 			mTerrainEntityDeleteConnection = entity.BeingDeleted.connect([this]() {
 				mTerrainHandler.EventTerrainDisabled();
 				mTerrainEntityDeleteConnection.disconnect();
-				mTerrainEntityVisibilityConnection.disconnect();
-			});
-		}
-		if (!mTerrainEntityVisibilityConnection) {
-			mTerrainEntityVisibilityConnection = entity.VisibilityChanged.connect([this, &entity](bool visible) {
-				if (!visible) {
-					mTerrainHandler.EventTerrainDisabled();
-				} else {
-					parseTerrainAttribute(entity, entity.valueOfProperty("terrain"));
-				}
 			});
 		}
 
-		if (entity.isVisible()) {
-			parseTerrainAttribute(entity, value);
-		}
+		parseTerrainAttribute(entity, value);
 	}
-
 }
 
 
-void TerrainEntityManager::entityTerrainPointsAttrChanged(EmberEntity& entity, const Atlas::Message::Element& value) {
-
-//	if (entity.isVisible()) {
+void TerrainEntityManager::entityTerrainPointsAttrChanged(EmberEntity&, const Atlas::Message::Element& value) {
 	if (value.isMap()) {
-//		WFMath::Point<3> pos = entity.getPosition();
-//		if (pos.isValid()) {
-		//For now hard code position to ZERO
 		mTerrainHandler.updateTerrain(Terrain::TerrainParser::parseTerrain(value.Map(), {0, 0, 0}));
-//		}
 	}
-//	}
 }
 
 void TerrainEntityManager::entityTerrainModAttrChanged(EmberEntity& entity, const Atlas::Message::Element& value) {
@@ -207,7 +187,7 @@ void TerrainEntityManager::entityTerrainModAttrChanged(EmberEntity& entity, cons
 }
 
 void TerrainEntityManager::entityAreaAttrChanged(EmberEntity& entity, const Atlas::Message::Element& value) {
-	Terrain::TerrainArea* terrainArea = nullptr;
+	Terrain::TerrainArea* terrainArea;
 	auto I = mAreas.find(&entity);
 	if (I == mAreas.end()) {
 		auto newTerrainArea = std::make_unique<Terrain::TerrainArea>(entity);

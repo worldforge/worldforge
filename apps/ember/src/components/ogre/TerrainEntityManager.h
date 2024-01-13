@@ -79,7 +79,6 @@ private:
 	std::unordered_map<EmberEntity*, std::pair<std::unique_ptr<Terrain::TerrainArea>, std::unique_ptr<TerrainEffectorListener>>> mAreas;
 
 	sigc::connection mTerrainEntityDeleteConnection;
-	sigc::connection mTerrainEntityVisibilityConnection;
 
 	void entityTerrainAttrChanged(EmberEntity& entity, const Atlas::Message::Element& value);
 

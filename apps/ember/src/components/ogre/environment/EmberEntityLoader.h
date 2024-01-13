@@ -65,11 +65,6 @@ struct ModelRepresentationInstance {
 	*/
 	sigc::connection movedConnection;
 
-	/**
-	@brief The connection for listening to the VisiblityChanged event on the entity. When removing the entity, make sure to disconnect this.
-	*/
-	sigc::connection visibilityChangedConnection;
-
 };
 
 
@@ -155,13 +150,6 @@ protected:
 	 * @param entity The entity which was moved.
 	 */
 	void EmberEntity_Moved(EmberEntity* entity);
-
-	/**
-	 * @brief Listen for visiblity changes and update the paged geometry accordingly.
-	 * @param visible Whether the entity is visible or not.
-	 * @param entity The entity for which the visibility was changed.
-	 */
-	void EmberEntity_VisibilityChanged(bool visible, EmberEntity* entity);
 
 	/**
 	 * @brief Utility method for getting the EntityMap a certain entity belongs to.

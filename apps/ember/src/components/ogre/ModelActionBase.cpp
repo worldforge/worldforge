@@ -103,7 +103,7 @@ void ModelActionBase::showModel(const std::string& modelName) {
 			}
 			if (definition) {
 				auto model = std::make_unique<Model::Model>(mScene.getSceneManager(), definition, mEntity.getId());
-				model->setVisible(mEntity.isVisible());
+				model->setVisible(true);
 				model->load();
 
 				auto newRepresentation = std::make_unique<Model::ModelRepresentation>(mEntity, std::move(model), mScene, mMapping);

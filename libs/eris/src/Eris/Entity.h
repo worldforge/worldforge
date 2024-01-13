@@ -186,7 +186,7 @@ public:
 	TypeInfo* getType() const;
 
 	/**
-	 * @brief The containing entity, or null if this is a top-level visible entity.
+	 * @brief The containing entity, or null if this is a top-level entity.
 	 * @return The containing entity, or null.
 	 */
 	Entity* getLocation() const;
@@ -274,9 +274,6 @@ public:
 	const std::map<std::string, std::unique_ptr<Task>>& getTasks() const;
 
 	bool hasChild(const std::string& eid) const;
-
-	/** determine if this entity is visible. */
-	bool isVisible() const;
 
 	/**
 	 * @brief Extracts an entity id from the supplied element.
@@ -386,11 +383,6 @@ public:
 	*/
 	sigc::signal<void(const Atlas::Objects::Root&, const TypeInfo&)> Noise;
 
-	/**
-	Emitted when the visibility of the entity changes. Often this happens
-	because it has moved in or out of the sight range of the avatar.
-	*/
-	sigc::signal<void(bool)> VisibilityChanged;
 
 	/**
 	Emitted prior to deletion. Note that entity instances may be deleted for
@@ -428,11 +420,6 @@ protected:
 	virtual void onPropertyChanged(const std::string& propertyName, const Atlas::Message::Element& v);
 
 	virtual void onLocationChanged(Entity* oldLoc);
-
-	/** over-rideable hook when the actual (computed) visiblity of this
-	entity changed. The default implementation emits the VisiblityChanged
-	signal. */
-	virtual void onVisibilityChanged(bool vis);
 
 	/**
 	Over-rideable hook when this entity is seen to perform an action.
@@ -505,10 +492,6 @@ protected:
 	 */
 	void setFromRoot(const Atlas::Objects::Root& obj, bool includeTypeInfoProperties = false);
 
-	/** the View calls this to change local entity visibility. No one else
-	should be calling it!*/
-	void setVisible(bool vis);
-
 	void setProperty(const std::string& p, const Atlas::Message::Element& v);
 
 	/**
@@ -576,11 +559,6 @@ protected:
 
 	void updateTasks(const Atlas::Message::Element& e);
 
-	/** recursively update the real visiblity of this entity, and fire
-	appropriate signals. */
-	void updateCalculatedVisibility(bool wasVisible);
-
-
 	void updatePredictedState(const std::chrono::steady_clock::time_point& t, double simulationSpeed);
 
 	/**
@@ -624,7 +602,6 @@ protected:
 	const std::string m_id;    ///< the Atlas object ID
 	std::string m_name;        ///< a human readable name
 	std::chrono::milliseconds m_stamp;        ///< last modification time
-	bool m_visible;
 	bool m_waitingForParentBind;   ///< waiting for parent bind
 
 	WFMath::Vector<3> m_scale;
@@ -696,7 +673,7 @@ inline TypeInfo* Entity::getType() const {
 	return m_type;
 }
 
-/** the containing entity, or null if this is a top-level visible entity. */
+/** the containing entity, or null if this is a top-level entity. */
 inline Entity* Entity::getLocation() const {
 	return m_location;
 }

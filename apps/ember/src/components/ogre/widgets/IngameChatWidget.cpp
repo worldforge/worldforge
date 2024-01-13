@@ -222,7 +222,6 @@ void IngameChatWidget::cameraPreRenderScene(Ogre::Camera* cam) {
 IngameChatWidget::EntityObserver::EntityObserver(IngameChatWidget& chatWidget, EmberEntity& entity) :
 		mChatWidget(chatWidget),
 		mEntity(entity) {
-	entity.VisibilityChanged.connect(sigc::mem_fun(*this, &EntityObserver::entity_VisibilityChanged));
 	entity.BeingDeleted.connect(sigc::mem_fun(*this, &EntityObserver::entity_BeingDeleted));
 	entity.Say.connect(sigc::mem_fun(*this, &EntityObserver::entity_Say));
 	entity.EventChangedGraphicalRepresentation.connect(sigc::mem_fun(*this, &EntityObserver::entity_GraphicalRepresentationChanged));
@@ -230,10 +229,7 @@ IngameChatWidget::EntityObserver::EntityObserver(IngameChatWidget& chatWidget, E
 	mExternalSlot = sigc::mem_fun(*this, &IngameChatWidget::EntityObserver::entity_attributeChanged);
 	entity.observe("external", mExternalSlot, true);
 	entity.observe("name", mExternalSlot, true);
-
-	if (mEntity.isVisible()) {
-		showLabel();
-	}
+	showLabel();
 }
 
 IngameChatWidget::EntityObserver::~EntityObserver() {
@@ -244,22 +240,12 @@ void IngameChatWidget::EntityObserver::entity_GraphicalRepresentationChanged() {
 	if (mLabel) {
 		mLabel->attachToEntity(&mEntity);
 	} else {
-		if (mEntity.isVisible()) {
-			showLabel();
-		}
+		showLabel();
 	}
 }
 
 const std::string& IngameChatWidget::EntityObserver::getEntityId() const {
 	return mEntity.getId();
-}
-
-void IngameChatWidget::EntityObserver::entity_VisibilityChanged(bool visible) {
-	if (visible) {
-		showLabel();
-	} else {
-		hideLabel();
-	}
 }
 
 void IngameChatWidget::EntityObserver::entity_BeingDeleted() {

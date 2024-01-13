@@ -110,8 +110,6 @@ class IngameChatWidget
 
 		void hideLabel();
 
-		void entity_VisibilityChanged(bool visible);
-
 		void entity_BeingDeleted();
 
 		void entity_Say(const Atlas::Objects::Root& talk);

@@ -273,9 +273,6 @@ void InspectWidget::addChildToList(Eris::Entity* child) {
 	} else {
 		name += " (" + child->getId() + " : " + child->getName() + ")";
 	}
-	if (!child->isVisible()) {
-		name += " (not visible)";
-	}
 	CEGUI::ListboxItem* item = Gui::ColouredListItem::createColouredListItem(name);
 	item->setUserData(child);
 	mChildList->addItem(item);

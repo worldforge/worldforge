@@ -17,14 +17,14 @@ ViewEntity::ViewEntity(std::string id, TypeInfo* ty, View& view) :
 ViewEntity::~ViewEntity() = default;
 
 Entity* ViewEntity::getEntity(const std::string& id) {
-	auto child = m_view.getEntity(id);
-	if (!child || !child->m_visible) {
+	auto entity = m_view.getEntity(id);
+	if (!entity) {
 		// we don't have the entity at all, so request it and skip
 		// processing it here; everything will come right when it
 		// arrives.
 		m_view.getEntityFromServer(id);
 	}
-	return child;
+	return entity;
 }
 
 void ViewEntity::onTaskAdded(const std::string& id, Task* task) {

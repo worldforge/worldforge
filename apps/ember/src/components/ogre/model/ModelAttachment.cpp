@@ -136,7 +136,7 @@ ModelAttachment::ModelAttachment(EmberEntity& parentEntity,
 
 	});
 	mModelRepresentation->getModel().Reloaded.connect(sigc::mem_fun(*this, &ModelAttachment::model_Reloaded));
-	mModelMount->getModel().setVisible(mChildEntity.isVisible());
+	mModelMount->getModel().setVisible(true);
 }
 
 ModelAttachment::~ModelAttachment() = default;
@@ -215,17 +215,6 @@ void ModelAttachment::attachEntity(EmberEntity& entity) {
 
 void ModelAttachment::detachEntity(EmberEntity& entity) {
 	mMappings.erase(&entity);
-}
-
-void ModelAttachment::setVisible(bool visible) {
-	NodeAttachment::setVisible(visible);
-	//We set the visibility of the Model here too, even though one might think that it would suffice with the call to
-	// NodeAttachment (since that will tell the node provider to set the visibility).
-	//However, the issue is that even though the Model has been detached from the scene graph, the light will still be
-	// taken into account unless they have their visibility turned off. Therefore the call to Model::setVisible.
-	if (mModelMount) {
-		mModelMount->getModel().setVisible(visible);
-	}
 }
 
 void ModelAttachment::updateScale() {
