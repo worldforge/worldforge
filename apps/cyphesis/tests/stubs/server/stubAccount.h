@@ -89,14 +89,6 @@
   }
 #endif //STUB_Account_isPersisted
 
-#ifndef STUB_Account_addToMessage
-//#define STUB_Account_addToMessage
-  void Account::addToMessage(Atlas::Message::MapType&) const
-  {
-    
-  }
-#endif //STUB_Account_addToMessage
-
 #ifndef STUB_Account_addToEntity
 //#define STUB_Account_addToEntity
   void Account::addToEntity(const Atlas::Objects::Entity::RootEntity&) const

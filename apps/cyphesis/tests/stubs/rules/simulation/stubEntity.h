@@ -40,14 +40,6 @@
   }
 #endif //STUB_Entity_setType
 
-#ifndef STUB_Entity_addToMessage
-//#define STUB_Entity_addToMessage
-  void Entity::addToMessage(Atlas::Message::MapType&) const
-  {
-    
-  }
-#endif //STUB_Entity_addToMessage
-
 #ifndef STUB_Entity_addToEntity
 //#define STUB_Entity_addToEntity
   void Entity::addToEntity(const Atlas::Objects::Entity::RootEntity&) const

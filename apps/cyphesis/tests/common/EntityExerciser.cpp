@@ -243,13 +243,6 @@ void EntityExerciser::runOperations() {
 }
 
 void EntityExerciser::runConversions() {
-	{
-		Atlas::Message::MapType data;
-
-		assert(data.empty());
-		m_ent->addToMessage(data);
-		assert(!data.empty());
-	}
 
 	{
 		Atlas::Objects::Entity::Anonymous data;

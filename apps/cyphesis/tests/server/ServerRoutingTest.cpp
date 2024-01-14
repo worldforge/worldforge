@@ -58,6 +58,9 @@ public:
 	Connection* getConnection() const override {
 		return nullptr;
 	}
+
+	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override {}
+
 };
 
 class TestAccount : public Account {

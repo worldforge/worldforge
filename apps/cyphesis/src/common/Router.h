@@ -22,20 +22,17 @@
 #include "OperationRouter.h"
 #include "RouterId.h"
 
+#include <Atlas/Message/Element.h>
+
 #include <string>
 #include <map>
-
-namespace Atlas {
-namespace Message {
-class Element;
-
-typedef std::map<std::string, Element> MapType;
-}
-}
 
 
 class Link;
 
+/**
+ * An interface for anything that's identifiable through a RouterId.
+ */
 struct RouterIdentifiable {
 	inline explicit RouterIdentifiable(RouterId id)
 			: m_id(std::move(id)) {
@@ -66,6 +63,15 @@ struct ExternalRouter {
 	virtual void externalOperation(const Operation& op, Link&) = 0;
 };
 
+
+/**
+ * Used by classes that can be described as RootEntity instances.
+ */
+struct AtlasDescribable {
+
+	/// \brief Copy the attribute values of this object to an Atlas Entity
+	virtual void addToEntity(const Atlas::Objects::Entity::RootEntity&) const = 0;
+};
 
 /// \brief This is the base class for any entity which has an Atlas
 /// compatible identifier.
@@ -111,12 +117,6 @@ public:
 
 	/// \brief Dispatch an operation that is to this object
 	virtual void operation(const Operation&, OpVector&) = 0;
-
-	/// \brief Copy the attribute values of this object to an Atlas Message
-	virtual void addToMessage(Atlas::Message::MapType&) const;
-
-	/// \brief Copy the attribute values of this object to an Atlas Entity
-	virtual void addToEntity(const Atlas::Objects::Entity::RootEntity&) const;
 
 };
 

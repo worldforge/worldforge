@@ -65,14 +65,6 @@
   }
 #endif //STUB_CyPy_CreatorClient_make
 
-#ifndef STUB_CyPy_CreatorClient_as_entity
-//#define STUB_CyPy_CreatorClient_as_entity
-  Py::Object CyPy_CreatorClient::as_entity()
-  {
-    return *static_cast<Py::Object*>(nullptr);
-  }
-#endif //STUB_CyPy_CreatorClient_as_entity
-
 #ifndef STUB_CyPy_CreatorClient_set
 //#define STUB_CyPy_CreatorClient_set
   Py::Object CyPy_CreatorClient::set(const Py::Tuple& args)

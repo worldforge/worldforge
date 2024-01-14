@@ -31,13 +31,16 @@ class TestConnectableRouter : public ConnectableRouter {
 public:
 	TestConnectableRouter() : ConnectableRouter(RouterId{1}) {}
 
-	virtual void externalOperation(const Operation&, Link&) {}
+	void externalOperation(const Operation&, Link&) override {}
 
-	virtual void operation(const Operation&, OpVector&) {}
+	void operation(const Operation&, OpVector&) override {}
 
-	virtual void setConnection(Connection* connection) {}
+	void setConnection(Connection* connection) override {}
 
-	virtual Connection* getConnection() const { return nullptr; }
+	Connection* getConnection() const override { return nullptr; }
+
+	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override {}
+
 };
 
 int main() {

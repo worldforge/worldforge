@@ -96,7 +96,6 @@ void ExternalMind::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) co
 	ent->setAttr("entity", entityAttr->asMessage());
 }
 
-
 void ExternalMind::externalOperation(const Operation& op, Link& link) {
 	//Any operations coming from the mind with a refno is a response to a previously Relayed op, and need to be handled.
 	if (!op->isDefaultRefno()) {
@@ -289,3 +288,5 @@ void ExternalMind::GetOperation(const Operation& op, OpVector& res) {
 	res.push_back(info);
 
 }
+
+

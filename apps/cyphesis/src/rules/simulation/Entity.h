@@ -58,8 +58,6 @@ public:
 
 	void setType(const TypeNode* t) override;
 
-	void addToMessage(Atlas::Message::MapType&) const override;
-
 	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override;
 
 	virtual void DeleteOperation(const Operation&, OpVector&);

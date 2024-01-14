@@ -45,6 +45,8 @@ struct LocatedEntityTest : public LocatedEntity {
 		return {};
 	}
 
+	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override {}
+
 };
 
 

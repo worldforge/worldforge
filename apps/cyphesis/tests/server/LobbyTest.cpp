@@ -75,8 +75,6 @@ public:
 
 	void test_operation_account();
 
-	void test_addToMessage();
-
 	void test_addToEntity();
 };
 
@@ -90,7 +88,6 @@ Lobbytest::Lobbytest() {
 	ADD_TEST(Lobbytest::test_operation_connected);
 	ADD_TEST(Lobbytest::test_operation_connected_other);
 	ADD_TEST(Lobbytest::test_operation_account);
-	ADD_TEST(Lobbytest::test_addToMessage);
 	ADD_TEST(Lobbytest::test_addToEntity);
 }
 
@@ -200,13 +197,6 @@ void Lobbytest::test_operation_account() {
 	m_lobby->operation(op, res);
 }
 
-void Lobbytest::test_addToMessage() {
-	TestAccount testAccount;
-	m_lobby->addAccount(&testAccount);
-
-	Atlas::Message::MapType e;
-	m_lobby->addToMessage(e);
-}
 
 void Lobbytest::test_addToEntity() {
 	TestAccount testAccount;

@@ -89,7 +89,6 @@ int main() {
 		expect_python_error("server.CreatorClient(1)", PyExc_RuntimeError);
 		expect_python_error("server.CreatorClient(\"one\")", PyExc_RuntimeError);
 		run_python_string("c=server.testclient");
-		run_python_string("c.as_entity()");
 		expect_python_error("c.make()", PyExc_IndexError);
 		expect_python_error("c.make('1')", PyExc_TypeError);
 		run_python_string("c.make(atlas.Entity('1'))");

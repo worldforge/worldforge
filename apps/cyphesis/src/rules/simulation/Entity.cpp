@@ -115,21 +115,6 @@ void Entity::removeChild(LocatedEntity& childEntity) {
 	LocatedEntity::removeChild(childEntity);
 }
 
-
-/// \brief Copy attributes into an Atlas element
-///
-/// @param omap Atlas map element this entity should be copied into
-void Entity::addToMessage(MapType& omap) const {
-	// We need to have a list of keys to pull from attributes.
-	for (auto& entry: m_properties) {
-		entry.second.property->add(entry.first, omap);
-	}
-
-	omap["stamp"] = (double) m_seq;
-	omap["parent"] = m_type;
-	omap["objtype"] = "obj";
-}
-
 /// \brief Copy attributes into an Atlas entity
 ///
 /// @param ent Atlas entity this entity should be copied into

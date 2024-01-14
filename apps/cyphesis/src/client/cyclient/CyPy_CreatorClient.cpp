@@ -49,18 +49,12 @@ void CyPy_CreatorClient::init_type() {
 	PYCXX_ADD_VARARGS_METHOD(look, look, "");
 	PYCXX_ADD_VARARGS_METHOD(look_for, look_for, "");
 	PYCXX_ADD_VARARGS_METHOD(delete, delete_, "");
-	PYCXX_ADD_NOARGS_METHOD(as_entity, as_entity, "");
-
 
 	behaviors().readyType();
 }
 
 
-Py::Object CyPy_CreatorClient::as_entity() {
-	Atlas::Message::MapType element;
-	m_value->addToMessage(element);
-	return CyPy_Element::wrap(std::move(element));
-}
+
 
 Py::Object CyPy_CreatorClient::make(const Py::Tuple& args) {
 	args.verify_length(1);

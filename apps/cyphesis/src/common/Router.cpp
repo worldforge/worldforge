@@ -72,13 +72,3 @@ void Router::clientError(const Operation& op,
 
 	res.push_back(e);
 }
-
-void Router::addToMessage(Atlas::Message::MapType& omap) const {
-	omap["objtype"] = "obj";
-	omap["id"] = getId();
-}
-
-void Router::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
-	ent->setObjtype("obj");
-	ent->setId(getId());
-}

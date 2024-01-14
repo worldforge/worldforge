@@ -48,6 +48,9 @@ struct TestEntity : LocatedEntity {
 			destroyFn(*this);
 		}
 	}
+
+	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override {}
+
 };
 
 long TestEntity::idGenerator = 0;

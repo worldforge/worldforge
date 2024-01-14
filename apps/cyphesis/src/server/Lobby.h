@@ -31,7 +31,7 @@ class ServerRouting;
 ///
 /// This allows chat between all connected players, and provides a forum for
 /// discusion out of the context of the game.
-class Lobby : public Router {
+class Lobby : public Router, public AtlasDescribable {
 private:
 	std::map<std::string, ConnectableRouter*> m_accounts;
 	ServerRouting& m_server;
@@ -50,8 +50,6 @@ public:
 	}
 
 	void operation(const Operation&, OpVector&) override;
-
-	void addToMessage(Atlas::Message::MapType&) const override;
 
 	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override;
 };

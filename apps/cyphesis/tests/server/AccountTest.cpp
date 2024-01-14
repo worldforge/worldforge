@@ -167,8 +167,6 @@ public:
 
 	void test_store();
 
-	void test_addToMessage();
-
 	void test_addToEntity();
 
 	void test_operation_Create();
@@ -334,7 +332,6 @@ Accounttest::Accounttest() : m_id_counter(0L),
 	ADD_TEST(Accounttest::test_LogoutOperation_unconnected);
 	ADD_TEST(Accounttest::test_getType);
 	ADD_TEST(Accounttest::test_store);
-	ADD_TEST(Accounttest::test_addToMessage);
 	ADD_TEST(Accounttest::test_addToEntity);
 	ADD_TEST(Accounttest::test_operation_Create);
 	ADD_TEST(Accounttest::test_operation_Get);
@@ -561,30 +558,6 @@ void Accounttest::test_getType() {
 
 void Accounttest::test_store() {
 	m_account->store();
-}
-
-void Accounttest::test_addToMessage() {
-	long cid = m_id_counter++;
-	Ref<Entity> c = new Entity(RouterId{cid});
-	m_account->m_charactersDict.emplace(c->getIntId(), c);
-
-	MapType data;
-
-	m_account->m_username = "2fe6afa4-747f-490b-a292-783bf3f4520b";
-	m_account->m_password = "09a6ec9f-493c-4cca-8e4a-241d15877ab4";
-
-	m_account->addToMessage(data);
-
-	ASSERT_EQUAL(data["username"], m_account->m_username);
-	ASSERT_EQUAL(data["name"], m_account->m_username);
-	ASSERT_EQUAL(data["password"], m_account->m_password);
-	ASSERT_EQUAL(data["parent"], "account");
-	ASSERT_EQUAL(data["characters"], ListType(1, c->getId()));
-	ASSERT_EQUAL(data["objtype"], "obj");
-	ASSERT_EQUAL(data["id"], m_account->getId());
-
-	m_account->m_charactersDict.erase(c->getIntId());
-
 }
 
 void Accounttest::test_addToEntity() {
@@ -1254,9 +1227,6 @@ Lobby::~Lobby() {
 
 void Lobby::removeAccount(ConnectableRouter* ac) {
 	m_accounts.erase(ac->getId());
-}
-
-void Lobby::addToMessage(MapType& omap) const {
 }
 
 void Lobby::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {

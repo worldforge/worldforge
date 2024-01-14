@@ -17,6 +17,15 @@
 #endif //STUB_ExternalRouter_externalOperation
 
 
+#ifndef STUB_AtlasDescribable_addToEntity
+//#define STUB_AtlasDescribable_addToEntity
+  void AtlasDescribable::addToEntity(const Atlas::Objects::Entity::RootEntity&) const
+  {
+    
+  }
+#endif //STUB_AtlasDescribable_addToEntity
+
+
 #ifndef STUB_Router_Router
 //#define STUB_Router_Router
    Router::Router(RouterId id)
@@ -65,22 +74,6 @@
     
   }
 #endif //STUB_Router_operation
-
-#ifndef STUB_Router_addToMessage
-//#define STUB_Router_addToMessage
-  void Router::addToMessage(Atlas::Message::MapType&) const
-  {
-    
-  }
-#endif //STUB_Router_addToMessage
-
-#ifndef STUB_Router_addToEntity
-//#define STUB_Router_addToEntity
-  void Router::addToEntity(const Atlas::Objects::Entity::RootEntity&) const
-  {
-    
-  }
-#endif //STUB_Router_addToEntity
 
 
 #endif

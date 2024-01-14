@@ -172,7 +172,7 @@ static const std::uint32_t entity_update_broadcast_queued = 1u << 18u;
 /// which lists other entities which specify their location with reference to
 /// this one. It also provides the script interface for handling operations
 /// in scripts rather than in the C++ code.
-class LocatedEntity : public Router, public ReferenceCounted {
+class LocatedEntity : public Router, public ReferenceCounted, public AtlasDescribable  {
 private:
 	static std::set<std::string> s_immutable;
 

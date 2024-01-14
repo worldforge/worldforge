@@ -207,15 +207,12 @@ void Entitytest::test_sequence() {
 	test_map["test_key"] = "test_value";
 	m_entity->setAttrValue("test_map_string", test_map);
 
-	// Make sure we have the test attributes now
-	MapType entityAsAtlas;
-
-	// Dump a representation of the entity into an Atlas Message
-	m_entity->addToMessage(entityAsAtlas);
 
 	Atlas::Objects::Entity::RootEntity entityAsAtlasEntity;
 
 	m_entity->addToEntity(entityAsAtlasEntity);
+
+	auto entityAsAtlas = entityAsAtlasEntity->asMessage();
 
 	// Make sure we got at least some of it
 	assert(entityAsAtlas.size() >= 9);

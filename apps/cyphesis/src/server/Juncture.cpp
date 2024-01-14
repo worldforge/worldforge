@@ -172,12 +172,6 @@ void Juncture::operation(const Operation& op, OpVector& res) {
 	}
 }
 
-void Juncture::addToMessage(MapType& omap) const {
-	omap["objtype"] = "obj";
-	omap["id"] = getId();
-	omap["parent"] = "juncture";
-}
-
 void Juncture::addToEntity(const RootEntity& ent) const {
 	ent->setObjtype("obj");
 	ent->setId(getId());

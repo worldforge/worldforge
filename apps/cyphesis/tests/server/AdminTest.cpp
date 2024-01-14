@@ -85,6 +85,11 @@ public:
 	Connection* getConnection() const override {
 		return nullptr;
 	}
+
+	void addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const override {
+		ent->setId(m_id.m_id);
+	}
+
 };
 
 TestObject::TestObject(RouterId id) : ConnectableRouter(id) {
@@ -133,8 +138,6 @@ public:
 	void test_null();
 
 	void test_getType();
-
-	void test_addToMessage();
 
 	void test_opDispatched();
 
@@ -298,7 +301,6 @@ Admintest::Admintest() : m_server(0),
 						 m_account(0) {
 	ADD_TEST(Admintest::test_null);
 	ADD_TEST(Admintest::test_getType);
-	ADD_TEST(Admintest::test_addToMessage);
 	ADD_TEST(Admintest::test_opDispatched);
 	ADD_TEST(Admintest::test_opDispatched_unconnected);
 	ADD_TEST(Admintest::test_opDispatched_unconnected_monitored);
@@ -389,13 +391,6 @@ void Admintest::test_getType() {
 	const char* type_string = m_account->getType();
 
 	ASSERT_EQUAL(std::string("admin"), type_string);
-}
-
-void Admintest::test_addToMessage() {
-	MapType data;
-
-	m_account->addToMessage(data);
-
 }
 
 void Admintest::test_opDispatched() {
@@ -1438,13 +1433,6 @@ Router::Router(RouterId id) : RouterIdentifiable(id) {
 }
 
 Router::~Router() {
-}
-
-void Router::addToMessage(Atlas::Message::MapType& omap) const {
-}
-
-void Router::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
-	ent->setId(getId());
 }
 
 void Router::clientError(const Operation& op,

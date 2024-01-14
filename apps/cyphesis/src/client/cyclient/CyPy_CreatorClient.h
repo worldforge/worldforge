@@ -41,9 +41,6 @@ public:
 
 	PYCXX_VARARGS_METHOD_DECL(CyPy_CreatorClient, make);
 
-	Py::Object as_entity();
-
-	PYCXX_NOARGS_METHOD_DECL(CyPy_CreatorClient, as_entity);
 
 	Py::Object set(const Py::Tuple& args);
 

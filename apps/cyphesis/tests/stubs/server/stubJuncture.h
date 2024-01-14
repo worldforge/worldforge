@@ -82,14 +82,6 @@
   }
 #endif //STUB_Juncture_operation
 
-#ifndef STUB_Juncture_addToMessage
-//#define STUB_Juncture_addToMessage
-  void Juncture::addToMessage(Atlas::Message::MapType&) const
-  {
-    
-  }
-#endif //STUB_Juncture_addToMessage
-
 #ifndef STUB_Juncture_addToEntity
 //#define STUB_Juncture_addToEntity
   void Juncture::addToEntity(const Atlas::Objects::Entity::RootEntity&) const

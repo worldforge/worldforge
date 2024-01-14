@@ -113,19 +113,6 @@ void Lobby::operation(const Operation& op, OpVector& res) {
 	}
 }
 
-void Lobby::addToMessage(MapType& omap) const {
-	omap["name"] = "lobby";
-	omap["parent"] = "room";
-	ListType player_list;
-	for (auto& entry: m_accounts) {
-		player_list.push_back(entry.first);
-	}
-	omap["people"] = player_list;
-	omap["rooms"] = ListType();
-	omap["objtype"] = "obj";
-	omap["id"] = getId();
-}
-
 void Lobby::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
 	ent->setName("lobby");
 	ListType plist(1, "room");

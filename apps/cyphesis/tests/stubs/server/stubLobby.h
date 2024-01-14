@@ -48,14 +48,6 @@
   }
 #endif //STUB_Lobby_operation
 
-#ifndef STUB_Lobby_addToMessage
-//#define STUB_Lobby_addToMessage
-  void Lobby::addToMessage(Atlas::Message::MapType&) const
-  {
-    
-  }
-#endif //STUB_Lobby_addToMessage
-
 #ifndef STUB_Lobby_addToEntity
 //#define STUB_Lobby_addToEntity
   void Lobby::addToEntity(const Atlas::Objects::Entity::RootEntity&) const

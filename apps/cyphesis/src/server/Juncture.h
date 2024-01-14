@@ -78,8 +78,6 @@ public:
 
 	void operation(const Operation&, OpVector&) override;
 
-	void addToMessage(Atlas::Message::MapType&) const override;
-
 	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override;
 
 	void LoginOperation(const Operation&, OpVector&);

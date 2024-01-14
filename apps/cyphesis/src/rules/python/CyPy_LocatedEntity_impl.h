@@ -28,6 +28,7 @@
 #include "CyPy_Props.h"
 #include "CyPy_Location.h"
 #include "CyPy_Element.h"
+#include "CyPy_RootEntity.h"
 #include "common/Inheritance.h"
 
 template<typename TValue, typename TPythonClass>
@@ -180,9 +181,9 @@ Py::Object CyPy_LocatedEntityBase<TValue, TPythonClass>::get_child(const Py::Tup
 
 template<typename TValue, typename TPythonClass>
 Py::Object CyPy_LocatedEntityBase<TValue, TPythonClass>::as_entity() {
-	Atlas::Message::MapType element;
-	this->m_value->addToMessage(element);
-	return CyPy_Element::wrap(element);
+	Atlas::Objects::Entity::RootEntity entity;
+	this->m_value->addToEntity(entity);
+	return CyPy_RootEntity::wrap(entity);
 }
 
 template<typename TValue, typename TPythonClass>

@@ -258,45 +258,6 @@ bool Account::isPersisted() const {
 	return true;
 }
 
-
-void Account::addToMessage(MapType& omap) const {
-	omap["username"] = m_username;
-	omap["name"] = m_username;
-	if (!m_password.empty()) {
-		omap["password"] = m_password;
-	}
-	omap["parent"] = getType();
-	if (m_connection != nullptr) {
-		BaseWorld& world = m_connection->m_server.m_world;
-
-		ListType spawn_list;
-		auto& spawnEntities = world.getSpawnEntities();
-		for (auto& id: spawnEntities) {
-			auto spawnEntity = world.getEntity(id);
-			if (spawnEntity) {
-				auto spawnProp = spawnEntity->getProperty("__spawn");
-				if (spawnProp) {
-					Element elem;
-					spawnProp->get(elem);
-					spawn_list.emplace_back(elem);
-				}
-			}
-		}
-		if (!spawn_list.empty()) {
-			omap["spawns"] = std::move(spawn_list);
-		}
-	}
-	ListType char_list;
-	auto I = m_charactersDict.begin();
-	auto Iend = m_charactersDict.end();
-	for (; I != Iend; ++I) {
-		char_list.emplace_back(I->second->getId());
-	}
-	omap["characters"] = char_list;
-	omap["objtype"] = "obj";
-	omap["id"] = getId();
-}
-
 void Account::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
 	ent->setAttr("username", m_username);
 	ent->setName(m_username);

@@ -60,6 +60,8 @@ public:
 
 	void destroy() override;
 
+	inline void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override {};
+
 //        TransformData m_transform;
 //        MovementData m_movement;
 	//WFMath::AxisBox<3> m_bbox;

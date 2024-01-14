@@ -126,8 +126,6 @@ public:
 
 	void test_getType();
 
-	void test_addToMessage();
-
 	void test_addToEntity();
 
 	void test_CreateOperation();
@@ -157,7 +155,6 @@ public:
 Accountintegration::Accountintegration() {
 	ADD_TEST(Accountintegration::test_addNewCharacter);
 	ADD_TEST(Accountintegration::test_getType);
-	ADD_TEST(Accountintegration::test_addToMessage);
 	ADD_TEST(Accountintegration::test_addToEntity);
 	ADD_TEST(Accountintegration::test_CreateOperation);
 	ADD_TEST(Accountintegration::test_GetOperation);
@@ -249,11 +246,6 @@ void Accountintegration::test_addNewCharacter() {
 
 void Accountintegration::test_getType() {
 	m_ac->getType();
-}
-
-void Accountintegration::test_addToMessage() {
-	MapType emap;
-	m_ac->addToMessage(emap);
 }
 
 void Accountintegration::test_addToEntity() {

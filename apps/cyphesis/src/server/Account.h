@@ -103,8 +103,6 @@ public:
 	/// \brief Returns true if the account should be stored.
 	virtual bool isPersisted() const;
 
-	void addToMessage(Atlas::Message::MapType&) const override;
-
 	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override;
 
 	void externalOperation(const Operation& op, Link&) override;
