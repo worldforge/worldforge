@@ -52,7 +52,7 @@ void DetachedEntity::setFromMessage(const Atlas::Message::MapType& attrs) {
 }
 
 void DetachedEntity::doInit(const Atlas::Objects::Entity::RootEntity& rootEntity) {
-	init(rootEntity, true);
+	init(rootEntity);
 }
 
 Eris::Entity* DetachedEntity::getEntity(const std::string&) {

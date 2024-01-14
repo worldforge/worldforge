@@ -105,11 +105,9 @@ void EmberEntity::deregisterGlobalAttributeListener(const std::string& attribute
 }
 
 
-void EmberEntity::init(const Atlas::Objects::Entity::RootEntity& ge, bool fromCreateOp) {
-	Eris::Entity::init(ge, fromCreateOp);
+void EmberEntity::init(const Atlas::Objects::Entity::RootEntity& ge) {
+	Eris::Entity::init(ge);
 
-	// Setup Sounds
-	//	setSounds();
 
 	if (getPredictedPos().isValid()) {
 		std::stringstream ss;

@@ -173,7 +173,6 @@ void EmberEntityLoader::loadPage(::Forests::PageInfo& page) {
 		ModelRepresentationInstance& instance = entity.second;
 		Model::ModelRepresentation* modelRepresentation = instance.modelRepresentation;
 		auto* nodeProvider = modelRepresentation->getModel().getNodeProvider();
-		EmberEntity& emberEntity = modelRepresentation->getEntity();
 		if (nodeProvider) {
 			Ogre::Node* node = nodeProvider->getNode();
 			const Ogre::Vector3& pos = node->_getDerivedPosition();

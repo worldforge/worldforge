@@ -99,8 +99,8 @@ public:
 		setProperty(p, v);
 	}
 
-	void setup_init(const Atlas::Objects::Entity::RootEntity& ge, bool fromCreateOp) {
-		init(ge, fromCreateOp);
+	void setup_init(const Atlas::Objects::Entity::RootEntity& ge) {
+		init(ge);
 	}
 
 	void setup_setFromRoot(const Atlas::Objects::Root& obj, bool allowMotion) {
@@ -193,14 +193,14 @@ int main() {
 
 	{
 		TestEntity ent("2", level1Type, ea->getView());
-		ent.setup_init(Atlas::Objects::Entity::RootEntity(), false);
+		ent.setup_init(Atlas::Objects::Entity::RootEntity());
 		assert(ent.hasProperty("level"));
 		assert(ent.valueOfProperty("level") == 1.0f);
 	}
 
 	{
 		TestEntity ent("2", level2Type, ea->getView());
-		ent.setup_init(Atlas::Objects::Entity::RootEntity(), false);
+		ent.setup_init(Atlas::Objects::Entity::RootEntity());
 		assert(ent.hasProperty("level"));
 		assert(ent.valueOfProperty("level") == 2.0f);
 

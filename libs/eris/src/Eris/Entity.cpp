@@ -54,10 +54,8 @@ Entity::Entity(std::string id, TypeInfo* ty) :
 		m_location(nullptr),
 		m_id(std::move(id)),
 		m_stamp(-1),
-		m_waitingForParentBind(false),
 		m_angularMag(0),
 		m_updateLevel(0),
-		m_hasBBox(false),
 		m_moving(false) {
 	assert(!m_id.empty());
 	m_orientation.identity();
@@ -188,16 +186,13 @@ void Entity::shutdown() {
 	}
 }
 
-void Entity::init(const RootEntity& ge, bool fromCreateOp) {
+void Entity::init(const RootEntity& ge) {
 	// setup initial state
 	firstSight(ge);
 }
 
 
 Entity* Entity::getTopEntity() {
-	if (m_waitingForParentBind) {
-		return nullptr;
-	}
 	if (!m_location) {
 		return this;
 	}
@@ -511,7 +506,6 @@ bool Entity::nativePropertyChanged(const std::string& p, const Element& v) {
 			m_bbox.highCorner().y() *= m_scale.y();
 			m_bbox.highCorner().z() *= m_scale.z();
 		}
-		m_hasBBox = m_bbox.isValid();
 		return true;
 	} else if (p == "loc") {
 		setLocationFromAtlas(v.asString());
@@ -699,8 +693,6 @@ void Entity::setLocationFromAtlas(const std::string& locId) {
 	Entity* newLocation = getEntity(locId);
 	if (!newLocation) {
 
-		m_waitingForParentBind = true;
-
 		if (m_location) {
 			removeFromLocation();
 		}
@@ -713,10 +705,6 @@ void Entity::setLocationFromAtlas(const std::string& locId) {
 
 void Entity::setLocation(Entity* newLocation, bool removeFromOldLocation) {
 	if (newLocation == m_location) return;
-
-	if (newLocation) {
-		m_waitingForParentBind = newLocation->m_waitingForParentBind;
-	}
 
 // do the actual member updating
 	if (m_location && removeFromOldLocation) {
@@ -767,10 +755,6 @@ void Entity::setContentsFromAtlas(const std::vector<std::string>& contents) {
 			child = getEntity(content);
 			if (!child) {
 				continue;
-			}
-
-			if (child->m_waitingForParentBind) {
-				child->m_waitingForParentBind = false;
 			}
 
 			/* we have found the child, update its location */

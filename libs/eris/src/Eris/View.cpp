@@ -314,7 +314,7 @@ ViewEntity* View::initialSight(const RootEntity& gent) {
 	auto I = m_contents.emplace(gent->getId(), EntityEntry{std::move(entity)});
 	auto& insertedEntry = I.first->second;
 	auto insertedEntity = insertedEntry.entity.get();
-	insertedEntity->init(gent, false);
+	insertedEntity->init(gent);
 
 	InitialSightEntity.emit(insertedEntity);
 

@@ -60,8 +60,6 @@ or creating peer classes and attaching them to the signals.
 */
 
 class Entity : virtual public sigc::trackable {
-	friend class EntityRouter;
-
 public:
 
 	//The "current" time, used for doing movement prediction.
@@ -360,7 +358,7 @@ public:
 
 	/**
 	Emitted when this entity emits an imaginary operation (also known as
-	an emote. This is used for debugging, but not much else.
+	an emote.
 	*/
 	sigc::signal<void(const std::string&)> Emote;
 
@@ -403,7 +401,7 @@ protected:
 	/** over-rideable initialisation helper. When subclassing, if you
 	over-ride this method, take care to call the base implementation, or
 	unfortunate things will happen. */
-	virtual void init(const Atlas::Objects::Entity::RootEntity& ge, bool fromCreateOp);
+	virtual void init(const Atlas::Objects::Entity::RootEntity& ge);
 
 	/**
 	 * Shuts down the entity. This is called by the destructor, but if you extend this class
@@ -602,7 +600,6 @@ protected:
 	const std::string m_id;    ///< the Atlas object ID
 	std::string m_name;        ///< a human readable name
 	std::chrono::milliseconds m_stamp;        ///< last modification time
-	bool m_waitingForParentBind;   ///< waiting for parent bind
 
 	WFMath::Vector<3> m_scale;
 	WFMath::AxisBox<3> m_bbox;
@@ -638,11 +635,6 @@ protected:
 
 	typedef std::unordered_map<std::string, PropertyChangedSignal> ObserverMap;
 	ObserverMap m_observers;
-
-	/** This flag should be set when the server notifies that this entity
-	has a bounding box. If this flag is not true, the contents of the
-	BBox property are undefined.  */
-	bool m_hasBBox;
 
 	bool m_moving; ///< flag recording if this entity is current considered in-motion
 
@@ -703,7 +695,7 @@ inline const WFMath::AxisBox<3>& Entity::getBBox() const {
 }
 
 inline bool Entity::hasBBox() const {
-	return m_hasBBox;
+	return m_bbox.isValid();
 }
 
 inline const std::map<std::string, std::unique_ptr<Task>>& Entity::getTasks() const {

@@ -410,7 +410,7 @@ protected:
 	 * @param ge The root entity which contains all atlas data that define this entity.
 	 * @param fromCreateOp
 	 */
-	void init(const Atlas::Objects::Entity::RootEntity& ge, bool fromCreateOp) override;
+	void init(const Atlas::Objects::Entity::RootEntity& ge) override;
 
 	/**
 	 * @brief Parses the current positioning mode from the submitted element, which should be taken from the "mode" attribute.
