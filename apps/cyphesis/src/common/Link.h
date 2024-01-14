@@ -23,11 +23,10 @@
 
 class CommSocket;
 
-namespace Atlas {
-namespace Objects {
+namespace Atlas::Objects {
 class ObjectsEncoder;
 }
-}
+
 
 /// \brief Class representing links from a client at the Atlas level.
 ///

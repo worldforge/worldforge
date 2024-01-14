@@ -281,7 +281,7 @@ Ref<MemEntity> MemMap::getAdd(const std::string& id)
 		assert(I->second != nullptr);
 		return I->second;
 	}
-	return addId(int_id);
+	return addId(RouterId{int_id});
 }
 
 void MemMap::addContents(const RootEntity& ent)
@@ -323,7 +323,7 @@ Ref<MemEntity> MemMap::updateAdd(const RootEntity& ent, std::chrono::millisecond
 	auto I = m_entities.find(int_id);
 	Ref<MemEntity> entity;
 	if (I == m_entities.end()) {
-		entity = newEntity(int_id, ent, d);
+		entity = newEntity(RouterId{int_id}, ent, d);
 	} else {
 		entity = I->second;
 		updateEntity(entity, ent, d);

@@ -32,7 +32,7 @@ Router::~Router() = default;
 void Router::buildError(const Operation& op,
 						const std::string& errstring,
 						const Operation& e,
-						const std::string& to) const {
+						const std::string& to) {
 	std::vector<Atlas::Objects::Root>& args = e->modifyArgs();
 
 	Atlas::Objects::Entity::Anonymous arg1;
@@ -48,14 +48,6 @@ void Router::buildError(const Operation& op,
 	}
 }
 
-/// \brief Report an Error.
-///
-/// The error reported is noted in the log, and an error operation is
-/// genereated.
-/// @param op The operation that caused the error.
-/// @param errstring A message describing the error.
-/// @param res The resulting error operation is returned here.
-/// @param to The error operation should be directed to this ID.
 void Router::error(const Operation& op,
 				   const std::string& errstring,
 				   OpVector& res,
@@ -70,17 +62,6 @@ void Router::error(const Operation& op,
 	res.push_back(e);
 }
 
-/// \brief Report an Error to a client.
-///
-/// The error reported generates an error operation.
-/// This is used instead of error() when an event occurs which is of no
-/// interest to the server admin, or world builder, and should only be
-/// be reported to the client. It stops the logs from getting filled
-/// with reports of authentication failures, and other similar occurences.
-/// @param op The operation that caused the error.
-/// @param errstring A message describing the error.
-/// @param res The resulting error operation is returned here.
-/// @param to The error operation should be directed to this ID.
 void Router::clientError(const Operation& op,
 						 const std::string& errstring,
 						 OpVector& res,
@@ -92,27 +73,18 @@ void Router::clientError(const Operation& op,
 	res.push_back(e);
 }
 
-/// \brief Process an operation from an external source
-///
-/// The ownership of the operation passed in at this point is handed
-/// over to the router. The calling code must not modify the operation
-/// after passing it to here, or expect the attributes
-/// of the operaration to remain the same.
-/// @param op The operation to be processed.
+
 void Router::externalOperation(const Operation& op, Link&) {
 }
 
-/// \brief Dispatch an operation that is to this object
 void Router::operation(const Operation& op, OpVector& res) {
 }
 
-/// \brief Copy the attribute values of this object to an Atlas Message
 void Router::addToMessage(Atlas::Message::MapType& omap) const {
 	omap["objtype"] = "obj";
 	omap["id"] = getId();
 }
 
-/// \brief Copy the attribute values of this object to an Atlas Entity
 void Router::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
 	ent->setObjtype("obj");
 	ent->setId(getId());

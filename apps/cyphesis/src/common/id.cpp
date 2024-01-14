@@ -27,7 +27,7 @@ long integerId(const std::string& id) {
 }
 
 RouterId idFromString(const std::string& id) {
-	return {integerId(id)};
+	return RouterId{integerId(id)};
 }
 
 long forceIntegerId(const std::string& id) {
@@ -40,7 +40,7 @@ long forceIntegerId(const std::string& id) {
 }
 
 RouterId forceIdFromString(const std::string& id) {
-	return {forceIntegerId(id)};
+	return RouterId{forceIntegerId(id)};
 }
 
 

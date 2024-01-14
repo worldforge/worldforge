@@ -25,13 +25,12 @@
 #include <string>
 #include <map>
 
-namespace Atlas {
-namespace Message {
+namespace Atlas::Message {
 class Element;
 
 typedef std::map<std::string, Element> MapType;
 }
-}
+
 
 class Link;
 
@@ -39,10 +38,9 @@ class Link;
 /// compatible identifier.
 ///
 class Router {
-protected:
+public:
 	explicit Router(RouterId id);
 
-public:
 	Router(const Router&) = delete;
 
 	virtual ~Router();
@@ -59,26 +57,54 @@ public:
 		return m_id.m_intId;
 	}
 
-	void buildError(const Operation&,
+	static void buildError(const Operation&,
 					const std::string& errstring,
 					const Operation&,
-					const std::string& to) const;
+					const std::string& to) ;
 
+	/// \brief Report an Error.
+	///
+	/// The error reported is noted in the log, and an error operation is
+	/// generated.
+	/// @param op The operation that caused the error.
+	/// @param errstring A message describing the error.
+	/// @param res The resulting error operation is returned here.
+	/// @param to The error operation should be directed to this ID.
 	void error(const Operation&, const std::string& errstring, OpVector&,
 			   const std::string& to = "") const;
 
+	/// \brief Report an Error to a client.
+	///
+	/// The error reported generates an error operation.
+	/// This is used instead of error() when an event occurs which is of no
+	/// interest to the server admin, or world builder, and should only be
+	/// be reported to the client. It stops the logs from getting filled
+	/// with reports of authentication failures, and other similar occurrences.
+	/// @param op The operation that caused the error.
+	/// @param errstring A message describing the error.
+	/// @param res The resulting error operation is returned here.
+	/// @param to The error operation should be directed to this ID.
 	void clientError(const Operation&, const std::string& errstring,
 					 OpVector&, const std::string& to = "") const;
 
+	/// \brief Process an operation from an external source
+	///
+	/// The ownership of the operation passed in at this point is handed
+	/// over to the router. The calling code must not modify the operation
+	/// after passing it to here, or expect the attributes
+	/// of the operation to remain the same.
+	/// @param op The operation to be processed.
 	virtual void externalOperation(const Operation& op, Link&) = 0;
 
+	/// \brief Dispatch an operation that is to this object
 	virtual void operation(const Operation&, OpVector&) = 0;
 
+	/// \brief Copy the attribute values of this object to an Atlas Message
 	virtual void addToMessage(Atlas::Message::MapType&) const;
 
+	/// \brief Copy the attribute values of this object to an Atlas Entity
 	virtual void addToEntity(const Atlas::Objects::Entity::RootEntity&) const;
 
-	friend class Routertest;
 };
 
 #endif // COMMON_ROUTER_H

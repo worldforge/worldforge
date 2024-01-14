@@ -20,5 +20,5 @@
 #include "id.h"
 
 RouterId newId() {
-	return {Database::instance().newId()};
+	return RouterId{Database::instance().newId()};
 }

@@ -520,7 +520,7 @@ int run() {
 									persistence,
 									ruleset_name,
 									server_name,
-									lobby_int_id);
+									RouterId{lobby_int_id});
 		serverRouting.setAssets({assetsHandler.resolveAssetsUrl()});
 
 

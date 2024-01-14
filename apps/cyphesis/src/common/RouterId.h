@@ -27,11 +27,8 @@
  * This allows us to revisit this setup if the need arises (for example if we want decentralized ids, such as GUIDs or similar).
  */
 struct RouterId {
-	/**
-	 * Implicit ctor by design here.
-	 * @param intId
-	 */
-	RouterId(long intId);
+
+	explicit RouterId(long intId);
 
 	explicit RouterId(std::string id);
 
