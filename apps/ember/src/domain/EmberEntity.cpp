@@ -21,7 +21,6 @@
 #include "IGraphicalRepresentation.h"
 #include "IEntityAttachment.h"
 #include "IEntityVisitor.h"
-#include "EntityTalk.h"
 #include "IHeightProvider.h"
 #include "framework/ConsoleBackend.h"
 #include "framework/Log.h"
@@ -155,35 +154,6 @@ double EmberEntity::getHeight(const WFMath::Point<2>& localPosition) const {
 	}
 }
 
-void EmberEntity::onTalk(const Atlas::Objects::Operation::RootOperation& talkArgs) {
-	auto entityTalk = EntityTalk::parse(talkArgs);
-
-	//some talk operations come with a predefined set of suitable responses, so we'll store those so that they can later on be queried by the GUI for example
-	mSuggestedResponses = entityTalk.suggestedResponses;
-
-	if (!entityTalk.sound.empty()) {
-		logger->debug("Entity {} makes the sound: \"{}\"", *this, entityTalk.sound);
-	} else if (!entityTalk.message.empty()) {
-		logger->debug("Entity {} says: \"{}\"", *this, entityTalk.message);
-	}
-
-	EventTalk.emit(entityTalk);
-
-
-	// Call the method of the base class (since we've overloaded it)
-	Eris::Entity::onTalk(talkArgs);
-}
-
-void EmberEntity::onSoundAction(const Atlas::Objects::Operation::RootOperation& op, const Eris::TypeInfo& typeInfo) {
-	//We'll just catch the call and write something to both the log and the console, and then pass it on.
-
-	std::string message = getNameOrType() + " emits a " + op->getParent() + ".";
-	ConsoleBackend::getSingletonPtr()->pushMessage(message, "info");
-	logger->debug("Entity: {} ({}) sound action: {}", this->getId(), this->getName(), op->getParent());
-
-	Eris::Entity::onSoundAction(op, typeInfo);
-}
-
 void EmberEntity::setAttachmentControlDelegate(IEntityControlDelegate* delegate) {
 	mAttachmentControlDelegate = delegate;
 	if (mAttachment) {
@@ -226,55 +196,6 @@ void EmberEntity::updateAttachment() {
 			logger->warn("Problem when setting attachment for entity. {}", ex.what());
 		}
 	}
-}
-
-
-void EmberEntity::onAction(const Atlas::Objects::Operation::RootOperation& act, const Eris::TypeInfo& typeInfo) {
-	if (typeInfo.isA("activity")) {
-		std::string message = getNameOrType() + " performs a " + act->getParent() + ".";
-		ConsoleBackend::getSingletonPtr()->pushMessage(message, "info");
-
-		logger->debug("Entity: {} ({}) action: {}", this->getId(), this->getName(), act->getParent());
-	}
-
-	Entity::onAction(act, typeInfo);
-}
-
-void EmberEntity::onHit(const Atlas::Objects::Operation::Hit& act) {
-
-	std::string message;
-	if (!act->getArgs().empty()) {
-		auto& arg = act->getArgs().front();
-		EmberEntity* actingEntity = nullptr;
-		if (!arg->isDefaultId()) {
-			actingEntity = dynamic_cast<EmberEntity*>(mContext.getEntity(arg->getId()));
-		}
-		if (arg->hasAttr("damage")) {
-			auto damageElem = arg->getAttr("damage");
-			if (damageElem.isNum()) {
-				std::stringstream ss;
-				ss.precision(2);
-				ss << damageElem.asNum();
-				auto damageString = ss.str();
-				if (actingEntity) {
-					message = getNameOrType() + " is hit by " + actingEntity->getNameOrType() + " for " + damageString + " damage.";
-				} else {
-					message = getNameOrType() + " is hit for " + damageString + " damage.";
-				}
-				ConsoleBackend::getSingletonPtr()->pushMessage(message, "info");
-			}
-		}
-	}
-
-	Entity::onHit(act);
-}
-
-const std::vector<std::string>& EmberEntity::getSuggestedResponses() const {
-	return mSuggestedResponses;
-}
-
-bool EmberEntity::hasSuggestedResponses() const {
-	return !mSuggestedResponses.empty();
 }
 
 void EmberEntity::onPropertyChanged(const std::string& str, const Atlas::Message::Element& v) {

@@ -26,6 +26,7 @@
 
 #include "../GUIManager.h"
 #include "domain/EmberEntity.h"
+#include "domain/EntityTalk.h"
 
 #include "../EmberOgre.h"
 #include "../World.h"
@@ -46,7 +47,6 @@
 #include <CEGUI/Exceptions.h>
 #include <CEGUI/Font.h>
 #include <CEGUI/Window.h>
-#include <CEGUI/widgets/Listbox.h>
 #include <CEGUI/widgets/PushButton.h>
 #include <CEGUI/widgets/FrameWindow.h>
 #include <CEGUI/widgets/LayoutContainer.h>
@@ -226,9 +226,8 @@ IngameChatWidget::EntityObserver::EntityObserver(IngameChatWidget& chatWidget, E
 	entity.Say.connect(sigc::mem_fun(*this, &EntityObserver::entity_Say));
 	entity.EventChangedGraphicalRepresentation.connect(sigc::mem_fun(*this, &EntityObserver::entity_GraphicalRepresentationChanged));
 
-	mExternalSlot = sigc::mem_fun(*this, &IngameChatWidget::EntityObserver::entity_attributeChanged);
-	entity.observe("external", mExternalSlot, true);
-	entity.observe("name", mExternalSlot, true);
+	mNameSlot = sigc::mem_fun(*this, &IngameChatWidget::EntityObserver::entity_attributeChanged);
+	entity.observe("name", mNameSlot, true);
 	showLabel();
 }
 
@@ -255,22 +254,16 @@ void IngameChatWidget::EntityObserver::entity_BeingDeleted() {
 void IngameChatWidget::EntityObserver::entity_Say(const Atlas::Objects::Root& talk) {
 	if (mLabel) {
 
-		if (!talk->hasAttr("say")) {
-			return;
+		auto entityTalk = EntityTalk::parse(talk);
+		if (!entityTalk.message.empty()) {
+			mLabel->updateText(entityTalk);
 		}
 
-		auto talkElement = talk->getAttr("say");
-		if (!talkElement.isString()) {
-			return;
-		}
-		const std::string& msg = talkElement.String();
-
-		mLabel->updateText(msg);
 	}
 
 }
 
-void IngameChatWidget::EntityObserver::entity_attributeChanged(const Atlas::Message::Element& attributeValue) {
+void IngameChatWidget::EntityObserver::entity_attributeChanged(const Atlas::Message::Element&) {
 	if (mLabel) {
 		mLabel->updateEntityName();
 	}
@@ -469,8 +462,8 @@ Window* IngameChatWidget::Label::getWindow() {
 	return mWindow.get();
 }
 
-void IngameChatWidget::Label::updateText(const std::string& line) {
-	getOrCreateChatText().updateText(line);
+void IngameChatWidget::Label::updateText(EntityTalk entityTalk) {
+	getOrCreateChatText().updateText(entityTalk);
 	//mWindow->moveToFront();
 }
 
@@ -565,38 +558,26 @@ void IngameChatWidget::ChatText::increaseElapsedTime(float timeSlice) {
 	mElapsedTimeSinceLastUpdate += timeSlice;
 }
 
-inline void inPlaceReplace(std::string& s, const std::string& sub, const std::string& replace) {
-	assert(!sub.empty());
-	boost::algorithm::replace_all(s, sub, replace);
-}
-
 inline std::string escapeForCEGUI(const std::string& str) {
-	std::string ret = str;
-	inPlaceReplace(ret, "[", "\\[");
-
-	return ret;
+	return boost::algorithm::replace_all_copy(str, "[", "\\[");
 }
 
-void IngameChatWidget::ChatText::updateText(const std::string& line) {
-	mAttachedTextWidget->setText(escapeForCEGUI(line));
+void IngameChatWidget::ChatText::updateText(EntityTalk entityTalk) {
+	mAttachedTextWidget->setText(escapeForCEGUI(entityTalk.message));
 
-	mDetachedChatHistory->setText(mDetachedChatHistory->getText() + "\n[colour='00000000']-\n[colour='FF000000']" + escapeForCEGUI(mLabel->getEntity()->getName()) + ": " + escapeForCEGUI(line));
+	mDetachedChatHistory->setText(
+			mDetachedChatHistory->getText() + "\n[colour='00000000']-\n[colour='FF000000']" + escapeForCEGUI(mLabel->getEntity()->getName()) + ": " + escapeForCEGUI(entityTalk.message));
 	mDetachedChatHistory->setProperty("VertScrollPosition", mDetachedChatHistory->getProperty("VertExtent"));
 
 	mElapsedTimeSinceLastUpdate = 0;
 
-	if (mLabel->getEntity()->hasSuggestedResponses()) {
+	if (!entityTalk.suggestedResponses.empty()) {
 		clearResponses();
 
 		//for each response, create a button
-		const std::vector<std::string>& responses = mLabel->getEntity()->getSuggestedResponses();
 
-		auto I = responses.begin();
-		auto I_end = responses.end();
 		int i = 0;
-		//std::stringstream ss;
-
-		for (; I != I_end; ++I) {
+		for (const auto& response: entityTalk.suggestedResponses) {
 			std::stringstream ss_;
 			ss_ << i;
 			PushButton* responseTextButton = dynamic_cast<PushButton*>(WindowManager::getSingleton().createWindow(GUIManager::getSingleton().getDefaultScheme() + "/IngameChatResponseButton",
@@ -605,9 +586,9 @@ void IngameChatWidget::ChatText::updateText(const std::string& line) {
 			BIND_CEGUI_EVENT(responseTextButton, PushButton::EventClicked, IngameChatWidget::ChatText::buttonResponse_Click)
 
 			responseTextButton->setInheritsAlpha(true);
-			responseTextButton->setText(*I);
+			responseTextButton->setText(response);
 			responseTextButton->setTextParsingEnabled(false);
-			responseTextButton->setTooltipText(*I);
+			responseTextButton->setTooltipText(response);
 			mResponseWidget->addChild(responseTextButton);
 			mResponseTextWidgets.emplace_back(responseTextButton);
 

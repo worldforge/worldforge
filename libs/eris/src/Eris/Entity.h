@@ -51,7 +51,7 @@ typedef std::vector<Entity*> EntityArray;
 @brief Entity is a concrete (instantiable) class representing one game entity
 
 Entity encapsulates the state and tracking of one game entity; this includes
-it's location in the containership tree (graph?), it's name and unique and id,
+its location in the containership tree (graph?), its name and unique and id,
 and so on.
 
 This class may be sub-classed by users (and those sub-classes built via
@@ -421,7 +421,7 @@ protected:
 	/** process TALK data - default implementation emits the Say signal.
 	@param talk The TALK operation
 	*/
-	virtual void onTalk(const Atlas::Objects::Operation::RootOperation& talk);
+	virtual void onTalk(const Atlas::Objects::Operation::Talk& talk);
 
 	virtual void onPropertyChanged(const std::string& propertyName, const Atlas::Message::Element& v);
 

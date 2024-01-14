@@ -144,20 +144,6 @@ public:
 	void adjustPosition();
 
 	/**
-	 * @brief Returns true if the entity has a list of suggested responses to something this entity has said in the world.
-	 * @see getSuggestedResponses()
-	 * @return True if there's a collection of suggested responses to something that this entity has just said.
-	 */
-	bool hasSuggestedResponses() const;
-
-	/**
-	 * @brief Returns a list of all suggested responses when conversing with this entity.
-	 * When talking to entities in the world (for example NPCs) the can sometimes be a specified list of suggested responses.
-	 * @return A vector of the suggested responses.
-	 */
-	const std::vector<std::string>& getSuggestedResponses() const;
-
-	/**
 	 * @brief Gets the location (i.e. parent entity) as cast to an EmberEntity.
 	 * This behaves just like getLocation, but will always return an instance of EmberEntity. We can do this since we're guaranteed to only ever deal with instances of EmberEntity in the world, thanks to the EmberEntityFactory class.
 	 * @see Eris::Entity::getLocation
@@ -292,8 +278,6 @@ public:
 
 	std::vector<ActionChange> processActionsChange(const Atlas::Message::Element& v);
 
-	sigc::signal<void(const EntityTalk&)> EventTalk;
-
 	/**
 	 * @brief Emitted when the graphical representation changes.
 	 */
@@ -322,10 +306,6 @@ public:
 
 protected:
 
-	/**
-	 @brief Sometimes when talking to an entity, the server will provide suggested responses. These are stored here.
-	 */
-	std::vector<std::string> mSuggestedResponses;
 
 	std::map<std::string, Eris::Usage> mUsages;
 	std::map<std::string, Eris::Usage> mUsagesProtected;
@@ -357,29 +337,9 @@ protected:
 	Atlas::Message::MapType mActionsData;
 
 	/**
-	 *    @copydoc Eris::Entity::onTalk()
-	 */
-	void onTalk(const Atlas::Objects::Operation::RootOperation& talk) override;
-
-	/**
 	 *    @copydoc Eris::Entity::onLocationChanged()
 	 */
 	void onLocationChanged(Eris::Entity* oldLocation) override;
-
-	/**
-	 *    @copydoc Eris::Entity::onAction()
-	 */
-	void onAction(const Atlas::Objects::Operation::RootOperation& act, const Eris::TypeInfo& typeInfo) override;
-
-	/**
-	 *    @copydoc Eris::Entity::onHit()
-	 */
-	void onHit(const Atlas::Objects::Operation::Hit& hit) override;
-
-	/**
-	 *    @copydoc Eris::Entity::onSoundAction()
-	 */
-	void onSoundAction(const Atlas::Objects::Operation::RootOperation& op, const Eris::TypeInfo& typeInfo) override;
 
 	/**
 	 *    @copydoc Eris::Entity::onPropertyChanged()

@@ -35,7 +35,7 @@ namespace Ember {
  */
 struct EntityTalk {
 
-	static EntityTalk parse(const Atlas::Objects::Operation::RootOperation& talkArgs);
+	static EntityTalk parse(const Atlas::Objects::Root& talk);
 
 	/**
 	 * @brief Checks if the message isn't addressed to anyone in particular.

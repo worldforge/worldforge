@@ -195,7 +195,9 @@ void Entity::init(const RootEntity& ge) {
 		setLocation(nullptr);
 	}
 
-	setContentsFromAtlas(ge->getContains());
+	if (!ge->isDefaultContains()) {
+		setContentsFromAtlas(ge->getContains());
+	}
 	//Since this is the first sight of this entity we should include all type props too.
 	setFromRoot(ge, true);
 
@@ -392,7 +394,7 @@ void Entity::setFromRoot(const Root& obj, bool includeTypeInfoProperties) {
 
 }
 
-void Entity::onTalk(const Atlas::Objects::Operation::RootOperation& talk) {
+void Entity::onTalk(const Atlas::Objects::Operation::Talk& talk) {
 	const std::vector<Root>& talkArgs = talk->getArgs();
 	if (talkArgs.empty()) {
 		logger->warn("entity {} got sound(talk) with no args", getId());
@@ -402,7 +404,6 @@ void Entity::onTalk(const Atlas::Objects::Operation::RootOperation& talk) {
 	for (const auto& arg: talkArgs) {
 		Say.emit(arg);
 	}
-	//Noise.emit(talk);
 }
 
 void Entity::onLocationChanged(Entity* oldLoc) {
@@ -738,30 +739,13 @@ void Entity::buildEntityDictFromContents(IdEntityMap& dict) {
 }
 
 void Entity::setContentsFromAtlas(const std::vector<std::string>& contents) {
-// convert existing contents into a map, for fast membership tests
-	IdEntityMap oldContents;
-	buildEntityDictFromContents(oldContents);
-
-// iterate over new contents
 	for (auto& content: contents) {
-		Entity* child;
-
-		auto J = oldContents.find(content);
-		if (J != oldContents.end()) {
-			child = J->second;
-			assert(child->getLocation() == this);
-			oldContents.erase(J);
-		} else {
-			child = getEntity(content);
-			if (!child) {
-				continue;
-			}
-
+		auto child = getEntity(content);
+		if (child && child->getLocation() != this) {
 			/* we have found the child, update its location */
 			child->setLocation(this);
 		}
-
-	} // of contents list iteration
+	}
 }
 
 bool Entity::hasChild(const std::string& eid) const {

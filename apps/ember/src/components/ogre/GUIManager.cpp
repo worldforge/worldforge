@@ -21,6 +21,8 @@
 #include "EmberOgre.h"
 #include "domain/EmberEntity.h"
 #include "framework/MainLoopController.h"
+#include "framework/ConsoleBackend.h"
+#include "domain/EntityTalk.h"
 #include "GUICEGUIAdapter.h"
 #include "World.h"
 
@@ -53,6 +55,7 @@
 
 #include <Eris/View.h>
 #include <Eris/Avatar.h>
+#include <Eris/TypeInfo.h>
 
 #include <OgreRoot.h>
 #include <OgreTextureManager.h>
@@ -63,10 +66,18 @@
 #include "CEGUIOgreRenderer/ImageCodec.h"
 #include <CEGUI/widgets/MultiLineEditbox.h>
 #include <CEGUI/widgets/Editbox.h>
+#include <fmt/ostream.h>
 
 #ifdef _WIN32
 #include "platform/platform_windows.h"
 #endif
+
+template<>
+struct fmt::formatter<Eris::Entity> : ostream_formatter {
+};
+template<>
+struct fmt::formatter<Ember::EmberEntity> : ostream_formatter {
+};
 
 using namespace CEGUI;
 using namespace Ember::OgreView::Gui;
@@ -191,20 +202,64 @@ void GUIManager::render() const {
 
 void GUIManager::server_GotView(Eris::View* view) {
 	//The View has a shorter lifespan than ours, so we don't need to store references to the connections.
-	view->EntityCreated.connect(sigc::mem_fun(*this, &GUIManager::view_EntityCreated));
-	view->EntitySeen.connect(sigc::mem_fun(*this, &GUIManager::view_EntityCreated));
-}
+	view->EntitySeen.connect([view, this](Eris::Entity* entity) {
+		//It's safe to cast to EmberEntity, since all entities in the system are guaranteed to be of this type.
+		auto* emberEntity = dynamic_cast<EmberEntity*>(entity);
+		entity->Say.connect([emberEntity, this](const Atlas::Objects::Root& op) {
+			auto entityTalk = EntityTalk::parse(op);
 
-void GUIManager::view_EntityCreated(Eris::Entity* entity) {
-	//It's safe to cast to EmberEntity, since all entities in the system are guaranteed to be of this type.
-	auto* emberEntity = dynamic_cast<EmberEntity*>(entity);
-	//The Entity has a shorter lifespan than ours, so we don't need to store references to the connections.
-	emberEntity->EventTalk.connect(sigc::bind(sigc::mem_fun(*this, &GUIManager::entity_Talk), emberEntity));
-	emberEntity->Emote.connect(sigc::bind(sigc::mem_fun(*this, &GUIManager::entity_Emote), emberEntity));
-}
+			if (!entityTalk.sound.empty()) {
+				logger->debug("Entity {} makes the sound: \"{}\"", *emberEntity, entityTalk.sound);
+			} else if (!entityTalk.message.empty()) {
+				logger->debug("Entity {} says: \"{}\"", *emberEntity, entityTalk.message);
+			}
+			AppendIGChatLine.emit(entityTalk, emberEntity);
+		});
 
-void GUIManager::entity_Talk(const EntityTalk& entityTalk, EmberEntity* entity) {
-	AppendIGChatLine.emit(entityTalk, entity);
+		emberEntity->Noise.connect([emberEntity](const Atlas::Objects::Root& op, const Eris::TypeInfo& typeInfo) {
+			std::string message = emberEntity->getNameOrType() + " emits a " + op->getParent() + ".";
+			ConsoleBackend::getSingletonPtr()->pushMessage(message, "info");
+			logger->debug("Entity: {} ({}) sound action: {}", emberEntity->getId(), emberEntity->getName(), op->getParent());
+		});
+		emberEntity->Acted.connect([emberEntity](const Atlas::Objects::Operation::RootOperation& act, const Eris::TypeInfo& typeInfo) {
+			if (typeInfo.isA("activity")) {
+				std::string message = emberEntity->getNameOrType() + " performs a " + act->getParent() + ".";
+				ConsoleBackend::getSingletonPtr()->pushMessage(message, "info");
+
+				logger->debug("Entity: {} ({}) action: {}", emberEntity->getId(), emberEntity->getName(), act->getParent());
+			}
+		});
+
+		emberEntity->Hit.connect([emberEntity, view](const Atlas::Objects::Operation::Hit& act) {
+			std::string message;
+			if (!act->getArgs().empty()) {
+				auto& arg = act->getArgs().front();
+				EmberEntity* actingEntity = nullptr;
+				if (!arg->isDefaultId()) {
+					actingEntity = dynamic_cast<EmberEntity*>(view->getEntity(arg->getId()));
+				}
+				if (arg->hasAttr("damage")) {
+					auto damageElem = arg->getAttr("damage");
+					if (damageElem.isNum()) {
+						std::stringstream ss;
+						ss.precision(2);
+						ss << damageElem.asNum();
+						auto damageString = ss.str();
+						if (actingEntity) {
+							message = emberEntity->getNameOrType() + " is hit by " + actingEntity->getNameOrType() + " for " + damageString + " damage.";
+						} else {
+							message = emberEntity->getNameOrType() + " is hit for " + damageString + " damage.";
+						}
+						ConsoleBackend::getSingletonPtr()->pushMessage(message, "info");
+					}
+				}
+			}
+
+		});
+
+		emberEntity->Emote.connect(sigc::bind(sigc::mem_fun(*this, &GUIManager::entity_Emote), emberEntity));
+
+	});
 }
 
 void GUIManager::entity_Emote(const std::string& description, EmberEntity* entity) {

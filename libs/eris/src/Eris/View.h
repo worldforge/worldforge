@@ -126,9 +126,6 @@ public:
 	is emitted once the entity has been fully bound into the View */
 	sigc::signal<void(Entity*)> EntitySeen;
 
-	/** emitted when a SIGHT(CREATE) op is received for an entity */
-	sigc::signal<void(Entity*)> EntityCreated;
-
 	/** emitted when a SIGHT(DELETE) op is received for an entity */
 	sigc::signal<void(Entity*)> EntityDeleted;
 
@@ -173,10 +170,6 @@ public:
 	void taskRateChanged(Task*);
 
 protected:
-
-	friend class Entity;
-
-	friend class Avatar;
 
 	friend class Task;
 

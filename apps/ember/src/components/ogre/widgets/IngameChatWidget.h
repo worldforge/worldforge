@@ -35,6 +35,7 @@
 #include <OgreCamera.h>
 #include <components/ogre/INodeProvider.h>
 #include <boost/noncopyable.hpp>
+#include <domain/EntityTalk.h>
 
 namespace Ember {
 
@@ -104,7 +105,7 @@ class IngameChatWidget
 		IngameChatWidget& mChatWidget;
 		EmberEntity& mEntity;
 		std::unique_ptr<Label> mLabel;
-		Eris::Entity::PropertyChangedSlot mExternalSlot; //, mNameSlot;
+		Eris::Entity::PropertyChangedSlot mNameSlot; //, mNameSlot;
 
 		void showLabel();
 
@@ -146,7 +147,7 @@ class IngameChatWidget
 		 *
 		 * @param line the new message (this will show up next to the entity and in chat history)
 		 */
-		void updateText(const std::string& line);
+		void updateText(EntityTalk entityTalk);
 
 		/**
 		 * @brief Gets the entity the window belongs to
@@ -269,7 +270,7 @@ class IngameChatWidget
 		 *
 		 * This adds given message to chat history and displays it next to the entity (if in attached mode)
 		 */
-		void updateText(const std::string& line);
+		void updateText(EntityTalk entityTalk);
 
 		/**
 		 * @brief Called each frame to update the window

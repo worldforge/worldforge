@@ -410,22 +410,6 @@ protected:
 	 */
 	void server_GotView(Eris::View* view);
 
-	/**
-	 * @brief Called when a new Entity is created.
-	 *
-	 * We'll wire up the entity_Talk() method call here.
-	 *
-	 * @param entity The new entity.
-	 */
-	void view_EntityCreated(Eris::Entity* entity);
-
-	/**
-	 * @brief Called when an entity talks.
-	 * @param entityTalk The entity talk struct, containing all useful entity talk data.
-	 * @param entity The entity which spoke.
-	 */
-	void entity_Talk(const EntityTalk& entityTalk, EmberEntity* entity);
-
 	void entity_Emote(const std::string& description, EmberEntity* entity);
 
 	/**
