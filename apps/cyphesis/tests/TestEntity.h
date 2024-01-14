@@ -24,11 +24,10 @@
 struct TestEntity : LocatedEntity {
 	static long idGenerator;
 
-	static std::function<void(TestEntity&, const Operation&, Link&)> externalOperationFn;
 	static std::function<void(TestEntity&, const Operation&, OpVector&)> operationFn;
 	static std::function<void(TestEntity&)> destroyFn;
 
-	TestEntity() : TestEntity(idGenerator++) {
+	TestEntity() : TestEntity(RouterId{idGenerator++}) {
 	}
 
 	TestEntity(RouterId id) : LocatedEntity(id) {
@@ -36,12 +35,6 @@ struct TestEntity : LocatedEntity {
 
 	std::unique_ptr<PropertyBase> createProperty(const std::string& propertyName) const override {
 		return {};
-	}
-
-	void externalOperation(const Operation& op, Link& link) override {
-		if (externalOperationFn) {
-			externalOperationFn(*this, op, link);
-		}
 	}
 
 	void operation(const Operation& op, OpVector& res) override {
@@ -59,7 +52,6 @@ struct TestEntity : LocatedEntity {
 
 long TestEntity::idGenerator = 0;
 
-std::function<void(TestEntity&, const Operation&, Link&)> TestEntity::externalOperationFn;
 std::function<void(TestEntity&, const Operation&, OpVector&)> TestEntity::operationFn;
 std::function<void(TestEntity&)> TestEntity::destroyFn;
 

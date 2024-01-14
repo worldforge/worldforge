@@ -44,9 +44,6 @@
 
 PropertyManager* LocatedEntityTest::propertyManager = nullptr;
 
-void LocatedEntityTest::externalOperation(const Operation& op, Link&) {
-}
-
 void LocatedEntityTest::operation(const Operation&, OpVector&) {
 }
 
@@ -56,7 +53,7 @@ EntityExerciser::EntityExerciser(Ref<LocatedEntity> e) : m_ent(e) {
 		e->makeContainer();
 		assert(e->m_contains != 0);
 	} else {
-		m_parentEntity = Ref<LocatedEntity>(new LocatedEntityTest(0));
+		m_parentEntity = Ref<LocatedEntity>(new LocatedEntityTest(RouterId{0}));
 		e->m_parent = m_parentEntity.get();
 		m_parentEntity->makeContainer();
 		assert(m_parentEntity->m_contains != 0);

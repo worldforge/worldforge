@@ -23,8 +23,6 @@
 
 #include <vector>
 
-#define OP_INVALID (-1)
-
 typedef Atlas::Objects::Operation::RootOperation Operation;
 
 typedef std::vector<Operation> OpVector;

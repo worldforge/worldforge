@@ -36,8 +36,6 @@ struct LocatedEntityTest : public LocatedEntity {
 	LocatedEntityTest(RouterId id) :
 			LocatedEntity(id) {}
 
-	void externalOperation(const Operation&, Link&) override;
-
 	void operation(const Operation&, OpVector&) override;
 
 	std::unique_ptr<PropertyBase> createProperty(const std::string& propertyName) const {

@@ -120,7 +120,7 @@ int Account::connectCharacter(const Ref<LocatedEntity>& entity, OpVector& res) {
 			m_minds.erase(mindPtr->getEntity()->getIntId());
 		});
 		mind->linkUp(m_connection);
-		m_connection->addRouter(mind.get());
+		m_connection->addRouter(mind->m_id, mind.get());
 
 		//Inform the client about the mind.
 		Info mindInfo{};
@@ -379,8 +379,6 @@ void Account::processExternalOperation(const Operation& op, OpVector& res) {
 			break;
 		case Atlas::Objects::Operation::TALK_NO:
 			TalkOperation(op, res);
-			break;
-		case OP_INVALID:
 			break;
 		default:
 			if (op_no == Atlas::Objects::Operation::POSSESS_NO) {

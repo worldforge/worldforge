@@ -113,14 +113,6 @@
   }
 #endif //STUB_BaseMind_operation
 
-#ifndef STUB_BaseMind_externalOperation
-//#define STUB_BaseMind_externalOperation
-  void BaseMind::externalOperation(const Operation& op, Link&)
-  {
-    
-  }
-#endif //STUB_BaseMind_externalOperation
-
 #ifndef STUB_BaseMind_SightOperation
 //#define STUB_BaseMind_SightOperation
   void BaseMind::SightOperation(const Operation&, OpVector&)

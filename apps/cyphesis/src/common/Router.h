@@ -25,25 +25,21 @@
 #include <string>
 #include <map>
 
-namespace Atlas::Message {
+namespace Atlas {
+namespace Message {
 class Element;
 
 typedef std::map<std::string, Element> MapType;
+}
 }
 
 
 class Link;
 
-/// \brief This is the base class for any entity which has an Atlas
-/// compatible identifier.
-///
-class Router {
-public:
-	explicit Router(RouterId id);
-
-	Router(const Router&) = delete;
-
-	virtual ~Router();
+struct RouterIdentifiable {
+	inline explicit RouterIdentifiable(RouterId id)
+			: m_id(std::move(id)) {
+	}
 
 	const RouterId m_id;
 
@@ -56,11 +52,36 @@ public:
 	long getIntId() const {
 		return m_id.m_intId;
 	}
+};
+
+struct ExternalRouter {
+
+	/// \brief Process an operation from an external source
+	///
+	/// The ownership of the operation passed in at this point is handed
+	/// over to the router. The calling code must not modify the operation
+	/// after passing it to here, or expect the attributes
+	/// of the operation to remain the same.
+	/// @param op The operation to be processed.
+	virtual void externalOperation(const Operation& op, Link&) = 0;
+};
+
+
+/// \brief This is the base class for any entity which has an Atlas
+/// compatible identifier.
+///
+class Router : public RouterIdentifiable {
+public:
+	explicit Router(RouterId id);
+
+	Router(const Router&) = delete;
+
+	virtual ~Router();
 
 	static void buildError(const Operation&,
-					const std::string& errstring,
-					const Operation&,
-					const std::string& to) ;
+						   const std::string& errstring,
+						   const Operation&,
+						   const std::string& to);
 
 	/// \brief Report an Error.
 	///
@@ -87,14 +108,6 @@ public:
 	void clientError(const Operation&, const std::string& errstring,
 					 OpVector&, const std::string& to = "") const;
 
-	/// \brief Process an operation from an external source
-	///
-	/// The ownership of the operation passed in at this point is handed
-	/// over to the router. The calling code must not modify the operation
-	/// after passing it to here, or expect the attributes
-	/// of the operation to remain the same.
-	/// @param op The operation to be processed.
-	virtual void externalOperation(const Operation& op, Link&) = 0;
 
 	/// \brief Dispatch an operation that is to this object
 	virtual void operation(const Operation&, OpVector&) = 0;

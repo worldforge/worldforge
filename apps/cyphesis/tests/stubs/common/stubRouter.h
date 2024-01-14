@@ -7,9 +7,20 @@
 #include "common/Router.h"
 #include "stubRouter_custom.h"
 
+
+#ifndef STUB_ExternalRouter_externalOperation
+//#define STUB_ExternalRouter_externalOperation
+  void ExternalRouter::externalOperation(const Operation& op, Link&)
+  {
+    
+  }
+#endif //STUB_ExternalRouter_externalOperation
+
+
 #ifndef STUB_Router_Router
 //#define STUB_Router_Router
    Router::Router(RouterId id)
+    : RouterIdentifiable(id)
   {
     
   }
@@ -25,7 +36,7 @@
 
 #ifndef STUB_Router_buildError
 //#define STUB_Router_buildError
-  void Router::buildError(const Operation&, const std::string& errstring, const Operation&, const std::string& to) const
+   void Router::buildError(const Operation&, const std::string& errstring, const Operation&, const std::string& to)
   {
     
   }
@@ -46,14 +57,6 @@
     
   }
 #endif //STUB_Router_clientError
-
-#ifndef STUB_Router_externalOperation
-//#define STUB_Router_externalOperation
-  void Router::externalOperation(const Operation& op, Link&)
-  {
-    
-  }
-#endif //STUB_Router_externalOperation
 
 #ifndef STUB_Router_operation
 //#define STUB_Router_operation

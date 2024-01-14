@@ -67,7 +67,7 @@
 
 #ifndef STUB_Connection_addRouter
 //#define STUB_Connection_addRouter
-  void Connection::addRouter(Router* obj)
+  void Connection::addRouter(const RouterId& id, ExternalRouter* router)
   {
     
   }
@@ -75,7 +75,7 @@
 
 #ifndef STUB_Connection_addConnectableRouter
 //#define STUB_Connection_addConnectableRouter
-  void Connection::addConnectableRouter(ConnectableRouter* obj)
+  void Connection::addConnectableRouter(ConnectableRouter* router)
   {
     
   }

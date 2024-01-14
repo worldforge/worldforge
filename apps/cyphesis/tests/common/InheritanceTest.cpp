@@ -113,10 +113,10 @@ public:
 	Inheritance* m_inheritance;
 };
 
-int Inheritancetest::SQUIGGLYMUFF_NO = OP_INVALID;
+int Inheritancetest::SQUIGGLYMUFF_NO = -1;
 
 Inheritancetest::Inheritancetest() {
-	if (SQUIGGLYMUFF_NO == OP_INVALID) {
+	if (SQUIGGLYMUFF_NO == -1) {
 		SQUIGGLYMUFF_NO = factories.addFactory("squigglymuff",
 											   &generic_factory, &Atlas::Objects::defaultInstance<Atlas::Objects::RootData>);
 	}

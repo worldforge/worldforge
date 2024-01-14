@@ -34,7 +34,7 @@ struct OperationsListener;
 /// This is now also intended to be the base for in-game persistence.
 /// It implements the basic types required for persistence.
 /// \ingroup EntityClasses
-class Entity : public LocatedEntity {
+class Entity : public LocatedEntity, public ExternalRouter {
 protected:
 
 	/// Map of delegate properties.

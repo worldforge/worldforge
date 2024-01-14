@@ -23,8 +23,10 @@
 
 class CommSocket;
 
-namespace Atlas::Objects {
+namespace Atlas {
+namespace Objects {
 class ObjectsEncoder;
+}
 }
 
 
@@ -32,7 +34,7 @@ class ObjectsEncoder;
 ///
 /// This means that operations sent to this class will then be routed through
 /// some comm socket to an external client.
-class Link : public Router {
+class Link : public Router, public ExternalRouter {
 protected:
 	/// \brief The Atlas encoder used to send objects over this link
 	Atlas::Objects::ObjectsEncoder* m_encoder;

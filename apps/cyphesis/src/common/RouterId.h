@@ -28,7 +28,11 @@
  */
 struct RouterId {
 
-	explicit RouterId(long intId);
+	/**
+	 * Implicit ctor by design here.
+	 * @param intId
+	 */
+	RouterId(long intId);
 
 	explicit RouterId(std::string id);
 

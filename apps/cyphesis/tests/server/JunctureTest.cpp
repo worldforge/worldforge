@@ -60,7 +60,7 @@ public:
 // Test class to expose protected methods.
 class TestJuncture : public Juncture {
 public:
-	TestJuncture(Connection* c = 0) : Juncture(c, 1) {}
+	TestJuncture(Connection* c = 0) : Juncture(c, RouterId{1}) {}
 
 	void test_onPeerLost() { onPeerLost(); }
 
@@ -74,12 +74,12 @@ int stub_CommPeer_connect_return = 0;
 
 int main() {
 	{
-		Juncture j(0, 1);
+		Juncture j(0, RouterId{1});
 
 	}
 
 	{
-		Juncture j(0, 1);
+		Juncture j(0, RouterId{1});
 
 		OpVector res;
 		Operation op;
@@ -88,7 +88,7 @@ int main() {
 	}
 
 	{
-		Juncture j(0, 1);
+		Juncture j(0, RouterId{1});
 
 		OpVector res;
 		Atlas::Objects::Operation::Login op;
@@ -98,7 +98,7 @@ int main() {
 
 	// Login op, no args
 	{
-		Juncture j(0, 1);
+		Juncture j(0, RouterId{1});
 
 		OpVector res;
 		Operation op;
@@ -108,7 +108,7 @@ int main() {
 
 	// Login op, empty arg
 	{
-		Juncture j(0, 1);
+		Juncture j(0, RouterId{1});
 
 		OpVector res;
 
@@ -122,7 +122,7 @@ int main() {
 
 	// Login op, username in arg
 	{
-		Juncture j(0, 1);
+		Juncture j(0, RouterId{1});
 
 		OpVector res;
 
@@ -137,7 +137,7 @@ int main() {
 
 	// Login op, bad username in arg
 	{
-		Juncture j(0, 1);
+		Juncture j(0, RouterId{1});
 
 		OpVector res;
 
@@ -152,7 +152,7 @@ int main() {
 
 	// Login op, username & password in arg
 	{
-		Juncture j(0, 1);
+		Juncture j(0, RouterId{1});
 
 		OpVector res;
 
@@ -168,7 +168,7 @@ int main() {
 
 	// Login op, username & bad password in arg
 	{
-		Juncture j(0, 1);
+		Juncture j(0, RouterId{1});
 
 		OpVector res;
 
@@ -184,11 +184,11 @@ int main() {
 
 	// Login op, username & password in arg, connected
 	{
-		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", 3);
+		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", RouterId{3});
 		TestJuncture j(0);
 		boost::asio::io_context io_context;
 		CommPeer cp("", io_context, factories);
-		Peer peer(cp, sr, "", 6767, 4);
+		Peer peer(cp, sr, "", 6767, RouterId{4});
 		j.test_addPeer(&peer);
 
 		OpVector res;
@@ -205,13 +205,13 @@ int main() {
 
 	// Login op, username & password in arg, connected already authenticating
 	{
-		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", 3);
+		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", RouterId{3});
 
 		TestJuncture j(0);
 
 		boost::asio::io_context io_context;
 		CommPeer cp("", io_context, factories);
-		Peer p(cp, sr, "", 6767, 4);
+		Peer p(cp, sr, "", 6767, RouterId{4});
 		j.test_addPeer(&p);
 
 		p.setAuthState(PEER_AUTHENTICATING);
@@ -230,13 +230,13 @@ int main() {
 
 	// Login op, username & password in arg, connected, with serialno
 	{
-		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", 3);
+		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", RouterId{3});
 
 		TestJuncture j(0);
 
 		boost::asio::io_context io_context;
 		CommPeer cp("", io_context, factories);
-		Peer p(cp, sr, "", 6767, 4);
+		Peer p(cp, sr, "", 6767, RouterId{4});
 		j.test_addPeer(&p);
 
 		OpVector res;
@@ -253,7 +253,7 @@ int main() {
 	}
 
 	{
-		Juncture j(0, 1);
+		Juncture j(0, RouterId{1});
 
 		OpVector res;
 		Operation op;
@@ -262,7 +262,7 @@ int main() {
 	}
 
 	{
-		Juncture j(0, 1);
+		Juncture j(0, RouterId{1});
 
 		OpVector res;
 		Atlas::Objects::Operation::Connect op;
@@ -272,7 +272,7 @@ int main() {
 
 	// Connect op, no args
 	{
-		Juncture j(0, 1);
+		Juncture j(0, RouterId{1});
 
 		OpVector res;
 		Operation op;
@@ -282,12 +282,12 @@ int main() {
 
 	// Connect op, no args, already connected
 	{
-		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", 3);
+		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", RouterId{3});
 		TestJuncture j(0);
 
 		boost::asio::io_context io_context;
 		CommPeer cp("", io_context, factories);
-		Peer p(cp, sr, "", 6767, 4);
+		Peer p(cp, sr, "", 6767, RouterId{4});
 		j.test_addPeer(&p);
 
 		OpVector res;
@@ -298,7 +298,7 @@ int main() {
 
 	// Connect op, hostname in arg
 	{
-		Juncture j(0, 1);
+		Juncture j(0, RouterId{1});
 
 		OpVector res;
 		Operation op;
@@ -313,7 +313,7 @@ int main() {
 
 	// Connect op, bad hostname in arg
 	{
-		Juncture j(0, 1);
+		Juncture j(0, RouterId{1});
 
 		OpVector res;
 		Operation op;
@@ -328,12 +328,12 @@ int main() {
 
 	// Connect op, hostname and port in arg, connected this end
 	{
-		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", 3);
+		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", RouterId{3});
 		boost::asio::io_context io_context;
 		StubSocket cc(io_context);
-		Connection c(cc, sr, "", 4);
+		Connection c(cc, sr, "", RouterId{4});
 
-		Juncture j(&c, 1);
+		Juncture j(&c, RouterId{1});
 
 		OpVector res;
 		Operation op;
@@ -351,12 +351,12 @@ int main() {
 	{
 		stub_CommPeer_connect_return = -1;
 
-		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", 3);
+		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", RouterId{3});
 		boost::asio::io_context io_context;
 		StubSocket cc(io_context);
-		Connection c(cc, sr, "", 4);
+		Connection c(cc, sr, "", RouterId{4});
 
-		Juncture j(&c, 1);
+		Juncture j(&c, RouterId{1});
 
 		OpVector res;
 		Operation op;
@@ -383,7 +383,7 @@ int main() {
 	// Teleport connected
 	{
 		TestJuncture j(0);
-		Peer peer(*(CommPeer*) 0, *(ServerRouting*) 0, "", 6767, 4);
+		Peer peer(*(CommPeer*) 0, *(ServerRouting*) 0, "", 6767, RouterId{4});
 		j.test_addPeer(&peer);
 		j.teleportEntity(0);
 
@@ -408,7 +408,7 @@ int main() {
 	// Peer replied, connected this end
 	{
 		Connection c(*(CommSocket*) 0,
-					 *(ServerRouting*) 0, "", 4);
+					 *(ServerRouting*) 0, "", RouterId{4});
 
 		TestJuncture j(&c);
 

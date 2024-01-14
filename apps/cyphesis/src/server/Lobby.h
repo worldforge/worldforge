@@ -49,8 +49,6 @@ public:
 		return m_accounts;
 	}
 
-	void externalOperation(const Operation& op, Link&) override;
-
 	void operation(const Operation&, OpVector&) override;
 
 	void addToMessage(Atlas::Message::MapType&) const override;

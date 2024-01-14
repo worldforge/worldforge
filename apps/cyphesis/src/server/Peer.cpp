@@ -47,7 +47,7 @@ using Atlas::Objects::Entity::Anonymous;
 /// @param client the client socket used to connect to the peer.
 /// @param svr the server routing object of this server.
 /// @param addr a string representation of the address of the peer.
-/// @param id a string giving the indentifier of the peer connection.
+/// @param id a string giving the identifier of the peer connection.
 Peer::Peer(CommSocket& client,
 		   ServerRouting& svr,
 		   const std::string& addr,

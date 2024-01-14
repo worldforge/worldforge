@@ -46,8 +46,6 @@ public:
 
 	void operation(const Operation& op, OpVector& res) override;
 
-	void externalOperation(const Operation& op, Link&) override;
-
 	const std::unordered_map<std::string, Ref<BaseMind>>& getMinds() const {
 		return m_minds;
 	};

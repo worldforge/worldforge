@@ -139,8 +139,6 @@ public:
 
 	void operation(const Operation&, OpVector&) override;
 
-	void externalOperation(const Operation& op, Link&) override;
-
 	void SightOperation(const Operation&, OpVector&);
 
 	void SoundOperation(const Operation&, OpVector&);

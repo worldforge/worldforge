@@ -35,9 +35,9 @@ RouterId newId()
 
 RouterId idFromString(const std::string& id)
 {
-    return {integerId(id)};
+    return RouterId{integerId(id)};
 }
 
 RouterId forceIdFromString(const std::string& id) {
-    return {forceIntegerId(id)};
+    return RouterId{forceIntegerId(id)};
 }

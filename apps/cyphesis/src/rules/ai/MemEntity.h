@@ -56,8 +56,6 @@ public:
 		}
 	}
 
-	void externalOperation(const Operation& op, Link&) override;
-
 	void operation(const Operation&, OpVector&) override;
 
 	void destroy() override;

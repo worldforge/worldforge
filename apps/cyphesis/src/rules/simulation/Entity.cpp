@@ -399,8 +399,6 @@ void Entity::callOperation(const Operation& op, OpVector& res) {
 		case Atlas::Objects::Operation::CREATE_NO:
 			CreateOperation(op, res);
 			break;
-		case OP_INVALID:
-			break;
 		default:
 			if ((op_no) == Atlas::Objects::Operation::UPDATE_NO) {
 				UpdateOperation(op, res);

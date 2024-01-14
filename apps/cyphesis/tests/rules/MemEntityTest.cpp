@@ -30,7 +30,7 @@
 #include <cassert>
 
 int main() {
-	MemEntity* me = new MemEntity(1);
+	auto* me = new MemEntity(RouterId{1});
 
 	delete me;
 	// The is no code in operations.cpp to execute, but we need coverage.

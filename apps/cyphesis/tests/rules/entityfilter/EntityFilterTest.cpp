@@ -141,7 +141,7 @@ struct TestContext {
 	TestContext() : m_inheritance(factories) {
 		s_types = &types;
 //Set up testing environment for Type/Soft properties
-		m_b1 = new TestEntity(1);
+		m_b1 = new TestEntity(RouterId{1});
 		add_entity(m_b1);
 
 		types["thing"] = std::make_unique<TypeNode>("thing");
@@ -153,21 +153,21 @@ struct TestContext {
 		m_b1->setProperty("burn_speed", std::make_unique<SoftProperty>(0.3));
 		m_b1->setProperty("isVisible", std::make_unique<SoftProperty>(true));
 
-		m_b2 = new TestEntity(2);
+		m_b2 = new TestEntity(RouterId{2});
 		add_entity(m_b2);
 		m_b2->setProperty("mass", std::make_unique<SoftProperty>(20));
 		m_b2->setProperty("burn_speed", std::make_unique<SoftProperty>(0.25));
 		m_b2->setType(types["barrel"].get());
 		m_b2->setProperty("isVisible", std::make_unique<SoftProperty>(false));
 
-		m_b3 = new TestEntity(3);
+		m_b3 = new TestEntity(RouterId{3});
 		add_entity(m_b3);
 		m_b3->setProperty("mass", std::make_unique<SoftProperty>(25));
 		m_b3->setProperty("burn_speed", std::make_unique<SoftProperty>(0.25));
 		m_b3->setType(types["barrel"].get());
 
 		types["boulder"] = std::make_unique<TypeNode>("boulder");
-		m_bl1 = new TestEntity(4);
+		m_bl1 = new TestEntity(RouterId{4});
 		add_entity(m_bl1);
 		m_bl1->setProperty("mass", std::make_unique<SoftProperty>(25));
 		m_bl1->setType(types["boulder"].get());
@@ -199,7 +199,7 @@ struct TestContext {
 		types["cloth"] = std::make_unique<TypeNode>("cloth");
 		types["leather"] = std::make_unique<TypeNode>("leather");
 
-		m_glovesEntity = new TestEntity(5);
+		m_glovesEntity = new TestEntity(RouterId{5});
 		add_entity(m_glovesEntity);
 		m_glovesEntity->setType(types["gloves"].get());
 		m_glovesEntity->setProperty("color", std::make_unique<SoftProperty>("brown"));
@@ -209,19 +209,19 @@ struct TestContext {
 		reachProp->data() = 10.0f;
 		m_glovesEntity->setProperty("reach", std::unique_ptr<PropertyBase>(reachProp));
 
-		m_bootsEntity = new TestEntity(6);
+		m_bootsEntity = new TestEntity(RouterId{6});
 		add_entity(m_bootsEntity);
 		m_bootsEntity->setType(types["boots"].get());
 		m_bootsEntity->setProperty("color", std::make_unique<SoftProperty>("black"));
 		m_bootsEntity->setProperty("mass", std::make_unique<SoftProperty>(10));
 
 
-		m_cloth = new TestEntity(8);
+		m_cloth = new TestEntity(RouterId{8});
 		add_entity(m_cloth);
 		m_cloth->setType(types["cloth"].get());
 		m_cloth->setProperty("color", std::make_unique<SoftProperty>("green"));
 
-		m_leather = new TestEntity(9);
+		m_leather = new TestEntity(RouterId{9});
 		add_entity(m_leather);
 		m_leather->setType(types["leather"].get());
 		m_leather->setProperty("color", std::make_unique<SoftProperty>("pink"));
@@ -239,7 +239,7 @@ struct TestContext {
 			m_glovesEntity->addChild(*m_cloth);
 		}
 
-		m_ch1 = new TestEntity(7);
+		m_ch1 = new TestEntity(RouterId{7});
 		add_entity(m_ch1);
 		m_ch1->setType(types["character"].get());
 		m_ch1->makeContainer();
@@ -269,7 +269,7 @@ struct TestContext {
 		m_cloth->setProperty("bbox", std::unique_ptr<PropertyBase>(bbox1->copy()));
 
 		//The m_entityOnlyReachableWithPosition is a child of b1
-		m_entityOnlyReachableWithPosition = new TestEntity(10);
+		m_entityOnlyReachableWithPosition = new TestEntity(RouterId{10});
 		add_entity(m_entityOnlyReachableWithPosition);
 		m_entityOnlyReachableWithPosition->setProperty("only_reachable_with_pos", std::make_unique<SoftProperty>(Element(1)));
 		m_entityOnlyReachableWithPosition->setType(types["barrel"].get());

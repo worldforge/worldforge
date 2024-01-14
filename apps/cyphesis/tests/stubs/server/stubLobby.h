@@ -40,14 +40,6 @@
   }
 #endif //STUB_Lobby_removeAccount
 
-#ifndef STUB_Lobby_externalOperation
-//#define STUB_Lobby_externalOperation
-  void Lobby::externalOperation(const Operation& op, Link&)
-  {
-    
-  }
-#endif //STUB_Lobby_externalOperation
-
 #ifndef STUB_Lobby_operation
 //#define STUB_Lobby_operation
   void Lobby::operation(const Operation&, OpVector&)

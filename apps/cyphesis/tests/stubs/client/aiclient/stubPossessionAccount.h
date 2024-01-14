@@ -40,14 +40,6 @@
   }
 #endif //STUB_PossessionAccount_operation
 
-#ifndef STUB_PossessionAccount_externalOperation
-//#define STUB_PossessionAccount_externalOperation
-  void PossessionAccount::externalOperation(const Operation& op, Link&)
-  {
-    
-  }
-#endif //STUB_PossessionAccount_externalOperation
-
 #ifndef STUB_PossessionAccount_findMindForId
 //#define STUB_PossessionAccount_findMindForId
   Ref<BaseMind> PossessionAccount::findMindForId(const std::string& id)

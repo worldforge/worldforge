@@ -24,14 +24,6 @@
   }
 #endif //STUB_MemEntity_MemEntity
 
-#ifndef STUB_MemEntity_externalOperation
-//#define STUB_MemEntity_externalOperation
-  void MemEntity::externalOperation(const Operation& op, Link&)
-  {
-    
-  }
-#endif //STUB_MemEntity_externalOperation
-
 #ifndef STUB_MemEntity_operation
 //#define STUB_MemEntity_operation
   void MemEntity::operation(const Operation&, OpVector&)

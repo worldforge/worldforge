@@ -39,7 +39,7 @@ struct ConnectableRouter;
 
 
 struct RouterWithQueue {
-	Router* router;
+	ExternalRouter* router;
 	/**
 	 * Operations send by the router, to be processed by calls to "dispatch".
 	 */
@@ -109,9 +109,9 @@ public:
 	 */
 	void setPossessionEnabled(bool enabled, const std::string& routerId);
 
-	void addRouter(Router* obj);
+	void addRouter(const RouterId& id, ExternalRouter* router);
 
-	void addConnectableRouter(ConnectableRouter* obj);
+	void addConnectableRouter(ConnectableRouter* router);
 
 	void removeRouter(long id);
 

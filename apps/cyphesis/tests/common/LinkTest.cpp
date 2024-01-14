@@ -138,7 +138,7 @@ Linktest::Linktest() {
 void Linktest::setup() {
 	m_bridge = new Sink;
 	m_socket = new TestCommSocket(*(boost::asio::io_context*) 0);
-	m_link = new TestLink(*m_socket, 1);
+	m_link = new TestLink(*m_socket, RouterId{1});
 	m_encoder = 0;
 }
 

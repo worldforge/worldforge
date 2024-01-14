@@ -138,14 +138,14 @@ void Connection::setPossessionEnabled(bool enabled, const std::string& routerId)
 }
 
 
-void Connection::addRouter(Router* obj) {
-	m_routers[obj->getIntId()].router = obj;
+void Connection::addRouter(const RouterId& id, ExternalRouter* router) {
+	m_routers[id.m_intId].router = router;
 }
 
-void Connection::addConnectableRouter(ConnectableRouter* obj) {
-	obj->setConnection(this);
-	addRouter(obj);
-	m_connectableRouters[obj->getIntId()] = obj;
+void Connection::addConnectableRouter(ConnectableRouter* router) {
+	router->setConnection(this);
+	addRouter(router->m_id, router);
+	m_connectableRouters[router->getIntId()] = router;
 }
 
 
@@ -257,7 +257,7 @@ void Connection::externalOperation(const Operation& op, Link& link) {
 			I->second.opsQueue.emplace_back(op);
 			if (I->second.opsQueue.size() > 1000) {
 				spdlog::warn("Operations queue for router {} is alarmingly high, currently at {}. New op of type '{}'.",
-							 I->second.router->getId(), I->second.opsQueue.size(), op->getParent());
+							 I->first, I->second.opsQueue.size(), op->getParent());
 			}
 		}
 	}
@@ -278,8 +278,6 @@ void Connection::operation(const Operation& op, OpVector& res) {
 			break;
 		case Atlas::Objects::Operation::LOGOUT_NO:
 			LogoutOperation(op, res);
-			break;
-		case OP_INVALID:
 			break;
 		default:
 			std::string parent = op->getParent().empty() ? "-" : op->getParent();

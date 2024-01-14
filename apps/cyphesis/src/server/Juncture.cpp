@@ -166,8 +166,6 @@ void Juncture::operation(const Operation& op, OpVector& res) {
 		case Atlas::Objects::Operation::LOGIN_NO:
 			LoginOperation(op, res);
 			break;
-		case OP_INVALID:
-			break;
 		default:
 			OtherOperation(op, res);
 			break;

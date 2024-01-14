@@ -24,7 +24,7 @@
 #include <Atlas/Objects/Operation.h>
 
 Router::Router(RouterId id) :
-		m_id(std::move(id)) {
+		RouterIdentifiable(std::move(id)) {
 }
 
 Router::~Router() = default;
@@ -71,13 +71,6 @@ void Router::clientError(const Operation& op,
 	buildError(op, errstring, e, to);
 
 	res.push_back(e);
-}
-
-
-void Router::externalOperation(const Operation& op, Link&) {
-}
-
-void Router::operation(const Operation& op, OpVector& res) {
 }
 
 void Router::addToMessage(Atlas::Message::MapType& omap) const {

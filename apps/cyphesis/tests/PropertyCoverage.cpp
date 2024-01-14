@@ -41,9 +41,9 @@ using Atlas::Objects::Entity::Anonymous;
 
 PropertyCoverage::PropertyCoverage(PropertyBase& pb) :
 		m_prop(pb),
-		m_tlve(new Entity(0)),
+		m_tlve(new Entity(RouterId{0})),
 		m_wrld(new TestWorld(m_tlve)),
-		m_ent(new Entity(1)) {
+		m_ent(new Entity(RouterId{1})) {
 	m_ent->m_parent = m_tlve.get();
 	//m_ent->m_location.m_pos = Point3D(1,0,0);
 
@@ -115,7 +115,7 @@ Ref<Entity> PropertyCoverage::createCharacterEntity() {
 	m_ent->m_parent = 0;
 	m_tlve->m_contains->clear();
 
-	Ref<Entity> chr(new Entity(2));
+	Ref<Entity> chr(new Entity(RouterId{2}));
 	m_ent = chr;
 	m_ent->m_parent = m_tlve.get();
 	//m_ent->m_location.m_pos = Point3D(1,0,0);

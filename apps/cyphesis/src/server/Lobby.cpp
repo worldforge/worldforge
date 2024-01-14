@@ -85,11 +85,6 @@ void Lobby::removeAccount(ConnectableRouter* ac) {
 	}
 }
 
-
-void Lobby::externalOperation(const Operation& op, Link&) {
-	spdlog::error("{} called", __PRETTY_FUNCTION__);
-}
-
 void Lobby::operation(const Operation& op, OpVector& res) {
 	cy_debug_print("Lobby::operation(" << op->getParent());
 	const std::string& to = op->getTo();

@@ -48,7 +48,7 @@ void checkSignal() {
 		// Check the assignment operator causes the signal to fire
 		emitted = false;
 
-		Entity e(1);
+		Entity e(RouterId{1});
 		WeakEntityRef ref;
 
 		assert(emitted == false);
@@ -68,7 +68,7 @@ void checkSignal() {
 		// the the pointer is unchanged
 		emitted = false;
 
-		Entity e(1);
+		Entity e(RouterId{1});
 		WeakEntityRef ref(&e);
 
 		assert(emitted == false);
@@ -87,8 +87,8 @@ void checkSignal() {
 		// Check that destroying the Entity makes the reference null.
 		emitted = false;
 
-		Entity e(1);
-		Ref<Entity> container = new Entity(2);
+		Entity e(RouterId{1});
+		Ref<Entity> container = new Entity(RouterId{2});
 
 		// Set the location of the entity being tested, as destroy requires it.
 		e.m_parent = container.get();
@@ -151,7 +151,7 @@ int main() {
 
 	{
 		// Check the initialising constructor via get
-		Ref<Entity> e = new Entity(1);
+		Ref<Entity> e = new Entity(RouterId{1});
 		WeakEntityRef ref(e);
 
 		assert(ref.get() == e.get());
@@ -159,7 +159,7 @@ int main() {
 
 	{
 		// Check the initialising constructor via dereference
-		Ref<Entity> e = new Entity(1);
+		Ref<Entity> e = new Entity(RouterId{1});
 		WeakEntityRef ref(e);
 
 		assert(&(*ref) == e.get());
@@ -167,7 +167,7 @@ int main() {
 
 	{
 		// Check the initialising constructor via ->
-		Ref<Entity> e = new Entity(1);
+		Ref<Entity> e = new Entity(RouterId{1});
 		WeakEntityRef ref(e);
 
 		assert(ref.operator->() == e.get());
@@ -175,7 +175,7 @@ int main() {
 
 	{
 		// Check the initialising constructor via ==
-		Ref<Entity> e = new Entity(1);
+		Ref<Entity> e = new Entity(RouterId{1});
 		WeakEntityRef ref(e);
 
 		assert(ref == e.get());
@@ -183,7 +183,7 @@ int main() {
 
 	{
 		// Check the copy constructor
-		Ref<Entity> e = new Entity(1);
+		Ref<Entity> e = new Entity(RouterId{1});
 		WeakEntityRef ref(e);
 		WeakEntityRef ref2(ref);
 
@@ -192,7 +192,7 @@ int main() {
 
 	{
 		// Check the comparison operator
-		Ref<Entity> e = new Entity(1);
+		Ref<Entity> e = new Entity(RouterId{1});
 		WeakEntityRef ref(e);
 		WeakEntityRef ref2(e);
 
@@ -201,8 +201,8 @@ int main() {
 
 	{
 		// Check the comparison operator
-		Ref<Entity> e = new Entity(1);
-		Ref<Entity> e2 = new Entity(2);
+		Ref<Entity> e = new Entity(RouterId{1});
+		Ref<Entity> e2 = new Entity(RouterId{2});
 		WeakEntityRef ref(e);
 		WeakEntityRef ref2(e2);
 
@@ -233,7 +233,7 @@ int main() {
 
 	{
 		// Check the less than operator
-		Ref<Entity> e = new Entity(1);
+		Ref<Entity> e = new Entity(RouterId{1});
 		WeakEntityRef ref(e);
 		WeakEntityRef ref2(e);
 
@@ -242,8 +242,8 @@ int main() {
 
 	{
 		// Check the less than operator
-		Ref<Entity> e = new Entity(1);
-		Ref<Entity> e2 = new Entity(2);
+		Ref<Entity> e = new Entity(RouterId{1});
+		Ref<Entity> e2 = new Entity(RouterId{2});
 		WeakEntityRef ref(e);
 		WeakEntityRef ref2(e2);
 
@@ -252,7 +252,7 @@ int main() {
 
 	{
 		// Check the assignment operator
-		Ref<Entity> e = new Entity(1);
+		Ref<Entity> e = new Entity(RouterId{1});
 		WeakEntityRef ref;
 
 		ref = WeakEntityRef(e);
@@ -262,8 +262,8 @@ int main() {
 
 	{
 		// Check that destroying the Entity makes the reference null.
-		Entity e(1);
-		Ref<Entity> container = new Entity(2);
+		Entity e(RouterId{1});
+		Ref<Entity> container = new Entity(RouterId{2});
 
 		// Set the location of the entity being tested, as destroy requires it.
 		e.m_parent = container.get();

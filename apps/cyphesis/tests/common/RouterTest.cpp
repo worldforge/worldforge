@@ -80,7 +80,7 @@ Routertest::Routertest() : m_router(0) {
 }
 
 void Routertest::setup() {
-	m_router = new TestRouter(1);
+	m_router = new TestRouter(RouterId{1});
 }
 
 void Routertest::teardown() {

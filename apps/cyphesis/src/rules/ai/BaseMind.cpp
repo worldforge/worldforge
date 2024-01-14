@@ -487,10 +487,6 @@ void BaseMind::operation(const Operation& op, OpVector& res) {
 	}
 }
 
-void BaseMind::externalOperation(const Operation& op, Link&) {
-
-}
-
 void BaseMind::processTick(OpVector& res) {
 	rmt_ScopedCPUSample(tick, 0)
 	//Start by scheduling the next tick op.
@@ -551,7 +547,7 @@ void BaseMind::callSightOperation(const Operation& op,
 								  OpVector& res) {
 	m_map.getAdd(op->getFrom());
 	auto op_no = op->getClassNo();
-	if (debug_flag && (op_no == OP_INVALID)) {
+	if (debug_flag) {
 		cy_debug_print(getId() << " could not deliver sight of "
 							   << op->getParent());
 	}
@@ -565,11 +561,6 @@ void BaseMind::callSoundOperation(const Operation& op,
 	// This function essentially does nothing now, except add the source
 	// of the sound op to the map.
 	m_map.getAdd(op->getFrom());
-	auto op_no = op->getClassNo();
-	if (debug_flag && (op_no == OP_INVALID)) {
-		cy_debug_print(getId() << " could not deliver sound of "
-							   << op->getParent())
-	}
 
 #if 0
 	const MemEntityDict & ents = m_map.getEntities();

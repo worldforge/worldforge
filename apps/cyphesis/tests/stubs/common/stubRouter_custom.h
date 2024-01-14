@@ -2,7 +2,7 @@
 #ifndef STUB_Router_Router
 #define STUB_Router_Router
 Router::Router(RouterId id)
-: m_id(id)
+: RouterIdentifiable(id)
 {
 
 }

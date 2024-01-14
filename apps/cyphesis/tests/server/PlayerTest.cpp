@@ -104,21 +104,21 @@ long Playertest::newId() {
 }
 
 void Playertest::setup() {
-	Ref<Entity> gw = new Entity(m_id_counter++);
+	Ref<Entity> gw = new Entity(RouterId{m_id_counter++});
 	m_world = new TestWorld(gw);
 
 	m_server = new ServerRouting(*m_world,
 								 *(Persistence*) nullptr,
 								 "5529d7a4-0158-4dc1-b4a5-b5f260cac635",
 								 "bad621d4-616d-4faf-b9e6-471d12b139a9",
-								 m_id_counter++);
+								 RouterId{m_id_counter++});
 	m_connection = new Connection(*(CommSocket*) 0, *m_server,
 								  "8d18a4e8-f14f-4a46-997e-ada120d5438f",
-								  m_id_counter++);
+								  RouterId{m_id_counter++});
 	m_account = new Player(m_connection,
 						   "6c9f3236-5de7-4ba4-8b7a-b0222df0af38",
 						   "fa1a03a2-a745-4033-85cb-bb694e921e62",
-						   m_id_counter++);
+						   RouterId{m_id_counter++});
 }
 
 void Playertest::teardown() {
@@ -241,7 +241,7 @@ void Router::error(const Operation& op,
 
 RouterId newId() {
 	long new_id = Playertest::newId();
-	return {new_id};
+	return RouterId{new_id};
 }
 
 #include "../stubs/common/stublog.h"

@@ -52,10 +52,6 @@ std::unique_ptr<PropertyBase> MemEntity::createProperty(const std::string& prope
 	return PropertyManager::instance().addProperty(propertyName);
 }
 
-
-void MemEntity::externalOperation(const Operation& op, Link&) {
-}
-
 void MemEntity::operation(const Operation&, OpVector&) {
 }
 

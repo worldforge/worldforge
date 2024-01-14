@@ -41,6 +41,14 @@
   }
 #endif //STUB_CyPy_World_get_time
 
+#ifndef STUB_CyPy_World_get_time_as_seconds
+//#define STUB_CyPy_World_get_time_as_seconds
+  Py::Object CyPy_World::get_time_as_seconds()
+  {
+    return *static_cast<Py::Object*>(nullptr);
+  }
+#endif //STUB_CyPy_World_get_time_as_seconds
+
 #ifndef STUB_CyPy_World_get_entity
 //#define STUB_CyPy_World_get_entity
   Py::Object CyPy_World::get_entity(const Py::Tuple& args)

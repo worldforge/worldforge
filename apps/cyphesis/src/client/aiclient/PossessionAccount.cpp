@@ -161,11 +161,6 @@ Ref<BaseMind> PossessionAccount::findMindForId(const std::string& id) {
 
 }
 
-
-void PossessionAccount::externalOperation(const Operation& op, Link&) {
-
-}
-
 void PossessionAccount::PossessOperation(const Operation& op, OpVector& res) {
 	spdlog::trace("Got possession request.");
 
@@ -208,7 +203,7 @@ void PossessionAccount::takePossession(OpVector& res, const std::string& possess
 			return;
 		}
 
-		RootEntity ent = Atlas::Objects::smart_dynamic_cast<RootEntity>(args.front());
+		auto ent = Atlas::Objects::smart_dynamic_cast<RootEntity>(args.front());
 		if (!ent.isValid()) {
 			spdlog::error("malformed character possession response");
 			return;

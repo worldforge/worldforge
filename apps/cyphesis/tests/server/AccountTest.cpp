@@ -379,7 +379,7 @@ void Accounttest::setup() {
 
 
 	m_persistence = new Persistence(m_database);
-	m_gw = new Entity(m_id_counter++);
+	m_gw = new Entity(RouterId{m_id_counter++});
 	TestWorld::extension.messageFn = &Accounttest::set_TestWorld_message_called;
 	TestWorld::extension.addNewEntityFn = [&](const std::string&,
 											  const Atlas::Objects::Entity::RootEntity&) {
@@ -396,14 +396,14 @@ void Accounttest::setup() {
 								 *m_persistence,
 								 "5529d7a4-0158-4dc1-b4a5-b5f260cac635",
 								 "bad621d4-616d-4faf-b9e6-471d12b139a9",
-								 m_id_counter++);
+								 RouterId{m_id_counter++});
 	m_connection = new Connection(*(CommSocket*) 0, *m_server,
 								  "8d18a4e8-f14f-4a46-997e-ada120d5438f",
-								  m_id_counter++);
+								  RouterId{m_id_counter++});
 	m_account = new TestAccount(m_connection,
 								"6c9f3236-5de7-4ba4-8b7a-b0222df0af38",
 								"fa1a03a2-a745-4033-85cb-bb694e921e62",
-								m_id_counter++);
+								RouterId{m_id_counter++});
 	TestWorld_addNewEntity_ret_value = nullptr;
 	TeleportAuthenticator_ret_value = nullptr;
 }
@@ -421,7 +421,7 @@ void Accounttest::test_null() {
 
 void Accounttest::test_characterDestroyed() {
 	long cid = m_id_counter++;
-	Ref<LocatedEntity> c = new Entity(cid);
+	Ref<LocatedEntity> c = new Entity(RouterId{cid});
 
 	ASSERT_TRUE(m_account->m_charactersDict.empty());
 
@@ -456,7 +456,7 @@ void Accounttest::test_connectCharacter_raw_Entity() {
 
 	OpVector res;
 	long cid = m_id_counter++;
-	Ref<Entity> c = new Entity(cid);
+	Ref<Entity> c = new Entity(RouterId{cid});
 
 	m_account->connectCharacter(c.get(), res);
 
@@ -468,7 +468,7 @@ void Accounttest::test_connectCharacter_raw_Entity() {
 
 void Accounttest::test_addCharacter_raw_Entity() {
 	long cid = m_id_counter++;
-	Ref<Entity> c = new Entity(cid);
+	Ref<Entity> c = new Entity(RouterId{cid});
 
 	ASSERT_TRUE(m_account->m_charactersDict.empty());
 
@@ -565,7 +565,7 @@ void Accounttest::test_store() {
 
 void Accounttest::test_addToMessage() {
 	long cid = m_id_counter++;
-	Ref<Entity> c = new Entity(cid);
+	Ref<Entity> c = new Entity(RouterId{cid});
 	m_account->m_charactersDict.emplace(c->getIntId(), c);
 
 	MapType data;
@@ -589,7 +589,7 @@ void Accounttest::test_addToMessage() {
 
 void Accounttest::test_addToEntity() {
 	long cid = m_id_counter++;
-	Ref<Entity> c = new Entity(cid);
+	Ref<Entity> c = new Entity(RouterId{cid});
 	m_account->m_charactersDict.emplace(c->getIntId(), c);
 
 	Anonymous data;
@@ -669,7 +669,7 @@ void Accounttest::test_operation_Talk() {
 
 void Accounttest::test_operation_INVALID() {
 	Atlas::Objects::Operation::Generic op;
-	op->setType("3d6b8a1e-137c-40a6-9ec9-1b21591e4937", OP_INVALID);
+	op->setType("3d6b8a1e-137c-40a6-9ec9-1b21591e4937", -1);
 	OpVector res;
 
 	m_account->test_processExternalOperation(op, res);
@@ -709,7 +709,7 @@ void Accounttest::test_CreateOperation_good() {
 //
 //    // Set up the creation so it succeeds
 //    characterError_ret_value = 0;
-//    TestWorld_addNewEntity_ret_value = new Entity(cid);
+//    TestWorld_addNewEntity_ret_value = new Entity(RouterId{cid});
 //
 //    Atlas::Objects::Operation::Create op;
 //    OpVector res;
@@ -856,7 +856,7 @@ void Accounttest::test_LookOperation_no_id() {
 
 void Accounttest::test_LookOperation_known_character() {
 	long cid = m_id_counter++;
-	Ref<Entity> c = new Entity(cid);
+	Ref<Entity> c = new Entity(RouterId{cid});
 	m_account->m_charactersDict.emplace(c->getIntId(), c);
 
 	Atlas::Objects::Operation::Look op;
@@ -889,7 +889,7 @@ void Accounttest::test_LookOperation_known_character() {
 
 void Accounttest::test_LookOperation_known_account() {
 	long cid = m_id_counter++;
-	Account* ac = new TestAccount(0, "", "", cid);
+	Account* ac = new TestAccount(0, "", "", RouterId{cid});
 	m_server->getLobby().addAccount(ac);
 
 	Atlas::Objects::Operation::Look op;
@@ -962,7 +962,7 @@ void Accounttest::test_LookOperation_possess_invalid() {
 
 void Accounttest::test_LookOperation_possess_Entity() {
 	long cid = m_id_counter++;
-	Ref<Entity> c = new Entity(cid);
+	Ref<Entity> c = new Entity(RouterId{cid});
 	TeleportAuthenticator_ret_value = c;
 
 	Atlas::Objects::Operation::Look op;
@@ -988,7 +988,7 @@ void Accounttest::test_LookOperation_possess_Entity() {
 
 void Accounttest::test_LookOperation_possess_Character() {
 //    long cid = m_id_counter++;
-//    Ref<Entity>  c = new Entity(cid);
+//    Ref<Entity>  c = new Entity(RouterId{cid});
 //    TeleportAuthenticator_ret_value = c;
 //
 //    Atlas::Objects::Operation::Look op;
@@ -1069,7 +1069,7 @@ void Accounttest::test_SetOperation_empty() {
 
 	long cid = m_id_counter++;
 
-	Ref<Entity> c = new Entity(cid);
+	Ref<Entity> c = new Entity(RouterId{cid});
 	m_account->m_charactersDict.emplace(c->getIntId(), c);
 
 	Atlas::Objects::Operation::Set op;
@@ -1267,8 +1267,6 @@ void Lobby::addAccount(ConnectableRouter* ac) {
 	m_accounts[ac->getId()] = ac;
 }
 
-void Lobby::externalOperation(const Operation& op, Link&) {
-}
 
 void Lobby::operation(const Operation& op, OpVector& res) {
 	Accounttest::set_Lobby_operation_called(op->getClassNo());

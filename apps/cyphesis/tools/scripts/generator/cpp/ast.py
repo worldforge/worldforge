@@ -1612,6 +1612,7 @@ class AstBuilder(object):
 
     def handle_namespace(self):
         token = self._GetNextToken()
+        print(token)
         # Support anonymous namespaces.
         name = None
         if token.token_type == tokenize.NAME:

@@ -29,7 +29,7 @@
 
 class TestConnectableRouter : public ConnectableRouter {
 public:
-	TestConnectableRouter() : ConnectableRouter(1) {}
+	TestConnectableRouter() : ConnectableRouter(RouterId{1}) {}
 
 	virtual void externalOperation(const Operation&, Link&) {}
 

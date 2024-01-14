@@ -157,7 +157,7 @@ void TrustedConnectionCreatorintegration::setup() {
 	m_creatorType = new TypeNode("test_avatar");
 	m_creator->setType(m_creatorType);
 
-	m_connection->addRouter(m_creator.get());
+	m_connection->addRouter(m_creator->m_id, m_creator.get());
 	BaseWorld::instance().addEntity(m_creator, m_gw);
 
 }
@@ -184,7 +184,7 @@ void TrustedConnectionCreatorintegration::test_external_op() {
 	// except that we assume that Creator was set up linked.
 
 	AdminMind mind(6, m_creator);
-	m_connection->addRouter(&mind);
+	m_connection->addRouter(mind.m_id, &mind);
 	m_creator->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
 	mind.linkUp(m_connection);
 
@@ -211,7 +211,7 @@ void TrustedConnectionCreatorintegration::test_external_op_override() {
 	// except that we assume that Creator was set up linked.
 
 	AdminMind mind(6, m_creator);
-	m_connection->addRouter(&mind);
+	m_connection->addRouter(mind.m_id, &mind);
 	m_creator->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
 	mind.linkUp(m_connection);
 
@@ -237,7 +237,7 @@ void TrustedConnectionCreatorintegration::test_external_op_puppet() {
 	// shortcutting the world.
 
 	AdminMind mind(6, m_creator);
-	m_connection->addRouter(&mind);
+	m_connection->addRouter(mind.m_id, &mind);
 	m_creator->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
 	mind.linkUp(m_connection);
 
@@ -269,7 +269,7 @@ void TrustedConnectionCreatorintegration::test_external_op_puppet_nonexistant() 
 	// shortcutting the world.
 
 	AdminMind mind(6, m_creator);
-	m_connection->addRouter(&mind);
+	m_connection->addRouter(mind.m_id, &mind);
 	m_creator->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
 	mind.linkUp(m_connection);
 

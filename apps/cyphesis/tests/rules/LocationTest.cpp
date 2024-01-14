@@ -447,7 +447,7 @@ int main() {
 		testLoc.addToEntity(ent);
 		assert(ent->getAttrFlags() == 0);
 
-		Ref<TestEntity> le1(new TestEntity(1));
+		Ref<TestEntity> le1(new TestEntity(RouterId{1}));
 
 		testLoc.m_parent = le1;
 		testLoc.m_pos = Point3D(0, 1, 0);

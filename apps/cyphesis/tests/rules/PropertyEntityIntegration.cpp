@@ -152,7 +152,7 @@ struct TestEntity : Entity
 struct TestContext
 {
     TypeNode m_type{"test_type"};
-    Ref<TestEntity> m_entity{new TestEntity(1L)};
+    Ref<TestEntity> m_entity{new TestEntity(RouterId{1L})};
     TestPropertyManager propertyManager{};
 
     TestContext()
@@ -214,7 +214,7 @@ struct PropertyEntityIntegration : public Cyphesis::TestBaseWithContext<TestCont
         AppendModifier appendModifier(1);
 
         {
-            Ref<TestEntity> entity(new TestEntity(1L));
+            Ref<TestEntity> entity(new TestEntity(RouterId{1L}));
             //We'll add a modifier without any previous value
             entity->addModifier("foo", &appendModifier, entity.get());
             entity->setAttrValue("foo!append", 1);
@@ -224,7 +224,7 @@ struct PropertyEntityIntegration : public Cyphesis::TestBaseWithContext<TestCont
         }
 
         {
-            Ref<TestEntity> entity(new TestEntity(1L));
+            Ref<TestEntity> entity(new TestEntity(RouterId{1L}));
             entity->addModifier("foo", &appendModifier, entity.get());
             entity->setAttrValue("foo", 4);
             Atlas::Message::Element element;
