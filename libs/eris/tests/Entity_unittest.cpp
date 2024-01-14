@@ -34,135 +34,130 @@
 
 using namespace std::chrono_literals;
 
-class TestErisEntity : public Eris::Entity
-{
-  public:
-    TestErisEntity(const std::string & id, Eris::TypeInfo * tp) : Eris::Entity(id, tp) { }
+class TestErisEntity : public Eris::Entity {
+public:
+	TestErisEntity(const std::string& id, Eris::TypeInfo* tp) : Eris::Entity(id, tp, {
+			.fetchEntity=[](const std::string&) { return nullptr; },
+			.getEntity=[](const std::string&) { return nullptr; },
+			.taskUpdated=[](Eris::Task&) {}
+	}) {}
 
-    virtual Eris::TypeService& getTypeService() const { return *(Eris::TypeService*)0; }
-    virtual void removeFromMovementPrediction() { }
-    virtual void addToMovementPrediction() { }
-    virtual Eris::Entity* getEntity(const std::string&) { return 0; }
+	virtual Eris::TypeService& getTypeService() const { return *(Eris::TypeService*) 0; }
 
-    void testSetLocation(Eris::Entity* location) {
-        setLocation(location);
-    }
+	virtual void removeFromMovementPrediction() {}
 
-    void testSetPosition(const WFMath::Point<3>& position) {
-        m_position = position;
+	virtual void addToMovementPrediction() {}
+
+	void testSetLocation(Eris::Entity* location) {
+		setLocation(location);
+	}
+
+	void testSetPosition(const WFMath::Point<3>& position) {
+		m_position = position;
 		m_predicted.position.value = position;
-    }
+	}
 
-    void testSetVelocity(const WFMath::Vector<3>& velocity) {
-        m_velocity = velocity;
-    }
+	void testSetVelocity(const WFMath::Vector<3>& velocity) {
+		m_velocity = velocity;
+	}
 
-    void testSetOrientation(const WFMath::Quaternion& orientation) {
-        m_orientation = orientation;
+	void testSetOrientation(const WFMath::Quaternion& orientation) {
+		m_orientation = orientation;
 		m_predicted.orientation.value = orientation;
-    }
+	}
 
-    void testUpdatePositionWithDelta(std::chrono::steady_clock::duration diff) {
-        m_moving = true;
-		m_predicted.position.lastUpdated= {};
+	void testUpdatePositionWithDelta(std::chrono::steady_clock::duration diff) {
+		m_moving = true;
+		m_predicted.position.lastUpdated = {};
 		m_predicted.orientation.lastUpdated = {};
-        updatePredictedState(std::chrono::steady_clock::time_point{} + diff, 1.0f);
-    }
+		updatePredictedState(std::chrono::steady_clock::time_point{} + diff, 1.0f);
+	}
 };
 
-int main()
-{
-    {
-        Eris::Entity * e = new TestErisEntity("1", 0);
-        delete e;
-    }
+int main() {
+	{
+		Eris::Entity* e = new TestErisEntity("1", 0);
+		delete e;
+	}
 
-    {
-        //Test that positioning works correctly
-        TestErisEntity e1("1", 0);
-        TestErisEntity e2("2", 0);
-        TestErisEntity e3("3", 0);
-        TestErisEntity e4("4", 0);
-        e2.testSetLocation(&e1);
-        e2.testSetPosition(WFMath::Point<3>(1, 2, 3));
-        e4.testSetPosition(WFMath::Point<3>(1, 0, 0));
-        e4.testSetVelocity(WFMath::Vector<3>(1, 0, 0));
-        //Rotate the e2 entity halfways around the z-axis, so that the e3 view position gets affected.
-        e2.testSetOrientation(WFMath::Quaternion(WFMath::Vector<3>(0, 0, 1), WFMath::numeric_constants<WFMath::CoordType>::pi()));
-        e3.testSetPosition(WFMath::Point<3>(3, 2, 1));
-        e3.testSetLocation(&e2);
-
-
-        //The root entity won't have any valid position. We still expect the getViewPosition to report correct results, treating the position of the root entity as (0,0,0).
-        assert(!e1.getPosition().isValid());
-        assert(e2.getPosition().isValid());
-
-        assert(e2.getPredictedPos() == WFMath::Point<3>(1, 2, 3));
-
-        e1.testSetPosition(WFMath::Point<3>(10, 20, 30));
-
-        //Test position inheritance
-        assert(e2.getPredictedPos() == WFMath::Point<3>(1, 2, 3));
-
-        e4.testUpdatePositionWithDelta(1000s);
-
-        //Check that the position is updated instantly when onMoved is called.
-        WFMath::Point<3> newPos(10, 20, 30);
-        e4.Moved.connect([&](){
-            assert(e4.getPosition() == newPos);
-            assert(e4.getPredictedPos() == newPos);
-        });
-        e4.testSetPosition(newPos);
-
-    }
+	{
+		//Test that positioning works correctly
+		TestErisEntity e1("1", 0);
+		TestErisEntity e2("2", 0);
+		TestErisEntity e3("3", 0);
+		TestErisEntity e4("4", 0);
+		e2.testSetLocation(&e1);
+		e2.testSetPosition(WFMath::Point<3>(1, 2, 3));
+		e4.testSetPosition(WFMath::Point<3>(1, 0, 0));
+		e4.testSetVelocity(WFMath::Vector<3>(1, 0, 0));
+		//Rotate the e2 entity halfways around the z-axis, so that the e3 view position gets affected.
+		e2.testSetOrientation(WFMath::Quaternion(WFMath::Vector<3>(0, 0, 1), WFMath::numeric_constants<WFMath::CoordType>::pi()));
+		e3.testSetPosition(WFMath::Point<3>(3, 2, 1));
+		e3.testSetLocation(&e2);
 
 
-    return 0;
+		//The root entity won't have any valid position. We still expect the getViewPosition to report correct results, treating the position of the root entity as (0,0,0).
+		assert(!e1.getPosition().isValid());
+		assert(e2.getPosition().isValid());
+
+		assert(e2.getPredictedPos() == WFMath::Point<3>(1, 2, 3));
+
+		e1.testSetPosition(WFMath::Point<3>(10, 20, 30));
+
+		//Test position inheritance
+		assert(e2.getPredictedPos() == WFMath::Point<3>(1, 2, 3));
+
+		e4.testUpdatePositionWithDelta(1000s);
+
+		//Check that the position is updated instantly when onMoved is called.
+		WFMath::Point<3> newPos(10, 20, 30);
+		e4.Moved.connect([&]() {
+			assert(e4.getPosition() == newPos);
+			assert(e4.getPredictedPos() == newPos);
+		});
+		e4.testSetPosition(newPos);
+
+	}
+
+
+	return 0;
 }
 
 // stubs
 
 namespace Eris {
 
-const Atlas::Message::Element* TypeInfo::getProperty(const std::string& attributeName) const
-{
-    return 0;
+const Atlas::Message::Element* TypeInfo::getProperty(const std::string& attributeName) const {
+	return 0;
 }
 
 void TypeInfo::onPropertyChanges(const std::string& attributeName,
-								 const Atlas::Message::Element& element)
-{
+								 const Atlas::Message::Element& element) {
 }
 
-bool TypeInfo::isA(std::string const&) const
-{
+bool TypeInfo::isA(std::string const&) const {
 	return true;
 }
 
-TypeInfo* TypeService::getTypeByName(const std::string &id)
-{
-    return nullptr;
+TypeInfo* TypeService::getTypeByName(const std::string& id) {
+	return nullptr;
 }
 
-TypeInfo* TypeService::getTypeForAtlas(Atlas::Objects::SmartPtr<Atlas::Objects::RootData> const&)
-{
-    return nullptr;
+TypeInfo* TypeService::getTypeForAtlas(Atlas::Objects::SmartPtr<Atlas::Objects::RootData> const&) {
+	return nullptr;
 }
 
 Task::Task(Entity& owner, std::string nm) :
-    m_name(nm),
-    m_owner(owner),
-    m_progress(0.0),
-    m_progressRate(-1.0)
-{
+		m_name(nm),
+		m_owner(owner),
+		m_progress(0.0),
+		m_progressRate(-1.0) {
 }
 
-Task::~Task()
-{
+Task::~Task() {
 }
 
-void Task::updateFromAtlas(const Atlas::Message::MapType & d)
-{
+void Task::updateFromAtlas(const Atlas::Message::MapType& d) {
 }
 
 

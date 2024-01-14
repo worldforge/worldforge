@@ -133,7 +133,7 @@ void EntityCreatorCreationInstance::createEntity() {
 		// Temporary entity
 		entry.mEntity = std::make_unique<Authoring::DetachedEntity>("-1", erisType);
 		Atlas::Objects::Entity::RootEntity rootEntity;
-		entry.mEntity->doInit(rootEntity);
+		entry.mEntity->init(rootEntity);
 		entry.mEntity->setFromMessage(entityMap);
 		//Set the parent to the top level by default.
 		entry.mEntity->setLocationEntity(mWorld.getView().getTopLevel());

@@ -99,6 +99,8 @@ Avatar::Avatar(Eris::Avatar& erisAvatar,
 		mScene(scene),
 		mEntityMaker(std::make_unique<Authoring::EntityMaker>(erisAvatar)) {
 
+	mCameraMount->setAvatarEntityId(mErisAvatarEntity.getId());
+
 	MainLoopController::getSingleton().EventAfterInputProcessing.connect(sigc::mem_fun(*this, &Avatar::application_AfterInputProcessing));
 
 	registerConfigListener("general", "logchatmessages", sigc::mem_fun(*this, &Avatar::Config_LogChatMessages));

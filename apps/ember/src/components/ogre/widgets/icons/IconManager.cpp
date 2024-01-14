@@ -39,17 +39,19 @@
 
 #include <OgreTextureManager.h>
 
+#include <utility>
+
 namespace Ember::OgreView::Gui::Icons {
 
 class DummyEntity : public Eris::Entity {
 
 public:
-	DummyEntity(const std::string& id, Eris::TypeInfo* ty) :
-			Eris::Entity(id, ty) {
-	}
-
-	Eris::Entity* getEntity(const std::string&) override {
-		return nullptr;
+	DummyEntity(std::string id, Eris::TypeInfo* ty) :
+			Eris::Entity(std::move(id), ty, {
+					.fetchEntity=[](const std::string&) { return nullptr; },
+					.getEntity=[](const std::string&) { return nullptr; },
+					.taskUpdated=[](Eris::Task&) {}
+			}) {
 	}
 
 };

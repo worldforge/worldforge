@@ -11,7 +11,7 @@ class Entity;
 
 class View;
 
-class ViewEntity;
+class Entity;
 
 class EntityRef : public sigc::trackable {
 public:
@@ -78,7 +78,7 @@ public:
 private:
 	void onEntityDeleted();
 
-	void onEntitySeen(ViewEntity* e);
+	void onEntitySeen(Entity* e);
 
 	Entity* m_inner;
 };

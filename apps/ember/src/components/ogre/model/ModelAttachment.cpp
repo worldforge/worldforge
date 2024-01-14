@@ -112,10 +112,12 @@ struct ModelContainedActionCreator : public EntityMapping::IActionCreator {
 ModelAttachment::ModelAttachment(EmberEntity& parentEntity,
 								 std::unique_ptr<ModelRepresentation> modelRepresentation,
 								 std::unique_ptr<INodeProvider> nodeProvider,
-								 std::string pose) :
+								 std::string pose,
+								 std::function<std::unique_ptr<::Ember::EntityMapping::EntityMapping>(Eris::Entity& entity, EntityMapping::IActionCreator& actionCreator)> mappingCreator) :
 		NodeAttachment(parentEntity, modelRepresentation->getEntity(), *nodeProvider),
 		mModelRepresentation(std::move(modelRepresentation)),
 		mPose(std::move(pose)),
+		mMappingCreator(mappingCreator),
 		mModelMount(std::make_unique<ModelMount>(mModelRepresentation->getModel(), std::move(nodeProvider), mPose)) {
 	mModelMount->reset();
 	setupFittings();
@@ -188,7 +190,7 @@ void ModelAttachment::attachEntity(EmberEntity& entity) {
 						if (attachpoint.Name == attachPoint) {
 							auto nodeProvider = std::make_unique<ModelBoneProvider>(mModelMount->getNodeProvider()->getNode(), mModelRepresentation->getModel());
 							nodeProvider->setAttachPointDefinition(attachpoint);
-							auto nodeAttachment = std::make_unique<ModelAttachment>(getAttachedEntity(), std::move(modelRepresentation), std::move(nodeProvider), attachpoint.Pose);
+							auto nodeAttachment = std::make_unique<ModelAttachment>(getAttachedEntity(), std::move(modelRepresentation), std::move(nodeProvider), attachpoint.Pose, mMappingCreator);
 							entity.setAttachment(std::move(nodeAttachment));
 							break;
 						}
@@ -200,7 +202,8 @@ void ModelAttachment::attachEntity(EmberEntity& entity) {
 		});
 
 	}
-	auto mapping = Ember::OgreView::Mapping::EmberEntityMappingManager::getSingleton().getManager().createMapping(entity, *creator, entity.getView()->getTypeService(), entity.getView());
+	auto mapping = mMappingCreator(entity, *creator);
+//	auto mapping = Ember::OgreView::Mapping::EmberEntityMappingManager::getSingleton().getManager().createMapping(entity, *creator, entity.getView()->getTypeService(), entity.getView());
 	if (mapping) {
 		mapping->initialize();
 		auto result = mMappings.emplace(&entity, std::move(mapping));

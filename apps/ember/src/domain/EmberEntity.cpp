@@ -35,6 +35,7 @@
 #include <fmt/ostream.h>
 #include <sstream>
 #include <iostream>
+#include <utility>
 
 template<>
 struct fmt::formatter<Eris::Entity> : ostream_formatter {
@@ -83,9 +84,8 @@ public:
 
 GlobalAttributeDispatcher sGlobalDispatcher;
 
-EmberEntity::EmberEntity(std::string id, Eris::TypeInfo* ty, Eris::View& vw) :
-		Eris::ViewEntity(std::move(id), ty, vw),
-		mIsInitialized(false),
+EmberEntity::EmberEntity(std::string id, Eris::TypeInfo* ty, Eris::Entity::EntityContext context) :
+		Eris::Entity(std::move(id), ty, std::move(context)),
 		mPositioningMode(PositioningMode::FREE),
 		mAttachment(nullptr),
 		mAttachmentControlDelegate(nullptr),
@@ -104,24 +104,6 @@ void EmberEntity::deregisterGlobalAttributeListener(const std::string& attribute
 	sGlobalDispatcher.deregisterListener(attributeName, listener);
 }
 
-
-void EmberEntity::init(const Atlas::Objects::Entity::RootEntity& ge) {
-	Eris::Entity::init(ge);
-
-
-	if (getPredictedPos().isValid()) {
-		std::stringstream ss;
-		ss << "Entity " << *this << " placed at " << getPredictedPos();
-		logger->debug(ss.str());
-	}
-
-	mIsInitialized = true;
-
-	//If the entity had no bounding box, the onBboxChanged will have never been called, and we want to do that now instead.
-	if (!hasBBox()) {
-		onBboxChanged();
-	}
-}
 
 std::string EmberEntity::getNameOrType() const {
 	if (!m_name.empty()) {
@@ -189,7 +171,7 @@ void EmberEntity::onTalk(const Atlas::Objects::Operation::RootOperation& talkArg
 
 
 	// Call the method of the base class (since we've overloaded it)
-	Eris::ViewEntity::onTalk(talkArgs);
+	Eris::Entity::onTalk(talkArgs);
 }
 
 void EmberEntity::onSoundAction(const Atlas::Objects::Operation::RootOperation& op, const Eris::TypeInfo& typeInfo) {
@@ -199,7 +181,7 @@ void EmberEntity::onSoundAction(const Atlas::Objects::Operation::RootOperation& 
 	ConsoleBackend::getSingletonPtr()->pushMessage(message, "info");
 	logger->debug("Entity: {} ({}) sound action: {}", this->getId(), this->getName(), op->getParent());
 
-	Eris::ViewEntity::onSoundAction(op, typeInfo);
+	Eris::Entity::onSoundAction(op, typeInfo);
 }
 
 void EmberEntity::setAttachmentControlDelegate(IEntityControlDelegate* delegate) {
@@ -265,7 +247,7 @@ void EmberEntity::onHit(const Atlas::Objects::Operation::Hit& act) {
 		auto& arg = act->getArgs().front();
 		EmberEntity* actingEntity = nullptr;
 		if (!arg->isDefaultId()) {
-			actingEntity = dynamic_cast<EmberEntity*>(m_view.getEntity(arg->getId()));
+			actingEntity = dynamic_cast<EmberEntity*>(mContext.getEntity(arg->getId()));
 		}
 		if (arg->hasAttr("damage")) {
 			auto damageElem = arg->getAttr("damage");
@@ -422,8 +404,7 @@ EmberEntity* EmberEntity::getEmberContained(size_t index) const {
 	return dynamic_cast<EmberEntity*>(getContained(index));
 }
 
-void EmberEntity::dumpAttributes(std::iostream& outstream, std::ostream& logOutstream) const {
-	logOutstream << "Dumping attributes for entity " << getId() << "(" << getName() << ")" << std::endl;
+void EmberEntity::dumpAttributes(std::iostream& outstream) const {
 
 	Atlas::Message::QueuedDecoder decoder;
 

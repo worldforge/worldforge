@@ -3,7 +3,7 @@
 #endif
 
 #include "View.h"
-#include "ViewEntity.h"
+#include "Entity.h"
 #include "LogStream.h"
 #include "Connection.h"
 #include "Exceptions.h"
@@ -179,7 +179,7 @@ Router::RouterResult View::handleOperation(const Atlas::Objects::Operation::Root
 }
 
 
-ViewEntity* View::getEntity(const std::string& eid) const {
+Entity* View::getEntity(const std::string& eid) const {
 	auto E = m_contents.find(eid);
 	if (E == m_contents.end()) {
 		return nullptr;
@@ -255,13 +255,13 @@ void View::update(const std::chrono::steady_clock::time_point& currentTime) {
 	}
 }
 
-void View::addToPrediction(ViewEntity* ent) {
+void View::addToPrediction(Entity* ent) {
 	assert(ent->isMoving());
 	assert(m_moving.count(ent) == 0);
 	m_moving.insert(ent);
 }
 
-void View::removeFromPrediction(ViewEntity* ent) {
+void View::removeFromPrediction(Entity* ent) {
 	assert(m_moving.count(ent) == 1);
 	m_moving.erase(ent);
 }
@@ -296,7 +296,7 @@ void View::disappear(const std::string& eid) {
 }
 
 
-ViewEntity* View::initialSight(const RootEntity& gent) {
+Entity* View::initialSight(const RootEntity& gent) {
 	assert(m_contents.count(gent->getId()) == 0);
 
 	auto entity = createEntity(gent);
@@ -370,7 +370,7 @@ void View::deleteEntity(const std::string& eid) {
 	}
 }
 
-std::unique_ptr<ViewEntity> View::createEntity(const RootEntity& gent) {
+std::unique_ptr<Entity> View::createEntity(const RootEntity& gent) {
 	TypeInfo* type = getConnection().getTypeService().getTypeForAtlas(gent);
 	assert(type->isBound());
 

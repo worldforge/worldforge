@@ -4,7 +4,6 @@
 
 #include "EntityRef.h"
 #include "Entity.h"
-#include "ViewEntity.h"
 #include "View.h"
 #include "Log.h"
 
@@ -67,7 +66,7 @@ void EntityRef::onEntityDeleted() {
 	Changed(m_inner, oldInner);
 }
 
-void EntityRef::onEntitySeen(ViewEntity* e) {
+void EntityRef::onEntitySeen(Entity* e) {
 	assert(e);
 	auto oldInner = m_inner;
 	m_inner = e;

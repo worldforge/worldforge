@@ -102,7 +102,7 @@ WFMath::Quaternion EntityIconDragDropPreview::getDropOrientation() const {
 	return mDropOrientation;
 }
 
-ModelPreviewWorker::ModelPreviewWorker(World& world, Eris::ViewEntity& entity) :
+ModelPreviewWorker::ModelPreviewWorker(World& world, Eris::Entity& entity) :
 		mWorld(world),
 		mEntity(entity),
 		mEntityNode(mWorld.getSceneManager().getRootSceneNode()->createChildSceneNode()),
@@ -117,7 +117,7 @@ ModelPreviewWorker::ModelPreviewWorker(World& world, Eris::ViewEntity& entity) :
 		showModelPart(partName);
 	});
 
-	auto modelMapping = Mapping::EmberEntityMappingManager::getSingleton().getManager().createMapping(entity, actionCreator, entity.getView()->getTypeService(), entity.getView());
+	auto modelMapping = Mapping::EmberEntityMappingManager::getSingleton().getManager().createMapping(entity, actionCreator, mWorld.getView().getTypeService(), &mWorld.getView());
 	if (modelMapping) {
 		modelMapping->initialize();
 	}

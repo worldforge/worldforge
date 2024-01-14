@@ -106,6 +106,10 @@ public:
 
 	void update() override;
 
+	void setAvatarEntityId(const std::string& id) {
+		mAvatarEntityId = id;
+	}
+
 protected:
 
 	Scene& mScene;
@@ -136,6 +140,8 @@ protected:
 	 * This is attached to the root node and adjusted each frame to match the pitch node. This allows us to adjust it to avoid collisions.
 	 */
 	Ogre::SceneNode* mCameraNode;
+
+	std::string mAvatarEntityId;
 
 	/**
 	 * @brief The desired distance of the camera from the root node, in world units.

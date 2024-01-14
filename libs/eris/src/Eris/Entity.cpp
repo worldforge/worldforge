@@ -49,7 +49,8 @@ namespace Eris {
 std::chrono::steady_clock::time_point Entity::currentTime;
 
 
-Entity::Entity(std::string id, TypeInfo* ty) :
+Entity::Entity(std::string id, TypeInfo* ty, EntityContext context) :
+		mContext(std::move(context)),
 		m_type(ty),
 		m_location(nullptr),
 		m_id(std::move(id)),
@@ -64,6 +65,7 @@ Entity::Entity(std::string id, TypeInfo* ty) :
 	if (m_type) {
 		m_type->PropertyChanges.connect(sigc::mem_fun(*this, &Entity::typeInfo_PropertyChanges));
 	}
+
 }
 
 Entity::~Entity() {
@@ -83,7 +85,7 @@ void Entity::handleOperation(const Atlas::Objects::Operation::RootOperation& op,
 							logger->error("Got Sight.Entity op without inner id.");
 						} else {
 							if (sightEntity->getId() == getId()) {
-								firstSight(sightEntity);
+								setFromRoot(sightEntity);
 							} else {
 								logger->error("Got Sight.Entity op with inner id of {} which doesn't matter the Sight:From value of {}.", sightEntity->getId(), op->getFrom());
 							}
@@ -187,8 +189,16 @@ void Entity::shutdown() {
 }
 
 void Entity::init(const RootEntity& ge) {
-	// setup initial state
-	firstSight(ge);
+	if (!ge->isDefaultLoc()) {
+		setLocationFromAtlas(ge->getLoc());
+	} else {
+		setLocation(nullptr);
+	}
+
+	setContentsFromAtlas(ge->getContains());
+	//Since this is the first sight of this entity we should include all type props too.
+	setFromRoot(ge, true);
+
 }
 
 
@@ -347,18 +357,6 @@ void Entity::updatePredictedState(const std::chrono::steady_clock::time_point& t
 	}
 }
 
-void Entity::firstSight(const RootEntity& gent) {
-	if (!gent->isDefaultLoc()) {
-		setLocationFromAtlas(gent->getLoc());
-	} else {
-		setLocation(nullptr);
-	}
-
-	setContentsFromAtlas(gent->getContains());
-	//Since this is the first sight of this entity we should include all type props too.
-	setFromRoot(gent, true);
-}
-
 void Entity::setFromRoot(const Root& obj, bool includeTypeInfoProperties) {
 	beginUpdate();
 
@@ -448,6 +446,8 @@ void Entity::onChildRemoved(Entity* child) {
 }
 
 void Entity::onTaskAdded(const std::string& id, Task* task) {
+	mContext.taskUpdated(*task);
+	task->ProgressRateChanged.connect([this, task]() { mContext.taskUpdated(*task); });
 	TaskAdded(id, task);
 }
 

@@ -31,7 +31,8 @@
 namespace Ember::OgreView {
 
 ProjectileRenderingTechnique::ProjectileRenderingTechnique(Ogre::SceneManager& sceneManager)
-		: mSceneManager(sceneManager) {
+		: mSceneManager(sceneManager),
+		  mSimulationSpeed(1.0) {
 
 	Ogre::Root::getSingleton().addFrameListener(this);
 	Ogre::NameValuePairList params;
@@ -97,7 +98,7 @@ void ProjectileRenderingTechnique::registerEntity(EmberEntity& entity) {
 
 						auto chainIndex = mTrail->getChainIndexForNode(node);
 						//Adapt the colour fading to the simulation speed.
-						mTrail->setColourChange(chainIndex, 0, 0, 0, 0.5f * (float) entity.getView()->getSimulationSpeed());
+						mTrail->setColourChange(chainIndex, 0, 0, 0, 0.5f * (float) mSimulationSpeed);
 					} else {
 						mActiveNodes.emplace(&entity, ActiveEntityEntry{node, 0.f, false, true});
 					}
@@ -127,7 +128,7 @@ bool ProjectileRenderingTechnique::frameStarted(const Ogre::FrameEvent& evt) {
 
 					auto chainIndex = mTrail->getChainIndexForNode(node);
 					//Adapt the colour fading to the simulation speed.
-					mTrail->setColourChange(chainIndex, 0, 0, 0, 0.5f * (float) entry.first->getView()->getSimulationSpeed());
+					mTrail->setColourChange(chainIndex, 0, 0, 0, 0.5f * (float) mSimulationSpeed);
 					entry.second.hasBeenAdded = true;
 				}
 			}

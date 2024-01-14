@@ -28,7 +28,7 @@
 
 #include <Eris/Connection.h>
 #include <Eris/Account.h>
-#include <Eris/ViewEntity.h>
+#include <Eris/Entity.h>
 #include <Eris/View.h>
 #include <Eris/Log.h>
 #include <Eris/Exceptions.h>
@@ -86,10 +86,14 @@ public:
 	}
 };
 
-class TestEntity : public Eris::ViewEntity {
+class TestEntity : public Eris::Entity {
 public:
-	TestEntity(const std::string& id, Eris::TypeInfo* ty, Eris::View& vw) :
-			Eris::ViewEntity(id, ty, vw) {}
+	TestEntity(const std::string& id, Eris::TypeInfo* ty) :
+			Eris::Entity(id, ty, {
+				.fetchEntity=[](const std::string&) { return nullptr; },
+				.getEntity=[](const std::string&) { return nullptr; },
+				.taskUpdated=[](Eris::Task&) {}
+		}) {}
 
 	void setup_setLocation(Eris::Entity* e) {
 		setLocation(e);
@@ -135,7 +139,7 @@ int main() {
 	std::string fake_mind_id("12");
 	TestAvatar* ea = new TestAvatar(&acc, fake_mind_id, fake_char_id);
 	acc.setup_insertActiveCharacters(ea);
-	TestEntity char_ent(fake_char_id, 0, ea->getView());
+	TestEntity char_ent(fake_char_id, 0);
 	ea->setup_setEntity(&char_ent);
 
 	TestTypeService typeService(con);
@@ -192,14 +196,14 @@ int main() {
 	assert(level2Type->getProperty("level2") && *level2Type->getProperty("level2") == Atlas::Message::Element(true));
 
 	{
-		TestEntity ent("2", level1Type, ea->getView());
+		TestEntity ent("2", level1Type);
 		ent.setup_init(Atlas::Objects::Entity::RootEntity());
 		assert(ent.hasProperty("level"));
 		assert(ent.valueOfProperty("level") == 1.0f);
 	}
 
 	{
-		TestEntity ent("2", level2Type, ea->getView());
+		TestEntity ent("2", level2Type);
 		ent.setup_init(Atlas::Objects::Entity::RootEntity());
 		assert(ent.hasProperty("level"));
 		assert(ent.valueOfProperty("level") == 2.0f);

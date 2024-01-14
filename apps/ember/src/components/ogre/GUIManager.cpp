@@ -76,7 +76,10 @@ namespace Ember::OgreView {
 
 unsigned long GUIManager::msAutoGenId(0);
 
-GUIManager::GUIManager(Cegui::CEGUISetup& ceguiSetup, ConfigService& configService, ServerServiceSignals& serverSignals, MainLoopController& mainLoopController) :
+GUIManager::GUIManager(Cegui::CEGUISetup& ceguiSetup,
+					   ConfigService& configService,
+					   ServerServiceSignals& serverSignals,
+					   MainLoopController& mainLoopController) :
 		ToggleInputMode("toggle_inputmode", this, "Toggle the input mode."),
 		ReloadGui("reloadgui", this, "Reloads the gui."),
 		ToggleGui("toggle_gui", this, "Toggle the gui display"),
@@ -205,8 +208,10 @@ void GUIManager::entity_Talk(const EntityTalk& entityTalk, EmberEntity* entity) 
 }
 
 void GUIManager::entity_Emote(const std::string& description, EmberEntity* entity) {
+	//TODO: extract this into something which is aware of the View
 	//If it's our own entity we should just print what it says.
-	if (entity == entity->getView()->getAvatar().getEntity()) {
+//	if (entity == entity->getView()->getAvatar().getEntity()) {
+	if (false) {
 		AppendAvatarImaginary(description);
 	} else {
 		AppendAvatarImaginary(entity->getName() + " " + description);

@@ -34,7 +34,7 @@
 #include <sigc++/connection.h>
 
 namespace Eris {
-class ViewEntity;
+class Entity;
 
 class Entity;
 
@@ -162,7 +162,7 @@ public:
 	 * @param world The world.
 	 * @param entity The entity being moved.
 	 */
-	ModelPreviewWorker(World& world, Eris::ViewEntity& entity);
+	ModelPreviewWorker(World& world, Eris::Entity& entity);
 
 	~ModelPreviewWorker();
 

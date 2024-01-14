@@ -67,7 +67,12 @@ void WorldAttachment::attachEntity(EmberEntity& entity) {
 	EmberEntityActionCreator creator(entity, mScene, [&](std::unique_ptr<Model::ModelRepresentation> graphicalRepresentation) {
 		if (graphicalRepresentation) {
 			Ogre::SceneNode* node = mWorldNode->createChildSceneNode(OgreInfo::createUniqueResourceName(entity.getId()));
-			auto nodeAttachment = std::make_unique<Model::ModelAttachment>(getAttachedEntity(), std::move(graphicalRepresentation), std::make_unique<SceneNodeProvider>(node, mWorldNode));
+			auto mappingCreator = [this](Eris::Entity& entityForMapping,
+										 EntityMapping::IActionCreator& actionCreator) {
+				return Ember::OgreView::Mapping::EmberEntityMappingManager::getSingleton().getManager().createMapping(entityForMapping, actionCreator, mWorld.getView().getTypeService(), &mWorld.getView());
+			};
+			auto nodeAttachment = std::make_unique<Model::ModelAttachment>(getAttachedEntity(), std::move(graphicalRepresentation), std::make_unique<SceneNodeProvider>(node, mWorldNode), "",
+																		   mappingCreator);
 			entity.setAttachment(std::move(nodeAttachment));
 		} else {
 			entity.setAttachment({});
@@ -86,7 +91,7 @@ void WorldAttachment::attachEntity(EmberEntity& entity) {
 			entity.setAttachment({});
 		}
 	});
-	auto mapping = Mapping::EmberEntityMappingManager::getSingleton().getManager().createMapping(entity, creator, entity.getView()->getTypeService(), entity.getView());
+	auto mapping = Mapping::EmberEntityMappingManager::getSingleton().getManager().createMapping(entity, creator, mWorld.getView().getTypeService(), &mWorld.getView());
 	if (mapping) {
 		mapping->initialize();
 		auto result = mMappings.emplace(&entity, std::move(mapping));

@@ -19,10 +19,13 @@
 #include "DetachedEntity.h"
 
 
-
 namespace Ember::OgreView::Authoring {
-DetachedEntity::DetachedEntity(const std::string& id, Eris::TypeInfo* ty) :
-		Eris::Entity(id, ty) {
+DetachedEntity::DetachedEntity(std::string id, Eris::TypeInfo* ty) :
+		Eris::Entity(id, ty, {
+				.fetchEntity=[](const std::string&) { return nullptr; },
+				.getEntity=[](const std::string&) { return nullptr; },
+				.taskUpdated=[](Eris::Task&) {}
+		}) {
 }
 
 DetachedEntity::~DetachedEntity() {
@@ -49,14 +52,6 @@ void DetachedEntity::setFromMessage(const Atlas::Message::MapType& attrs) {
 	}
 
 	endUpdate();
-}
-
-void DetachedEntity::doInit(const Atlas::Objects::Entity::RootEntity& rootEntity) {
-	init(rootEntity);
-}
-
-Eris::Entity* DetachedEntity::getEntity(const std::string&) {
-	return nullptr;
 }
 
 void DetachedEntity::setLocationEntity(Eris::Entity* location) {

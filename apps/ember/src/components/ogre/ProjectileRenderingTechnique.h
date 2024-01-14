@@ -44,6 +44,10 @@ public:
 
 	bool frameStarted(const Ogre::FrameEvent& evt) override;
 
+	void setSimulationSpeed(double speed) {
+		mSimulationSpeed = speed;
+	}
+
 protected:
 
 	struct ActiveEntityEntry {
@@ -61,6 +65,8 @@ protected:
 	Ogre::RibbonTrail* mTrail;
 
 	std::set<EmberEntity*> mEntities;
+
+	double mSimulationSpeed;
 };
 
 }

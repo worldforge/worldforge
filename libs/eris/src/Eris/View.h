@@ -3,7 +3,7 @@
 
 // WF
 #include "Factory.h"
-#include "ViewEntity.h"
+#include "Entity.h"
 #include "Router.h"
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <wfmath/timestamp.h>
@@ -54,7 +54,10 @@ public:
 	Retrieve an entity in the view by id. Returns nullptr if no such entity exists
 	in the view.
 	*/
-	ViewEntity* getEntity(const std::string& eid) const;
+	Entity* getEntity(const std::string& eid) const;
+
+	void getEntityFromServer(const std::string& eid);
+
 
 	Avatar& getAvatar() const {
 		return m_owner;
@@ -111,7 +114,7 @@ public:
 
 	double getSimulationSpeed() const;
 
-	typedef sigc::slot<void(ViewEntity*)> EntitySightSlot;
+	typedef sigc::slot<void(Entity*)> EntitySightSlot;
 
 	/**
 	Connect up a slot to be fired when an Entity with the specified ID is seen.
@@ -121,13 +124,13 @@ public:
 
 	/** emitted whenever the View creates a new Entity instance. This signal
 	is emitted once the entity has been fully bound into the View */
-	sigc::signal<void(ViewEntity*)> EntitySeen;
+	sigc::signal<void(Entity*)> EntitySeen;
 
 	/** emitted when a SIGHT(CREATE) op is received for an entity */
-	sigc::signal<void(ViewEntity*)> EntityCreated;
+	sigc::signal<void(Entity*)> EntityCreated;
 
 	/** emitted when a SIGHT(DELETE) op is received for an entity */
-	sigc::signal<void(ViewEntity*)> EntityDeleted;
+	sigc::signal<void(Entity*)> EntityDeleted;
 
 	/// emitted when the TLVE changes
 	sigc::signal<void()> TopLevelEntityChanged;
@@ -138,7 +141,7 @@ public:
 	 * This signal is mainly meant for debugging or authoring; normal entity
 	 * presentation logic should use EntitySeen or EntityCreated instead.
 	 */
-	sigc::signal<void(ViewEntity*)> InitialSightEntity;
+	sigc::signal<void(Entity*)> InitialSightEntity;
 
 	void dumpLookQueue();
 
@@ -161,9 +164,17 @@ public:
 
 	Connection& getConnection() const;
 
+	/**
+	Method to register and unregister tasks with with view, so they can
+	have their progress updated automatically by update(). Only certain
+	tasks (those with linear progress) are handled this way, but all tasks
+	are submitted to this method.
+	*/
+	void taskRateChanged(Task*);
+
 protected:
 
-	friend class ViewEntity;
+	friend class Entity;
 
 	friend class Avatar;
 
@@ -180,27 +191,18 @@ protected:
 	/// test if the specified entity ID is pending initial sight on the View
 	bool isPending(const std::string& eid) const;
 
-	void addToPrediction(ViewEntity* ent);
+	void addToPrediction(Entity* ent);
 
-	void removeFromPrediction(ViewEntity* ent);
+	void removeFromPrediction(Entity* ent);
 
-	/**
-	Method to register and unregister tasks with with view, so they can
-	have their progress updated automatically by update(). Only certain
-	tasks (those with linear progress) are handled this way, but all tasks
-	are submitted to this method.
-	*/
-	void taskRateChanged(Task*);
 
 private:
-	ViewEntity* initialSight(const Atlas::Objects::Entity::RootEntity& ge);
-
-	void getEntityFromServer(const std::string& eid);
+	Entity* initialSight(const Atlas::Objects::Entity::RootEntity& ge);
 
 	/** helper to update the top-level entity, fire signals, etc */
 	void setTopLevelEntity(Entity* newTopLevel);
 
-	std::unique_ptr<ViewEntity> createEntity(const Atlas::Objects::Entity::RootEntity&);
+	std::unique_ptr<Entity> createEntity(const Atlas::Objects::Entity::RootEntity&);
 
 	void parseSimulationSpeed(const Atlas::Message::Element& element);
 
@@ -228,7 +230,7 @@ private:
 	Avatar& m_owner;
 
 	struct EntityEntry {
-		std::unique_ptr<ViewEntity> entity;
+		std::unique_ptr<Entity> entity;
 	};
 	std::unordered_map<std::string, EntityEntry> m_contents;
 	Entity* m_topLevel; ///< the top-level visible entity for this view
@@ -283,12 +285,12 @@ private:
 
 	unsigned int m_maxPendingCount;
 
-	typedef sigc::signal<void(ViewEntity*)> EntitySightSignal;
+	typedef sigc::signal<void(Entity*)> EntitySightSignal;
 
 	typedef std::unordered_map<std::string, EntitySightSignal> NotifySightMap;
 	NotifySightMap m_notifySights;
 
-	typedef std::set<ViewEntity*> EntitySet;
+	typedef std::set<Entity*> EntitySet;
 
 	/** all the entities in the view which are moving, so they can be
 	motion predicted. */

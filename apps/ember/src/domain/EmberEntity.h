@@ -24,7 +24,7 @@
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
 
-#include <Eris/ViewEntity.h>
+#include <Eris/Entity.h>
 #include <Eris/Usage.h>
 
 #include <functional>
@@ -76,7 +76,7 @@ struct ActionChange {
  * This is the base class for any entities in the world. It's therefore safe to case any instance of Eris::Entity into this class.
  * Any entity which has a graphical representation in the world, and under normal circumstances that's the most of them, will have mGraphicalRepresentation set to a subclass of IGraphicalRepresentation.
  */
-class EmberEntity : public Eris::ViewEntity, public IVisualizable {
+class EmberEntity : public Eris::Entity, public IVisualizable {
 public:
 
 	/**
@@ -123,7 +123,7 @@ public:
 	 * @param ty The type info which specified the type for this entity.
 	 * @param vw The world view to which this entity belongs.
 	 */
-	EmberEntity(std::string id, Eris::TypeInfo* ty, Eris::View& vw);
+	EmberEntity(std::string id, Eris::TypeInfo* ty, Eris::Entity::EntityContext context);
 
 	/**
 	 * @brief Dtor.
@@ -185,9 +185,8 @@ public:
 	 * @brief Dumps all of this entity's attributes to the supplied outstream.
 	 * By default the entity will be exported using XML Atlas format.
 	 * @param outstream The stream to write to.
-	 * @param logOutstream The stream to which log messages will be written.
 	 */
-	void dumpAttributes(std::iostream& outstream, std::ostream& logOutstream) const;
+	void dumpAttributes(std::iostream& outstream) const;
 
 	/**
 	 * General method for turning on and off debug visualizations. Subclasses might support more types of visualizations than the ones defined here.
@@ -324,12 +323,6 @@ public:
 protected:
 
 	/**
-	 * @brief If this is true, init(...) has been called and the entity been set up.
-	 * @see isInitialized().
-	 */
-	bool mIsInitialized;
-
-	/**
 	 @brief Sometimes when talking to an entity, the server will provide suggested responses. These are stored here.
 	 */
 	std::vector<std::string> mSuggestedResponses;
@@ -404,13 +397,6 @@ protected:
 	 * @brief Called when the bounding box has changed.
 	 */
 	virtual void onBboxChanged();
-
-	/**
-	 * @brief Called by eris just after the entity has been put into the world.
-	 * @param ge The root entity which contains all atlas data that define this entity.
-	 * @param fromCreateOp
-	 */
-	void init(const Atlas::Objects::Entity::RootEntity& ge) override;
 
 	/**
 	 * @brief Parses the current positioning mode from the submitted element, which should be taken from the "mode" attribute.

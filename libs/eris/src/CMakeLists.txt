@@ -24,7 +24,6 @@ set(SOURCE_FILES
         Eris/TypeInfo.cpp
         Eris/TypeService.cpp
         Eris/View.cpp
-        Eris/ViewEntity.cpp
         Eris/ActiveMarker.cpp)
 
 set(HEADER_FILES
@@ -60,7 +59,6 @@ set(HEADER_FILES
         Eris/Types.h
         Eris/TypeService.h
         Eris/View.h
-        Eris/ViewEntity.h
         Eris/WaitFreeQueue.h
         Eris/ActiveMarker.h
         Eris/Usage.h)

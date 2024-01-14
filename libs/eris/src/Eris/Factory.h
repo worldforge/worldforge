@@ -2,7 +2,7 @@
 #define ERIS_FACTORY_H
 
 #include <Atlas/Objects/ObjectsFwd.h>
-#include "ViewEntity.h"
+#include <memory>
 
 namespace Eris {
 
@@ -14,8 +14,7 @@ class View;
 class TypeInfo;
 
 /// Factory is used to allow custom entity creation by client libraries
-class Factory {
-public:
+struct Factory {
 	virtual ~Factory();
 	/// Accept is called by the world to test if this factory can instantiate the specified object
 	/** Accept is called when an entity must be constructed; this will be called every time
@@ -24,7 +23,7 @@ public:
 	virtual bool accept(const Atlas::Objects::Entity::RootEntity& ge, TypeInfo* type) = 0;
 
 	/// create whatever entity the client desires
-	virtual std::unique_ptr<ViewEntity> instantiate(const Atlas::Objects::Entity::RootEntity& ge, TypeInfo* type, View& v) = 0;
+	virtual std::unique_ptr<Entity> instantiate(const Atlas::Objects::Entity::RootEntity& ge, TypeInfo* type, View& v) = 0;
 
 	/** retrieve this factory's priority level; higher priority factories
 	get first chance to process a received Atlas entity. The default implementation

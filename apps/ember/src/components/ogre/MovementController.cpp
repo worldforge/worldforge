@@ -122,11 +122,11 @@ MovementController::MovementController(Avatar& avatar, Camera::MainCamera& camer
 			try {
 				mAwareness = std::make_unique<Navigation::Awareness>(mAvatar.getEmberEntity(), heightProvider);
 				mAwarenessVisualizer = std::make_unique<Authoring::AwarenessVisualizer>(*mAwareness, *camera.getCamera().getSceneManager());
-				mSteering = std::make_unique<Navigation::Steering>(*mAwareness, location.getView()->getAvatar());
+				mSteering = std::make_unique<Navigation::Steering>(*mAwareness, mAvatar.getErisAvatar());
 				mSteering->EventPathUpdated.connect(sigc::mem_fun(*this, &MovementController::Steering_PathUpdated));
 
 				mAwareness->EventTileDirty.connect([this] {
-					mAvatar.getEmberEntity().getView()->getEventService().runOnMainThread([this]() { this->tileRebuild(); }, mActiveMarker);
+					mAvatar.getErisAvatar().getView().getEventService().runOnMainThread([this]() { this->tileRebuild(); }, mActiveMarker);
 				});
 
 				mAwareness->EventTileUpdated.connect([&](int, int) {
@@ -215,7 +215,7 @@ void MovementController::tileRebuild() {
 	if (mAwareness) {
 		size_t dirtyTiles = mAwareness->rebuildDirtyTile();
 		if (dirtyTiles) {
-			mAvatar.getEmberEntity().getView()->getEventService().runOnMainThread([this] { this->tileRebuild(); }, mActiveMarker);
+			mAvatar.getErisAvatar().getView().getEventService().runOnMainThread([this] { this->tileRebuild(); }, mActiveMarker);
 		}
 	}
 }
@@ -366,7 +366,7 @@ void MovementController::moveToPoint(const Ogre::Vector3& point) {
 }
 
 void MovementController::schedulePruning() {
-	mAvatar.getEmberEntity().getView()->getEventService().runOnMainThread([this]() {
+	mAvatar.getErisAvatar().getView().getEventService().runOnMainThread([this]() {
 		this->mAwareness->pruneTiles();
 		if (mAwareness->needsPruning()) {
 			schedulePruning();

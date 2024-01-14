@@ -67,8 +67,7 @@ void registerBindingsDomain(sol::state_view& lua) {
 													   "getVisualize", &EmberEntity::getVisualize,
 													   "dumpAttributes", [](EmberEntity* self) {
 				std::stringstream ss;
-				std::stringstream ss_log;
-				self->dumpAttributes(ss, ss_log);
+				self->dumpAttributes(ss);
 				return ss.str();
 			},
 													   "getAttachedEntity", &EmberEntity::getAttachedEntity,

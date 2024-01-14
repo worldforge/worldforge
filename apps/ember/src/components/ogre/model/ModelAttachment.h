@@ -26,7 +26,7 @@
 #include <map>
 #include <vector>
 #include <string>
-
+#include <functional>
 
 namespace Atlas::Message {
 class Element;
@@ -35,6 +35,9 @@ class Element;
 
 namespace Ember {
 class AttributeObserver;
+namespace EntityMapping {
+class IActionCreator;
+}
 }
 
 namespace Ember {
@@ -63,7 +66,8 @@ public:
 	ModelAttachment(EmberEntity& parentEntity,
 					std::unique_ptr<ModelRepresentation> modelRepresentation,
 					std::unique_ptr<INodeProvider> nodeProvider,
-					std::string pose = "");
+					std::string pose,
+					std::function<std::unique_ptr<::Ember::EntityMapping::EntityMapping>(Eris::Entity&, EntityMapping::IActionCreator&)> mappingCreator);
 
 	~ModelAttachment() override;
 
@@ -111,6 +115,8 @@ protected:
 	 * @brief An optional pose to use.
 	 */
 	const std::string mPose;
+
+	std::function<std::unique_ptr<::Ember::EntityMapping::EntityMapping>(Eris::Entity&, EntityMapping::IActionCreator&)> mMappingCreator;
 
 	/**
 	 * @brief The model mount, which takes care of setting up and handling the rotation and orientation of the model.

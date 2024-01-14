@@ -78,7 +78,7 @@ public:
 	/**
 	 Creates instances of EmberEntity and its subclasses.
 	 */
-	std::unique_ptr<Eris::ViewEntity> instantiate(const Atlas::Objects::Entity::RootEntity& ge, Eris::TypeInfo* type, Eris::View& w) override;
+	std::unique_ptr<Eris::Entity> instantiate(const Atlas::Objects::Entity::RootEntity& ge, Eris::TypeInfo* type, Eris::View& w) override;
 
 	/** retrieve this factory's priority level; higher priority factories
 	 get first chance to process a received Atlas entity. The default implementation
@@ -88,8 +88,6 @@ public:
 protected:
 
 	Eris::View& mView;
-
-	Eris::TypeService& mTypeService;
 
 	/**
 	 * @brief The scene which will handle the entities.

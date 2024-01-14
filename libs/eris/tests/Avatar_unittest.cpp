@@ -28,7 +28,7 @@
 
 #include "Eris/Connection.h"
 #include "Eris/Account.h"
-#include "Eris/ViewEntity.h"
+#include "Eris/Entity.h"
 #include "Eris/View.h"
 #include "Eris/EventService.h"
 
@@ -93,10 +93,14 @@ public:
 	}
 };
 
-class TestEntity : public Eris::ViewEntity {
+class TestEntity : public Eris::Entity {
 public:
-	TestEntity(const std::string& id, Eris::TypeInfo* ty, Eris::View& vw) :
-			Eris::ViewEntity(id, ty, vw) {}
+	TestEntity(const std::string& id, Eris::TypeInfo* ty) :
+			Eris::Entity(id, ty, {
+				.fetchEntity=[](const std::string&) { return nullptr; },
+				.getEntity=[](const std::string&) { return nullptr; },
+				.taskUpdated=[](Eris::Task&) {}
+		}) {}
 
 	void setup_setLocation(Eris::Entity* e) {
 		setLocation(e);
@@ -161,9 +165,9 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity wrld_ent("0", 0, testAvatar.getView());
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
-		TestEntity inv_ent("2", 0, testAvatar.getView());
+		TestEntity wrld_ent("0", 0);
+		TestEntity char_ent(fake_char_id, 0);
+		TestEntity inv_ent("2", 0);
 
 		testAvatar.setup_setEntity(&char_ent);
 		char_ent.setup_setLocation(&wrld_ent);
@@ -183,7 +187,7 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
+		TestEntity char_ent(fake_char_id, 0);
 
 		testAvatar.setup_setEntity(&char_ent);
 
@@ -202,8 +206,8 @@ int main() {
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
 
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
-		TestEntity npc_ent(fake_npc_id, 0, testAvatar.getView());
+		TestEntity char_ent(fake_char_id, 0);
+		TestEntity npc_ent(fake_npc_id, 0);
 		std::vector<std::string> entityIds;
 		entityIds.push_back(npc_ent.getId());
 
@@ -223,9 +227,9 @@ int main() {
 		std::string fake_char_id("1"), fake_npc_id("2"), fake_npc2_id("3");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
-		TestEntity npc_ent(fake_npc_id, 0, testAvatar.getView());
-		TestEntity npc2_ent(fake_npc2_id, 0, testAvatar.getView());
+		TestEntity char_ent(fake_char_id, 0);
+		TestEntity npc_ent(fake_npc_id, 0);
+		TestEntity npc2_ent(fake_npc2_id, 0);
 		std::vector<std::string> entityIds;
 		entityIds.push_back(npc_ent.getId());
 		entityIds.push_back(npc2_ent.getId());
@@ -246,7 +250,7 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
+		TestEntity char_ent(fake_char_id, 0);
 		std::vector<std::string> entityIds;
 
 		testAvatar.setup_setEntity(&char_ent);
@@ -265,7 +269,7 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
+		TestEntity char_ent(fake_char_id, 0);
 
 		testAvatar.setup_setEntity(&char_ent);
 
@@ -283,8 +287,8 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity wrld_ent("0", 0, testAvatar.getView());
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
+		TestEntity wrld_ent("0", 0);
+		TestEntity char_ent(fake_char_id, 0);
 
 		testAvatar.setup_setEntity(&char_ent);
 		char_ent.setup_setLocation(&wrld_ent);
@@ -303,8 +307,8 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity wrld_ent("0", 0, testAvatar.getView());
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
+		TestEntity wrld_ent("0", 0);
+		TestEntity char_ent(fake_char_id, 0);
 
 		testAvatar.setup_setEntity(&char_ent);
 		char_ent.setup_setLocation(&wrld_ent);
@@ -323,8 +327,8 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity wrld_ent("0", 0, testAvatar.getView());
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
+		TestEntity wrld_ent("0", 0);
+		TestEntity char_ent(fake_char_id, 0);
 
 		testAvatar.setup_setEntity(&char_ent);
 		char_ent.setup_setLocation(&wrld_ent);
@@ -343,8 +347,8 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity wrld_ent("0", 0, testAvatar.getView());
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
+		TestEntity wrld_ent("0", 0);
+		TestEntity char_ent(fake_char_id, 0);
 
 		testAvatar.setup_setEntity(&char_ent);
 		char_ent.setup_setLocation(&wrld_ent);
@@ -365,8 +369,8 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity wrld_ent("0", 0, testAvatar.getView());
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
+		TestEntity wrld_ent("0", 0);
+		TestEntity char_ent(fake_char_id, 0);
 
 		testAvatar.setup_setEntity(&char_ent);
 		char_ent.setup_setLocation(&wrld_ent);
@@ -385,9 +389,9 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity wrld_ent("0", 0, testAvatar.getView());
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
-		TestEntity inv_ent("2", 0, testAvatar.getView());
+		TestEntity wrld_ent("0", 0);
+		TestEntity char_ent(fake_char_id, 0);
+		TestEntity inv_ent("2", 0);
 
 		testAvatar.setup_setEntity(&char_ent);
 		char_ent.setup_setLocation(&wrld_ent);
@@ -407,9 +411,9 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity wrld_ent("0", 0, testAvatar.getView());
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
-		TestEntity inv_ent("2", 0, testAvatar.getView());
+		TestEntity wrld_ent("0", 0);
+		TestEntity char_ent(fake_char_id, 0);
+		TestEntity inv_ent("2", 0);
 
 		testAvatar.setup_setEntity(&char_ent);
 		char_ent.setup_setLocation(&wrld_ent);
@@ -430,9 +434,9 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity wrld_ent("0", 0, testAvatar.getView());
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
-		TestEntity inv_ent("2", 0, testAvatar.getView());
+		TestEntity wrld_ent("0", 0);
+		TestEntity char_ent(fake_char_id, 0);
+		TestEntity inv_ent("2", 0);
 
 		testAvatar.setup_setEntity(&char_ent);
 		char_ent.setup_setLocation(&wrld_ent);
@@ -452,9 +456,9 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity wrld_ent("0", 0, testAvatar.getView());
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
-		TestEntity inv_ent("2", 0, testAvatar.getView());
+		TestEntity wrld_ent("0", 0);
+		TestEntity char_ent(fake_char_id, 0);
+		TestEntity inv_ent("2", 0);
 
 		testAvatar.setup_setEntity(&char_ent);
 		char_ent.setup_setLocation(&wrld_ent);
@@ -476,8 +480,8 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity wrld_ent("0", 0, testAvatar.getView());
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
+		TestEntity wrld_ent("0", 0);
+		TestEntity char_ent(fake_char_id, 0);
 
 		testAvatar.setup_setEntity(&char_ent);
 		char_ent.setup_setLocation(&wrld_ent);
@@ -496,7 +500,7 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity char_ent(fake_char_id, 0, testAvatar.getView());
+		TestEntity char_ent(fake_char_id, 0);
 		SignalFlagger gotCharacterEntity;
 
 		testAvatar.GotCharacterEntity.connect(sigc::hide(sigc::mem_fun(gotCharacterEntity, &SignalFlagger::set)));
@@ -518,7 +522,7 @@ int main() {
 		std::string fake_char_id("1");
 		std::string fake_mind_id("12");
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-		TestEntity char_ent("2", 0, testAvatar.getView());
+		TestEntity char_ent("2", 0);
 		SignalFlagger gotCharacterEntity;
 
 		testAvatar.GotCharacterEntity.connect(sigc::hide(sigc::mem_fun(gotCharacterEntity, &SignalFlagger::set)));

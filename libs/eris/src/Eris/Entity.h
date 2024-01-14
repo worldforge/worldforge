@@ -23,6 +23,7 @@
 #include <unordered_map>
 #include <optional>
 #include <chrono>
+#include <functional>
 
 namespace Atlas::Message {
 class Element;
@@ -62,6 +63,12 @@ or creating peer classes and attaching them to the signals.
 class Entity : virtual public sigc::trackable {
 public:
 
+	struct EntityContext {
+		std::function<Entity*(const std::string&)> fetchEntity;
+		std::function<Entity*(const std::string&)> getEntity;
+		std::function<void(Task&)> taskUpdated;
+	};
+
 	//The "current" time, used for doing movement prediction.
 	static std::chrono::steady_clock::time_point currentTime;
 
@@ -79,9 +86,14 @@ public:
 
 	typedef std::map<std::string, Atlas::Message::Element> PropertyMap;
 
-	explicit Entity(std::string id, TypeInfo* ty);
+	explicit Entity(std::string id, TypeInfo* ty, EntityContext context);
 
 	virtual ~Entity();
+
+	/** over-rideable initialisation helper. When subclassing, if you
+	over-ride this method, take care to call the base implementation, or
+	unfortunate things will happen. */
+	virtual void init(const Atlas::Objects::Entity::RootEntity& ge);
 
 	void handleOperation(const Atlas::Objects::Operation::RootOperation& op, TypeService& typeService);
 
@@ -398,10 +410,6 @@ public:
 	*/
 	sigc::signal<void(const std::string&, Task*)> TaskRemoved;
 protected:
-	/** over-rideable initialisation helper. When subclassing, if you
-	over-ride this method, take care to call the base implementation, or
-	unfortunate things will happen. */
-	virtual void init(const Atlas::Objects::Entity::RootEntity& ge);
 
 	/**
 	 * Shuts down the entity. This is called by the destructor, but if you extend this class
@@ -474,14 +482,6 @@ protected:
 	friend class Task;
 
 	friend class Avatar;
-
-	/**
-	 * Fully initialise all entity state based on a RootEntity, including
-	 * location and contents.
-	 * This is only called once when the entity is first seen.
-	*/
-	void firstSight(const Atlas::Objects::Entity::RootEntity& gent);
-
 
 	/**
 	 * @brief Initialise all simple state from a Root. This excludes location and contents, and may optionally exclude all properties related to motion.
@@ -563,7 +563,7 @@ protected:
 	 * @brief Gets an entity with the supplied id from the system.
 	 * @param id The id of the entity to get.
 	 */
-	virtual Entity* getEntity(const std::string& id) = 0;
+	Entity* getEntity(const std::string& id);
 
 	/**
  * Called when a type has been bound, which means that we should replay any queued ops for that type.
@@ -578,11 +578,12 @@ protected:
 	 */
 	void typeBad(TypeInfo* type);
 
+	EntityContext mContext;
 
 	struct TypeDelayedOperation {
-	enum class Type {
-		SIGHT, SOUND
-	};
+		enum class Type {
+			SIGHT, SOUND
+		};
 		Atlas::Objects::Operation::RootOperation operation;
 		Type type;
 	};
@@ -718,6 +719,10 @@ inline WFMath::Vector<3> Entity::toLocationCoords(const WFMath::Vector<3>& v) co
 
 inline WFMath::Vector<3> Entity::fromLocationCoords(const WFMath::Vector<3>& v) const {
 	return WFMath::Vector<3>(v).rotate(m_orientation.inverse());
+}
+
+inline Entity* Entity::getEntity(const std::string& id) {
+	return mContext.fetchEntity(id);
 }
 
 } // of namespace

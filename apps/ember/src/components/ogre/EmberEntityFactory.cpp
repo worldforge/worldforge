@@ -31,16 +31,34 @@ namespace Ember::OgreView {
 
 EmberEntityFactory::EmberEntityFactory(Eris::View& view, Scene& scene) :
 		mView(view),
-		mTypeService(view.getTypeService()),
 		mScene(scene) {
 }
 
 EmberEntityFactory::~EmberEntityFactory() = default;
 
 // create whatever entity the client desires
-std::unique_ptr<Eris::ViewEntity> EmberEntityFactory::instantiate(const Atlas::Objects::Entity::RootEntity& ge, Eris::TypeInfo* type, Eris::View& w) {
+std::unique_ptr<Eris::Entity> EmberEntityFactory::instantiate(const Atlas::Objects::Entity::RootEntity& ge, Eris::TypeInfo* type, Eris::View& w) {
 
-	auto entity = std::make_unique<EmberEntity>(ge->getId(), type, w);
+	Eris::Entity::EntityContext context{
+			.fetchEntity = [this](const std::string& id) {
+				auto entity = mView.getEntity(id);
+				if (!entity) {
+					// we don't have the entity at all, so request it and skip
+					// processing it here; everything will come right when it
+					// arrives.
+					mView.getEntityFromServer(id);
+				}
+				return entity;
+			},
+			.getEntity= [this](const std::string& id) {
+				return mView.getEntity(id);
+			},
+			.taskUpdated = [this](Eris::Task& task) {
+				mView.taskRateChanged(&task);
+			}
+	};
+
+	auto entity = std::make_unique<EmberEntity>(ge->getId(), type, context);
 	logger->debug("Entity {} ({}) added to game view.", entity->getId(), type->getName());
 	return entity;
 }

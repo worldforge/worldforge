@@ -38,7 +38,7 @@ namespace Ember::OgreView::Authoring {
  */
 class DetachedEntity : public Eris::Entity {
 public:
-	DetachedEntity(const std::string& id, Eris::TypeInfo* ty);
+	DetachedEntity(std::string id, Eris::TypeInfo* ty);
 
 	~DetachedEntity() override;
 
@@ -47,21 +47,7 @@ public:
 	 */
 	void setFromMessage(const Atlas::Message::MapType& attrs);
 
-	/**
-	 * @brief Performs initialization of the entity.
-	 */
-	void doInit(const Atlas::Objects::Entity::RootEntity& rootEntity);
-
 	void setLocationEntity(Eris::Entity* location);
-
-protected:
-
-
-	/**
-	 * @brief Gets an entity with the supplied id from the system.
-	 * @param id The id of the entity to get.
-	 */
-	Eris::Entity* getEntity(const std::string& id) override;
 
 };
 

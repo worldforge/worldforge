@@ -34,7 +34,7 @@
 #include <map>
 #include <unordered_map>
 #include <functional>
-#include <Eris/ViewEntity.h>
+#include <Eris/Entity.h>
 #include <framework/AutoCloseConnection.h>
 
 class dtNavMeshQuery;
