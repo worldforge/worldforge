@@ -312,7 +312,7 @@ bool EmberOgre::setup(MainLoopController& mainLoopController, Eris::EventService
 																	 (preloadMedia ? numberOfSections : 0),
 																	 (preloadMedia ? 0.7f : 1.0f));
 
-	loadingBar.setVersionText(std::string("Version ") + EMBER_VERSION);
+	loadingBar.setVersionText("Version " EMBER_VERSION);
 
 	//create the collision manager
 	//	mCollisionManager = new OgreOpcode::CollisionManager(mSceneMgr);
