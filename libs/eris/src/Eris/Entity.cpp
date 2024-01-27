@@ -115,10 +115,11 @@ void Entity::handleOperation(const Atlas::Objects::Operation::RootOperation& op,
 				} else if (arg->getClassNo() == HIT_NO) {
 					//For hits we want to check the "to" field rather than the "from" field. We're more interested in
 					//the entity that was hit than the one which did the hitting.
-					if (!op->isDefaultTo()) {
-						Entity* otherEntity = getEntity(op->getTo());
+					auto hitOp = smart_dynamic_cast<Atlas::Objects::Operation::Hit>(arg);
+					if (!hitOp->isDefaultTo()) {
+						Entity* otherEntity = getEntity(hitOp->getTo());
 						if (otherEntity) {
-							otherEntity->onHit(smart_dynamic_cast<Atlas::Objects::Operation::Hit>(arg));
+							otherEntity->onHit(hitOp);
 						}
 					} else {
 						logger->warn("received 'hit' with TO unset");
