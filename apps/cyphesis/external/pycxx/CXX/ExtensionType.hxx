@@ -49,8 +49,8 @@
     { \
         try \
         { \
-            Py::PythonClassInstance *self_python = reinterpret_cast< Py::PythonClassInstance * >( _self ); \
-            CLS *self = reinterpret_cast< CLS * >( self_python->m_pycxx_object ); \
+            auto *self_python = reinterpret_cast< Py::PythonClassInstance * >( _self ); \
+            auto *self = reinterpret_cast< CLS * >( self_python->m_pycxx_object ); \
             Py::Object r( (self->NAME)() ); \
             return Py::new_reference_to( r.ptr() ); \
         } \
@@ -64,8 +64,8 @@
     { \
         try \
         { \
-            Py::PythonClassInstance *self_python = reinterpret_cast< Py::PythonClassInstance * >( _self ); \
-            CLS *self = reinterpret_cast< CLS * >( self_python->m_pycxx_object ); \
+            auto *self_python = reinterpret_cast< Py::PythonClassInstance * >( _self ); \
+            auto *self = reinterpret_cast< CLS * >( self_python->m_pycxx_object ); \
             Py::Tuple a( _a ); \
             Py::Object r( (self->NAME)( a ) ); \
             return Py::new_reference_to( r.ptr() ); \
