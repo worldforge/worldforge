@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.18)
 
 project(Worldforge)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/tools/cmake)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED on)
 
 # Meta data
 set(DESCRIPTION "The Worldforge project.")

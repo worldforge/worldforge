@@ -10,6 +10,7 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
     add_library(${_LIB_NAME} ${${_SOURCE_FILES_VAR}})
     target_compile_options(${_LIB_NAME} PUBLIC ${WF_WARNING_FLAGS})
+    target_compile_features(${_LIB_NAME} PUBLIC cxx_std_20)
     target_include_directories(${_LIB_NAME}
             PUBLIC
             "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
