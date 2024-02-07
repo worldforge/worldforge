@@ -19,13 +19,23 @@
 #include <boost/algorithm/string/replace.hpp>
 #include "pythonbase/Python_API.h"
 #include "rules/ai/python/CyPy_Ai.h"
-#include "rules/python/CyPy_Rules.h"
+#include "rules/python/CyPy_Rules_impl.h"
 #include "rules/python/CyPy_Physics.h"
-#include "rules/entityfilter/python/CyPy_EntityFilter.h"
+#include "rules/entityfilter/python/CyPy_EntityFilter_impl.h"
+#include "rules/entityfilter/Filter_impl.h"
+#include "rules/entityfilter/ParserDefinitions_impl.h"
 #include "rules/python/CyPy_Atlas.h"
 #include "rules/python/CyPy_Common.h"
 #include "rules/simulation/python/CyPy_Server.h"
+#include "rules/simulation/LocatedEntity.h"
+#include "rules/ai/MemEntity.h"
+#include "rules/simulation/python/CyPy_LocatedEntity.h"
 #include <spdlog/sinks/stdout_sinks.h>
+
+template
+struct EntityFilter::parser::query_parser<std::string::const_iterator, LocatedEntity>;
+template
+struct EntityFilter::parser::query_parser<std::string::const_iterator, MemEntity>;
 
 /**
  * A simple tool that will load all of our bindings and then at request try to generate suitable stubs based on the meta data from the bindings.
@@ -39,17 +49,17 @@
  * @param argv
  * @return
  */
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
 	//Ant log output goes to cerr, so as not to interfere with program output.
 	spdlog::default_logger()->sinks().clear();
 	spdlog::default_logger()->sinks().emplace_back(std::make_shared<spdlog::sinks::stderr_sink_mt>());
-    init_python_api({&CyPy_Server::init, &CyPy_Ai::init, &CyPy_Rules::init, &CyPy_Physics::init, &CyPy_EntityFilter::init, &CyPy_Atlas::init, &CyPy_Common::init}, {}, false);
+	init_python_api({&CyPy_Server::init, &CyPy_Ai::init, &CyPy_Rules<LocatedEntity, CyPy_LocatedEntity>::init, &CyPy_Physics::init, &CyPy_EntityFilter<LocatedEntity>::init, &CyPy_Atlas::init,
+					 &CyPy_Common::init}, {}, false);
 
-    if (argc > 1) {
-        auto moduleName = argv[1];
+	if (argc > 1) {
+		auto moduleName = argv[1];
 
-        std::string commandString = R"EOF(
+		std::string commandString = R"EOF(
 import inspect
 import sys
 import %1 as mod
@@ -115,9 +125,9 @@ for line in output:
     print(line)
 
 )EOF";
-        boost::replace_all(commandString, "%1", moduleName);
+		boost::replace_all(commandString, "%1", moduleName);
 
-        PyRun_SimpleString(commandString.c_str());
-    }
-    shutdown_python_api();
+		PyRun_SimpleString(commandString.c_str());
+	}
+	shutdown_python_api();
 }

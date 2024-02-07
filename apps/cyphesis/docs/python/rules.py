@@ -18,7 +18,6 @@ class Location:
     def __init__(self, *args, **kwargs):
         pass
     def add_to_entity(self):
-        """Adds the location data to the supplied entity and return the entity."""
         pass
     def copy(self):
         pass

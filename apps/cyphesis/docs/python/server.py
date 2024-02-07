@@ -140,6 +140,9 @@ class World:
         """Gets the entity with the supplied id."""
         pass
     def get_time(self):
+        """Get server time in milliseconds."""
+        pass
+    def get_time_as_seconds(self):
         pass
     def match_entity(self):
         """Matches a filter against an entity."""

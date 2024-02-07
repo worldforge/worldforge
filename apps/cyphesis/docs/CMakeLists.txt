@@ -13,7 +13,7 @@ add_custom_target(GeneratePythonDocs
         COMMAND cyphesis-pythondocgenerator physics > physics.py
         COMMAND cyphesis-pythondocgenerator rules > rules.py
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/apps/cyphesis/docs/python
-        DEPENDS cyphesis-pythondocgenerator cyphesis-rulesai_python cyphesis-rulessimulation_python cyphesis-entityfilter_python cyphesis-rulesbase_python
+        DEPENDS cyphesis-pythondocgenerator cyphesis-rulesai_python cyphesis-rulessimulation_python
         VERBATIM
         )
 

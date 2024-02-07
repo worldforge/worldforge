@@ -8,12 +8,6 @@ EDGE = 1
 class MemEntity:
     def __init__(self, *args, **kwargs):
         pass
-    def as_entity(self):
-        pass
-    def can_reach(self):
-        pass
-    def client_error(self):
-        pass
     def describe_entity(self):
         pass
     def get_child(self):
@@ -53,12 +47,8 @@ class MemEntity:
 class MemMap:
     def __init__(self, *args, **kwargs):
         pass
-    def add(self):
-        pass
     def add_entity_memory(self, entity_id, name, memory):
         """Adds memory for an entity. First parameter is entity id, second is memory name, and third is the memory contents."""
-        pass
-    def delete(self):
         pass
     def find_by_filter(self):
         pass
@@ -78,8 +68,6 @@ class MemMap:
         pass
     def remove_entity_memory(self):
         """Removes memory for an entity. First parameter is entity id, second is memory name. If no memory name is supplied all memory for that entity will be removed"""
-        pass
-    def update(self):
         pass
 
 class Mind:
