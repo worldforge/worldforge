@@ -23,9 +23,9 @@
 
 #include <Mercator/TerrainMod.h>
 
-struct TerrainContext : public Mercator::Effector::Context
-{
-    WeakEntityRef m_entity;
+template<typename EntityT>
+struct TerrainContext : public Mercator::Effector::Context {
+	WeakEntityRef<EntityT> m_entity;
 };
 
 #endif // MODULES_TERRAIN_CONTEXT_H

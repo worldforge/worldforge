@@ -24,6 +24,7 @@
 #include "MemEntity.h"
 #include "modules/Ref.h"
 #include "common/TypeStore.h"
+#include "rules/EntityLocation.h"
 
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <Atlas/Message/Element.h>
@@ -36,15 +37,16 @@
 #include <string>
 #include <optional>
 
-class LocatedEntity;
 
+template<typename>
 class Location;
 
+template<typename>
 class TypeNode;
 
 class TypeResolver;
 
-typedef std::vector<LocatedEntity*> EntityVector;
+typedef std::vector<MemEntity*> EntityVector;
 
 /// \brief Class to handle the basic entity memory of a mind
 class MemMap {
@@ -54,7 +56,7 @@ public:
 
 		virtual void entityAdded(MemEntity& entity) = 0;
 
-		virtual void entityUpdated(MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, LocatedEntity* oldLocation) = 0;
+		virtual void entityUpdated(MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, MemEntity* oldLocation) = 0;
 
 		virtual void entityDeleted(MemEntity& entity) = 0;
 	};
@@ -83,12 +85,22 @@ protected:
 
 	std::deque<Operation> m_typeResolverOps;
 
-	void readEntity(const Ref<MemEntity>&, const Atlas::Objects::Entity::RootEntity&, std::chrono::milliseconds timestamp);
+	std::unique_ptr<PropertyManager<MemEntity>> m_propertyManager;
 
-	void updateEntity(const Ref<MemEntity>&, const Atlas::Objects::Entity::RootEntity&, std::chrono::milliseconds timestamp);
+	void readEntity(const Ref<MemEntity>&,
+					const Atlas::Objects::Entity::RootEntity&,
+					std::chrono::milliseconds timestamp,
+					OpVector& res);
+
+	void updateEntity(const Ref<MemEntity>&,
+					  const Atlas::Objects::Entity::RootEntity&,
+					  std::chrono::milliseconds timestamp,
+					  OpVector& res);
 
 	Ref<MemEntity> newEntity(const RouterId&,
-							 const Atlas::Objects::Entity::RootEntity&, std::chrono::milliseconds timestamp);
+							 const Atlas::Objects::Entity::RootEntity&,
+							 std::chrono::milliseconds timestamp,
+							 OpVector& res);
 
 	void addContents(const Atlas::Objects::Entity::RootEntity&);
 
@@ -102,7 +114,7 @@ public:
 
 	~MemMap();
 
-	std::vector<Ref<MemEntity>> resolveEntitiesForType(const TypeNode* typeNode);
+	std::vector<Ref<MemEntity>> resolveEntitiesForType(const TypeNode<MemEntity>* typeNode);
 
 	void addEntity(const Ref<MemEntity>&);
 
@@ -124,7 +136,7 @@ public:
 
 	Ref<MemEntity> getAdd(const std::string& id);
 
-	Ref<MemEntity> updateAdd(const Atlas::Objects::Entity::RootEntity&, std::chrono::milliseconds);
+	Ref<MemEntity> updateAdd(const Atlas::Objects::Entity::RootEntity&, std::chrono::milliseconds, OpVector& res);
 
 	///\brief Add an entity-related memory or update it if it already exists
 	///@param id - the id of entity to which we relate the memory
@@ -150,7 +162,7 @@ public:
 
 	EntityVector findByType(const std::string& what);
 
-	EntityVector findByLocation(const EntityLocation& where,
+	EntityVector findByLocation(const EntityLocation<MemEntity>& where,
 								WFMath::CoordType radius,
 								const std::string& what) const;
 
@@ -164,7 +176,7 @@ public:
 		return m_typeResolverOps;
 	}
 
-	const TypeStore& getTypeStore() const;
+	const TypeStore<MemEntity>& getTypeStore() const;
 
 	friend class BaseMindMapEntityintegration;
 };

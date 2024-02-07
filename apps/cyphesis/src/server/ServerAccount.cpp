@@ -22,7 +22,7 @@
 #include "Connection.h"
 #include "PossessionAuthenticator.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "rules/simulation/BaseWorld.h"
 #include "common/debug.h"

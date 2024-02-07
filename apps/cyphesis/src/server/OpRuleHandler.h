@@ -45,11 +45,11 @@ public:
 				const Atlas::Objects::Root& desc,
 				std::string&,
 				std::string&,
-				std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) override;
+				std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) override;
 
 	int update(const std::string&,
 			   const Atlas::Objects::Root& desc,
-			   std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) override;
+			   std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) override;
 };
 
 #endif // SERVER_OP_RULE_HANDLER_H

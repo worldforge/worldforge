@@ -18,7 +18,7 @@
 
 #include "Thing.h"
 
-#include "rules/Domain.h"
+#include "rules/simulation/Domain.h"
 
 #include "rules/simulation/BaseWorld.h"
 #include "common/debug.h"
@@ -202,12 +202,12 @@ void Thing::moveToNewLocation(Ref<LocatedEntity>& new_loc,
 
 	//TODO: move this into the domain instead
 	if (newOrientation.isValid()) {
-		auto& prop = requirePropertyClassFixed<OrientationProperty>();
+		auto& prop = requirePropertyClassFixed<OrientationProperty<LocatedEntity>>();
 		prop.data() = newOrientation;
 		applyProperty(prop);
 	}
 	if (newPos.isValid()) {
-		auto& prop = requirePropertyClassFixed<PositionProperty>();
+		auto& prop = requirePropertyClassFixed<PositionProperty<LocatedEntity>>();
 		prop.data() = newPos;
 		applyProperty(prop);
 	}

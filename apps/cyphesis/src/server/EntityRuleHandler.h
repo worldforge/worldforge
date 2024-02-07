@@ -35,7 +35,7 @@ class EntityRuleHandler : public RuleHandler
 {
     protected:
         EntityBuilder& m_builder;
-        const PropertyManager& m_propertyManager;
+        const PropertyManager<LocatedEntity>& m_propertyManager;
 
         int populateEntityFactory(const std::string& class_name,
                                   EntityFactoryBase* factory,
@@ -48,7 +48,7 @@ class EntityRuleHandler : public RuleHandler
                                const Atlas::Objects::Root& class_desc,
                                std::string& dependent,
                                std::string& reason,
-                               std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes);
+                               std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes);
 
         int installEntityClass(const std::string& class_name,
                                const std::string& parent,
@@ -56,16 +56,16 @@ class EntityRuleHandler : public RuleHandler
                                std::string& dependent,
                                std::string& reason,
                                std::unique_ptr<EntityFactoryBase> factory,
-                               std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes);
+                               std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes);
 
         int modifyEntityClass(const std::string& class_name,
                               const Atlas::Objects::Root& class_desc,
-                              std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes);
+                              std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes);
 
         std::map<std::string, std::function<std::unique_ptr<EntityFactoryBase>(EntityFactoryBase*)>> mFactories;
 
     public:
-        explicit EntityRuleHandler(EntityBuilder& eb, const PropertyManager& propertyManager);
+        explicit EntityRuleHandler(EntityBuilder& eb, const PropertyManager<LocatedEntity>& propertyManager);
 
         int check(const Atlas::Objects::Root& desc) override;
 
@@ -74,11 +74,11 @@ class EntityRuleHandler : public RuleHandler
                     const Atlas::Objects::Root& desc,
                     std::string& dependent,
                     std::string& reason,
-                    std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) override;
+                    std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) override;
 
         int update(const std::string& name,
                    const Atlas::Objects::Root& desc,
-                   std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) override;
+                   std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) override;
 
 
 };

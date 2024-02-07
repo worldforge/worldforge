@@ -45,7 +45,7 @@ Py::Object CyPy_EntityProps::getattro(const Py::String& name) {
 	auto nameStr = name.as_string();
 
 	if (nameStr == "bbox") {
-		auto bboxProperty = m_value->getPropertyClassFixed<BBoxProperty>();
+		auto bboxProperty = m_value->getPropertyClassFixed<BBoxProperty<LocatedEntity>>();
 		if (bboxProperty) {
 			return CyPy_Axisbox::wrap(bboxProperty->data());
 		}

@@ -19,7 +19,7 @@
 #ifndef CYPHESIS_MODIFIERSPROPERTY_H
 #define CYPHESIS_MODIFIERSPROPERTY_H
 
-#include "common/Property.h"
+#include "PropertyBase.h"
 
 /**
  * Exposes the current active modifiers as a protected "_modifiers" attribute.

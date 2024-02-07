@@ -28,7 +28,7 @@
 #include "common/TypeNode.h"
 
 #include "rules/simulation/BaseWorld.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/id.h"
 #include "common/debug.h"

@@ -33,6 +33,7 @@
 
 
 /// \brief Entry in the type hierarchy for in-game entity classes.
+template<typename EntityT>
 class TypeNode {
 
 protected:
@@ -40,7 +41,7 @@ protected:
 	const std::string m_name;
 
 	/// \brief property defaults
-	std::map<std::string, std::unique_ptr<PropertyBase>> m_defaults;
+	std::map<std::string, std::unique_ptr<PropertyCore<EntityT>>> m_defaults;
 
 	/// \brief type description, complete
 	Atlas::Objects::Root m_privateDescription;
@@ -74,13 +75,13 @@ public:
 	~TypeNode();
 
 	/// \brief injects a new property and updated the m_description
-	TypeNode::PropertiesUpdate injectProperty(const std::string&, std::unique_ptr<PropertyBase>);
+	TypeNode::PropertiesUpdate injectProperty(const std::string&, std::unique_ptr<PropertyCore<EntityT>>);
 
 	/// \brief add the class properties for this type from Atlas attributes
-	void addProperties(const Atlas::Message::MapType& attributes, const PropertyManager& propertyManager);
+	void addProperties(const Atlas::Message::MapType& attributes, const PropertyManager<EntityT>& propertyManager);
 
 	/// \brief update the class properties for this type from Atlas attributes
-	TypeNode::PropertiesUpdate updateProperties(const Atlas::Message::MapType& attributes, const PropertyManager& propertyManager);
+	TypeNode::PropertiesUpdate updateProperties(const Atlas::Message::MapType& attributes, const PropertyManager<EntityT>& propertyManager);
 
 	/// \brief check if this type inherits from another
 	bool isTypeOf(const std::string& base_type) const;
@@ -94,7 +95,7 @@ public:
 	}
 
 	/// \brief const accessor for property defaults
-	const std::map<std::string, std::unique_ptr<PropertyBase>>& defaults() const {
+	const std::map<std::string, std::unique_ptr<PropertyCore<EntityT>>>& defaults() const {
 		return m_defaults;
 	}
 

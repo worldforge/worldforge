@@ -19,7 +19,7 @@
 #ifndef CYPHESIS_WORLDTIMEPROPERTY_H
 #define CYPHESIS_WORLDTIMEPROPERTY_H
 
-#include "common/Property.h"
+#include "PropertyBase.h"
 
 /**
  * Keeps track of the world time.

@@ -27,7 +27,8 @@
  *
  * \ingroup PropertyClasses
  */
-class Point3Property : public PropertyBase {
+template <typename EntityT>
+class Point3Property : public PropertyCore<EntityT> {
 public:
 
 	static constexpr const char* property_atlastype = "list";
@@ -48,7 +49,7 @@ public:
 
 	WFMath::Point<3>& data() { return m_data; }
 
-	Point3Property* copy() const override;
+	Point3Property<EntityT>* copy() const override;
 
 protected:
 	WFMath::Point<3> m_data;

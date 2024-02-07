@@ -31,29 +31,30 @@
 #include <rules/python/CyPy_Physics.h>
 #include <rules/python/CyPy_Atlas.h>
 #include <rules/python/CyPy_Common.h>
-#include <rules/entityfilter/python/CyPy_EntityFilter.h>
-#include <rules/python/CyPy_Rules.h>
-#include <rules/SimpleTypeStore.h>
+#include <rules/entityfilter/python/CyPy_EntityFilter_impl.h>
+#include "rules/python/CyPy_Rules_impl.h"
 #include "common/Property_impl.h"
+#include "client/SimpleTypeStore.h"
+#include "rules/ai/python/CyPy_MemEntity.h"
 
 static void usage(const char* prgname) {
 	std::cout << "usage: " << prgname << " [ [package.]function ]"
 			  << std::endl;
 }
 
-STRING_OPTION(server, "localhost", "client", "serverhost",
+STRING_OPTION(serverOption, "localhost", "client", "serverhost",
 			  "Hostname of the server to connect to");
 
-STRING_OPTION(account, "", "client", "account",
+STRING_OPTION(accountOption, "", "client", "account",
 			  "Account name to use to authenticate to the server");
 
-STRING_OPTION(password, "", "client", "password",
+STRING_OPTION(passwordOption, "", "client", "password",
 			  "Password to use to authenticate to the server");
 
-STRING_OPTION(package, "", "client", "package",
+STRING_OPTION(packageOption, "", "client", "package",
 			  "Python package which contains the world initialisation code");
 
-STRING_OPTION(function, "", "client", "function",
+STRING_OPTION(functionOption, "", "client", "function",
 			  "Python function to initialise the world");
 
 int main(int argc, char** argv) {
@@ -81,10 +82,10 @@ int main(int argc, char** argv) {
 		std::string::size_type pos = arg.rfind('.');
 		if (pos == std::string::npos) {
 			// std::cout << "function " << arg << std::endl;
-			function = arg;
+			functionOption = arg;
 		} else {
-			package = arg.substr(0, pos);
-			function = arg.substr(pos + 1);
+			packageOption = arg.substr(0, pos);
+			functionOption = arg.substr(pos + 1);
 			// std::cout << "module.function " << package << "." << function << std::endl;
 		}
 	} else if (optindex != argc) {
@@ -103,8 +104,8 @@ int main(int argc, char** argv) {
 	python_directories.push_back(share_directory + "/cyphesis/rulesets/" + ruleset_name + "/scripts");
 
 	init_python_api({&CyPy_Physics::init,
-					 &CyPy_Rules::init,
-					 &CyPy_EntityFilter::init,
+					 &CyPy_Rules<MemEntity, CyPy_MemEntity>::init,
+					 &CyPy_EntityFilter<MemEntity>::init,
 					 &CyPy_Atlas::init,
 					 &CyPy_Common::init},
 					python_directories, false);
@@ -120,8 +121,8 @@ int main(int argc, char** argv) {
 		std::map<std::string, std::string> keywords;
 		Atlas::Objects::Factories factories;
 		ObserverClient observerClient(io_context, factories, typeStore);
-		observerClient.setup(account, password, server);
-		python_client_script(package, function, observerClient);
+		observerClient.setup(accountOption, passwordOption, serverOption);
+		python_client_script(packageOption, functionOption, observerClient);
 	}
 
 	shutdown_python_api();

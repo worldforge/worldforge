@@ -25,31 +25,10 @@
 
 #include <Atlas/Message/Element.h>
 
-class LocatedEntity;
-
+template<typename>
 class TypeNode;
 
-struct PropertyUtil {
 
-	/**
-	 * Extract the property visibility flags from the name.
-	 * Names that starts with "__" are "private". Only visible to the simulation and to administrators.
-	 * Names that starts with "_" are "protected". Only visible to the entity it belongs, the simulation and to administrators.
-	 * All other properties are "public", i.e. visible to everyone.
-	 * @param name A property name.
-	 * @return
-	 */
-	static std::uint32_t flagsForPropertyName(const std::string& name);
-
-	/**
-	 * Checks if the name supplied is a valid property name.
-	 *
-	 * It should not be more than 32 characters, and can only contain ascii characters or numbers, dollar sign ("$"), underscores ("_") or hyphens ("-").
-	 */
-	static bool isValidName(const std::string& name);
-
-	static std::pair<ModifierType, std::string> parsePropertyModification(const std::string& propertyName);
-};
 
 
 /// \brief Classes that define properties on in world entities
@@ -79,7 +58,7 @@ struct PropertyUtil {
 ///
 /// \ingroup PropertyClasses
 template<typename EntityT>
-class PropertyCore : public OperationsListener {
+class PropertyCore : public OperationsListener<EntityT> {
 protected:
 	/// \brief Flags indicating how this Property should be handled
 	Flags m_flags;
@@ -119,7 +98,7 @@ public:
 	/// \brief Install this property on a type
 	///
 	/// Called whenever a TypeNode gains this property for the first time
-	virtual void install(TypeNode&, const std::string&);
+	virtual void install(TypeNode<EntityT>&, const std::string&);
 
 	/// \brief Remove this property from an entity.
 	///
@@ -146,7 +125,7 @@ public:
 	virtual void add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const;
 
 	/// \brief Handle an operation
-	HandlerResult operation(LocatedEntity&,
+	HandlerResult operation(EntityT&,
 							const Operation&,
 							OpVector&) override;
 
@@ -159,8 +138,6 @@ public:
 
 	bool operator!=(const PropertyCore& rhs) const;
 };
-
-typedef PropertyCore<LocatedEntity> PropertyBase;
 
 /// \brief Flag indicating data has been written to permanent store
 /// \ingroup PropertyFlags
@@ -212,18 +189,22 @@ static const std::uint32_t prop_flag_instance = 1u << 8u;
 static const std::uint32_t prop_flag_modifiers_not_allowed = 1u << 9u;
 
 
+template <typename T>
+struct PropertyAtlasBase {
+		static const std::string property_atlastype;
+};
+
 /// \brief Entity property template for properties with single data values
 /// \ingroup PropertyClasses
-template<typename T>
-class Property : public PropertyBase {
+template<typename T, typename EntityT>
+class Property : public PropertyCore<EntityT>, public PropertyAtlasBase<T> {
 protected:
 	/// \brief Reference to variable holding the value of this Property
 	T m_data;
 
-	Property(const Property<T>&) = default;
+	Property(const Property<T, EntityT>&) = default;
 
 public:
-	static const std::string property_atlastype;
 
 	explicit Property(unsigned int flags = 0);
 
@@ -239,12 +220,13 @@ public:
 
 	void add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const override;
 
-	Property<T>* copy() const override;
+	Property<T, EntityT>* copy() const override;
 };
 
 /// \brief Entity property that can store any Atlas value
 /// \ingroup PropertyClasses
-class SoftProperty : public PropertyBase {
+template<typename EntityT>
+class SoftProperty : public PropertyCore<EntityT> {
 protected:
 	Atlas::Message::Element m_data;
 public:
@@ -263,7 +245,8 @@ public:
 	const Atlas::Message::Element& data() const;
 };
 
-class BoolProperty : public PropertyBase {
+template<typename EntityT>
+class BoolProperty : public PropertyCore<EntityT> {
 public:
 	static constexpr const char* property_atlastype = "int";
 

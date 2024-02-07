@@ -21,56 +21,66 @@
 
 #include "Predicates.h"
 
-#include "rules/LocatedEntity.h"
-#include <Atlas/Message/Element.h>
-#include <list>
+#include "modules/Ref.h"
+#include "modules/ReferenceCounted.h"
+#include "common/Router.h"
+#include "common/TypeNode.h"
 
+
+#include <Atlas/Message/Element.h>
+
+#include <wfmath/point.h>
+
+
+#include <list>
 #include <map>
 #include <functional>
 #include <string>
 
+template<typename>
 class TypeNode;
-
-class BBoxProperty;
 
 namespace EntityFilter {
 
+template<typename>
 class Predicate;
 
 /**
  * A simple struct for storing both an entity and a position.
  */
+template<typename EntityT>
 struct QueryEntityLocation {
-	LocatedEntity& entity;
+	EntityT& entity;
 
 	const WFMath::Point<3>* pos = nullptr;
 
 	QueryEntityLocation() = delete;
 
-	QueryEntityLocation(LocatedEntity& entity_in) : entity(entity_in) {}
+	QueryEntityLocation(EntityT& entity_in) : entity(entity_in) {}
 
-	QueryEntityLocation(LocatedEntity& entity_in, const WFMath::Point<3>* pos_in) : entity(entity_in), pos(pos_in) {}
+	QueryEntityLocation(EntityT& entity_in, const WFMath::Point<3>* pos_in) : entity(entity_in), pos(pos_in) {}
 };
 
+template<typename EntityT>
 struct QueryContext {
 	/**
 	 * The main entity (with an optional position) which the filter is applied on. This is required, all other parameters are optional.
 	 */
-	QueryEntityLocation entityLoc;
+	QueryEntityLocation<EntityT> entityLoc;
 	/**
 	 * Represents an actor, mainly used together with the "tool" field. The "actor" is the entity which uses the "tool".
 	 */
-	LocatedEntity* actor = nullptr;
+	EntityT* actor = nullptr;
 
 	/**
 	 * Represents something being used, often along with an "actor".
 	 */
-	LocatedEntity* tool = nullptr;
+	EntityT* tool = nullptr;
 
 	/**
 	 * Do not set this field yourself. This is used when iterating through Entity sets, and is set automatically by the Providers.
 	 */
-	LocatedEntity* child = nullptr;
+	EntityT* child = nullptr;
 
 	/**
 	 * A memory, using when filters are attached to Minds.
@@ -78,17 +88,17 @@ struct QueryContext {
 	std::function<const Atlas::Message::MapType&(const std::string&)> memory_lookup_fn;
 
 	//This field can be used by client code to specify entity for "self.*" query
-	LocatedEntity* self_entity = nullptr;
+	EntityT* self_entity = nullptr;
 
 	/**
 	 * Gets entities by their id. Used by the get_entity function. Optional.
 	 */
-	std::function<Ref<LocatedEntity>(const std::string&)> entity_lookup_fn;
+	std::function<Ref<EntityT>(const std::string&)> entity_lookup_fn;
 
 	/**
 	 * Looks up types by name. Used by the DynamicTypeNodeProvider. Optional.
 	 */
-	std::function<const TypeNode*(const std::string&)> type_lookup_fn;
+	std::function<const TypeNode<EntityT>*(const std::string&)> type_lookup_fn;
 
 	/**
 	 * If provided allows predicates to report on failures to match. This can be used to provide better messages to clients.
@@ -97,9 +107,8 @@ struct QueryContext {
 	std::function<void(const std::string&)> report_error_fn;
 };
 
-class TypedProvider {
-public:
-	virtual ~TypedProvider() = default;
+struct TypedProvider {
+	inline virtual ~TypedProvider() = default;
 
 	/**
 	 * @brief Gets the type of the pointer provided by this instance, if that can be determined.
@@ -210,120 +219,144 @@ inline const std::type_info* ConsumingNamedAttributeProviderBase<TProviding, TCo
 }
 
 
-class FixedElementProvider : public Consumer<QueryContext> {
+template<typename EntityT>
+class FixedElementProvider : public Consumer<QueryContext<EntityT>> {
 public:
 	explicit FixedElementProvider(Atlas::Message::Element element);
 
-	void value(Atlas::Message::Element& value, const QueryContext& context) const override;
+	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const override;
 
 	const Atlas::Message::Element m_element;
 };
 
-class DynamicTypeNodeProvider : public ConsumingProviderBase<TypeNode, QueryContext> {
+template<typename EntityT>
+class DynamicTypeNodeProvider : public ConsumingProviderBase<TypeNode<EntityT>, QueryContext<EntityT>> {
 public:
-	DynamicTypeNodeProvider(std::shared_ptr<Consumer<TypeNode>> consumer, std::string type);
 
-	void value(Atlas::Message::Element& value, const QueryContext& context) const override;
+	DynamicTypeNodeProvider(std::shared_ptr<Consumer<TypeNode<EntityT>>> consumer, std::string type);
 
-	const std::type_info* getType() const override;
+	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const
+
+	override;
+
+	const std::type_info* getType() const
+
+	override;
 
 	const std::string m_type;
 };
 
-class FixedTypeNodeProvider : public ConsumingProviderBase<TypeNode, QueryContext> {
+template<typename EntityT>
+class FixedTypeNodeProvider : public ConsumingProviderBase<TypeNode<EntityT>, QueryContext<EntityT>> {
 public:
-	FixedTypeNodeProvider(std::shared_ptr<Consumer<TypeNode>> consumer, const TypeNode& type);
 
-	void value(Atlas::Message::Element& value, const QueryContext& context) const override;
+	FixedTypeNodeProvider(std::shared_ptr<Consumer<TypeNode<EntityT>>> consumer, const TypeNode<EntityT>& type);
+
+	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const override;
 
 	const std::type_info* getType() const override;
 
-	const TypeNode& m_type;
+	const TypeNode<EntityT>& m_type;
 };
 
-class MemoryProvider : public ConsumingProviderBase<Atlas::Message::Element, QueryContext> {
+template<typename EntityT>
+class MemoryProvider : public ConsumingProviderBase<Atlas::Message::Element, QueryContext<EntityT>> {
 public:
+
 	explicit MemoryProvider(std::shared_ptr<Consumer<Atlas::Message::Element>> consumer);
 
-	void value(Atlas::Message::Element& value, const QueryContext&) const override;
+	void value(Atlas::Message::Element& value, const QueryContext<EntityT>&) const override;
 };
 
-class EntityProvider : public ConsumingProviderBase<LocatedEntity, QueryContext> {
+template<typename EntityT>
+class EntityProvider : public ConsumingProviderBase<EntityT, QueryContext<EntityT>> {
 public:
-	explicit EntityProvider(std::shared_ptr<Consumer<LocatedEntity>> consumer);
 
-	void value(Atlas::Message::Element& value, const QueryContext& context) const override;
+	explicit EntityProvider(std::shared_ptr<Consumer<EntityT>> consumer);
+
+	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const override;
 
 	const std::type_info* getType() const override;
 };
 
-class EntityLocationProvider : public ConsumingProviderBase<LocatedEntity, QueryContext> {
+template<typename EntityT>
+class EntityLocationProvider : public ConsumingProviderBase<EntityT, QueryContext<EntityT>> {
 public:
-	explicit EntityLocationProvider(std::shared_ptr<Consumer<LocatedEntity>> consumer);
 
-	void value(Atlas::Message::Element& value, const QueryContext& context) const override;
+	explicit EntityLocationProvider(std::shared_ptr<Consumer<EntityT>> consumer);
+
+	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const override;
 
 	const std::type_info* getType() const override;
 };
 
-class ActorProvider : public EntityProvider {
+template<typename EntityT>
+class ActorProvider : public EntityProvider<EntityT> {
 public:
-	explicit ActorProvider(std::shared_ptr<Consumer<LocatedEntity>> consumer);
+	explicit ActorProvider(std::shared_ptr<Consumer<EntityT>> consumer);
 
-	void value(Atlas::Message::Element& value, const QueryContext& context) const override;
+	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const override;
 
 };
 
-class ToolProvider : public EntityProvider {
+template<typename EntityT>
+class ToolProvider : public EntityProvider<EntityT> {
 public:
-	explicit ToolProvider(std::shared_ptr<Consumer<LocatedEntity>> consumer);
+	explicit ToolProvider(std::shared_ptr<Consumer<EntityT>> consumer);
 
-	void value(Atlas::Message::Element& value, const QueryContext& context) const override;
+	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const override;
 
 };
 
-class ChildProvider : public EntityProvider {
+template<typename EntityT>
+class ChildProvider : public EntityProvider<EntityT> {
 public:
-	explicit ChildProvider(std::shared_ptr<Consumer<LocatedEntity>> consumer);
+	explicit ChildProvider(std::shared_ptr<Consumer<EntityT>> consumer);
 
-	void value(Atlas::Message::Element& value, const QueryContext& context) const override;
+	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const override;
 
 };
 
-class SelfEntityProvider : public ConsumingProviderBase<LocatedEntity, QueryContext> {
+template<typename EntityT>
+class SelfEntityProvider : public ConsumingProviderBase<EntityT, QueryContext<EntityT>> {
 public:
-	explicit SelfEntityProvider(std::shared_ptr<Consumer<LocatedEntity>> consumer);
 
-	void value(Atlas::Message::Element& value, const QueryContext& context) const override;
+	explicit SelfEntityProvider(std::shared_ptr<Consumer<EntityT>> consumer);
+
+	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const override;
 
 	const std::type_info* getType() const override;
 };
 
-class EntityTypeProvider : public ConsumingProviderBase<TypeNode, LocatedEntity> {
+template<typename EntityT>
+class EntityTypeProvider : public ConsumingProviderBase<TypeNode<EntityT>, EntityT> {
 public:
-	explicit EntityTypeProvider(std::shared_ptr<Consumer<TypeNode>> consumer);
+	explicit EntityTypeProvider(std::shared_ptr<Consumer<TypeNode<EntityT>>> consumer);
 
-	void value(Atlas::Message::Element& value, const LocatedEntity& entity) const override;
+	void value(Atlas::Message::Element& value, const EntityT& entity) const override;
 
 	const std::type_info* getType() const override;
 };
 
 //Provides integer ID of an entity
-class EntityIdProvider : public Consumer<LocatedEntity> {
+template<typename EntityT>
+class EntityIdProvider : public Consumer<EntityT> {
 public:
-	void value(Atlas::Message::Element& value, const LocatedEntity& entity) const override;
+	void value(Atlas::Message::Element& value, const EntityT& entity) const override;
 };
 
-class TypeNodeProvider : public Consumer<TypeNode> {
+template<typename EntityT>
+class TypeNodeProvider : public Consumer<TypeNode<EntityT>> {
 public:
 	explicit TypeNodeProvider(std::string attribute_name);
 
-	void value(Atlas::Message::Element& value, const TypeNode& type) const override;
+	void value(Atlas::Message::Element& value, const TypeNode<EntityT>& type) const override;
 
 	const std::string m_attribute_name;
 };
 
-class BBoxProvider : public ConsumingProviderBase<Atlas::Message::Element, LocatedEntity> {
+template<typename EntityT>
+class BBoxProvider : public ConsumingProviderBase<Atlas::Message::Element, EntityT> {
 public:
 	enum class Measurement {
 		HEIGHT, WIDTH, DEPTH, VOLUME, AREA
@@ -331,30 +364,30 @@ public:
 
 	BBoxProvider(std::shared_ptr<Consumer<Atlas::Message::Element>> consumer, Measurement measurement);
 
-	void value(Atlas::Message::Element& value, const LocatedEntity& prop) const override;
+	void value(Atlas::Message::Element& value, const EntityT& prop) const override;
 
 protected:
 	Measurement m_measurement;
 };
 
-template<typename TProperty>
-class PropertyProvider : public ConsumingNamedAttributeProviderBase<TProperty, LocatedEntity> {
+template<typename TProperty, typename EntityT>
+class PropertyProvider : public ConsumingNamedAttributeProviderBase<TProperty, EntityT> {
 public:
 	PropertyProvider(std::shared_ptr<Consumer<TProperty>> consumer, const std::string& attribute_name);
 
 	virtual ~PropertyProvider() = default;
 
-	virtual void value(Atlas::Message::Element& value, const LocatedEntity& entity) const;
+	virtual void value(Atlas::Message::Element& value, const EntityT& entity) const;
 };
 
-template<typename TProperty>
-inline PropertyProvider<TProperty>::PropertyProvider(std::shared_ptr<Consumer<TProperty>> consumer, const std::string& attribute_name)
-		: ConsumingNamedAttributeProviderBase<TProperty, LocatedEntity>(consumer, attribute_name) {
+template<typename TProperty, typename EntityT>
+inline PropertyProvider<TProperty, EntityT>::PropertyProvider(std::shared_ptr<Consumer<TProperty>> consumer, const std::string& attribute_name)
+		:        ConsumingNamedAttributeProviderBase<TProperty, EntityT>(consumer, attribute_name) {
 }
 
-template<typename TProperty>
-inline void PropertyProvider<TProperty>::value(Atlas::Message::Element& value, const LocatedEntity& entity) const {
-	const TProperty* prop = entity.getPropertyClass<TProperty>(this->m_attribute_name);
+template<typename TProperty, typename EntityT>
+inline void PropertyProvider<TProperty, EntityT>::value(Atlas::Message::Element& value, const EntityT& entity) const {
+	auto* prop = entity.template getPropertyClass<TProperty>(this->m_attribute_name);
 	if (!prop) {
 		return;
 	}
@@ -367,11 +400,12 @@ inline void PropertyProvider<TProperty>::value(Atlas::Message::Element& value, c
 }
 
 
-class SoftPropertyProvider : public ConsumingNamedAttributeProviderBase<Atlas::Message::Element, LocatedEntity> {
+template<typename EntityT>
+class SoftPropertyProvider : public ConsumingNamedAttributeProviderBase<Atlas::Message::Element, EntityT> {
 public:
 	SoftPropertyProvider(std::shared_ptr<Consumer<Atlas::Message::Element>> consumer, const std::string& attribute_name);
 
-	void value(Atlas::Message::Element& value, const LocatedEntity& entity) const override;
+	void value(Atlas::Message::Element& value, const EntityT& entity) const override;
 };
 
 class MapProvider : public ConsumingNamedAttributeProviderBase<Atlas::Message::Element, Atlas::Message::Element> {
@@ -383,47 +417,59 @@ public:
 
 
 ///\brief This class retrieves a pointer to the m_contains property of a given entity
-class ContainsProvider : public Consumer<LocatedEntity> {
+template<typename EntityT>
+class ContainsProvider : public Consumer<EntityT> {
 public:
-	void value(Atlas::Message::Element& value, const LocatedEntity& entity) const override;
+	void value(Atlas::Message::Element& value, const EntityT& entity) const override;
 
 	const std::type_info* getType() const override;
 };
 
 ///\brief This class uses container Consumer to retrieve a container and condition Predicate
 ///to check whether there exists an entity within the container that matches the given condition
-class ContainsRecursiveFunctionProvider : public Consumer<QueryContext> {
+template<typename EntityT>
+class ContainsRecursiveFunctionProvider : public Consumer<QueryContext<EntityT>> {
 public:
-	ContainsRecursiveFunctionProvider(std::shared_ptr<Consumer<QueryContext>> container,
-									  std::shared_ptr<Predicate> condition,
-									  bool recursive);
+
+	ContainsRecursiveFunctionProvider(std::shared_ptr<Consumer<QueryContext<EntityT>>> container,
+									  std::shared_ptr<Predicate<EntityT>> condition,
+									  bool recursive
+	);
 
 	void value(Atlas::Message::Element& value,
-			   const QueryContext& context) const override;
+			   const QueryContext<EntityT>& context) const
+
+	override;
 
 private:
-	///\brief Condition used to match entities within the container
-	std::shared_ptr<Predicate> m_condition;
-	///\brief A Consumer which must return LocatedEntitySet* i.e. entity.contains
-	std::shared_ptr<Consumer<QueryContext>> m_consumer;
+///\brief Condition used to match entities within the container
+	std::shared_ptr<Predicate<EntityT>> m_condition;
+///\brief A Consumer which must return std::set<Ref<EntityT>>* i.e. entity.contains
+	std::shared_ptr<Consumer<QueryContext<EntityT>>> m_consumer;
 
 	bool m_recursive;
 
-	bool checkContainer(LocatedEntitySet* container,
-						const QueryContext& context) const;
+	bool checkContainer(const std::set<Ref<EntityT>>* container,
+						const QueryContext<EntityT>& context) const;
+
 };
 
 
-class GetEntityFunctionProvider : public ConsumingProviderBase<LocatedEntity, QueryContext> {
+template<typename EntityT>
+class GetEntityFunctionProvider : public ConsumingProviderBase<EntityT, QueryContext<EntityT>> {
 public:
-	explicit GetEntityFunctionProvider(std::shared_ptr<Consumer<QueryContext>> entity_provider, std::shared_ptr<Consumer<LocatedEntity>> consumer);
 
-	void value(Atlas::Message::Element& value, const QueryContext& context) const override;
+	explicit GetEntityFunctionProvider(std::shared_ptr<Consumer<QueryContext<EntityT>>> entity_provider,
+									   std::shared_ptr<Consumer<EntityT>>
+									   consumer);
+
+	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const override;
 
 	const std::type_info* getType() const override;
 
 private:
-	std::shared_ptr<Consumer<QueryContext>> m_entity_provider;
+	std::shared_ptr<Consumer<QueryContext<EntityT>>>
+			m_entity_provider;
 };
 
 

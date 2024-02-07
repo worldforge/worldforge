@@ -7,10 +7,12 @@ add_library(cyphesis-rulessimulation_python
         CyPy_UsageInstance.cpp
         CyPy_EntityProps.cpp
         CyPy_Domain.cpp
+        CyPy_LocatedEntity.cpp
 )
 
 target_link_libraries(cyphesis-rulessimulation_python PUBLIC
         cyphesis-rulessimulation
+        cyphesis-common_python
         cyphesis-pythonbase
 )
 

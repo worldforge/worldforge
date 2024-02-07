@@ -21,24 +21,24 @@
 
 #include "AwarenessStoreProvider.h"
 #include "SharedTerrain.h"
-
 #include "MindFactory.h"
+#include "common/TypeStore.h"
+
 #include <unordered_map>
 
 class AwarenessStore;
 
-class TypeStore;
 
 class AwareMindFactory : public MindKit {
 public:
-	explicit AwareMindFactory(TypeStore& typeStore);
+	explicit AwareMindFactory(TypeStore<MemEntity>& typeStore);
 
 	~AwareMindFactory() override = default;
 
 	BaseMind* newMind(RouterId id, const std::string& entity_id) const override;
 
 protected:
-	TypeStore& mTypeStore;
+	TypeStore<MemEntity>& mTypeStore;
 	std::unique_ptr<SharedTerrain> mSharedTerrain;
 	std::unique_ptr<AwarenessStoreProvider> mAwarenessStoreProvider;
 

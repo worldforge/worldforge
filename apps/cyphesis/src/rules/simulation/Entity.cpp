@@ -19,7 +19,7 @@
 #include "Entity.h"
 
 #include "rules/Script.h"
-#include "rules/Domain.h"
+#include "rules/simulation/Domain.h"
 #include "DomainProperty.h"
 
 #include "BaseWorld.h"
@@ -33,7 +33,7 @@
 #include "common/Monitors.h"
 #include "common/Variable.h"
 #include "ModeDataProperty.h"
-#include "rules/AtlasProperties.h"
+#include "rules/simulation/AtlasProperties.h"
 #include "rules/PhysicalProperties.h"
 
 #include <Atlas/Objects/Operation.h>
@@ -55,7 +55,7 @@ using Atlas::Objects::smart_dynamic_cast;
 
 static const bool debug_flag = false;
 
-std::unordered_map<const TypeNode*, int> Entity::s_monitorsMap;
+std::unordered_map<const TypeNode<LocatedEntity>*, int> Entity::s_monitorsMap;
 
 /// \brief Flags used to control entities
 ///
@@ -81,11 +81,11 @@ Entity::~Entity() {
 }
 
 std::unique_ptr<PropertyBase> Entity::createProperty(const std::string& propertyName) const {
-	return PropertyManager::instance().addProperty(propertyName);
+	return PropertyManager<LocatedEntity>::instance().addProperty(propertyName);
 }
 
 
-void Entity::setType(const TypeNode* t) {
+void Entity::setType(const TypeNode<LocatedEntity>* t) {
 	LocatedEntity::setType(t);
 
 	if (t) {
@@ -169,17 +169,17 @@ void Entity::destroy() {
 				if (m_parent) {
 					ent->setLoc(m_parent->getId());
 				}
-				auto posProp = getPropertyClassFixed<PositionProperty>();
+				auto posProp = getPropertyClassFixed<PositionProperty<LocatedEntity>>();
 				if (posProp && posProp->data().isValid()) {
 					ent->setPos({posProp->data().x(), posProp->data().y(), posProp->data().z()});
 				}
-				auto orientProp = getPropertyClassFixed<OrientationProperty>();
+				auto orientProp = getPropertyClassFixed<OrientationProperty<LocatedEntity>>();
 				if (orientProp && orientProp->data().isValid()) {
-					orientProp->add(OrientationProperty::property_name, ent);
+					orientProp->add(OrientationProperty<LocatedEntity>::property_name, ent);
 				}
-				auto velocityProp = getPropertyClassFixed<VelocityProperty>();
+				auto velocityProp = getPropertyClassFixed<VelocityProperty<LocatedEntity>>();
 				if (velocityProp && velocityProp->data().isValid()) {
-					velocityProp->add(VelocityProperty::property_name, ent);
+					velocityProp->add(VelocityProperty<LocatedEntity>::property_name, ent);
 				}
 				moveOp->setArgs1(std::move(ent));
 				OpVector res;
@@ -259,13 +259,13 @@ void Entity::RelayOperation(const Operation& op, OpVector& res) {
 void Entity::CreateOperation(const Operation& op, OpVector& res) {
 }
 
-void Entity::addListener(OperationsListener* listener) {
+void Entity::addListener(OperationsListener<LocatedEntity>* listener) {
 	if (std::find(m_listeners.begin(), m_listeners.end(), listener) == m_listeners.end()) {
 		m_listeners.push_back(listener);
 	}
 }
 
-void Entity::removeListener(OperationsListener* listener) {
+void Entity::removeListener(OperationsListener<LocatedEntity>* listener) {
 	auto I = std::find(m_listeners.begin(), m_listeners.end(), listener);
 	if (I != m_listeners.end()) {
 		m_listeners.erase(I);

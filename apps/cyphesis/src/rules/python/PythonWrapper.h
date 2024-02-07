@@ -25,7 +25,8 @@
 
 /// \brief A Python script wrapping a C++ class.
 /// \ingroup Scripts
-class PythonWrapper : public Script {
+template<typename EntityT>
+class PythonWrapper : public Script<EntityT> {
 protected:
 	/// \brief Python object that wraps the entity.
 	Py::Object m_wrapper;
@@ -39,9 +40,9 @@ public:
 							const Atlas::Objects::Operation::RootOperation& op,
 							OpVector& res) override;
 
-	void hook(const std::string& function, LocatedEntity* entity, OpVector& res) override;
+	void hook(const std::string& function, EntityT* entity, OpVector& res) override;
 
-	void attachPropertyCallbacks(LocatedEntity& entity) override;
+	void attachPropertyCallbacks(EntityT& entity, std::function<void(const Atlas::Objects::Operation::RootOperation&)> sendWorldFn) override;
 
 	static HandlerResult processScriptResult(const std::string& scriptName, const Py::Object& ret, OpVector& res);
 
@@ -51,6 +52,6 @@ public:
 };
 
 template<class T>
-Py::Object wrapPython(T* entity);
+Py::Object wrapPython(T* value);
 
 #endif // RULESETS_PYTHON_WRAPPER_H

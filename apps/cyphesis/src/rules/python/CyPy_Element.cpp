@@ -28,6 +28,7 @@ using Atlas::Message::Element;
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 
+std::vector<std::function<std::optional<Atlas::Message::Element>(const Py::Object& o)>>  CyPy_Element::converters;
 
 /**
  * Used when iterating over a List element.
@@ -290,7 +291,7 @@ void CyPy_ElementMap::init_type() {
 								   | Py::PythonType::support_mapping_subscript);
 	behaviors().supportSequenceType(Py::PythonType::support_sequence_contains);
 
-	PYCXX_ADD_NOARGS_METHOD(items, items, "");
+	register_method<&CyPy_ElementMap::items>("items");
 
 	behaviors().readyType();
 
@@ -464,11 +465,7 @@ Element CyPy_Element::asElement(const Py::Object& o) {
 		}
 		return list;
 	}
-	if (CyPy_Location::check(o)) {
-		MapType map;
-		CyPy_Location::value(o).addToMessage(map);
-		return map;
-	}
+
 	if (o.isList()) {
 		return listAsElement(Py::List(o));
 	}
@@ -479,8 +476,16 @@ Element CyPy_Element::asElement(const Py::Object& o) {
 		return sequenceAsElement(Py::Sequence(o));
 	}
 	if (o.isNone()) {
-		return Element();
+		return {};
 	}
+	//Go through any registered converters.
+	for (auto& converter: converters) {
+		auto result = converter(o);
+		if (result) {
+			return *result;
+		}
+	}
+
 	throw Py::TypeError(fmt::format("Contained object (of type {}) could not be converted to an Element.", o.type().as_string()));
 }
 

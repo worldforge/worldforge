@@ -17,7 +17,7 @@
  */
 
 #include "InventoryDomain.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/TypeNode.h"
 #include "AmountProperty.h"

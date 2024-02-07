@@ -19,7 +19,9 @@
 #include "OpRuleHandler.h"
 
 #include "common/debug.h"
-#include "common/Inheritance.h"
+#include "common/custom_impl.h"
+#include "rules/simulation/Inheritance.h"
+#include "common/AtlasFactories.h"
 
 #include <Atlas/Objects/Factories.h>
 
@@ -59,7 +61,7 @@ int OpRuleHandler::installOpDefinition(const std::string& class_name,
 		return -1;
 	}
 
-	Inheritance::instance().getFactories().addFactory(class_name, &Atlas::Objects::generic_factory, &Atlas::Objects::defaultInstance<Atlas::Objects::RootData>);
+	i.getFactories().addFactory(class_name, &Atlas::Objects::generic_factory, &Atlas::Objects::defaultInstance<Atlas::Objects::RootData>);
 
 	return 0;
 }
@@ -83,13 +85,13 @@ int OpRuleHandler::install(const std::string& name,
 						   const Atlas::Objects::Root& description,
 						   std::string& dependent,
 						   std::string& reason,
-						   std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) {
+						   std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) {
 	//Ignore changes, as no other factories are affected.
 	return installOpDefinition(name, parent, description, dependent, reason);
 }
 
 int OpRuleHandler::update(const std::string& name,
 						  const Atlas::Objects::Root& desc,
-						  std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) {
+						  std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) {
 	return modifyOpDefinition(name, desc);
 }

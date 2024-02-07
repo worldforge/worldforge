@@ -26,6 +26,21 @@
 #include "CyPy_EntityProps.h"
 #include "CyPy_Domain.h"
 
+#include "../../python/CyPy_Rules_impl.h"
+#include "common/ScriptKit.h"
+#include "rules/python/PythonScriptFactory_impl.h"
+#include "rules/Script_impl.h"
+
+template
+class CyPy_Rules<LocatedEntity, CyPy_LocatedEntity>;
+
+template
+class Script<LocatedEntity>;
+
+template<>
+std::shared_ptr<ScriptKit<LocatedEntity, LocatedEntity>> ScriptKit<LocatedEntity, LocatedEntity>::createScriptFactory(std::string script_package, std::string script_class) {
+	return std::make_shared<PythonScriptFactory<LocatedEntity, LocatedEntity>>(script_package, script_class);
+}
 
 CyPy_Server::CyPy_Server() : ExtensionModule("server") {
 

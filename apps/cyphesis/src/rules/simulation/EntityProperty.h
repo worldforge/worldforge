@@ -19,7 +19,7 @@
 #ifndef RULESETS_ENTITY_PROPERTY_H
 #define RULESETS_ENTITY_PROPERTY_H
 
-#include "common/Property.h"
+#include "PropertyBase.h"
 
 #include "modules/WeakEntityRef.h"
 
@@ -27,7 +27,7 @@
 /// \ingroup PropertyClasses
 class EntityProperty : public PropertyBase {
 protected:
-	WeakEntityRef m_data;
+	WeakEntityRef<LocatedEntity> m_data;
 
 	EntityProperty(const EntityProperty& rhs) = default;
 
@@ -37,9 +37,9 @@ public:
 
 	explicit EntityProperty(std::uint32_t flags = 0);
 
-	WeakEntityRef& data() { return m_data; }
+	WeakEntityRef<LocatedEntity>& data() { return m_data; }
 
-	const WeakEntityRef& data() const { return m_data; }
+	const WeakEntityRef<LocatedEntity>& data() const { return m_data; }
 
 	int get(Atlas::Message::Element& val) const override;
 

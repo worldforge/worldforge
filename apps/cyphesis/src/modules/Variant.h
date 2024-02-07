@@ -64,7 +64,7 @@ namespace detail {
 template<class...Fs>
 auto compose(Fs&& ...fs)
 {
-    using visitor_type = detail::lambda_visitor<std::decay_t<Fs>...>;
+    using visitor_type = ::detail::lambda_visitor<std::decay_t<Fs>...>;
     return visitor_type(std::forward<Fs>(fs)...);
 };
 #endif //CYPHESIS_VARIANT_H

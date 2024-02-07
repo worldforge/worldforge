@@ -17,7 +17,6 @@
  */
 
 #include "ScriptUtils.h"
-#include "rules/python/CyPy_LocatedEntity.h"
 #include "rules/python/CyPy_Operation.h"
 #include "rules/python/CyPy_Oplist.h"
 #include "common/debug.h"

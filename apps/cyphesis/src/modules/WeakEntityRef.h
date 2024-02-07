@@ -23,12 +23,13 @@
 #include <sigc++/connection.h>
 #include <sigc++/signal.h>
 
-class LocatedEntity;
+class EntityT;
 
+template <typename EntityT>
 class WeakEntityRef
 {
   private:
-    LocatedEntity * m_inner;
+    EntityT * m_inner;
 
     sigc::connection m_connection;
 
@@ -40,8 +41,8 @@ class WeakEntityRef
     {
     }
 
-    explicit WeakEntityRef(const Ref<LocatedEntity>&);
-    explicit WeakEntityRef(LocatedEntity*);
+    explicit WeakEntityRef(const Ref<EntityT>&);
+    explicit WeakEntityRef(EntityT*);
 
     ~WeakEntityRef();
 
@@ -49,20 +50,20 @@ class WeakEntityRef
 
     WeakEntityRef& operator=(const WeakEntityRef& ref);
 
-    WeakEntityRef& operator=(LocatedEntity* ref);
-    WeakEntityRef& operator=(const Ref<LocatedEntity>& ref);
+    WeakEntityRef& operator=(EntityT* ref);
+    WeakEntityRef& operator=(const Ref<EntityT>& ref);
 
-    LocatedEntity& operator*() const noexcept
+    EntityT& operator*() const noexcept
     {
         return *m_inner;
     }
 
-    LocatedEntity* operator->() const noexcept
+    EntityT* operator->() const noexcept
     {
         return m_inner;
     }
 
-    LocatedEntity* get() const noexcept
+    EntityT* get() const noexcept
     {
         return m_inner;
     }
@@ -77,12 +78,12 @@ class WeakEntityRef
         return !operator==(e);
     }
 
-    bool operator==(const LocatedEntity* e) const noexcept
+    bool operator==(const EntityT* e) const noexcept
     {
         return (m_inner == e);
     }
 
-	bool operator!=(const LocatedEntity* e) const noexcept
+	bool operator!=(const EntityT* e) const noexcept
     {
         return !operator==(e);
     }

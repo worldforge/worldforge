@@ -17,7 +17,7 @@
  */
 
 #include "ContainedVisibilityProperty.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 ContainedVisibilityProperty* ContainedVisibilityProperty::copy() const {
 	return new ContainedVisibilityProperty(*this);

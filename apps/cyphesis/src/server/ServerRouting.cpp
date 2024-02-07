@@ -85,6 +85,16 @@ void ServerRouting::disconnectAllConnections() {
 	}
 }
 
+void ServerRouting::registerConnection(Connection* connection) {
+	m_connections.insert(connection);
+	m_numClients++;
+}
+
+void ServerRouting::deregisterConnection(Connection* connection) {
+	m_connections.erase(connection);
+	m_numClients--;
+}
+
 
 /// Add an OOG object to the server.
 void ServerRouting::addRouter(std::unique_ptr<ConnectableRouter> obj) {

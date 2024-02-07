@@ -27,6 +27,7 @@
 
 class LocatedEntity;
 
+template <typename EntityT>
 class Location;
 
 /// \brief Base class for handling Character movement
@@ -64,7 +65,7 @@ public:
 
 	void reset();
 
-	bool updateNeeded(const Location& location) const;
+	bool updateNeeded(const Location<LocatedEntity>& location) const;
 
 	/// \brief Determine the time before the next update is required.
 	///
@@ -79,7 +80,7 @@ public:
 	/// \brief Calculate the update position of the entity.
 	///
 	/// @param return_location the returned Location data.
-	virtual int getUpdatedLocation(Location& return_location) = 0;
+	virtual int getUpdatedLocation(Location<LocatedEntity>& return_location) = 0;
 
 	/// \brief Generate a new Move operation to implement the movement.
 	///
@@ -87,7 +88,7 @@ public:
 	/// how the Entity is moving.
 	/// @param new_location Location data about the entity once movement has
 	/// changed.
-	virtual Atlas::Objects::Operation::RootOperation generateMove(const Location& new_location) = 0;
+	virtual Atlas::Objects::Operation::RootOperation generateMove(const Location<LocatedEntity>& new_location) = 0;
 };
 
 #endif // RULESETS_MOVEMENT_H

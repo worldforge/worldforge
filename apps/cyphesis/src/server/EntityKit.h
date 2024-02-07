@@ -39,7 +39,7 @@ typedef std::map<std::string, Element> MapType;
 
 class Entity;
 
-template<class T>
+template<typename, typename>
 class ScriptKit;
 
 /// \brief Abstract factory for creating in-game entity objects.
@@ -55,7 +55,7 @@ protected:
 
 public:
 	/// Inheritance type of this class.
-	TypeNode* m_type;
+	TypeNode<LocatedEntity>* m_type;
 	/// Number of times this factory has created an entity
 	int m_createdCount;
 
@@ -69,9 +69,9 @@ public:
 	virtual Ref<Entity> newEntity(RouterId id,
 								  const Atlas::Objects::Entity::RootEntity& attributes) = 0;
 
-	virtual void addProperties(const PropertyManager& propertyManager) = 0;
+	virtual void addProperties(const PropertyManager<LocatedEntity>& propertyManager) = 0;
 
-	virtual void updateProperties(std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes, const PropertyManager& propertyManager) = 0;
+	virtual void updateProperties(std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes, const PropertyManager<LocatedEntity>& propertyManager) = 0;
 
 };
 

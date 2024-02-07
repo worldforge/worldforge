@@ -17,6 +17,7 @@
 
 
 #include "SuspendedProperty.h"
+#include "common/Property_impl.h"
 #include "rules/simulation/BaseWorld.h"
 #include "common/custom.h"
 #include "Entity.h"

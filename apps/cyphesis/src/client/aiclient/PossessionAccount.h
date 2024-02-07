@@ -29,6 +29,7 @@
 
 class MindKit;
 
+template<typename>
 class TypeNode;
 
 class PossessionClient;

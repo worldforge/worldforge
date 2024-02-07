@@ -17,7 +17,7 @@
  */
 
 #include "ContainerDomain.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/TypeNode.h"
 #include "AmountProperty.h"
@@ -31,7 +31,7 @@
 #include <unordered_set>
 #include <common/operations/Update.h>
 #include <algorithm>
-#include "rules/AtlasProperties.h"
+#include "rules/simulation/AtlasProperties.h"
 #include "rules/PhysicalProperties.h"
 
 ContainerDomain::ContainerDomain(LocatedEntity& entity) :
@@ -107,7 +107,7 @@ bool ContainerDomain::isEntityVisibleFor(const LocatedEntity& observingEntity, c
 }
 
 void ContainerDomain::getVisibleEntitiesFor(const LocatedEntity& observingEntity, std::list<LocatedEntity*>& entityList) const {
-	if (observingEntity.canReach(EntityLocation{&m_entity})) {
+	if (observingEntity.canReach(EntityLocation<LocatedEntity>{&m_entity})) {
 		if (m_entity.m_contains) {
 			for (auto& entity: *m_entity.m_contains) {
 				if (isEntityVisibleFor(observingEntity, *entity)) {

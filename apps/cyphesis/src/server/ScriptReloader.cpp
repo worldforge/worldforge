@@ -18,9 +18,9 @@
 
 #include "ScriptReloader.h"
 #include "pythonbase/Python_API.h"
-#include "rules/python/ScriptsProperty.h"
+#include "rules/simulation/ScriptsProperty.h"
 #include "rules/simulation/BaseWorld.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 ScriptReloader::ScriptReloader(BaseWorld& world) {
 	python_reload_scripts.connect([&]() {
@@ -28,7 +28,7 @@ ScriptReloader::ScriptReloader(BaseWorld& world) {
 		ScriptsProperty::reloadAllScriptFactories();
 
 		//TODO: Implement scripts on archetypes and reload them here
-//        std::map<const TypeNode*, EntityFactoryBase*> collector;
+//        std::map<const TypeNode<LocatedEntity>*, EntityFactoryBase*> collector;
 //        for (auto& entry : m_entityFactories) {
 //            auto entityFactory = dynamic_cast<EntityFactoryBase*>(entry.second);
 //            if (entityFactory && entityFactory->m_scriptFactory) {

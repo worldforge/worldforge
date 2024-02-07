@@ -19,8 +19,8 @@
 #include "World.h"
 
 #include "rules/simulation/CalendarProperty.h"
-#include "rules/AtlasProperties.h"
-#include "rules/Domain.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/simulation/Domain.h"
 
 #include "rules/simulation/BaseWorld.h"
 #include "common/debug.h"

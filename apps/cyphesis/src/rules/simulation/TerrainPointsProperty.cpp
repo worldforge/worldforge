@@ -17,8 +17,8 @@
 
 
 #include "TerrainPointsProperty.h"
-#include "rules/LocatedEntity.h"
-#include "rules/Domain.h"
+#include "rules/simulation/LocatedEntity.h"
+#include "rules/simulation/Domain.h"
 
 #include "TerrainProperty.h"
 

@@ -18,7 +18,7 @@
 
 #include "ModeDataProperty.h"
 #include "BaseWorld.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 ModeDataProperty::ModeDataProperty() : mMode(ModeProperty::Mode::Unknown) {}
 

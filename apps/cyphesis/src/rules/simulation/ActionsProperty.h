@@ -19,7 +19,7 @@
 #ifndef CYPHESIS_ACTIONSPROPERTY_H
 #define CYPHESIS_ACTIONSPROPERTY_H
 
-#include "common/Property.h"
+#include "PropertyBase.h"
 #include "modules/Ref.h"
 #include <optional>
 #include <chrono>

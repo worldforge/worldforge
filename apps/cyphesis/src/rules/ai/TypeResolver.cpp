@@ -23,12 +23,12 @@
 #include <common/log.h>
 
 
-const TypeStore& TypeResolver::getTypeStore() const {
+const TypeStore<MemEntity>& TypeResolver::getTypeStore() const {
 	return m_typeStore;
 }
 
 
-std::set<const TypeNode*> TypeResolver::InfoOperation(const Operation& op, OpVector& res) {
+std::set<const TypeNode<MemEntity>*> TypeResolver::InfoOperation(const Operation& op, OpVector& res) {
 	if (!op->getArgs().empty()) {
 		auto& arg = op->getArgs().front();
 		if (!arg->isDefaultObjtype()) {
@@ -44,7 +44,7 @@ std::set<const TypeNode*> TypeResolver::InfoOperation(const Operation& op, OpVec
 	return {};
 }
 
-std::set<const TypeNode*> TypeResolver::processTypeData(const Atlas::Objects::Root& data, OpVector& res) {
+std::set<const TypeNode<MemEntity>*> TypeResolver::processTypeData(const Atlas::Objects::Root& data, OpVector& res) {
 	if (!data->isDefaultId()) {
 		auto& id = data->getId();
 		if (!data->isDefaultParent()) {
@@ -66,7 +66,7 @@ std::set<const TypeNode*> TypeResolver::processTypeData(const Atlas::Objects::Ro
 	return {};
 }
 
-const TypeNode* TypeResolver::requestType(const std::string& id, OpVector& res) {
+const TypeNode<MemEntity>* TypeResolver::requestType(const std::string& id, OpVector& res) {
 	auto type = m_typeStore.getType(id);
 	if (type) {
 		return type;
@@ -90,8 +90,8 @@ const TypeNode* TypeResolver::requestType(const std::string& id, OpVector& res) 
 	return nullptr;
 }
 
-std::set<const TypeNode*> TypeResolver::resolveType(const std::string& id, const Atlas::Objects::Root& ent, OpVector& res) {
-	std::set<const TypeNode*> resolved;
+std::set<const TypeNode<MemEntity>*> TypeResolver::resolveType(const std::string& id, const Atlas::Objects::Root& ent, OpVector& res) {
+	std::set<const TypeNode<MemEntity>*> resolved;
 
 	auto typeNode = m_typeStore.getType(id);
 	if (!typeNode) {
@@ -119,7 +119,7 @@ std::set<const TypeNode*> TypeResolver::resolveType(const std::string& id, const
 	return resolved;
 }
 
-TypeResolver::TypeResolver(TypeStore& typeStore)
+TypeResolver::TypeResolver(TypeStore<MemEntity>& typeStore)
 		: m_typeStore(typeStore) {
 
 }

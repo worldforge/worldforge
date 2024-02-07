@@ -23,6 +23,7 @@
 
 class ClientConnection;
 
+template<typename>
 struct TypeStore;
 
 /// \brief Class to implement a character entity in an admin client
@@ -32,19 +33,19 @@ protected:
 
 	int sendAndWaitReply(const Operation&, OpVector&);
 
-	Ref<LocatedEntity> sendLook(const Operation& op);
+	Ref<MemEntity> sendLook(const Operation& op);
 
 public:
 	CharacterClient(RouterId mindId,
 					const std::string& entityId,
 					ClientConnection&,
-					TypeStore& typeStore);
+					TypeStore<MemEntity>& typeStore);
 
 	void send(const Operation& op);
 
-	Ref<LocatedEntity> look(const std::string&);
+	Ref<MemEntity> look(const std::string&);
 
-	Ref<LocatedEntity> lookFor(const Atlas::Objects::Entity::RootEntity&);
+	Ref<MemEntity> lookFor(const Atlas::Objects::Entity::RootEntity&);
 };
 
 #endif // CLIENT_CHARACTER_CLIENT_H

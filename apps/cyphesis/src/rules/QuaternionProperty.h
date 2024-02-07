@@ -26,7 +26,8 @@
  *
  * \ingroup PropertyClasses
  */
-class QuaternionProperty : public PropertyBase {
+template <typename EntityT>
+class QuaternionProperty : public PropertyCore<EntityT> {
 public:
 
 	static constexpr const char* property_atlastype = "list";
@@ -47,7 +48,7 @@ public:
 
 	WFMath::Quaternion& data() { return m_data; }
 
-	QuaternionProperty* copy() const override;
+	QuaternionProperty<EntityT>* copy() const override;
 
 protected:
 	WFMath::Quaternion m_data;

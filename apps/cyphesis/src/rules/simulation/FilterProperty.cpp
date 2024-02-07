@@ -17,17 +17,23 @@
  */
 
 #include "FilterProperty.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/entityfilter/ProviderFactory.h"
+#include "rules/entityfilter/Filter_impl.h"
+#include "rules/entityfilter/ParserDefinitions_impl.h"
+
+template
+struct EntityFilter::parser::query_parser<std::string::const_iterator, LocatedEntity>;
 
 FilterProperty::FilterProperty(const FilterProperty& rhs)
 		: PropertyBase(rhs) {
 	if (rhs.m_data) {
-		m_data = std::make_unique<EntityFilter::Filter>(*rhs.m_data);
+		m_data = std::make_unique<EntityFilter::Filter<LocatedEntity>>(*rhs.m_data);
 	}
 }
 
 
-const EntityFilter::Filter* FilterProperty::getData() const {
+const EntityFilter::Filter<LocatedEntity>* FilterProperty::getData() const {
 	return m_data.get();
 }
 
@@ -44,7 +50,7 @@ int FilterProperty::get(Atlas::Message::Element& val) const {
 
 void FilterProperty::set(const Atlas::Message::Element& val) {
 	if (val.isString()) {
-		m_data = std::make_unique<EntityFilter::Filter>(val.String(), EntityFilter::ProviderFactory());
+		m_data = std::make_unique<EntityFilter::Filter<LocatedEntity>>(val.String(), EntityFilter::ProviderFactory<LocatedEntity>());
 	} else {
 		m_data.reset();
 	}

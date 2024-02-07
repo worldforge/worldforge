@@ -25,12 +25,12 @@
 #include "Juncture.h"
 
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "common/TypeNode.h"
 
 #include "rules/simulation/BaseWorld.h"
 #include "common/id.h"
-#include "common/Inheritance.h"
+#include "rules/simulation//Inheritance.h"
 
 #include "common/operations/Monitor.h"
 

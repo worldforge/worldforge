@@ -28,7 +28,8 @@
 
 /// \brief Class to handle Entity bbox property
 /// \ingroup PropertyClasses
-class BBoxProperty : public PropertyBase {
+template <typename EntityT>
+class BBoxProperty : public PropertyCore<EntityT> {
 protected:
 	BBox m_data;
 public:
@@ -42,7 +43,7 @@ public:
 
 	BBox& data() { return m_data; }
 
-	void apply(LocatedEntity&) override;
+	void apply(EntityT&) override;
 
 	int get(Atlas::Message::Element& val) const override;
 
@@ -56,7 +57,7 @@ public:
 
 	BBoxProperty* copy() const override;
 
-	virtual void updateBboxOnEntity(LocatedEntity& entity) const;
+	virtual void updateBboxOnEntity(EntityT& entity) const;
 
 
 };

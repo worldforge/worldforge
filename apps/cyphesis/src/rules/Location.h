@@ -34,9 +34,10 @@
 #include <optional>
 #include <iostream>
 
-class LocatedEntity;
+class EntityT;
 
-class Location : public EntityLocation {
+template<typename EntityT>
+class Location : public EntityLocation<EntityT> {
 protected:
 
 	double m_timeStamp;
@@ -58,25 +59,25 @@ public:
 
 	Location();
 
-	explicit Location(Ref<LocatedEntity> rf);
+	explicit Location(Ref<EntityT> rf);
 
-	explicit Location(Ref<LocatedEntity> rf,
+	explicit Location(Ref<EntityT> rf,
 					  const Point3D& pos);
 
-	explicit Location(Ref<LocatedEntity> rf,
+	explicit Location(Ref<EntityT> rf,
 					  const Point3D& pos,
 					  Vector3D velocity);
 
-	explicit Location(LocatedEntity* rf);
+	explicit Location(EntityT* rf);
 
-	explicit Location(LocatedEntity* rf,
+	explicit Location(EntityT* rf,
 					  const Point3D& pos);
 
-	explicit Location(LocatedEntity* rf,
+	explicit Location(EntityT* rf,
 					  const Point3D& pos,
 					  Vector3D velocity);
 
-	explicit Location(EntityLocation entityLocation);
+	explicit Location(EntityLocation<EntityT> entityLocation);
 
 
 	float radius() const { return m_radius; }
@@ -103,7 +104,7 @@ public:
 	}
 
 	void resetTransformAndMovement() {
-		m_pos = {};
+		this->m_pos = {};
 		m_orientation = {};
 		m_velocity = {};
 		m_angularVelocity = {};
@@ -127,15 +128,18 @@ public:
 
 	void modifyBBox();
 
-	friend std::ostream& operator<<(std::ostream& s, Location& v);
+	template<typename T>
+	friend std::ostream& operator<<(std::ostream& s, Location<T>& v);
 };
 
+template<typename EntityT>
+Vector3D distanceTo(const Location<EntityT>& self, const Location<EntityT>& other);
 
-Vector3D distanceTo(const Location& self, const Location& other);
+template<typename EntityT>
+Point3D relativePos(const Location<EntityT>& self, const Location<EntityT>& other);
 
-Point3D relativePos(const Location& self, const Location& other);
-
-std::optional<WFMath::CoordType> squareDistance(const Location& self, const Location& other);
+template<typename EntityT>
+std::optional<WFMath::CoordType> squareDistance(const Location<EntityT>& self, const Location<EntityT>& other);
 
 /**
  * \brief Gets the squared distance between the two supplied location, if possible, along with the common ancestor.
@@ -151,11 +155,14 @@ std::optional<WFMath::CoordType> squareDistance(const Location& self, const Loca
  * @param ancestor Any ancestor location will be placed here.
  * @return The distance, squared. Note that this value is invalid if no ancestor could be found, so make sure to check the return value of the "ancestor" parameter.
  */
-WFMath::CoordType squareDistanceWithAncestor(const Location& self, const Location& other, const Location** ancestor);
+template<typename EntityT>
+WFMath::CoordType squareDistanceWithAncestor(const Location<EntityT>& self, const Location<EntityT>& other, const Location<EntityT>** ancestor);
 
-std::optional<WFMath::CoordType> squareHorizontalDistance(const Location& self, const Location& other);
+template<typename EntityT>
+std::optional<WFMath::CoordType> squareHorizontalDistance(const Location<EntityT>& self, const Location<EntityT>& other);
 
-inline std::optional<WFMath::CoordType> distance(const Location& self, const Location& other) {
+template<typename EntityT>
+inline std::optional<WFMath::CoordType> distance(const Location<EntityT>& self, const Location<EntityT>& other) {
 	auto distance = squareDistance(self, other);
 	if (!distance) {
 		return {};

@@ -17,17 +17,19 @@
 
 #include "PossessionClient.h"
 #include "pythonbase/Python_API.h"
-#include "rules/python/PythonScriptFactory.h"
+#include "rules/python/PythonScriptFactory_impl.h"
 #include "rules/ai/AwareMindFactory.h"
 #include "rules/python/CyPy_Atlas.h"
 #include "rules/python/CyPy_Common.h"
 #include "rules/python/CyPy_Physics.h"
 #include "rules/ai/python/CyPy_Ai.h"
-#include "rules/entityfilter/python/CyPy_EntityFilter.h"
+#include "rules/ai/python/CyPy_MemEntity.h"
+
+
+#include "rules/entityfilter/python/CyPy_EntityFilter_impl.h"
 
 #include "common/sockets.h"
 #include "common/RuleTraversalTask.h"
-#include "common/Inheritance.h"
 
 #define _GLIBCXX_USE_NANOSLEEP 1
 
@@ -38,15 +40,17 @@
 #include "common/FileSystemObserver.h"
 #include "common/operations/Think.h"
 #include "common/globals.h"
+#include "common/AtlasFactories.h"
 #include "client/ClientPropertyManager.h"
 
 #include <sys/prctl.h>
-#include "rules/python/CyPy_Rules.h"
-#include "rules/SimpleTypeStore.h"
+#include "rules/python/CyPy_Rules_impl.h"
 #include "common/net/HttpHandling.h"
 #include "common/net/CommAsioListener_impl.h"
 #include "common/Variable.h"
 #include "PossessionAccount.h"
+#include "client/SimpleTypeStore.h"
+#include "rules/simulation/Inheritance.h"
 #include <varconf/config.h>
 
 #include <memory>
@@ -61,8 +65,6 @@ using Atlas::Objects::Operation::Create;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Entity::Anonymous;
 
-Atlas::Objects::Factories factories;
-
 namespace {
 
 INT_OPTION(http_port_num, 6790, CYPHESIS, "httpport",
@@ -76,7 +78,8 @@ void connectToServer(boost::asio::io_context& io_context, AwareMindFactory& mind
 	if (exit_flag_soft || exit_flag) {
 		return;
 	}
-	auto commClient = std::make_shared<CommAsioClient<boost::asio::local::stream_protocol>>("aiclient", io_context, factories);
+	auto commClient = std::make_shared<CommAsioClient<boost::asio::local::stream_protocol>>
+			("aiclient", io_context, AtlasFactories::factories);
 
 	commClient->getSocket().async_connect({client_socket_name}, [&io_context, &mindFactory, commClient](boost::system::error_code ec) {
 		if (!ec) {
@@ -92,11 +95,16 @@ void connectToServer(boost::asio::io_context& io_context, AwareMindFactory& mind
 				std::chrono::steady_clock::duration flushInterval;
 
 				Flusher(boost::asio::io_context& _io_context,
-						std::weak_ptr<CommAsioClient<boost::asio::local::stream_protocol>> _commClient,
-						std::chrono::steady_clock::duration _flushInterval)
-						: io_context(_io_context),
-						  commClient(std::move(_commClient)),
-						  flushInterval(_flushInterval) {
+						std::weak_ptr<CommAsioClient<boost::asio::local::stream_protocol>>
+
+						_commClient,
+						std::chrono::steady_clock::duration _flushInterval
+				)
+						:
+
+						io_context(_io_context),
+						commClient(std::move(_commClient)),
+						flushInterval(_flushInterval) {
 				}
 
 				void flush() {
@@ -124,7 +132,7 @@ void connectToServer(boost::asio::io_context& io_context, AwareMindFactory& mind
 			flusher->flush();
 
 
-			commClient->startConnect(std::make_unique<PossessionClient>(*commClient, mindFactory, std::make_unique<Inheritance>(factories), [&]() {
+			commClient->startConnect(std::make_unique<PossessionClient>(*commClient, mindFactory, [&]() {
 				connectToServer(io_context, mindFactory);
 			}));
 		} else {
@@ -155,6 +163,8 @@ STRING_OPTION(password, "", "aiclient", "password", "Password to use to authenti
 
 int main(int argc, char** argv) {
 	spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [AI] [%^%l%$] %v");
+
+	//spdlog::set_level(spdlog::level::trace);
 
 	//Kill ourselves if our parent is killed.
 	prctl(PR_SET_PDEATHSIG, SIGTERM);
@@ -220,9 +230,9 @@ int main(int argc, char** argv) {
 			python_directories.push_back(share_directory + "/cyphesis/rulesets/basic/scripts");
 
 			init_python_api({&CyPy_Ai::init,
-							 &CyPy_Rules::init,
+							 &CyPy_Rules<MemEntity, CyPy_MemEntity>::init,
 							 &CyPy_Physics::init,
-							 &CyPy_EntityFilter::init,
+							 &CyPy_EntityFilter<MemEntity>::init,
 							 &CyPy_Atlas::init,
 							 &CyPy_Common::init},
 							std::move(python_directories), true);
@@ -242,7 +252,7 @@ int main(int argc, char** argv) {
 				}
 			}
 			if (mindFactory.m_scriptFactory == nullptr) {
-				auto psf = std::make_unique<PythonScriptFactory<BaseMind>>(script_package, script_class);
+				auto psf = std::make_unique<PythonScriptFactory<MemEntity, BaseMind>>(script_package, script_class);
 				if (psf->setup() == 0) {
 					spdlog::info("Initialized mind code with Python class {}.{}.", script_package, script_class);
 					mindFactory.m_scriptFactory = std::move(psf);

@@ -18,10 +18,10 @@
 
 #include "BaseMind.h"
 
-#include "rules/Script.h"
+#include "rules/Script_impl.h"
 #include "TypeResolver.h"
-#include "rules/SimpleTypeStore.h"
 
+#include "common/log.h"
 #include "common/custom.h"
 #include "common/debug.h"
 #include "common/TypeNode.h"
@@ -35,6 +35,7 @@
 #include "Remotery.h"
 #include <sstream>
 
+
 using Atlas::Message::Element;
 using Atlas::Objects::Root;
 using Atlas::Objects::Operation::Look;
@@ -45,7 +46,8 @@ using Atlas::Objects::smart_dynamic_cast;
 
 static const bool debug_flag = false;
 
-BaseMind::BaseMind(RouterId mindId, std::string entityId, TypeStore& typeStore) :
+
+BaseMind::BaseMind(RouterId mindId, std::string entityId, TypeStore<MemEntity>& typeStore) :
 		Router(std::move(mindId)),
 		m_entityId(std::move(entityId)),
 		m_flags(0),
@@ -82,7 +84,6 @@ void BaseMind::init(OpVector& res) {
 
 void BaseMind::destroy() {
 	m_map.flush();
-	m_flags.addFlags(entity_destroyed);
 	setScript(nullptr);
 }
 
@@ -96,12 +97,12 @@ void BaseMind::sightSetOperation(const Operation& op, OpVector& res) {
 		cy_debug_print(" no args!")
 		return;
 	}
-	RootEntity ent(smart_dynamic_cast<RootEntity>(args.front()));
+	auto ent = smart_dynamic_cast<RootEntity>(args.front());
 	if (!ent.isValid()) {
 		spdlog::error("Got sight(set) of non-entity");
 		return;
 	}
-	m_map.updateAdd(ent, std::chrono::milliseconds(op->getStamp()));
+	m_map.updateAdd(ent, std::chrono::milliseconds(op->getStamp()), res);
 }
 
 void BaseMind::SoundOperation(const Operation& op, OpVector& res) {
@@ -114,7 +115,7 @@ void BaseMind::SoundOperation(const Operation& op, OpVector& res) {
 		return;
 	}
 	const Root& arg = args.front();
-	Operation op2(Atlas::Objects::smart_dynamic_cast<Operation>(arg));
+	auto op2 = Atlas::Objects::smart_dynamic_cast<Operation>(arg);
 	if (op2.isValid()) {
 		cy_debug_print(" args is an op!")
 		std::string event_name("sound_");
@@ -141,7 +142,7 @@ void BaseMind::SightOperation(const Operation& op, OpVector& res) {
 		return;
 	}
 	const Root& arg = args.front();
-	Operation op2(Atlas::Objects::smart_dynamic_cast<Operation>(arg));
+	auto op2 = Atlas::Objects::smart_dynamic_cast<Operation>(arg);
 	if (op2.isValid()) {
 		cy_debug_print(fmt::format(" args is an op ({})!", op2->getParent()))
 		std::string event_name("sight_");
@@ -157,16 +158,13 @@ void BaseMind::SightOperation(const Operation& op, OpVector& res) {
 			callSightOperation(op2, res);
 		}
 	} else /* if (op2->getObjtype() == "object") */ {
-		RootEntity ent(Atlas::Objects::smart_dynamic_cast<RootEntity>(arg));
+		auto ent = Atlas::Objects::smart_dynamic_cast<RootEntity>(arg);
 		if (!ent.isValid()) {
 			spdlog::error("Arg of sight operation is not an op or an entity");
 			return;
 		}
 		cy_debug_print(" arg is an entity!")
-		auto me = m_map.updateAdd(ent, std::chrono::milliseconds(op->getStamp()));
-		if (me) {
-			me->setVisible();
-		}
+		m_map.updateAdd(ent, std::chrono::milliseconds(op->getStamp()), res);
 	}
 }
 
@@ -179,7 +177,7 @@ void BaseMind::ThinkOperation(const Operation& op, OpVector& res) {
 		return;
 	}
 	const Root& arg = args.front();
-	Operation op2(Atlas::Objects::smart_dynamic_cast<Operation>(arg));
+	auto op2 = Atlas::Objects::smart_dynamic_cast<Operation>(arg);
 	if (op2.isValid()) {
 		cy_debug_print(" args is an op!")
 		std::string event_name("think_");
@@ -225,7 +223,6 @@ void BaseMind::AppearanceOperation(const Operation& op, OpVector& res) {
 				spdlog::error("BaseMind: Appearance op does not have stamp");
 			}
 			entity->update(std::chrono::milliseconds(op->getStamp()));
-			entity->setVisible();
 		}
 	}
 }
@@ -283,11 +280,11 @@ void BaseMind::setOwnEntity(OpVector& res, Ref<MemEntity> ownEntity) {
 	m_ownEntity = std::move(ownEntity);
 
 	if (m_scriptFactory) {
-		m_scriptFactory->addScript(*this);
+		m_script = m_scriptFactory->createScriptWrapper(*this);
 	}
 
 
-	m_ownEntity->propertyApplied.connect([&](const std::string& name, const PropertyBase&) {
+	m_ownEntity->propertyApplied.connect([&](const std::string& name, const PropertyCore<MemEntity>&) {
 		if (m_script) {
 			auto I = m_propertyScriptCallbacks.find(name);
 			if (I != m_propertyScriptCallbacks.end()) {
@@ -397,10 +394,12 @@ void BaseMind::updateServerTimeFromOperation(const Atlas::Objects::Operation::Ro
 void BaseMind::operation(const Operation& op, OpVector& res) {
 	rmt_ScopedCPUSample(operation, 0)
 
-	if (debug_flag) {
-		std::cout << "BaseMind::operation received {" << std::endl;
-		debug_dump(op, std::cout);
-		std::cout << "}" << std::endl;
+	if (spdlog::get_level() >= spdlog::level::trace) {
+		std::stringstream ss;
+		ss << "BaseMind::operation received {" << std::endl;
+		debug_dump(op, ss);
+		ss << "}" << std::endl;
+		spdlog::trace(ss.str());
 	}
 
 	int op_no = op->getClassNo();
@@ -505,7 +504,9 @@ void BaseMind::processTick(OpVector& res) {
 		auto now = std::chrono::steady_clock::now();
 		if (now >= m_tickControl.think.next) {
 			rmt_ScopedCPUSample(think, 0)
-			m_script->hook("think", m_ownEntity.get(), res);
+			if (m_script) {
+				m_script->hook("think", m_ownEntity.get(), res);
+			}
 			m_tickControl.think.next = now + m_tickControl.think.interval;
 		}
 
@@ -576,10 +577,13 @@ void BaseMind::callSoundOperation(const Operation& op,
 	// SUB_OP_SWITCH(op, op_no, res, sound)
 }
 
-void BaseMind::setScript(std::unique_ptr<Script> scrpt) {
+void BaseMind::setScript(std::unique_ptr<Script<MemEntity>> scrpt) {
 	m_script = std::move(scrpt);
 	if (m_script && m_ownEntity) {
-		m_script->attachPropertyCallbacks(*m_ownEntity);
+		m_script->attachPropertyCallbacks(*m_ownEntity, [this](const Operation& op) {
+			//TODO: send on to the world perhaps? Or is this feature not used in AI code?
+
+		});
 		OpVector res;
 		//If there are any property callbacks registered call them now.
 		for (auto& entry: m_propertyScriptCallbacks) {
@@ -593,7 +597,7 @@ void BaseMind::setScript(std::unique_ptr<Script> scrpt) {
 	}
 }
 
-const TypeStore& BaseMind::getTypeStore() const {
+const TypeStore<MemEntity>& BaseMind::getTypeStore() const {
 	return m_typeStore;
 }
 
@@ -624,7 +628,7 @@ void BaseMind::entityAdded(MemEntity& entity) {
 	}
 }
 
-void BaseMind::entityUpdated(MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, LocatedEntity* oldLocation) {
+void BaseMind::entityUpdated(MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, MemEntity* oldLocation) {
 	if (!m_updateHook.empty() && m_script) {
 		OpVector res;
 		m_script->hook(m_updateHook, &entity, res);

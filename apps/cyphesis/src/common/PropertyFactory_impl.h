@@ -15,25 +15,23 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+#pragma once
 
-#ifndef COMMON_PROPERTY_FACTORY_IMPL_H
-#define COMMON_PROPERTY_FACTORY_IMPL_H
 
 #include "PropertyFactory.h"
-#include "Property.h"
+#include "Property_impl.h"
 
-template<class T>
-std::unique_ptr<PropertyBase> PropertyFactory<T>::newProperty() {
+template<typename T, typename EntityT>
+std::unique_ptr<PropertyCore<EntityT>> PropertyFactory<T, EntityT>::newProperty() {
 	auto prop = std::make_unique<T>();
 	prop->addFlags(m_flags);
 	return prop;
 }
 
-template<class T>
-std::unique_ptr<PropertyKit> PropertyFactory<T>::duplicateFactory() const {
-	auto copy = std::make_unique<PropertyFactory<T>>();
+template<typename T, typename EntityT>
+std::unique_ptr<PropertyKit<EntityT>> PropertyFactory<T, EntityT>::duplicateFactory() const {
+	auto copy = std::make_unique<PropertyFactory<T, EntityT>>();
 	copy->m_flags = m_flags;
 	return copy;
 }
 
-#endif // COMMON_PROPERTY_FACTORY_IMPL_H

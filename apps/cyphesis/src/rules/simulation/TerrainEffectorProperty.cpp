@@ -17,7 +17,7 @@
 
 #include "TerrainEffectorProperty.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "TerrainProperty.h"
 
 #include "modules/TerrainContext.h"

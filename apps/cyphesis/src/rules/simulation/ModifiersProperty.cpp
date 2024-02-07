@@ -17,7 +17,7 @@
  */
 
 #include "ModifiersProperty.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 ModifiersProperty::ModifiersProperty() :
 		PropertyBase(prop_flag_instance | prop_flag_persistence_ephem),

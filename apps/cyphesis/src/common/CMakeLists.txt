@@ -16,10 +16,9 @@ add_library(cyphesis-common
         system_uid.cpp
         system_prefix.cpp
         serialno.cpp
-        TypeNode.cpp
-        Inheritance.cpp
+        TypeNode_impl.h
         Property.cpp
-        PropertyManager.cpp
+        PropertyManager_impl.h
         Router.cpp
         AtlasFileLoader.cpp
         Monitors.cpp
@@ -28,7 +27,6 @@ add_library(cyphesis-common
         ClientTask.cpp
         Link.cpp
         Shaker.cpp
-        OperationsDispatcher.cpp
         RuleTraversalTask.cpp
         FileSystemObserver.cpp
         AssetsManager.cpp
@@ -38,6 +36,8 @@ add_library(cyphesis-common
         net/HttpHandling.cpp
         FormattedXMLWriter.cpp
         net/SquallHandler.cpp
+        AtlasFactories.cpp
+        PropertyUtil.cpp
 )
 
 target_link_libraries(cyphesis-common PUBLIC

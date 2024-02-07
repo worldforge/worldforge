@@ -35,7 +35,7 @@ class ArchetypeRuleHandler : public RuleHandler
 {
     protected:
         EntityBuilder& m_builder;
-        const PropertyManager& m_propertyManager;
+        const PropertyManager<LocatedEntity>& m_propertyManager;
 
         int populateArchetypeFactory(const std::string& class_name,
                                      ArchetypeFactory* factory,
@@ -51,10 +51,10 @@ class ArchetypeRuleHandler : public RuleHandler
 
         int modifyArchetypeClass(const std::string& class_name,
                                  const Atlas::Objects::Root& class_desc,
-                                 std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes);
+                                 std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes);
 
     public:
-        explicit ArchetypeRuleHandler(EntityBuilder& eb, const PropertyManager& propertyManager)
+        explicit ArchetypeRuleHandler(EntityBuilder& eb, const PropertyManager<LocatedEntity>& propertyManager)
                 : m_builder(eb), m_propertyManager(propertyManager)
         {}
 
@@ -65,11 +65,11 @@ class ArchetypeRuleHandler : public RuleHandler
                     const Atlas::Objects::Root& description,
                     std::string& dependent,
                     std::string& reason,
-                    std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) override;
+                    std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) override;
 
         int update(const std::string& name,
                    const Atlas::Objects::Root& desc,
-                   std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) override;
+                   std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) override;
 };
 
 #endif // SERVER_ARCHETYPE_RULE_HANDLER_H

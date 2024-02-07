@@ -26,7 +26,7 @@
 #include "common/CommSocket.h"
 #include "common/log.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
@@ -167,7 +167,7 @@ int Peer::teleportEntity(const LocatedEntity* ent) {
 		// peer
 		std::string key;
 		spdlog::info("Entity has a mind. Generating random key");
-		// FIXME non-random, plus potetial timing attack.
+		// FIXME non-random, plus potential timing attack.
 		WFMath::MTRand generator;
 		for (int i = 0; i < 32; i++) {
 			char ch = (char) ((int) 'a' + generator.rand(25));

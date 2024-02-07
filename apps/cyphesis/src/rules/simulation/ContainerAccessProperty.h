@@ -19,8 +19,8 @@
 #ifndef CYPHESIS_CONTAINERACCESSPROPERTY_H
 #define CYPHESIS_CONTAINERACCESSPROPERTY_H
 
-#include "common/Property.h"
-#include "rules/LocatedEntity.h"
+#include "PropertyBase.h"
+#include "rules/simulation/LocatedEntity.h"
 #include <vector>
 
 class ContainerDomain;

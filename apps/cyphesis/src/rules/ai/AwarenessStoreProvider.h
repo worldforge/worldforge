@@ -19,13 +19,13 @@
 #define RULESETS_MIND_AWARENESSSTOREPROVIDER_H_
 
 #include "AwarenessStore.h"
+#include "common/TypeNode.h"
 
 #include <wfmath/axisbox.h>
 
 #include <unordered_map>
 #include <memory>
 
-class TypeNode;
 
 struct IHeightProvider;
 
@@ -35,7 +35,7 @@ public:
 
 	virtual ~AwarenessStoreProvider() = default;
 
-	AwarenessStore& getStore(const TypeNode* type, int tileSize = 64);
+	AwarenessStore& getStore(const TypeNode<MemEntity>* type, int tileSize = 64);
 
 protected:
 	std::unordered_map<std::string, AwarenessStore> m_awarenessStores;

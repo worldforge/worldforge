@@ -27,7 +27,7 @@
 
 #include "common/debug.h"
 #include "common/log.h"
-#include "common/Inheritance.h"
+#include "common/AtlasFactories.h"
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Operation.h>
@@ -112,7 +112,7 @@ void Juncture::onPeerReplied(const Operation& op) {
 int Juncture::attemptConnect(const std::string& hostname, int port) {
 	auto peer = std::make_shared<CommPeer>(m_connection->m_server.getName(),
 										   m_connection->m_commSocket.m_io_context,
-										   Inheritance::instance().getFactories());
+										   AtlasFactories::factories);
 	m_socket = std::weak_ptr<CommPeer>(peer);
 
 	peer->connect(*m_address.i);

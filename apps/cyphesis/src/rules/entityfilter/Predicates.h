@@ -1,3 +1,21 @@
+/*
+ Copyright (C) 2024 Erik Ogenvik
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
 #ifndef PREDICATES_H_
 #define PREDICATES_H_
 
@@ -8,87 +26,95 @@
 
 namespace EntityFilter {
 
-class QueryContext;
+template<typename>
+struct QueryContext;
 
-template<class T>
+template<typename>
 class Consumer;
 
+template<typename EntityT>
 class Predicate {
 public:
 	virtual ~Predicate() = default;
 
-	virtual bool isMatch(const QueryContext& context) const = 0;
+	virtual bool isMatch(const QueryContext<EntityT>& context) const = 0;
 };
 
 
-class ComparePredicate : public Predicate {
+template<typename EntityT>
+class ComparePredicate : public Predicate<EntityT> {
 public:
 
 	enum class Comparator {
 		EQUALS, NOT_EQUALS, INSTANCE_OF, IN, INCLUDES, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, CAN_REACH
 	};
 
-	ComparePredicate(std::shared_ptr<Consumer<QueryContext>> lhs,
-					 std::shared_ptr<Consumer<QueryContext>> rhs,
+	ComparePredicate(std::shared_ptr<Consumer<QueryContext<EntityT>>> lhs,
+					 std::shared_ptr<Consumer<QueryContext<EntityT>>> rhs,
 					 Comparator comparator,
-					 std::shared_ptr<Consumer<QueryContext>> with = nullptr);
+					 std::shared_ptr<Consumer<QueryContext<EntityT>>> with = nullptr);
 
-	bool isMatch(const QueryContext& context) const override;
+	bool isMatch(const QueryContext<EntityT>& context) const override;
 
-	std::shared_ptr<Consumer<QueryContext>> m_lhs;
-	std::shared_ptr<Consumer<QueryContext>> m_rhs;
+	std::shared_ptr<Consumer<QueryContext<EntityT>>> m_lhs;
+	std::shared_ptr<Consumer<QueryContext<EntityT>>> m_rhs;
 	const Comparator m_comparator;
-	std::shared_ptr<Consumer<QueryContext>> m_with;
+	std::shared_ptr<Consumer<QueryContext<EntityT>>> m_with;
 };
 
-class DescribePredicate : public Predicate {
+template<typename EntityT>
+class DescribePredicate : public Predicate<EntityT> {
 public:
 
 	DescribePredicate(std::string description,
-					  std::shared_ptr<Predicate> predicate);
+					  std::shared_ptr<Predicate<EntityT>> predicate);
 
-	bool isMatch(const QueryContext& context) const override;
+	bool isMatch(const QueryContext<EntityT>& context) const override;
 
 	std::string m_description;
-	std::shared_ptr<Predicate> m_predicate;
+	std::shared_ptr<Predicate<EntityT>> m_predicate;
 };
 
-class AndPredicate : public Predicate {
+template<typename EntityT>
+class AndPredicate : public Predicate<EntityT> {
 public:
-	AndPredicate(std::shared_ptr<Predicate> lhs, std::shared_ptr<Predicate> rhs);
+	AndPredicate(std::shared_ptr<Predicate<EntityT>> lhs, std::shared_ptr<Predicate<EntityT>> rhs);
 
-	bool isMatch(const QueryContext& context) const override;
+	bool isMatch(const QueryContext<EntityT>& context) const override;
 
-	std::shared_ptr<Predicate> m_lhs;
-	std::shared_ptr<Predicate> m_rhs;
+	std::shared_ptr<Predicate<EntityT>> m_lhs;
+	std::shared_ptr<Predicate<EntityT>> m_rhs;
 };
 
-class OrPredicate : public Predicate {
+template<typename EntityT>
+class OrPredicate : public Predicate<EntityT> {
 public:
-	OrPredicate(std::shared_ptr<Predicate> lhs, std::shared_ptr<Predicate> rhs);
+	OrPredicate(std::shared_ptr<Predicate<EntityT>> lhs, std::shared_ptr<Predicate<EntityT>> rhs);
 
-	bool isMatch(const QueryContext& context) const override;
+	bool isMatch(const QueryContext<EntityT>& context) const override;
 
-	std::shared_ptr<Predicate> m_lhs;
-	std::shared_ptr<Predicate> m_rhs;
+	std::shared_ptr<Predicate<EntityT>> m_lhs;
+	std::shared_ptr<Predicate<EntityT>> m_rhs;
 };
 
-class NotPredicate : public Predicate {
+template<typename EntityT>
+class NotPredicate : public Predicate<EntityT> {
 public:
-	explicit NotPredicate(std::shared_ptr<Predicate> pred);
+	explicit NotPredicate(std::shared_ptr<Predicate<EntityT>> pred);
 
-	bool isMatch(const QueryContext& context) const override;
+	bool isMatch(const QueryContext<EntityT>& context) const override;
 
-	const std::shared_ptr<Predicate> m_pred;
+	const std::shared_ptr<Predicate<EntityT>> m_pred;
 };
 
-class BoolPredicate : public Predicate {
+template<typename EntityT>
+class BoolPredicate : public Predicate<EntityT> {
 public:
-	explicit BoolPredicate(std::shared_ptr<Consumer<QueryContext>> consumer);
+	explicit BoolPredicate(std::shared_ptr<Consumer<QueryContext<EntityT>>> consumer);
 
-	bool isMatch(const QueryContext& context) const override;
+	bool isMatch(const QueryContext<EntityT>& context) const override;
 
-	const std::shared_ptr<Consumer<QueryContext>> m_consumer;
+	const std::shared_ptr<Consumer<QueryContext<EntityT>>> m_consumer;
 };
 
 }

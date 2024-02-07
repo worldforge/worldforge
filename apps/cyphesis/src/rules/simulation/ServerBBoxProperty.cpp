@@ -18,7 +18,8 @@
 
 #include "ServerBBoxProperty.h"
 #include "DensityProperty.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
+#include "rules/BBoxProperty_impl.h"
 
 void ServerBBoxProperty::updateBboxOnEntity(LocatedEntity& entity) const {
 	BBoxProperty::updateBboxOnEntity(entity);

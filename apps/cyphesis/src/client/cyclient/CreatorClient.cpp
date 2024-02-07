@@ -36,18 +36,18 @@ using Atlas::Objects::smart_dynamic_cast;
 CreatorClient::CreatorClient(RouterId mindId,
 							 const std::string& entityId,
 							 ClientConnection& c,
-							 TypeStore& typeStore) :
+							 TypeStore<MemEntity>& typeStore) :
 		CharacterClient(std::move(mindId), entityId, c, typeStore) {
 }
 
-LocatedEntity* CreatorClient::handleMakeResponse(const RootOperation& op,
+MemEntity* CreatorClient::handleMakeResponse(const RootOperation& op,
 												 std::chrono::milliseconds create_time) {
 	if (op->getArgs().empty()) {
 		std::cerr << "Arg of reply to make has no args"
 				  << std::endl;
 		return nullptr;
 	}
-	RootEntity created = smart_dynamic_cast<RootEntity>(op->getArgs().front());
+	auto created = smart_dynamic_cast<RootEntity>(op->getArgs().front());
 	if (!created.isValid()) {
 		std::cerr << "Created argument is not an entity"
 				  << std::endl;
@@ -67,10 +67,12 @@ LocatedEntity* CreatorClient::handleMakeResponse(const RootOperation& op,
 	const std::string& created_type = created->getParent();
 	std::cout << "Created: " << created_type << "(" << created_id << ")"
 			  << std::endl;
-	return m_map.updateAdd(created, create_time).get();
+	//Ignored...
+	OpVector res;
+	return m_map.updateAdd(created, create_time, res).get();
 }
 
-Ref<LocatedEntity> CreatorClient::make(const RootEntity& entity) {
+Ref<MemEntity> CreatorClient::make(const RootEntity& entity) {
 	Create op;
 	op->setArgs1(entity);
 	op->setFrom(getId());
@@ -92,7 +94,7 @@ Ref<LocatedEntity> CreatorClient::make(const RootEntity& entity) {
 			std::cerr << "Reply to make has no args" << std::endl;
 			return nullptr;
 		}
-		RootOperation arg = smart_dynamic_cast<RootOperation>(res->getArgs().front());
+		auto arg = smart_dynamic_cast<RootOperation>(res->getArgs().front());
 		if (!arg.isValid()) {
 			std::cerr << "Arg of reply to make is not an operation"
 					  << std::endl;

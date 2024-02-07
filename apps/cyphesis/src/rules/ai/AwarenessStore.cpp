@@ -45,7 +45,7 @@ std::shared_ptr<Awareness> AwarenessStore::requestAwareness(const MemEntity& dom
 		m_awarenesses.erase(I);
 	}
 
-	auto bboxProp = domainEntity.getPropertyClassFixed<BBoxProperty>();
+	auto bboxProp = domainEntity.getPropertyClassFixed<BBoxProperty<MemEntity>>();
 	auto bbox = bboxProp ? bboxProp->data() : WFMath::AxisBox<3>{};
 
 	auto awareness = std::make_shared<Awareness>(domainEntity.getIntId(), mAgentRadius, mAgentHeight, mStepHeight, mHeightProvider, bbox, mTileSize);

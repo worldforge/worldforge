@@ -85,9 +85,9 @@ void CyPy_Axisbox::init_type() {
 
 	behaviors().supportRichCompare();
 
-	PYCXX_ADD_NOARGS_METHOD(square_bounding_radius, sqr_bounding_radius, "");
-	PYCXX_ADD_NOARGS_METHOD(square_horizontal_bounding_radius, sqr_horizontal_bounding_radius, "");
-	PYCXX_ADD_NOARGS_METHOD(as_sequence, as_sequence, "");
+	register_method<&CyPy_Axisbox::sqr_bounding_radius>("square_bounding_radius", "");
+	register_method<&CyPy_Axisbox::sqr_horizontal_bounding_radius>("square_horizontal_bounding_radius", "");
+	register_method<&CyPy_Axisbox::as_sequence>("as_sequence", "");
 
 	behaviors().readyType();
 }

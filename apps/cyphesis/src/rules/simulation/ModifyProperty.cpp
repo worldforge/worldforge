@@ -16,7 +16,7 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "common/Inheritance.h"
+#include "Inheritance.h"
 #include "common/AtlasQuery.h"
 #include "ModifyProperty.h"
 #include "rules/entityfilter/ProviderFactory.h"
@@ -29,7 +29,7 @@ PropertyInstanceState<ModifyProperty::State> ModifyProperty::sInstanceState;
 ModifyEntry ModifyEntry::parseEntry(const Atlas::Message::MapType& entryMap) {
 	ModifyEntry modifyEntry;
 	AtlasQuery::find<std::string>(entryMap, "constraint", [&](const std::string& constraintEntry) {
-		modifyEntry.constraint = std::make_unique<EntityFilter::Filter>(constraintEntry, EntityFilter::ProviderFactory());
+		modifyEntry.constraint = std::make_unique<EntityFilter::Filter<LocatedEntity>>(constraintEntry, EntityFilter::ProviderFactory<LocatedEntity>());
 	});
 	AtlasQuery::find<Atlas::Message::ListType>(entryMap, "observed_properties", [&](const Atlas::Message::ListType& observedPropertiesEntry) {
 		for (auto& propertyEntry: observedPropertiesEntry) {
@@ -194,7 +194,7 @@ void ModifyProperty::checkIfActive(State& state, LocatedEntity& entity) {
 			if (!modifyEntry.constraint) {
 				apply = true;
 			} else {
-				EntityFilter::QueryContext queryContext{entity, state.parentEntity};
+				EntityFilter::QueryContext<LocatedEntity> queryContext{entity, state.parentEntity};
 				queryContext.entity_lookup_fn = [&entity, &state](const std::string& id) {
 					// This might be applied before the entity or its parent has been added to the world.
 					if (id == entity.getId()) {

@@ -17,7 +17,7 @@
 
 #include "DensityProperty.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/debug.h"
 
@@ -37,18 +37,18 @@ void DensityProperty::apply(LocatedEntity& entity) {
 }
 
 void DensityProperty::updateMass(LocatedEntity& entity) const {
-	auto bboxProp = entity.getPropertyClassFixed<BBoxProperty>();
+	auto bboxProp = entity.getPropertyClassFixed<BBoxProperty<LocatedEntity>>();
 	if (bboxProp && bboxProp->data().isValid()) {
 		auto& bbox = bboxProp->data();
 		WFMath::Vector<3> volumeVector = bbox.highCorner() - bbox.lowCorner();
-		float volume = volumeVector.x() * volumeVector.y() * volumeVector.z();
+		auto volume = volumeVector.x() * volumeVector.y() * volumeVector.z();
 
 		if (!std::isnormal(volume) && volume != 0) {
 			spdlog::warn("Volume of {} is not a normal number.", volume);
 		} else {
-			double mass = volume * m_data;
+			auto mass = volume * m_data;
 
-			auto& massProp = entity.requirePropertyClass<Property<double>>("mass", mass);
+			auto& massProp = entity.requirePropertyClass<Property<double, LocatedEntity>>("mass", mass);
 
 			if (massProp.data() != mass) {
 				massProp.set(mass);

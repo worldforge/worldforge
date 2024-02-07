@@ -21,13 +21,14 @@
 
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 
 /// \brief Class to handle Entity terrain_points property.
 /// This property defines the geometry of the terrain, using Mercator Basepoints.
 /// It's in map format to allow updating of singular points through the Modifers system ("append" in most cases).
 ///
 /// \ingroup PropertyClasses
-class TerrainPointsProperty : public Property<Atlas::Message::MapType> {
+class TerrainPointsProperty : public Property<Atlas::Message::MapType, LocatedEntity> {
 
 public:
 

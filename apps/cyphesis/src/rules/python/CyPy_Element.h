@@ -24,6 +24,9 @@
 #include "pythonbase/WrapperBase.h"
 
 #include <Atlas/Message/Element.h>
+#include <vector>
+#include <optional>
+#include <functional>
 
 /**
  * \ingroup PythonWrappers
@@ -95,6 +98,8 @@ public:
  */
 class CyPy_Element {
 public:
+
+	static std::vector<std::function<std::optional<Atlas::Message::Element>(const Py::Object& o)>> converters;
 
 	static Py::Object wrap(Atlas::Message::Element value);
 

@@ -22,7 +22,7 @@
 #include <boost/variant.hpp>
 #include <modules/WeakEntityRef.h>
 #include <optional>
-#include "common/Property.h"
+#include "PropertyBase.h"
 #include "ModeProperty.h"
 
 /**

@@ -18,10 +18,47 @@
 
 #include "common/type_utils_impl.h"
 
+using Atlas::Message::Element;
+using Atlas::Message::ListType;
+
+using Atlas::Objects::Root;
+
+Root atlasOpDefinition(const std::string& name, const std::string& parent) {
+	Atlas::Objects::Entity::Anonymous r;
+
+	r->setParent(parent);
+	r->setObjtype("op_definition");
+	r->setId(name);
+
+	return r;
+}
+
+Root atlasClass(const std::string& name, const std::string& parent) {
+	Atlas::Objects::Entity::Anonymous r;
+
+	r->setParent(parent);
+	r->setObjtype("class");
+	r->setId(name);
+
+	return r;
+}
+
+Root atlasType(const std::string& name,
+			   const std::string& parent,
+			   bool abstract) {
+	Atlas::Objects::Entity::Anonymous r;
+
+	r->setParent(parent);
+	r->setObjtype(abstract ? "data_type" : "type");
+	r->setId(name);
+
+	return r;
+}
+
 void idListasObject(const IdList& l, Atlas::Message::ListType& ol) {
 	ol.clear();
 	for (auto& entry: l) {
-		ol.push_back(entry);
+		ol.emplace_back(entry);
 	}
 }
 

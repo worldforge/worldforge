@@ -19,7 +19,7 @@
 #ifndef CYPHESIS_STACKABLEDOMAIN_H
 #define CYPHESIS_STACKABLEDOMAIN_H
 
-#include "rules/Domain.h"
+#include "rules/simulation/Domain.h"
 #include <set>
 #include <string>
 

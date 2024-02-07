@@ -20,11 +20,12 @@
 #define RULESETS_SPAWN_PROPERTY_H
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 
 
 /// \brief Class to handle Entity where new characters can be spawned.
 /// \ingroup PropertyClasses
-class SpawnProperty : public Property<Atlas::Message::MapType> {
+class SpawnProperty : public Property<Atlas::Message::MapType, LocatedEntity> {
 public:
 	static constexpr const char* property_name = "__spawn";
 

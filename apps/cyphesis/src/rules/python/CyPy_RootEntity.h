@@ -26,11 +26,14 @@
 #include <Atlas/Objects/RootEntity.h>
 #include <Atlas/Objects/SmartPtr.h>
 
+
 /**
  * \ingroup PythonWrappers
  */
 class CyPy_RootEntity : public WrapperBase<Atlas::Objects::Entity::RootEntity, CyPy_RootEntity> {
 public:
+	static std::vector<std::function<bool(Atlas::Objects::Entity::RootEntity&, const Py::Object& o)>> importers;
+
 	CyPy_RootEntity(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
 	CyPy_RootEntity(Py::PythonClassInstance* self, Atlas::Objects::Entity::RootEntity value);

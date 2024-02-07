@@ -17,7 +17,7 @@
 
 #include "AngularFactorProperty.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/debug.h"
 #include <Atlas/Objects/RootEntity.h>

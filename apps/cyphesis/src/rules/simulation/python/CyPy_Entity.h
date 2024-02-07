@@ -20,7 +20,7 @@
 #define CYPHESIS_CYPY_ENTITY_H
 
 #include "rules/simulation/Entity.h"
-#include "rules/python/CyPy_LocatedEntity_impl.h"
+#include "CyPy_LocatedEntity_impl.h"
 
 /**
  * \ingroup PythonWrappers

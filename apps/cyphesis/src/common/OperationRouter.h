@@ -33,10 +33,10 @@ typedef enum {
 	OPERATION_BLOCKED, // Handler has determined that op should stop here
 } HandlerResult;
 
-class LocatedEntity;
 
+template<typename EntityT>
 struct OperationsListener {
-	virtual HandlerResult operation(LocatedEntity&, const Operation&, OpVector& res) = 0;
+	virtual HandlerResult operation(EntityT&, const Operation&, OpVector& res) = 0;
 };
 
 #endif // COMMON_OPERATION_ROUTER_H

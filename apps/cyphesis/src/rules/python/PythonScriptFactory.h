@@ -23,27 +23,28 @@
 #include "pythonbase/PythonClass.h"
 
 #include "common/ScriptKit.h"
+#include "PythonWrapper.h"
 
 /// \brief Factory implementation for creating python script objects to attach
 /// to in game objects.
-template<class T>
-class PythonScriptFactory : public ScriptKit<T>, private PythonClass {
+template<typename EntityT, typename ScriptObjectT>
+class PythonScriptFactory : public ScriptKit<EntityT, ScriptObjectT>, private PythonClass {
 public:
 	PythonScriptFactory(const std::string& package, const std::string& type);
 
 	~PythonScriptFactory() override = default;
 
-	int setup();
+	int setup() override;
 
-	const std::string& package() const;
+	const std::string& package() const override;
 
-	int addScript(T& entity) const;
+	int refreshClass() override;
 
-	int refreshClass();
+	Py::Object createScript(ScriptObjectT& entity) const;
 
-protected:
+	std::unique_ptr<Script<EntityT>> createScriptWrapper(ScriptObjectT& entity) const override;
 
-	Py::Object createScript(T& entity) const;
+
 };
 
 #endif // RULESETS_PYTHON_SCRIPT_FACTORY_H

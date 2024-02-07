@@ -16,13 +16,14 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "common/Inheritance.h"
+#include "Inheritance.h"
 #include "rules/entityfilter/ProviderFactory.h"
 #include "UsageInstance.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/BaseWorld.h"
 #include "modules/Variant.h"
 #include "common/AtlasQuery.h"
+#include "rules/EntityLocation_impl.h"
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -62,7 +63,7 @@ UsageParameter UsageParameter::parse(const Atlas::Message::Element& element) {
 
 	AtlasQuery::find<std::string>(paramMap, "constraint", [&](const std::string& constraint) {
 		//TODO: should be a usage constraint provider factory
-		parameter.constraint.reset(new EntityFilter::Filter(constraint, EntityFilter::ProviderFactory()));
+		parameter.constraint.reset(new EntityFilter::Filter(constraint, EntityFilter::ProviderFactory<LocatedEntity>()));
 	});
 	AtlasQuery::find<Atlas::Message::IntType>(paramMap, "min", [&](const Atlas::Message::IntType& min) {
 		parameter.min = static_cast<int>(min);
@@ -83,7 +84,7 @@ int UsageParameter::countValidArgs(const std::vector<UsageArg>& args, const Ref<
 			case UsageParameter::Type::DIRECTION: {
 
 				auto visitor = compose(
-						[&](const EntityLocation& value) {},
+						[&](const EntityLocation<LocatedEntity>& value) {},
 						[&](const WFMath::Point<3>& value) {},
 						[&](const WFMath::Vector<3>& value) {
 							is_valid = value.isValid();
@@ -96,7 +97,7 @@ int UsageParameter::countValidArgs(const std::vector<UsageArg>& args, const Ref<
 			}
 			case UsageParameter::Type::POSITION: {
 				auto visitor = compose(
-						[&](const EntityLocation& value) {},
+						[&](const EntityLocation<LocatedEntity>& value) {},
 						[&](const WFMath::Point<3>& value) {
 							is_valid = value.isValid();
 						},
@@ -110,10 +111,10 @@ int UsageParameter::countValidArgs(const std::vector<UsageArg>& args, const Ref<
 			case UsageParameter::Type::ENTITY: {
 
 				auto visitor = compose(
-						[&](const EntityLocation& value) -> void {
+						[&](const EntityLocation<LocatedEntity>& value) -> void {
 							if (value.m_parent && !value.m_parent->isDestroyed()) {
 								if (constraint) {
-									EntityFilter::QueryContext queryContext{*value.m_parent, actor.get(), tool.get()};
+									EntityFilter::QueryContext<LocatedEntity> queryContext{*value.m_parent, actor.get(), tool.get()};
 									queryContext.entityLoc.pos = &value.m_pos;
 									queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
 									queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
@@ -134,10 +135,10 @@ int UsageParameter::countValidArgs(const std::vector<UsageArg>& args, const Ref<
 			}
 			case UsageParameter::Type::ENTITYLOCATION: {
 				auto visitor = compose(
-						[&](const EntityLocation& value) -> void {
+						[&](const EntityLocation<LocatedEntity>& value) -> void {
 							if (value.isValid() && !value.m_parent->isDestroyed()) {
 								if (constraint) {
-									EntityFilter::QueryContext queryContext{*value.m_parent, actor.get(), tool.get()};
+									EntityFilter::QueryContext<LocatedEntity> queryContext{*value.m_parent, actor.get(), tool.get()};
 									queryContext.entityLoc.pos = &value.m_pos;
 									queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
 									queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
@@ -167,7 +168,7 @@ std::pair<bool, std::string> UsageInstance::isValid() const {
 
 	if (definition.constraint) {
 		std::vector<std::string> errors;
-		EntityFilter::QueryContext queryContext{*tool, actor.get(), tool.get()};
+		EntityFilter::QueryContext<LocatedEntity> queryContext{*tool, actor.get(), tool.get()};
 		queryContext.report_error_fn = [&](const std::string& error) { errors.push_back(error); };
 		queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
 		queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };

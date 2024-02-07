@@ -21,8 +21,7 @@
 #include "rules/simulation/World.h"
 
 #include "common/ScriptKit.h"
-#include "common/TypeNode.h"
-#include "EntityFactory.h"
+#include "common/TypeNode_impl.h"
 
 
 #include <Atlas/Objects/Entity.h>
@@ -80,12 +79,12 @@ void EntityFactoryBase::initializeEntity(Entity& thing,
 
 }
 
-void EntityFactoryBase::addProperties(const PropertyManager& propertyManager) {
+void EntityFactoryBase::addProperties(const PropertyManager<LocatedEntity>& propertyManager) {
 	assert(m_type != nullptr);
 	m_type->addProperties(m_attributes, propertyManager);
 }
 
-void EntityFactoryBase::updateProperties(std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes, const PropertyManager& propertyManager) {
+void EntityFactoryBase::updateProperties(std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes, const PropertyManager<LocatedEntity>& propertyManager) {
 	assert(m_type != nullptr);
 	changes.emplace(m_type, m_type->updateProperties(m_attributes, propertyManager));
 

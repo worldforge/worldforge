@@ -19,7 +19,7 @@
 #define DOMAINPROPERTY_H_
 
 #include "common/Property.h"
-#include "common/PropertyInstanceState.h"
+#include "PropertyInstanceState.h"
 
 class Domain;
 
@@ -36,7 +36,7 @@ class Domain;
  *
  * \ingroup PropertyClasses
  */
-class DomainProperty : public Property<std::string> {
+class DomainProperty : public Property<std::string, LocatedEntity> {
 public:
 
 	static constexpr const char* property_name = "domain";

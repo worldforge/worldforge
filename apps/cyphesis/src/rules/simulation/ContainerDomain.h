@@ -19,7 +19,7 @@
 #ifndef CYPHESIS_CONTAINERDOMAIN_H
 #define CYPHESIS_CONTAINERDOMAIN_H
 
-#include "rules/Domain.h"
+#include "rules/simulation/Domain.h"
 #include "ContainerAccessProperty.h"
 #include <set>
 #include <string>

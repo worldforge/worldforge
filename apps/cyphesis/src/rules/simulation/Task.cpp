@@ -18,7 +18,7 @@
 
 #include "Task.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/Script.h"
 #include "rules/simulation/BaseWorld.h"
 
@@ -159,7 +159,7 @@ void Task::callScriptFunction(const std::string& function, const Py::Tuple& args
 			});
 			auto ret = m_script.callMemberFunction(function, args);
 			//Ignore any return codes
-			ScriptUtils::processScriptResult(m_script.type().str(), ret, res, *m_usageInstance.actor);
+			ScriptUtils::processScriptResult(m_script.type().str(), ret, res, m_usageInstance.actor->getId(), [this]() { return m_usageInstance.actor->describeEntity(); });
 		} catch (const Py::BaseException& e) {
 			spdlog::error("Error when calling '{}' on task '{}' on entity '{}'.", function, m_script.as_string(), m_usageInstance.actor->describeEntity());
 			if (PyErr_Occurred() != nullptr) {
@@ -184,7 +184,7 @@ void Task::callUsageScriptFunction(const std::string& function, const std::map<s
 			auto script = m_script;
 			auto ret = script.callMemberFunction(function, Py::TupleN(py_args));
 			//Ignore any return codes
-			ScriptUtils::processScriptResult(script.type().str(), ret, res, *m_usageInstance.actor);
+			ScriptUtils::processScriptResult(script.type().str(), ret, res, m_usageInstance.actor->getId(), [this]() { return m_usageInstance.actor->describeEntity(); });
 		} catch (const Py::BaseException& e) {
 			spdlog::error("Error when calling '{}' on task '{}' on entity '{}'.", function, m_script.as_string(), m_usageInstance.actor->describeEntity());
 			if (PyErr_Occurred() != nullptr) {

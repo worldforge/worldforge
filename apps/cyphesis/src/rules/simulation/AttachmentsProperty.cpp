@@ -22,9 +22,10 @@
 #include "BaseWorld.h"
 #include "ModeDataProperty.h"
 #include "common/operations/Update.h"
-#include "common/Inheritance.h"
-#include "rules/LocatedEntity.h"
-#include "rules/entityfilter/ProviderFactory.h"
+#include "Inheritance.h"
+#include "rules/simulation/LocatedEntity.h"
+#include "rules/entityfilter/ProviderFactory_impl.h"
+#include "common/Property_impl.h"
 #include <Atlas/Objects/Operation.h>
 
 AttachmentsProperty::AttachmentsProperty(uint32_t flags)
@@ -60,7 +61,7 @@ HandlerResult AttachmentsProperty::operation(LocatedEntity& entity, const Operat
 
 				Ref<LocatedEntity> existing_entity;
 
-				auto attachedProp = entity.getPropertyClass<SoftProperty>(attached_prop_name);
+				auto attachedProp = entity.getPropertyClass<SoftProperty<LocatedEntity>>(attached_prop_name);
 				if (attachedProp) {
 					existing_entity = extractEntityRef(attachedProp->data());
 				}
@@ -102,7 +103,7 @@ HandlerResult AttachmentsProperty::operation(LocatedEntity& entity, const Operat
 
 						//Check that the attached entity matches the constraint filter
 						if (attachment.filter) {
-							EntityFilter::QueryContext queryContext{entity, &entity, new_entity.get()};
+							EntityFilter::QueryContext<LocatedEntity> queryContext{entity, &entity, new_entity.get()};
 							std::vector<std::string> errors;
 							queryContext.report_error_fn = [&](const std::string& error) { errors.push_back(error); };
 							queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
@@ -126,7 +127,7 @@ HandlerResult AttachmentsProperty::operation(LocatedEntity& entity, const Operat
 								if (plantedOnData.attachment) {
 									//We need to reset the old attached value for the attached entity
 									auto old_attached_prop_name = std::string("attached_") + *plantedOnData.attachment;
-									auto oldAttachedProp = entity.modPropertyClass<SoftProperty>(old_attached_prop_name);
+									auto oldAttachedProp = entity.modPropertyClass<SoftProperty<LocatedEntity>>(old_attached_prop_name);
 									if (oldAttachedProp) {
 										oldAttachedProp->data() = Atlas::Message::Element();
 										entity.applyProperty(old_attached_prop_name, *oldAttachedProp);
@@ -181,10 +182,10 @@ void AttachmentsProperty::set(const Atlas::Message::Element& val) {
 		for (auto& entry: val.Map()) {
 			if (entry.second.isString() && !entry.second.String().empty()) {
 				try {
-					EntityFilter::ProviderFactory factory{};
+					EntityFilter::ProviderFactory<LocatedEntity> factory{};
 					Attachment attachment{
 							entry.second.String(),
-							std::make_unique<EntityFilter::Filter>(entry.second.String(), factory)
+							std::make_unique<EntityFilter::Filter<LocatedEntity>>(entry.second.String(), factory)
 					};
 					m_data.emplace(entry.first, std::move(attachment));
 				} catch (const std::invalid_argument& e) {

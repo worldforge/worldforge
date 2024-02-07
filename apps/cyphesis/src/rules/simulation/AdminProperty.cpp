@@ -18,7 +18,7 @@
 
 #include "AdminProperty.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 void AdminProperty::apply(LocatedEntity& entity) {
 	if (isTrue()) {

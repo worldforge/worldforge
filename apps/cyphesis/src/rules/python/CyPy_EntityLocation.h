@@ -19,17 +19,18 @@
 #ifndef CYPHESIS_CYPY_ENTITYLOCATION_H
 #define CYPHESIS_CYPY_ENTITYLOCATION_H
 
-#include "rules/EntityLocation.h"
+#include "rules/EntityLocation_impl.h"
 #include "pythonbase/WrapperBase.h"
 
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_EntityLocation : public WrapperBase<EntityLocation, CyPy_EntityLocation> {
+template<typename EntityT, typename PythonEntityT>
+class CyPy_EntityLocation : public WrapperBase<EntityLocation<EntityT>, CyPy_EntityLocation<EntityT, PythonEntityT>> {
 public:
 	CyPy_EntityLocation(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-	CyPy_EntityLocation(Py::PythonClassInstance* self, EntityLocation value);
+	CyPy_EntityLocation(Py::PythonClassInstance* self, EntityLocation<EntityT> value);
 
 	static void init_type();
 
@@ -41,11 +42,7 @@ public:
 //
 //        virtual Py::Object number_subtract(const Py::Object&);
 
-private:
 
-	Py::Object copy();
-
-	PYCXX_NOARGS_METHOD_DECL(CyPy_EntityLocation, copy);
 };
 
 

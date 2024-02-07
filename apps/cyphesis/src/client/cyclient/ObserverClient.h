@@ -19,7 +19,7 @@
 #ifndef CLIENT_OBSERVER_CLIENT_H
 #define CLIENT_OBSERVER_CLIENT_H
 
-#include "BaseClient.h"
+#include "BaseClientLegacy.h"
 #include "ClientConnection.h"
 
 /// \brief Class for the core of a client that connects to a server,
@@ -27,11 +27,11 @@
 ///
 /// In fact the observation code has not yet been implemented, and this
 /// client is mainly used to handle world initialisation.
-class ObserverClient : public BaseClient {
+class ObserverClient : public BaseClientLegacy {
 protected:
 	std::string m_server;
 public:
-	explicit ObserverClient(boost::asio::io_context& io_context, Atlas::Objects::Factories& factories, TypeStore& typeStore);
+	explicit ObserverClient(boost::asio::io_context& io_context, Atlas::Objects::Factories& factories, TypeStore<MemEntity>& typeStore);
 
 	~ObserverClient() override;
 

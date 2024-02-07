@@ -13,7 +13,6 @@ add_library(cyphesis-rulesai
 target_link_libraries(cyphesis-rulesai PUBLIC
         external-remotery
         cyphesis-navigation
-        cyphesis-entityfilter
         cyphesis-physics
         cyphesis-rulesbase
         mercator

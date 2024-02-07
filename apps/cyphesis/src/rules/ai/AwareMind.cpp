@@ -29,6 +29,7 @@
 
 #include "navigation/Awareness.h"
 #include "navigation/Steering.h"
+#include "common/log.h"
 
 #include <Atlas/Objects/RootEntity.h>
 #include <Atlas/Objects/Operation.h>
@@ -40,7 +41,7 @@ static const bool debug_flag = false;
 
 AwareMind::AwareMind(RouterId mind_id,
 					 std::string entity_id,
-					 TypeStore& typeStore,
+					 TypeStore<MemEntity>& typeStore,
 					 SharedTerrain& sharedTerrain,
 					 AwarenessStoreProvider& awarenessStoreProvider) :
 		BaseMind(std::move(mind_id), std::move(entity_id), typeStore),
@@ -179,7 +180,7 @@ void AwareMind::requestAwareness(const MemEntity& entity) {
 	mSteering->setAwareness(mAwareness.get());
 }
 
-void AwareMind::entityUpdated(MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, LocatedEntity* oldLocation) {
+void AwareMind::entityUpdated(MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, MemEntity* oldLocation) {
 	BaseMind::entityUpdated(entity, ent, oldLocation);
 	if (mAwareness) {
 		mAwareness->updateEntity(*m_ownEntity, entity, ent);

@@ -23,38 +23,55 @@
 #include "Point3Property.h"
 #include "QuaternionProperty.h"
 
-class PositionProperty : public Point3Property {
+template <typename EntityT>
+class PositionProperty : public Point3Property<EntityT> {
 public:
 	static constexpr const char* property_name = "pos";
 
-	PositionProperty* copy() const override;
+	PositionProperty<EntityT>* copy() const override;
 
-	static WFMath::Point<3> extractPosition(const LocatedEntity& entity);
+	static WFMath::Point<3> extractPosition(const EntityT& entity);
 
 };
 
-class VelocityProperty : public Vector3Property {
+template <typename EntityT>
+class VelocityProperty : public Vector3Property<EntityT> {
 public:
 	static constexpr const char* property_name = "velocity";
 
-	VelocityProperty* copy() const override;
+	VelocityProperty<EntityT>* copy() const override;
 
 };
 
-class AngularVelocityProperty : public Vector3Property {
+template <typename EntityT>
+class AngularVelocityProperty : public Vector3Property<EntityT> {
 public:
 	static constexpr const char* property_name = "angular";
 
-	AngularVelocityProperty* copy() const override;
+	AngularVelocityProperty<EntityT>* copy() const override;
 
 };
 
-class OrientationProperty : public QuaternionProperty {
+template <typename EntityT>
+class OrientationProperty : public QuaternionProperty<EntityT> {
 public:
 	static constexpr const char* property_name = "orientation";
 
-	OrientationProperty* copy() const override;
+	OrientationProperty<EntityT>* copy() const override;
 
+};
+
+/// \brief Class to handle whether or not an entity is solid for collisions.
+/// \ingroup PropertyClasses
+template <typename EntityT>
+class SolidProperty : public BoolProperty<EntityT> {
+public:
+
+	static constexpr const char* property_name = "solid";
+
+	SolidProperty* copy() const override;
+
+	void apply(EntityT&) override;
 };
 
 

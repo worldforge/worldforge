@@ -39,7 +39,6 @@ class PossessionClient : public BaseClient {
 public:
 	explicit PossessionClient(CommSocket& commSocket,
 							  MindKit& mindFactory,
-							  std::unique_ptr<Inheritance> inheritance,
 							  std::function<void()> reconnectFn);
 
 	~PossessionClient() override;
@@ -57,7 +56,7 @@ protected:
 
 	void processOperation(const Operation& op, OpVector& res);
 
-	void operationFromEntity(const Operation& op, Ref<BaseMind> locatedEntity);
+	void operationFromEntity(const Operation& op, Ref<BaseMind> mind);
 
 	std::chrono::steady_clock::duration getTime() const;
 
@@ -76,8 +75,6 @@ protected:
 	std::unique_ptr<PossessionAccount> m_account;
 
 	OperationsDispatcher<BaseMind> m_operationsDispatcher;
-
-	std::unique_ptr<Inheritance> m_inheritance;
 
 	boost::asio::steady_timer m_dispatcherTimer;
 

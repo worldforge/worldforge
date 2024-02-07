@@ -17,15 +17,15 @@
 
 #include "EntityBuilder.h"
 
-#include "EntityFactory.h"
 #include "ArchetypeFactory.h"
 
 #include "rules/simulation/Entity.h"
 
 #include "common/debug.h"
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/Monitors.h"
 #include "common/Variable.h"
+#include "common/type_utils.h"
 
 #include <Atlas/Objects/RootOperation.h>
 

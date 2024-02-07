@@ -22,6 +22,7 @@
 #include "MindProperty.h"
 #include "common/PropertyFactory_impl.h"
 #include "AccountProperty.h"
+#include "rules/simulation/ScriptsProperty.h"
 
 ServerPropertyManager::ServerPropertyManager(Inheritance& inheritance)
 : CorePropertyManager(inheritance)
@@ -30,6 +31,13 @@ ServerPropertyManager::ServerPropertyManager(Inheritance& inheritance)
     installProperty<MindProperty>();
     installProperty<AccountProperty>();
     installProperty<SpawnProperty>();
+
+	/**
+	 * "__scripts" is meant to be installed on the Type, whereas "__scripts_instance" is meant to be installed on the entity instance.
+	 * This way it should be possible to both override type scripts, and to alternatively add new ones to specific instances.
+	 */
+	installProperty<ScriptsProperty>("__scripts");
+	installProperty<ScriptsProperty>("__scripts_instance");
 
 }
 

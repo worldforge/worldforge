@@ -19,7 +19,7 @@
 #ifndef CYPHESIS_CYPY_DOMAIN_H
 #define CYPHESIS_CYPY_DOMAIN_H
 
-#include "rules/Domain.h"
+#include "rules/simulation/Domain.h"
 #include "modules/Ref.h"
 #include "pythonbase/WrapperBase.h"
 

@@ -26,7 +26,8 @@
  *
  * \ingroup PropertyClasses
  */
-class Vector3Property : public PropertyBase {
+template <typename EntityT>
+class Vector3Property : public PropertyCore<EntityT> {
 public:
 
 	static constexpr const char* property_atlastype = "list";
@@ -47,7 +48,7 @@ public:
 
 	WFMath::Vector<3>& data() { return m_data; }
 
-	Vector3Property* copy() const override;
+	Vector3Property<EntityT>* copy() const override;
 
 protected:
 	WFMath::Vector<3> m_data;

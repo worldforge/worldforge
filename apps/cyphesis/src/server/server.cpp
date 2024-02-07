@@ -42,7 +42,7 @@
 #include "common/net/HttpHandling.h"
 
 #include "pythonbase/Python_API.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/World.h"
 
 #ifdef CYPHESIS_USE_POSTGRES
@@ -54,7 +54,8 @@
 
 #include "common/id.h"
 #include "common/const.h"
-#include "common/Inheritance.h"
+#include "common/AtlasFactories.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/system.h"
 #include "common/sockets.h"
 #include "common/Monitors.h"
@@ -80,10 +81,11 @@
 #include <common/MainLoop.h>
 #include <rules/simulation/python/CyPy_Server.h>
 #include <rules/python/CyPy_Physics.h>
-#include <rules/entityfilter/python/CyPy_EntityFilter.h>
+#include <rules/entityfilter/python/CyPy_EntityFilter_impl.h>
 #include <rules/python/CyPy_Atlas.h>
 #include <rules/python/CyPy_Common.h>
-#include <rules/python/CyPy_Rules.h>
+#include <rules/python/CyPy_Rules_impl.h>
+#include <rules/simulation/python/CyPy_LocatedEntity_impl.h>
 #include <rules/simulation/ExternalMind.h>
 #include <rules/simulation/PhysicalDomain.h>
 #include "saf/saf.hpp"
@@ -392,7 +394,7 @@ int run() {
 	auto io_context = std::make_unique<boost::asio::io_context>();
 
 	try {
-		Atlas::Objects::Factories atlasFactories;
+		auto& atlasFactories = AtlasFactories::factories;
 
 		// Initialise the persistence subsystem.
 		auto serverDatabase = createDatabase(*io_context);
@@ -456,15 +458,15 @@ int run() {
 
 		// Start up the Python subsystem.
 		init_python_api({&CyPy_Server::init,
-						 &CyPy_Rules::init,
+						 &CyPy_Rules<LocatedEntity, CyPy_LocatedEntity>::init,
 						 &CyPy_Physics::init,
-						 &CyPy_EntityFilter::init,
+						 &CyPy_EntityFilter<LocatedEntity>::init,
 						 &CyPy_Atlas::init,
 						 &CyPy_Common::init},
 						python_directories);
 		observe_python_directories(*io_context, assets_manager);
 
-		Inheritance inheritance(atlasFactories);
+		Inheritance inheritance;
 		ServerPropertyManager propertyManager(inheritance);
 
 		EntityBuilder entityBuilder;

@@ -22,7 +22,7 @@
 #include "physics/Vector3D.h"
 
 #include "common/Property.h"
-#include <common/PropertyInstanceState.h>
+#include "PropertyInstanceState.h"
 
 #include <Mercator/Terrain.h>
 #include <Mercator/TileShader.h>
@@ -42,7 +42,7 @@ class TileShader;
 /// \brief Class to handle Entity terrain property
 /// This property only defines the surfaces. The separate TerrainPointsProperty defines the actual terrain geometry.
 /// \ingroup PropertyClasses
-class TerrainProperty : public Property<Atlas::Message::ListType> {
+class TerrainProperty : public Property<Atlas::Message::ListType, LocatedEntity> {
 protected:
 
 	struct State {

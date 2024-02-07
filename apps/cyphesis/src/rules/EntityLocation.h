@@ -23,17 +23,16 @@
 
 #include <wfmath/point.h>
 
-class LocatedEntity;
-
 /**
  * Represents a location in an entity. The position is optional; if it's invalid the location only
  * refers to the entity.
  */
+template<typename EntityT>
 struct EntityLocation {
 	/**
 	 * The parent entity.
 	 */
-	Ref<LocatedEntity> m_parent;
+	Ref<EntityT> m_parent;
 	/**
 	 * Coords relative to the entity
 	 */
@@ -41,9 +40,9 @@ struct EntityLocation {
 
 	EntityLocation();
 
-	explicit EntityLocation(Ref<LocatedEntity> loc);
+	explicit EntityLocation(Ref<EntityT> loc);
 
-	EntityLocation(Ref<LocatedEntity> loc, const WFMath::Point<3>& pos);
+	EntityLocation(Ref<EntityT> loc, const WFMath::Point<3>& pos);
 
 	const WFMath::Point<3>& pos() const;
 

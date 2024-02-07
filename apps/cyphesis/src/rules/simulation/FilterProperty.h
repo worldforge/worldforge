@@ -20,7 +20,7 @@
 #define CYPHESIS_FILTERPROPERTY_H
 
 #include "rules/entityfilter/Filter.h"
-#include "common/Property.h"
+#include "PropertyBase.h"
 
 /**
  * @brief Adds an Entity Filter.
@@ -35,9 +35,11 @@ public:
 
 	explicit FilterProperty() = default;
 
+	FilterProperty(const FilterProperty& rhs);
+
 	FilterProperty* copy() const override;
 
-	const EntityFilter::Filter* getData() const;
+	const EntityFilter::Filter<LocatedEntity>* getData() const;
 
 	int get(Atlas::Message::Element& val) const override;
 
@@ -46,9 +48,8 @@ public:
 
 protected:
 
-	FilterProperty(const FilterProperty& rhs);
 
-	std::unique_ptr<EntityFilter::Filter> m_data;
+	std::unique_ptr<EntityFilter::Filter<LocatedEntity>> m_data;
 };
 
 

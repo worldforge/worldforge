@@ -26,9 +26,9 @@
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <Atlas/Message/Element.h>
 
-typedef std::vector<Atlas::Objects::Operation::RootOperation> OpVector;
+#include <functional>
 
-class LocatedEntity;
+typedef std::vector<Atlas::Objects::Operation::RootOperation> OpVector;
 
 /// \defgroup Scripts Script types.
 ///
@@ -39,6 +39,7 @@ class LocatedEntity;
 /// This base class allows scripts to override operation handlers, and
 /// handlers for hooks.
 /// \ingroup Scripts
+template<typename EntityT>
 class Script {
 public:
 	Script() = default;
@@ -63,9 +64,9 @@ public:
 	/// used and supported in the mind code.
 	/// @param function name of the function to call in the script
 	/// @param entity which has triggered this hook
-	virtual void hook(const std::string& function, LocatedEntity* entity, OpVector& res);
+	virtual void hook(const std::string& function, EntityT* entity, OpVector& res);
 
-	virtual void attachPropertyCallbacks(LocatedEntity& entity);
+	virtual void attachPropertyCallbacks(EntityT& entity, std::function<void(const Atlas::Objects::Operation::RootOperation&)> sendWorldFn);
 
 	static int getScriptDetails(const Atlas::Message::MapType&,
 								const std::string&,

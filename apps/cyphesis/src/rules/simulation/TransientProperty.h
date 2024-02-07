@@ -20,10 +20,11 @@
 #define RULESETS_TRANSIENT_PROPERTY_H
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 
 /// \brief Class to handle Entity which are ephemeral and get auto deleted
 /// \ingroup PropertyClasses
-class TransientProperty : public Property<double> {
+class TransientProperty : public Property<double, LocatedEntity> {
 public:
 	static constexpr const char* property_name = "transient";
 

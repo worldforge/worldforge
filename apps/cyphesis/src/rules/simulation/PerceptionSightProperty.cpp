@@ -17,7 +17,7 @@
  */
 
 #include "PerceptionSightProperty.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 void PerceptionSightProperty::apply(LocatedEntity& entity) {
 	PropertyBase::apply(entity);

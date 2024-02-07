@@ -20,10 +20,11 @@
 #define RULESETS_STATUS_PROPERTY_H
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 
 /// \brief Keeps track of the status of an entity. It cannot go below 0.
 /// \ingroup PropertyClasses
-class StatusProperty : public Property<double> {
+class StatusProperty : public Property<double, LocatedEntity> {
 public:
 	static constexpr const char* property_name = "status";
 

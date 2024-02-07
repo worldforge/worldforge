@@ -17,7 +17,7 @@
 
 #include "VisibilityDistanceProperty.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 VisibilityDistanceProperty* VisibilityDistanceProperty::copy() const {
 	return new VisibilityDistanceProperty(*this);

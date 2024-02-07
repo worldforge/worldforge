@@ -23,6 +23,6 @@ StatusProperty* StatusProperty::copy() const {
 }
 
 void StatusProperty::set(const Atlas::Message::Element& e) {
-	Property<double>::set(e);
+	Property<double, LocatedEntity>::set(e);
 	m_data = std::max(m_data, 0.0);
 }

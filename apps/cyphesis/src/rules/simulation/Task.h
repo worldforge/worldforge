@@ -34,6 +34,7 @@
 
 class LocatedEntity;
 
+template<typename>
 class Script;
 
 struct TaskUsage {

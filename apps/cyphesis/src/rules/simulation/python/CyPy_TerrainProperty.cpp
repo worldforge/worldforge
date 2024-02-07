@@ -19,7 +19,7 @@
 #include <rules/simulation/TerrainProperty.h>
 #include "CyPy_TerrainProperty.h"
 #include "rules/python/CyPy_Vector3D.h"
-#include "rules/python/CyPy_LocatedEntity.h"
+#include "CyPy_LocatedEntity.h"
 
 CyPy_TerrainProperty::CyPy_TerrainProperty(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds)
 		: WrapperBase(self, args, kwds) {
@@ -37,17 +37,17 @@ void CyPy_TerrainProperty::init_type() {
 	behaviors().name("TerrainProperty");
 	behaviors().doc("");
 
-	PYCXX_ADD_VARARGS_METHOD(get_height, getHeight, "");
-	PYCXX_ADD_VARARGS_METHOD(get_surface, getSurface, R"(Gets the numerical index of the surface that's most prevalent at the location.
+	register_method<&CyPy_TerrainProperty::getHeight>("get_height");
+	register_method<&CyPy_TerrainProperty::getSurface>("get_surface", R"(Gets the numerical index of the surface that's most prevalent at the location.
 Parameters:
 x : The x position
 y : The y position)");
-	PYCXX_ADD_VARARGS_METHOD(get_surface_name, getSurfaceName, R"(Gets the name of the surface that's most prevalent at the location.
+	register_method<&CyPy_TerrainProperty::getSurfaceName>("get_surface_name", R"(Gets the name of the surface that's most prevalent at the location.
 Parameters:
 x : The x position
 y : The y position)");
-	PYCXX_ADD_VARARGS_METHOD(get_normal, getNormal, "");
-	PYCXX_ADD_VARARGS_METHOD(find_mods, findMods, "");
+	register_method<&CyPy_TerrainProperty::getNormal>("get_normal");
+	register_method<&CyPy_TerrainProperty::findMods>("find_mods");
 
 	behaviors().readyType();
 }

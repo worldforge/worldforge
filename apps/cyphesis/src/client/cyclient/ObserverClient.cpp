@@ -30,8 +30,8 @@
 
 #include <thread>
 
-ObserverClient::ObserverClient(boost::asio::io_context& io_context, Atlas::Objects::Factories& factories, TypeStore& typeStore)
-		: BaseClient(io_context, factories, typeStore) {
+ObserverClient::ObserverClient(boost::asio::io_context& io_context, Atlas::Objects::Factories& factories, TypeStore<MemEntity>& typeStore)
+		: BaseClientLegacy(io_context, factories, typeStore) {
 }
 
 ObserverClient::~ObserverClient() = default;

@@ -110,11 +110,9 @@ void CyPy_Quaternion::init_type() {
 
 	behaviors().supportNumberType(Py::PythonType::support_number_multiply);
 
-	PYCXX_ADD_VARARGS_METHOD(rotation, rotation, "");
-
-	PYCXX_ADD_NOARGS_METHOD(as_list, as_list, "");
-	PYCXX_ADD_NOARGS_METHOD(is_valid, is_valid, "");
-
+	register_method<&CyPy_Quaternion::rotation>("rotation");
+	register_method<&CyPy_Quaternion::as_list>("as_list");
+	register_method<&CyPy_Quaternion::is_valid>("is_valid");
 
 	behaviors().readyType();
 }

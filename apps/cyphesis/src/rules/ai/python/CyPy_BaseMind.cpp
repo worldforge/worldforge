@@ -20,12 +20,12 @@
 
 #include "CyPy_MemMap.h"
 #include "CyPy_MemEntity.h"
-#include "rules/python/PythonWrapper.h"
-#include "rules/python/CyPy_Props.h"
-#include "rules/python/PythonScriptFactory.h"
-#include "rules/entityfilter/python/CyPy_EntityFilter.h"
-#include "rules/entityfilter/Providers.h"
+#include "rules/python/PythonWrapper_impl.h"
+#include "rules/python/CyPy_Props_impl.h"
+#include "rules/python/PythonScriptFactory_impl.h"
+#include "rules/entityfilter/python/CyPy_EntityFilter_impl.h"
 #include "rules/ai/AwareMind.h"
+#include "rules/Script_impl.h"
 
 
 #include "navigation/Steering.h"
@@ -33,6 +33,14 @@
 
 #include "common/id.h"
 #include "CyPy_Steering.h"
+
+template
+struct EntityFilter::parser::query_parser<std::string::const_iterator, MemEntity>;
+
+template<>
+int CyPy_Props<MemEntity>::setattro(const Py::String& name, const Py::Object& attr) {
+	return 0;
+}
 
 template<>
 Py::Object wrapPython(BaseMind* value) {
@@ -68,6 +76,7 @@ CyPy_BaseMind::CyPy_BaseMind(Py::PythonClassInstance* self, Py::Tuple& args, Py:
 
 CyPy_BaseMind::~CyPy_BaseMind() = default;
 
+
 void CyPy_BaseMind::init_type() {
 	behaviors().name("Mind");
 	behaviors().doc("");
@@ -76,26 +85,19 @@ void CyPy_BaseMind::init_type() {
 
 	behaviors().supportStr();
 
-//    PYCXX_ADD_NOARGS_METHOD(as_entity, as_entity, "");
-//    PYCXX_ADD_VARARGS_METHOD(can_reach, can_reach, "");
-//    PYCXX_ADD_NOARGS_METHOD(describe_entity, describe_entity, "");
-//    PYCXX_ADD_VARARGS_METHOD(client_error, client_error, "");
+	register_method<&CyPy_BaseMind::add_hook_set>("add_hook_set", PYCXX_SIG_DOC("add_hook_set(method_name)", "Adds a hook that will be called whenever an entity is added."));
+
+	register_method<&CyPy_BaseMind::update_hook_set>("update_hook_set", PYCXX_SIG_DOC("update_hook_set(method_name)", "Adds a hook that will be called whenever an entity is updated."));
+	register_method<&CyPy_BaseMind::delete_hook_set>("delete_hook_set", PYCXX_SIG_DOC("delete_hook_set(method_name)", "Adds a hook that will be called whenever an entity is deleted."));
+
+	register_method<&CyPy_BaseMind::addPropertyCallback>("add_property_callback",
+														 PYCXX_SIG_DOC("add_property_callback(property, method_name)", "Adds a callback that will be called whenever the specified property changes."));
 
 
-
-	PYCXX_ADD_VARARGS_METHOD(add_hook_set, add_hook_set, PYCXX_SIG_DOC("add_hook_set(method_name)", "Adds a hook that will be called whenever an entity is added."));
-	PYCXX_ADD_VARARGS_METHOD(update_hook_set, update_hook_set, PYCXX_SIG_DOC("update_hook_set(method_name)", "Adds a hook that will be called whenever an entity is updated."));
-	PYCXX_ADD_VARARGS_METHOD(delete_hook_set, delete_hook_set, PYCXX_SIG_DOC("delete_hook_set(method_name)", "Adds a hook that will be called whenever an entity is deleted."));
-
-	PYCXX_ADD_VARARGS_METHOD(add_property_callback, addPropertyCallback,
-							 PYCXX_SIG_DOC("add_property_callback(property, method_name)", "Adds a callback that will be called whenever the specified property changes."));
-
-
-	PYCXX_ADD_VARARGS_METHOD(match_entity, matchEntity, PYCXX_SIG_DOC("match_entity(filter, entity)", "Returns true if the filter applies to the entity."));
-	PYCXX_ADD_VARARGS_METHOD(match_entities, matchEntities,
-							 PYCXX_SIG_DOC("match_entities(filter, entities)", "Processes the supplied entities and returns a list containing only those that matched the filter."));
-
-	//behaviors().type_object()->tp_base = base;
+	register_method<&CyPy_BaseMind::matchEntity>("match_entity", PYCXX_SIG_DOC("match_entity(filter, entity)", "Returns true if the filter applies to the entity."));
+	register_method<&CyPy_BaseMind::matchEntities>("match_entities",
+												   PYCXX_SIG_DOC("match_entities(filter, entities)",
+																 "Processes the supplied entities and returns a list containing only those that matched the filter."));
 
 	behaviors().readyType();
 }
@@ -103,8 +105,8 @@ void CyPy_BaseMind::init_type() {
 Py::Object CyPy_BaseMind::matchEntity(const Py::Tuple& args) {
 	args.verify_length(2);
 
-	auto& filter = verifyObject<CyPy_Filter>(args.getItem(0));
-	auto& entity = verifyObject<CyPy_LocatedEntity>(args.getItem(1));
+	auto& filter = verifyObject<CyPy_Filter<MemEntity>>(args.getItem(0));
+	auto& entity = verifyObject<CyPy_MemEntity>(args.getItem(1));
 
 	EntityFilter::QueryContext queryContext = CyPy_MemMap::createFilterContext(entity.get(), m_value->getMap());
 	queryContext.actor = m_value->getEntity().get();
@@ -115,12 +117,12 @@ Py::Object CyPy_BaseMind::matchEntity(const Py::Tuple& args) {
 Py::Object CyPy_BaseMind::matchEntities(const Py::Tuple& args) {
 	args.verify_length(2);
 
-	auto& filter = verifyObject<CyPy_Filter>(args.getItem(0));
+	auto& filter = verifyObject<CyPy_Filter<MemEntity>>(args.getItem(0));
 	auto entities = verifyList(args.getItem(1));
 	Py::List list;
 
 	for (auto entity: entities) {
-		EntityFilter::QueryContext queryContext = CyPy_MemMap::createFilterContext(verifyObject<CyPy_LocatedEntity>(entity).get(), m_value->getMap());
+		auto queryContext = CyPy_MemMap::createFilterContext(verifyObject<CyPy_MemEntity>(entity).get(), m_value->getMap());
 		queryContext.actor = m_value->getEntity().get();
 
 		if (filter->match(queryContext)) {
@@ -159,7 +161,7 @@ Py::Object CyPy_BaseMind::getattro(const Py::String& name) {
 	}
 
 	if (nameStr == "props") {
-		return CyPy_Props::wrap(m_value->getEntity());
+		return CyPy_Props<MemEntity>::wrap(m_value->getEntity());
 	}
 
 
@@ -224,13 +226,10 @@ Py::Object CyPy_BaseMind::delete_hook_set(const Py::Tuple& args) {
 
 
 template<>
-PythonScriptFactory<BaseMind>::PythonScriptFactory(const std::string& package,
-												   const std::string& type) :
-		PythonClass(package,
-					type) {
+PythonScriptFactory<MemEntity, BaseMind>::PythonScriptFactory(const std::string& package,
+															  const std::string& type) :
+		PythonClass(package, type) {
 }
 
 template
-class PythonScriptFactory<BaseMind>;
-
-#include "rules/python/PythonScriptFactory_impl.h"
+class PythonScriptFactory<MemEntity, BaseMind>;

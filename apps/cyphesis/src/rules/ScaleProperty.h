@@ -22,6 +22,7 @@
 
 #include "rules/Vector3Property.h"
 
+template <typename EntityT>
 class BBoxProperty;
 
 /**
@@ -31,12 +32,13 @@ class BBoxProperty;
  *
  * \ingroup PropertyClasses
  */
-class ScaleProperty : public PropertyBase {
+template <typename EntityT>
+class ScaleProperty : public PropertyCore<EntityT> {
 public:
 	static constexpr const char* property_name = "scale";
 	static constexpr const char* property_atlastype = "list";
 
-	void apply(LocatedEntity&) override;
+	void apply(EntityT&) override;
 
 	int get(Atlas::Message::Element& val) const override;
 
@@ -46,11 +48,11 @@ public:
 
 	WFMath::Vector<3>& data() { return m_data; }
 
-	ScaleProperty* copy() const override;
+	ScaleProperty<EntityT>* copy() const override;
 
-	static WFMath::AxisBox<3> scaledBbox(const LocatedEntity& entity);
+	static WFMath::AxisBox<3> scaledBbox(const EntityT& entity);
 
-	static WFMath::AxisBox<3> scaledBbox(const LocatedEntity& entity, const BBoxProperty& bboxProperty);
+	static WFMath::AxisBox<3> scaledBbox(const EntityT& entity, const BBoxProperty<EntityT>& bboxProperty);
 
 	static WFMath::AxisBox<3> scaledBbox(const WFMath::AxisBox<3>& bbox, const WFMath::Vector<3>& scale);
 

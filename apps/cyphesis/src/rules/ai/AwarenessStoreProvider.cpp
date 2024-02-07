@@ -34,7 +34,7 @@ AwarenessStoreProvider::AwarenessStoreProvider(IHeightProvider& heightProvider)
 		: m_heightProvider(heightProvider) {
 }
 
-AwarenessStore& AwarenessStoreProvider::getStore(const TypeNode* type, int tileSize) {
+AwarenessStore& AwarenessStoreProvider::getStore(const TypeNode<MemEntity>* type, int tileSize) {
 	auto I = m_awarenessStores.find(type->name());
 	if (I != m_awarenessStores.end()) {
 		cy_debug_print("Reusing awareness store for type " << type->name() << ".");

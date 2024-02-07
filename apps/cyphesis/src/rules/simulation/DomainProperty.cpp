@@ -24,7 +24,7 @@
 #include "PhysicalDomain.h"
 #include "VoidDomain.h"
 #include "InventoryDomain.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "StackableDomain.h"
 #include "ContainerDomain.h"
 

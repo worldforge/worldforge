@@ -20,10 +20,10 @@
 #define SERVER_RULE_HANDLER_H
 
 #include "common/TypeNode.h"
-
+#include "rules/simulation/LocatedEntity.h"
 #include <Atlas/Objects/Root.h>
 
-/// \brief Handle processing and updating of task ruless
+/// \brief Handle processing and updating of task rules
 class RuleHandler {
 public:
 	virtual ~RuleHandler() = default;
@@ -35,11 +35,11 @@ public:
 						const Atlas::Objects::Root& desc,
 						std::string&,
 						std::string&,
-						std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) = 0;
+						std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) = 0;
 
 	virtual int update(const std::string&,
 					   const Atlas::Objects::Root& desc,
-					   std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) = 0;
+					   std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) = 0;
 
 };
 

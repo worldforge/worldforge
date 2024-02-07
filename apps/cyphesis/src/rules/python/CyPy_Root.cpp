@@ -51,7 +51,7 @@ void CyPy_Root::init_type() {
 								   | Py::PythonType::support_mapping_subscript);
 	behaviors().supportSequenceType(Py::PythonType::support_sequence_contains);
 
-	PYCXX_ADD_NOARGS_METHOD(get_name, get_name, "");
+	register_method<&CyPy_Root::get_name>("get_name");
 
 	behaviors().readyType();
 }

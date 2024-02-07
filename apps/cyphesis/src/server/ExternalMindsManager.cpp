@@ -26,7 +26,7 @@
 #include "common/operations/Possess.h"
 #include "common/log.h"
 #include "common/debug.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <Atlas/Objects/Entity.h>
 

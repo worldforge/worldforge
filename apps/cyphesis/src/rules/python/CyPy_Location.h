@@ -19,17 +19,18 @@
 #ifndef CYPHESIS_CYPY_LOCATION_H
 #define CYPHESIS_CYPY_LOCATION_H
 
-#include "rules/Location.h"
+#include "rules/Location_impl.h"
 #include "pythonbase/WrapperBase.h"
 
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Location : public WrapperBase<Location, CyPy_Location> {
+template<typename EntityT, typename PythonEntityT>
+class CyPy_Location : public WrapperBase<Location<EntityT>, CyPy_Location<EntityT, PythonEntityT>> {
 public:
 	CyPy_Location(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-	CyPy_Location(Py::PythonClassInstance* self, Location value);
+	CyPy_Location(Py::PythonClassInstance* self, Location<EntityT> value);
 
 	static void init_type();
 
@@ -40,16 +41,6 @@ public:
 	Py::Object repr() override;
 
 	Py::Object number_subtract(const Py::Object&) override;
-
-private:
-
-	Py::Object copy();
-
-	PYCXX_NOARGS_METHOD_DECL(CyPy_Location, copy);
-
-	Py::Object add_to_entity(const Py::Tuple& args);
-
-	PYCXX_VARARGS_METHOD_DECL(CyPy_Location, add_to_entity);
 };
 
 

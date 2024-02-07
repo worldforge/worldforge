@@ -21,6 +21,7 @@
 
 #include "common/TypeNode.h"
 #include "common/Singleton.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/SmartPtr.h>
@@ -81,17 +82,17 @@ protected:
 
 	void installItem(const std::string& class_name,
 					 const Atlas::Objects::Root& class_desc,
-					 std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes);
+					 std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes);
 
 	int installRuleInner(const std::string& class_name,
 						 const Atlas::Objects::Root& class_desc,
 						 std::string& dependent,
 						 std::string& reason,
-						 std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes);
+						 std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes);
 
 	int modifyRuleInner(const std::string& class_name,
 						const Atlas::Objects::Root& class_desc,
-						std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes);
+						std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes);
 
 	void getRulesFromFiles(std::filesystem::path directory,
 						   std::map<std::string, Atlas::Objects::Root>&);
@@ -106,7 +107,7 @@ protected:
 public:
 	explicit Ruleset(EntityBuilder& eb,
 					 boost::asio::io_context& io_context,
-					 PropertyManager& propertyManager);
+					 PropertyManager<LocatedEntity>& propertyManager);
 
 	~Ruleset() override;
 

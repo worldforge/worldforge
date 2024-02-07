@@ -18,7 +18,7 @@
 #ifndef RULESETS_VISIBILITY_PROPERTY_H
 #define RULESETS_VISIBILITY_PROPERTY_H
 
-#include "common/Property.h"
+#include "PropertyBase.h"
 
 /**
  * \brief Allows setting visibility of entities to either "public", "protected" or "private".

@@ -23,6 +23,7 @@
 #include "UsageInstance.h"
 
 #include <memory>
+#include "rules/simulation/LocatedEntity.h"
 
 
 /**
@@ -33,7 +34,7 @@
  *
  * \ingroup PropertyClasses
  */
-class UsagesProperty : public Property<Atlas::Message::MapType> {
+class UsagesProperty : public Property<Atlas::Message::MapType, LocatedEntity> {
 public:
 
 	UsagesProperty() = default;

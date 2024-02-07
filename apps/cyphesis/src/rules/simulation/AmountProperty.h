@@ -20,12 +20,13 @@
 #define CYPHESIS_AMOUNTPROPERTY_H
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 
 /**
  * Used together with the "stackable" domain to handle amount of stacked entities.
  * \ingroup PropertyClasses
  */
-class AmountProperty : public Property<int> {
+class AmountProperty : public Property<int, LocatedEntity> {
 public:
 	static constexpr const char* property_name = "amount";
 

@@ -19,7 +19,7 @@
 #ifndef CYPHESIS_MINDSPROPERTY_H
 #define CYPHESIS_MINDSPROPERTY_H
 
-#include "common/Property.h"
+#include "PropertyBase.h"
 #include <Atlas/Objects/Operation.h>
 
 class Router;

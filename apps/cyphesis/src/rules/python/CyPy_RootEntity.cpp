@@ -26,6 +26,8 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Entity::Anonymous;
 
+std::vector<std::function<bool(Atlas::Objects::Entity::RootEntity&, const Py::Object& o)>> CyPy_RootEntity::importers;
+
 CyPy_RootEntity::CyPy_RootEntity(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds)
 		: WrapperBase(self, args, kwds) {
 	m_value = Anonymous();
@@ -60,7 +62,7 @@ void CyPy_RootEntity::init_type() {
 								   | Py::PythonType::support_mapping_subscript);
 	behaviors().supportSequenceType(Py::PythonType::support_sequence_contains);
 
-	PYCXX_ADD_NOARGS_METHOD(get_name, get_name, "");
+	register_method<&CyPy_RootEntity::get_name>("get_name");
 
 	behaviors().readyType();
 }
@@ -70,10 +72,17 @@ void CyPy_RootEntity::setFromDict(const Py::Dict& dict) {
 		auto keyStr = key.str().as_string();
 		auto value = dict.getItem(key);
 		if (keyStr == "location") {
-			if (!CyPy_Location::check(value)) {
+			bool wasValid = false;
+			for (auto& importer: importers) {
+				if (importer(m_value, value)) {
+					wasValid = true;
+					break;
+				}
+			}
+			if (!wasValid) {
 				throw Py::TypeError("location must be a Location object");
 			}
-			CyPy_Location::value(value).addToEntity(m_value);
+//			CyPy_Location::value(value).addToEntity(m_value);
 		} else if (keyStr == "pos") {
 			m_value->setPos(sequence_asVector(value));
 		} else if (keyStr == "parent") {

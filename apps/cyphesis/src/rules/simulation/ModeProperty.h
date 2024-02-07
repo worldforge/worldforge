@@ -18,7 +18,7 @@
 #ifndef RULESETS_MODEPROPERTY_H_
 #define RULESETS_MODEPROPERTY_H_
 
-#include "common/Property.h"
+#include "PropertyBase.h"
 
 /**
  * \brief Defines the physical mode of the entity.

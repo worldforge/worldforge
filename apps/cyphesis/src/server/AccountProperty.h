@@ -20,10 +20,11 @@
 #define CYPHESIS_ACCOUNTPROPERTY_H
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 
 class ServerRouting;
 
-class AccountProperty : public Property<std::string> {
+class AccountProperty : public Property<std::string, LocatedEntity> {
 public:
 
 	static constexpr const char* property_name = "__account";

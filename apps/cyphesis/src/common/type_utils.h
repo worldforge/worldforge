@@ -20,6 +20,7 @@
 #define COMMON_TYPE_UTILS_H
 
 #include <Atlas/Message/Element.h>
+#include <Atlas/Objects/Entity.h>
 
 typedef std::vector<std::string> IdList;
 
@@ -34,5 +35,26 @@ void objectListAsMessage(const List_T & l, Atlas::Message::ListType & ol);
 
 template<typename T, typename List_T>
 int objectListFromMessage(const Atlas::Message::ListType & l, List_T & ol);
+
+Atlas::Objects::Root atlasOpDefinition(const std::string& name,
+									   const std::string& parent);
+
+Atlas::Objects::Root atlasClass(const std::string& name,
+								const std::string& parent);
+
+Atlas::Objects::Root atlasType(const std::string& name,
+							   const std::string& parent,
+							   bool abstract = false);
+
+template<typename T>
+Atlas::Objects::Root atlasObjDefinition() {
+	Atlas::Objects::Entity::Anonymous r;
+
+	r->setParent(T::super_parent);
+	r->setObjtype(std::string(T::default_objtype) == "op" ? "op_definition" : "class");
+	r->setId(T::default_parent);
+
+	return r;
+}
 
 #endif // COMMON_TYPE_UTILS_H

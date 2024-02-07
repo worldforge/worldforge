@@ -18,6 +18,7 @@
 
 #ifndef COMMON_CUSTOM_H
 #define COMMON_CUSTOM_H
+#include "TypeStore.h"
 
 namespace Atlas {
 namespace Objects {
@@ -40,5 +41,17 @@ extern int CLOSE_CONTAINER_NO;
 }
 }
 }
+
+
+
+template<typename EntityT>
+void installStandardObjects(TypeStore<EntityT>& i);
+
+template<typename EntityT>
+void installCustomOperations(TypeStore<EntityT>& i);
+
+template<typename EntityT>
+void installCustomEntities(TypeStore<EntityT>& i);
+
 
 #endif // COMMON_CUSTOM_H

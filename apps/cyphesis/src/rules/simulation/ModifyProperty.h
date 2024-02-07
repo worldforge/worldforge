@@ -22,8 +22,8 @@
 #include <rules/entityfilter/Filter.h>
 #include <rules/Modifier.h>
 #include <sigc++/connection.h>
-#include <common/PropertyInstanceState.h>
-#include "common/Property.h"
+#include "PropertyInstanceState.h"
+#include "PropertyBase.h"
 #include <set>
 
 
@@ -34,7 +34,7 @@ struct ModifyEntry {
 	/**
 	 * An optional constraint.
 	 */
-	std::unique_ptr<EntityFilter::Filter> constraint;
+	std::unique_ptr<EntityFilter::Filter<LocatedEntity>> constraint;
 
 	/**
 	 * The modifiers which will be applied.

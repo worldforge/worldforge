@@ -24,7 +24,8 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Rules : public Py::ExtensionModule<CyPy_Rules> {
+template<typename EntityT, typename PythonEntityT>
+class CyPy_Rules : public Py::ExtensionModule<CyPy_Rules<EntityT, PythonEntityT>> {
 public:
 	CyPy_Rules();
 

@@ -21,7 +21,7 @@
 
 #include "Task.h"
 #include "modules/Ref.h"
-#include "common/Property.h"
+#include "PropertyBase.h"
 #include <map>
 
 /// \brief Keeps track of any ongoing tasks.

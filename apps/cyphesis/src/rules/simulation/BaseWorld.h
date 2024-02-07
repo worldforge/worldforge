@@ -24,6 +24,8 @@
 
 #include "modules/Ref.h"
 
+#include "rules/simulation/LocatedEntity.h"
+
 #include <Atlas/Message/Element.h>
 #include <Atlas/Objects/ObjectsFwd.h>
 
@@ -35,8 +37,7 @@
 #include <set>
 #include <functional>
 
-class LocatedEntity;
-
+template<typename EntityT>
 class Location;
 
 typedef std::map<long, Ref<LocatedEntity>> EntityRefDict;

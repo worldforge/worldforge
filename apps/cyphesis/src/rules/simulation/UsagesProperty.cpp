@@ -31,7 +31,7 @@
 #include <wfmath/atlasconv.h>
 #include <rules/simulation/python/CyPy_UsageInstance.h>
 #include "pythonbase/Python_API.h"
-#include <common/Inheritance.h>
+#include "common/AtlasFactories.h"
 
 static const bool debug_flag = false;
 using Atlas::Message::Element;
@@ -72,7 +72,7 @@ void UsagesProperty::set(const Atlas::Message::Element& val) {
 					});
 					AtlasQuery::find<std::string>(map, "constraint", [&](const std::string& value) {
 						//TODO: should be a usage constraint provider factory
-						usage.constraint.reset(new EntityFilter::Filter(value, EntityFilter::ProviderFactory()));
+						usage.constraint.reset(new EntityFilter::Filter<LocatedEntity>(value, EntityFilter::ProviderFactory<LocatedEntity>()));
 					});
 					AtlasQuery::find<Atlas::Message::MapType>(map, "params", [&](const Atlas::Message::MapType& value) {
 						for (auto& entry: value) {
@@ -133,7 +133,7 @@ HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
 		auto op_type = argOp->getParent();
 		cy_debug_print("Got op type " << op_type << " from arg")
 
-		auto obj = Inheritance::instance().getFactories().createObject(op_type);
+		auto obj = AtlasFactories::factories.createObject(op_type);
 		if (!obj.isValid()) {
 			spdlog::error("Character::UseOperation Unknown op type "
 						  "\"{}\".", op_type);
@@ -241,7 +241,7 @@ HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
 							return fmt::format("Usage '{}', entity {}: ", functionName, actor->describeEntity());
 						});
 						auto ret = Py::Callable(functionObject).apply(Py::TupleN(UsageInstance::scriptCreator(std::move(usageInstance))));
-						return ScriptUtils::processScriptResult(usage.handler, ret, res, e);
+						return ScriptUtils::processScriptResult(usage.handler, ret, res, e.getId(), [&e]() { return e.describeEntity(); });
 					} catch (const Py::BaseException& py_ex) {
 						spdlog::error("Python error calling \"{}\" for entity {}", usage.handler, e.describeEntity());
 						if (PyErr_Occurred()) {

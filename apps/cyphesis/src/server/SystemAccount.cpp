@@ -22,7 +22,7 @@
 #include "Connection.h"
 #include "ServerRouting.h"
 #include "rules/simulation/BaseWorld.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 SystemAccount::SystemAccount(Connection* conn,
 							 const std::string& username,

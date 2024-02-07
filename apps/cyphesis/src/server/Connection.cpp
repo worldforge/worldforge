@@ -25,7 +25,7 @@
 #include "ExternalMindsManager.h"
 #include "common/id.h"
 #include "common/debug.h"
-#include "common/Inheritance.h"
+#include "rules/simulation//Inheritance.h"
 #include "common/system.h"
 #include "common/TypeNode.h"
 #include "common/log.h"
@@ -250,7 +250,7 @@ void Connection::externalOperation(const Operation& op, Link& link) {
 		cy_debug_print("send on to " << from)
 		auto I = m_routers.find(integerId(from));
 		if (I == m_routers.end()) {
-			sendError(op, fmt::format("Client \"{}\" op from \"{}\" is from non-existent object.",
+			sendError(op, fmt::format(R"(Client "{}" op from "{}" is from non-existent object.)",
 									  op->getParent(), from), from);
 			return;
 		} else {

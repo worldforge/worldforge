@@ -89,7 +89,7 @@ int ArchetypeRuleHandler::installArchetypeClass(const std::string& class_name,
 }
 
 int ArchetypeRuleHandler::modifyArchetypeClass(const std::string& class_name,
-                                               const Root& class_desc, std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes)
+                                               const Root& class_desc, std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes)
 {
     assert(class_name == class_desc->getId());
 
@@ -223,14 +223,14 @@ int ArchetypeRuleHandler::install(const std::string& name,
                                   const Atlas::Objects::Root& description,
                                   std::string& dependent,
                                   std::string& reason,
-                                  std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes)
+                                  std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes)
 {
     return installArchetypeClass(name, parent, description, dependent, reason);
 }
 
 int ArchetypeRuleHandler::update(const std::string& name,
                                  const Atlas::Objects::Root& desc,
-                                 std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes)
+                                 std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes)
 {
     return modifyArchetypeClass(name, desc, changes);
 }

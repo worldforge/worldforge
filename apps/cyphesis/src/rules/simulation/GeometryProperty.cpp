@@ -17,15 +17,15 @@
 
 #include "GeometryProperty.h"
 #include "OgreMeshDeserializer.h"
-#include "rules/BBoxProperty.h"
+#include "rules/BBoxProperty_impl.h"
 #include "physics/Convert.h"
 #include "common/log.h"
 #include "common/globals.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 #include "common/debug.h"
 #include "common/AtlasQuery.h"
 #include "common/AssetsManager.h"
-#include "common/Inheritance.h"
+#include "Inheritance.h"
 
 #include <wfmath/atlasconv.h>
 
@@ -40,7 +40,7 @@
 #include <boost/algorithm/string.hpp>
 #include <filesystem>
 #include <iostream>
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 auto createBoxFn = [](const WFMath::AxisBox<3>& bbox, const WFMath::Vector<3>& size, btVector3& centerOfMassOffset, float)
 		-> std::shared_ptr<btCollisionShape> {
@@ -50,7 +50,7 @@ auto createBoxFn = [](const WFMath::AxisBox<3>& bbox, const WFMath::Vector<3>& s
 };
 
 void GeometryProperty::set(const Atlas::Message::Element& data) {
-	Property<Atlas::Message::MapType>::set(data);
+	Property<Atlas::Message::MapType, LocatedEntity>::set(data);
 
 
 	std::shared_ptr<OgreMeshDeserializer> deserializer;
@@ -75,7 +75,7 @@ void GeometryProperty::set(const Atlas::Message::Element& data) {
 							void operator()(LocatedEntity*) const {
 							}
 
-							void operator()(TypeNode* typeNode) const {
+							void operator()(TypeNode<LocatedEntity>* typeNode) const {
 								prop->install(*typeNode, "");
 							}
 						};
@@ -449,22 +449,22 @@ GeometryProperty* GeometryProperty::copy() const {
 }
 
 
-void GeometryProperty::install(TypeNode& typeNode, const std::string&) {
+void GeometryProperty::install(TypeNode<LocatedEntity>& typeNode, const std::string&) {
 	m_owner = &typeNode;
 
 	//If there are valid mesh bounds read, and there's no bbox property already, add one.
 	if (m_meshBounds.isValid()) {
-		auto I = typeNode.defaults().find(BBoxProperty::property_name);
+		auto I = typeNode.defaults().find(BBoxProperty<LocatedEntity>::property_name);
 		//Create a new property if either there isn't one, or the existing one is calculated from geometry (which we detect by checking if it's ephemeral).
 		if (I == typeNode.defaults().end() || I->second->flags().hasFlags(prop_flag_persistence_ephem)) {
 			//Update the bbox property of the type if there are valid bounds from the mesh.
-			auto bBoxProperty = std::make_unique<BBoxProperty>();
+			auto bBoxProperty = std::make_unique<BBoxProperty<LocatedEntity>>();
 			bBoxProperty->data() = m_meshBounds;
 			//Mark the property as ephemeral since it's calculated.
 			bBoxProperty->addFlags(prop_flag_class | prop_flag_persistence_ephem);
-			bBoxProperty->flags().addFlags(PropertyUtil::flagsForPropertyName(BBoxProperty::property_name));
-			bBoxProperty->install(typeNode, BBoxProperty::property_name);
-			auto update = typeNode.injectProperty(BBoxProperty::property_name, std::move(bBoxProperty));
+			bBoxProperty->flags().addFlags(PropertyUtil::flagsForPropertyName(BBoxProperty<LocatedEntity>::property_name));
+			bBoxProperty->install(typeNode, BBoxProperty<LocatedEntity>::property_name);
+			auto update = typeNode.injectProperty(BBoxProperty<LocatedEntity>::property_name, std::move(bBoxProperty));
 
 			Inheritance::instance().typesUpdated({{&typeNode, update}});
 		}

@@ -20,14 +20,14 @@
 #define RULESETS_BASE_MIND_H
 
 #include "MemMap.h"
+#include "modules/ReferenceCounted.h"
 
 #include "common/ScriptKit.h"
+#include "rules/Script.h"
 
 #include <deque>
 
 class SimpleTypeStore;
-
-struct TypeStore;
 
 /// \brief This is core class for representing the mind of an AI entity.
 ///
@@ -42,20 +42,20 @@ protected:
 
 	Flags m_flags;
 
-	TypeStore& m_typeStore;
+	TypeStore<MemEntity>& m_typeStore;
 	std::unique_ptr<TypeResolver> m_typeResolver;
 
 	/// \brief Memory map of world entities this mind knows about
 	MemMap m_map;
 	/// \brief World time as far as this mind is aware
-	std::chrono::milliseconds  mServerTime;
+	std::chrono::milliseconds mServerTime;
 
 	std::map<std::string, std::vector<Operation>> m_pendingEntitiesOperations;
 	std::deque<Operation> m_pendingOperations;
 
 	long m_serialNoCounter;
 
-	std::unique_ptr<Script> m_script;
+	std::unique_ptr<Script<MemEntity>> m_script;
 
 	Ref<MemEntity> m_ownEntity;
 
@@ -69,7 +69,7 @@ protected:
 
 	void entityAdded(MemEntity& entity) override;
 
-	void entityUpdated(MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, LocatedEntity* oldLocation) override;
+	void entityUpdated(MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, MemEntity* oldLocation) override;
 
 	void entityDeleted(MemEntity& entity) override;
 
@@ -97,11 +97,11 @@ protected:
 
 	virtual void processNavmesh() {};
 public:
-	BaseMind(RouterId mindId, std::string entityId, TypeStore& typeStore);
+	BaseMind(RouterId mindId, std::string entityId, TypeStore<MemEntity>& typeStore);
 
 	~BaseMind() override;
 
-	ScriptKit<BaseMind>* m_scriptFactory;
+	ScriptKit<MemEntity, BaseMind>* m_scriptFactory;
 
 	void init(OpVector& res);
 
@@ -122,16 +122,16 @@ public:
 		return m_ownEntity;
 	}
 
-	const TypeStore& getTypeStore() const;
+	const TypeStore<MemEntity>& getTypeStore() const;
 
 	/// \brief Is this mind active
-	bool isAwake() const { return !m_flags.hasFlags(entity_asleep); }
+	bool isAwake() const { return !m_flags.hasFlags(mem_entity_asleep); }
 
 	/// \brief Set this mind as inactive
-	void sleep() { m_flags.addFlags(entity_asleep); }
+	void sleep() { m_flags.addFlags(mem_entity_asleep); }
 
 	/// \brief Set this mind as active
-	void awake() { m_flags.removeFlags(entity_asleep); }
+	void awake() { m_flags.removeFlags(mem_entity_asleep); }
 
 	void sightSetOperation(const Operation&, OpVector&);
 
@@ -161,10 +161,10 @@ public:
 
 	friend class BaseMindMapEntityintegration;
 
-	void setScript(std::unique_ptr<Script> scrpt);
+	void setScript(std::unique_ptr<Script<MemEntity>> scrpt);
 
 	/// \brief Check if this entity is flagged as destroyed
-	bool isDestroyed() const { return m_flags.hasFlags(entity_destroyed); }
+	bool isDestroyed() const { return m_flags.hasFlags(mem_entity_destroyed); }
 
 	virtual void setOwnEntity(OpVector& res, Ref<MemEntity> ownEntity);
 

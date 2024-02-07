@@ -23,7 +23,7 @@
 #include "AwareMind.h"
 
 
-AwareMindFactory::AwareMindFactory(TypeStore& typeStore)
+AwareMindFactory::AwareMindFactory(TypeStore<MemEntity>& typeStore)
 		: mTypeStore(typeStore),
 		  mSharedTerrain(new SharedTerrain()),
 		  mAwarenessStoreProvider(new AwarenessStoreProvider(*mSharedTerrain)) {

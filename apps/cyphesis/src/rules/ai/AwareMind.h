@@ -38,7 +38,7 @@ class AwareMind : public BaseMind {
 public:
 	AwareMind(RouterId mind_id,
 			  std::string entity_id,
-			  TypeStore& typeStore,
+			  TypeStore<MemEntity>& typeStore,
 			  SharedTerrain& sharedTerrain,
 			  AwarenessStoreProvider& awarenessStoreProvider);
 
@@ -46,7 +46,7 @@ public:
 
 	void entityAdded(MemEntity& entity) override;
 
-	void entityUpdated(MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, LocatedEntity* oldLocation) override;
+	void entityUpdated(MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, MemEntity* oldLocation) override;
 
 	void entityDeleted(MemEntity& entity) override;
 

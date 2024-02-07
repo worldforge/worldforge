@@ -20,7 +20,7 @@
 #define CYPHESIS_TYPEUPDATECOORDINATOR_H
 
 
-#include <common/Inheritance.h>
+#include <rules/simulation/Inheritance.h>
 #include "ServerRouting.h"
 #include "rules/simulation/WorldRouter.h"
 

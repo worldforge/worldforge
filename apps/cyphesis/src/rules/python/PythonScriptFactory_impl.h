@@ -19,35 +19,34 @@
 #ifndef RULESETS_PYTHON_SCRIPT_FACTORY_IMPL_H
 #define RULESETS_PYTHON_SCRIPT_FACTORY_IMPL_H
 
-#include "rules/python/CyPy_LocatedEntity.h"
-#include "rules/simulation/python/CyPy_Task.h"
 #include "PythonScriptFactory.h"
+#include "rules/simulation/python/CyPy_Task.h"
 
-#include "PythonWrapper.h"
+#include "PythonWrapper_impl.h"
 #include "pythonbase/Python_Script_Utils.h"
 #include "pythonbase/Python_API.h"
 
-/// \brief PythonScriptFactory constructor
-///
-/// @param package Name of the script package where the script type is
-/// @param type Name of the script types instanced by this factory
-template<>
-Py::Object wrapPython(LocatedEntity* value) {
-	return CyPy_LocatedEntity::wrap(value);
+
+
+template<typename EntityT, typename ScriptObjectT>
+PythonScriptFactory<EntityT, ScriptObjectT>::PythonScriptFactory(const std::string& p,
+											const std::string& t) :
+		PythonClass(p, t) {
 }
 
-template<class T>
-int PythonScriptFactory<T>::setup() {
+
+template<typename EntityT, typename ScriptObjectT>
+int PythonScriptFactory<EntityT, ScriptObjectT>::setup() {
 	return load();
 }
 
-template<class T>
-const std::string& PythonScriptFactory<T>::package() const {
+template<typename EntityT, typename ScriptObjectT>
+const std::string& PythonScriptFactory<EntityT, ScriptObjectT>::package() const {
 	return m_package;
 }
 
-template<class T>
-Py::Object PythonScriptFactory<T>::createScript(T& entity) const {
+template<typename EntityT, typename ScriptObjectT>
+Py::Object PythonScriptFactory<EntityT, ScriptObjectT>::createScript(ScriptObjectT& entity) const {
 	if (!this->m_class || this->m_class->isNull()) {
 		return Py::Null();
 	}
@@ -70,18 +69,18 @@ Py::Object PythonScriptFactory<T>::createScript(T& entity) const {
 	}
 }
 
-template<class T>
-int PythonScriptFactory<T>::addScript(T& entity) const {
+template<typename EntityT, typename ScriptObjectT>
+std::unique_ptr<Script<EntityT>> PythonScriptFactory<EntityT, ScriptObjectT>::createScriptWrapper(ScriptObjectT& entity) const {
 	auto script = createScript(entity);
 	if (!script.isNone() && !script.isNull()) {
-		entity.setScript(std::make_unique<PythonWrapper>(script));
+		return std::make_unique<PythonWrapper<EntityT>>(script);
+	} else {
+		return {};
 	}
-
-	return (script.isNull()) ? -1 : 0;
 }
 
-template<class T>
-int PythonScriptFactory<T>::refreshClass() {
+template<typename EntityT, typename ScriptObjectT>
+int PythonScriptFactory<EntityT, ScriptObjectT>::refreshClass() {
 	return refresh();
 }
 

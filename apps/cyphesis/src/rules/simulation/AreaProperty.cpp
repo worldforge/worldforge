@@ -66,8 +66,8 @@ void AreaProperty::set(const Element& ent) {
 	}
 	m_data = ent.Map();
 
-	MapType::const_iterator I = m_data.find("shape");
-	MapType::const_iterator Iend = m_data.end();
+	auto I = m_data.find("shape");
+	auto Iend = m_data.end();
 
 	if (I == m_data.end() || !I->second.isMap()) {
 		spdlog::error("Area shape data missing or is not map");

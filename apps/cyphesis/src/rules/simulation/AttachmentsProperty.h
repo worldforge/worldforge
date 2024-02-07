@@ -19,7 +19,7 @@
 #ifndef CYPHESIS_ATTACHMENTSPROPERTY_H
 #define CYPHESIS_ATTACHMENTSPROPERTY_H
 
-#include "common/Property.h"
+#include "PropertyBase.h"
 #include "rules/entityfilter/Filter.h"
 #include "modules/Ref.h"
 
@@ -45,7 +45,7 @@ public:
 
 	struct Attachment {
 		std::string contraint;
-		std::unique_ptr<EntityFilter::Filter> filter;
+		std::unique_ptr<EntityFilter::Filter<LocatedEntity>> filter;
 	};
 
 	explicit AttachmentsProperty(std::uint32_t flags = 0);

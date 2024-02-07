@@ -19,7 +19,7 @@
 #ifdef HAVE_CONFIG_H
 #endif
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "common/operations/Update.h"
 #include "VoidDomain.h"
 #include "ModeProperty.h"

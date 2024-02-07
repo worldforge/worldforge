@@ -20,6 +20,7 @@
 #define RULESETS_SUSPENDEDPROPERTY_H_
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 #include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Objects/Operation.h>
 
@@ -36,7 +37,7 @@
  *
  * \ingroup PropertyClasses
  */
-class SuspendedProperty : public BoolProperty {
+class SuspendedProperty : public BoolProperty<LocatedEntity> {
 public:
 	static constexpr const char* property_name = "suspended";
 

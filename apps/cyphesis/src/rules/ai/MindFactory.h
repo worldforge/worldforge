@@ -26,7 +26,7 @@
 
 class BaseMind;
 
-template<class T>
+template<typename, typename>
 class ScriptKit;
 
 class MindKit {
@@ -34,7 +34,7 @@ protected:
 	MindKit() = default;
 
 public:
-	std::unique_ptr<ScriptKit<BaseMind>> m_scriptFactory;
+	std::unique_ptr<ScriptKit<MemEntity, BaseMind>> m_scriptFactory;
 
 	virtual ~MindKit() = default;
 

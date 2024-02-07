@@ -22,7 +22,7 @@
 
 #include "common/OperationRouter.h"
 #include "pycxx/CXX/Objects.hxx"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include <string>
 
 class ScriptUtils {
@@ -30,7 +30,8 @@ public:
 	static HandlerResult processScriptResult(const std::string& scriptName,
 											 const Py::Object& ret,
 											 OpVector& res,
-											 LocatedEntity& e);
+											 const std::string& attachedEntityId,
+											 std::function<std::string()> entityDescribeFn);
 };
 
 

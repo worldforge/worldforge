@@ -18,7 +18,7 @@
 
 #include "AmountProperty.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "DomainProperty.h"
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>

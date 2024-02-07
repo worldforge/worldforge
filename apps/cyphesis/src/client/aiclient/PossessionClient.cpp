@@ -26,7 +26,6 @@
 #include "common/operations/Possess.h"
 #include "common/id.h"
 #include "common/custom.h"
-#include "common/Inheritance.h"
 
 #include "common/debug.h"
 #include "common/CommSocket.h"
@@ -47,7 +46,6 @@ size_t PossessionClient::operations_out = 0;
 
 PossessionClient::PossessionClient(CommSocket& commSocket,
 								   MindKit& mindFactory,
-								   std::unique_ptr<Inheritance> inheritance,
 								   std::function<void()> reconnectFn) :
 		BaseClient(commSocket),
 		m_startTime{std::chrono::steady_clock::now()},
@@ -56,7 +54,6 @@ PossessionClient::PossessionClient(CommSocket& commSocket,
 		m_account(nullptr),
 		m_operationsDispatcher([&](const Operation& op, Ref<BaseMind> from) { this->operationFromEntity(op, std::move(from)); },
 							   [&]() -> std::chrono::steady_clock::duration { return getTime(); }),
-		m_inheritance(std::move(inheritance)),
 		m_dispatcherTimer(commSocket.m_io_context),
 		m_serverLocalTimeDiff(0) {
 
@@ -81,8 +78,8 @@ void PossessionClient::notifyAccountCreated(RouterId accountId) {
 }
 
 
-void PossessionClient::operationFromEntity(const Operation& op, Ref<BaseMind> locatedEntity) {
-	if (!locatedEntity->isDestroyed()) {
+void PossessionClient::operationFromEntity(const Operation& op, Ref<BaseMind> mind) {
+	if (!mind->isDestroyed()) {
 		rmt_ScopedCPUSample(operationFromEntity, 0)
 
 		OpVector res;

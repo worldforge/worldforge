@@ -22,17 +22,18 @@
 #include "RuleHandler.h"
 
 class EntityBuilder;
+template <typename EntityT>
 class PropertyManager;
 
 /// \brief Handle processing and updating of task rules
 class PropertyRuleHandler : public RuleHandler
 {
     private:
-        PropertyManager& m_propertyManager;
+        PropertyManager<LocatedEntity>& m_propertyManager;
 
     public:
 
-        PropertyRuleHandler(PropertyManager& propertyManager);
+        PropertyRuleHandler(PropertyManager<LocatedEntity>& propertyManager);
 
         int check(const Atlas::Objects::Root& desc) override;
 
@@ -41,11 +42,11 @@ class PropertyRuleHandler : public RuleHandler
                     const Atlas::Objects::Root& desc,
                     std::string&,
                     std::string&,
-                    std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) override;
+                    std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) override;
 
         int update(const std::string&,
                    const Atlas::Objects::Root& desc,
-                   std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) override;
+                   std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) override;
 };
 
 #endif // SERVER_PROPERTY_RULE_HANDLER_H

@@ -103,11 +103,11 @@ void CyPy_Point3D::init_type() {
 	behaviors().supportNumberType(Py::PythonType::support_number_add
 								  | Py::PythonType::support_number_subtract);
 
-	PYCXX_ADD_VARARGS_METHOD(unit_vector_to, unit_vector_to, "");
-	PYCXX_ADD_VARARGS_METHOD(distance, distance, "");
 
-	PYCXX_ADD_NOARGS_METHOD(mag, mag, "");
-	PYCXX_ADD_NOARGS_METHOD(is_valid, is_valid, "");
+	register_method<&CyPy_Point3D::unit_vector_to>("unit_vector_to");
+	register_method<&CyPy_Point3D::distance>("distance");
+	register_method<&CyPy_Point3D::mag>("mag");
+	register_method<&CyPy_Point3D::is_valid>("is_valid");
 
 	behaviors().readyType();
 

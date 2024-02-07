@@ -39,7 +39,7 @@ static const bool debug_flag = false;
 CharacterClient::CharacterClient(RouterId id,
 								 const std::string& entityId,
 								 ClientConnection& c,
-								 TypeStore& typeStore) :
+								 TypeStore<MemEntity>& typeStore) :
 		BaseMind(std::move(id), entityId, typeStore), m_connection(c) {
 }
 
@@ -51,7 +51,7 @@ void CharacterClient::send(const Operation& op) {
 	m_connection.send(op);
 }
 
-Ref<LocatedEntity> CharacterClient::look(const std::string& id) {
+Ref<MemEntity> CharacterClient::look(const std::string& id) {
 	Look op;
 	if (!id.empty()) {
 		Anonymous ent;
@@ -62,7 +62,7 @@ Ref<LocatedEntity> CharacterClient::look(const std::string& id) {
 	return sendLook(op);
 }
 
-Ref<LocatedEntity> CharacterClient::lookFor(const RootEntity& ent) {
+Ref<MemEntity> CharacterClient::lookFor(const RootEntity& ent) {
 	Look op;
 	op->setArgs1(ent);
 	op->setFrom(getId());
@@ -80,7 +80,7 @@ int CharacterClient::sendAndWaitReply(const Operation& op, OpVector& res) {
 	return m_connection.sendAndWaitReply(op, res);
 }
 
-Ref<LocatedEntity> CharacterClient::sendLook(const Operation& op) {
+Ref<MemEntity> CharacterClient::sendLook(const Operation& op) {
 	OpVector result;
 	if (sendAndWaitReply(op, result) != 0) {
 		std::cerr << "No reply to look" << std::endl;
@@ -104,7 +104,7 @@ Ref<LocatedEntity> CharacterClient::sendLook(const Operation& op) {
 		std::cerr << "Reply to look has no args" << std::endl;
 		return nullptr;
 	}
-	RootEntity seen = smart_dynamic_cast<RootEntity>(res->getArgs().front());
+	auto seen = smart_dynamic_cast<RootEntity>(res->getArgs().front());
 	if (!seen.isValid()) {
 		std::cerr << "Sight arg is not an entity" << std::endl;
 		return nullptr;
@@ -120,5 +120,5 @@ Ref<LocatedEntity> CharacterClient::sendLook(const Operation& op) {
 	} else {
 		std::cout << "Seen: " << sight_id << std::endl;
 	}
-	return m_map.updateAdd(seen, std::chrono::milliseconds(res->getStamp()));
+	return m_map.updateAdd(seen, std::chrono::milliseconds(res->getStamp()), result);
 }

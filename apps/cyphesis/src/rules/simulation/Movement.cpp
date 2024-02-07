@@ -24,7 +24,7 @@ Movement::Movement(LocatedEntity& body) : m_body(body),
 										  m_serialno(0) {
 }
 
-bool Movement::updateNeeded(const Location& location) const {
+bool Movement::updateNeeded(const Location<LocatedEntity>& location) const {
 	return (location.velocity().isValid() && location.velocity() != Vector3D::ZERO());
 }
 

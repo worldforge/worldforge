@@ -23,12 +23,12 @@
 
 #include "rules/simulation/BaseWorld.h"
 #include "rules/BBoxProperty.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/ScaleProperty.h"
-#include "rules/AtlasProperties.h"
+#include "rules/simulation/AtlasProperties.h"
 #include "rules/entityfilter/Providers.h"
 
-#include "common/Inheritance.h"
+#include "Inheritance.h"
 #include "common/Router.h"
 #include "common/debug.h"
 #include "common/custom.h"
@@ -395,7 +395,7 @@ void MindsProperty::moveOtherEntity(LocatedEntity& ent, const Operation& op, OpV
 			newArgs1->setPos(arg->getPos());
 			targetPos.fromAtlas(arg->getPosAsList());
 		}
-		auto bbox = ScaleProperty::scaledBbox(*other);
+		auto bbox = ScaleProperty<LocatedEntity>::scaledBbox(*other);
 		auto radius = bbox.isValid() ? bbox.boundingSphere().radius() : 0;
 		//Check that we can reach the edge of the entity if it's placed in its new location.
 		if (!ent.canReach({targetLoc, targetPos}, (float) radius)) {

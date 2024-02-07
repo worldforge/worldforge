@@ -18,10 +18,12 @@
 
 #include "EntityProperty.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "rules/simulation/BaseWorld.h"
 #include "common/debug.h"
+#include "common/Property_impl.h"
+#include "modules/WeakEntityRef_impl.h"
 
 #include <Atlas/Objects/RootEntity.h>
 
@@ -47,7 +49,7 @@ void EntityProperty::set(const Atlas::Message::Element& val) {
 		if (m_data.get() == nullptr || m_data->getId() != id) {
 			cy_debug_print("Assigning " << id)
 			if (id.empty()) {
-				m_data = WeakEntityRef(nullptr);
+				m_data = WeakEntityRef<LocatedEntity>(nullptr);
 			} else {
 				auto e = BaseWorld::instance().getEntity(id);
 				if (e) {
@@ -66,7 +68,7 @@ void EntityProperty::set(const Atlas::Message::Element& val) {
 			set(I->second);
 		}
 	} else if (val.isNone()) {
-		m_data = WeakEntityRef(nullptr);
+		m_data = WeakEntityRef<LocatedEntity>(nullptr);
 	}
 }
 

@@ -18,7 +18,7 @@
 
 #include "SpawnProperty.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "rules/simulation/BaseWorld.h"
 

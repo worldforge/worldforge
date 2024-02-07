@@ -17,8 +17,9 @@
  */
 
 #include "AdminMind.h"
+#include "Inheritance.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/debug.h"
 #include "BaseWorld.h"
@@ -31,7 +32,6 @@
 
 #include <iostream>
 
-#include <common/Inheritance.h>
 
 using Atlas::Objects::Root;
 using Atlas::Objects::Operation::Delete;

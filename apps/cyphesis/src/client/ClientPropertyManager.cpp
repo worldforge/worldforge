@@ -16,14 +16,14 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <rules/PhysicalProperties.h>
 #include "ClientPropertyManager.h"
 
-#include "rules/ScaleProperty.h"
-#include "rules/SolidProperty.h"
-#include "rules/BBoxProperty.h"
-#include "common/PropertyFactory.h"
+#include "rules/PhysicalProperties_impl.h"
+#include "rules/ScaleProperty_impl.h"
+//#include "rules/SolidProperty_impl.h"
+#include "rules/BBoxProperty_impl.h"
 #include "common/PropertyFactory_impl.h"
+#include "common/PropertyManager_impl.h"
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -31,20 +31,20 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 
 ClientPropertyManager::ClientPropertyManager() {
-	installFactory(PositionProperty::property_name, std::make_unique<PropertyFactory<PositionProperty>>());
-	installFactory(VelocityProperty::property_name, std::make_unique<PropertyFactory<VelocityProperty>>());
-	installFactory(BBoxProperty::property_name, std::make_unique<PropertyFactory<BBoxProperty>>());
-	installFactory(ScaleProperty::property_name, std::make_unique<PropertyFactory<ScaleProperty>>());
-	installFactory(SolidProperty::property_name, std::make_unique<PropertyFactory<SolidProperty>>());
-	installFactory(AngularVelocityProperty::property_name, std::make_unique<PropertyFactory<AngularVelocityProperty>>());
-	installFactory(OrientationProperty::property_name, std::make_unique<PropertyFactory<OrientationProperty>>());
-	installFactory("_propel", std::make_unique<PropertyFactory<Vector3Property>>());
+	installFactory(PositionProperty<MemEntity>::property_name, std::make_unique<PropertyFactory<PositionProperty<MemEntity>, MemEntity>>());
+	installFactory(VelocityProperty<MemEntity>::property_name, std::make_unique<PropertyFactory<VelocityProperty<MemEntity>, MemEntity>>());
+	installFactory(BBoxProperty<MemEntity>::property_name, std::make_unique<PropertyFactory<BBoxProperty<MemEntity>, MemEntity>>());
+	installFactory(ScaleProperty<MemEntity>::property_name, std::make_unique<PropertyFactory<ScaleProperty<MemEntity>, MemEntity>>());
+	installFactory(SolidProperty<MemEntity>::property_name, std::make_unique<PropertyFactory<SolidProperty<MemEntity>, MemEntity>>());
+	installFactory(AngularVelocityProperty<MemEntity>::property_name, std::make_unique<PropertyFactory<AngularVelocityProperty<MemEntity>, MemEntity>>());
+	installFactory(OrientationProperty<MemEntity>::property_name, std::make_unique<PropertyFactory<OrientationProperty<MemEntity>, MemEntity>>());
+	installFactory("_propel", std::make_unique<PropertyFactory<Vector3Property<MemEntity>, MemEntity>>());
 }
 
-std::unique_ptr<PropertyBase> ClientPropertyManager::addProperty(const std::string& name) const {
+std::unique_ptr<PropertyCore<MemEntity>> ClientPropertyManager::addProperty(const std::string& name) const {
 	auto I = m_propertyFactories.find(name);
 	if (I == m_propertyFactories.end()) {
-		return std::make_unique<SoftProperty>();
+		return std::make_unique<SoftProperty<MemEntity>>();
 	} else {
 		return I->second->newProperty();
 	}

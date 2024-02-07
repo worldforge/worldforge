@@ -20,12 +20,13 @@
 #define CYPHESIS_SIMULATIONSPEEDPROPERTY_H
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 
 /**
  * Determines the speed of the simulation.
  * \ingroup PropertyClasses
  */
-class SimulationSpeedProperty : public Property<double> {
+class SimulationSpeedProperty : public Property<double, LocatedEntity> {
 public:
 	static constexpr const char* property_name = "simulation_speed";
 

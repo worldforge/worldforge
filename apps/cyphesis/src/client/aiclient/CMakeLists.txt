@@ -1,22 +1,14 @@
-
-add_executable(cyaiclient
+add_library(cyphesis-cyaiclient
         PossessionClient.cpp
-        aiclient.cpp
-        PossessionAccount.cpp)
+        PossessionAccount.cpp
+)
 
-#If Python has been built statically (as with Conan) we need to enable exports so the dynamic loading works.
-if (PYTHON_IS_STATIC)
-    set_property(TARGET cyaiclient PROPERTY ENABLE_EXPORTS 1)
-endif ()
 
-target_link_libraries(cyaiclient
+target_link_libraries(cyphesis-cyaiclient
         cyphesis-client
         cyphesis-rulesai_python
         cyphesis-rulesai
-        cyphesis-entityfilter_python
-        cyphesis-entityfilter
         cyphesis-navigation
-        cyphesis-rulesbase_python
         cyphesis-atlas_python
         cyphesis-common_python
         cyphesis-physics_python
@@ -28,6 +20,19 @@ target_link_libraries(cyaiclient
         external-Detour
         external-Recast
         external-remotery
+)
+
+
+add_executable(cyaiclient
+        aiclient.cpp)
+
+#If Python has been built statically (as with Conan) we need to enable exports so the dynamic loading works.
+if (PYTHON_IS_STATIC)
+    set_property(TARGET cyaiclient PROPERTY ENABLE_EXPORTS 1)
+endif ()
+
+target_link_libraries(cyaiclient
+        cyphesis-cyaiclient
 )
 
 install(TARGETS cyaiclient DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

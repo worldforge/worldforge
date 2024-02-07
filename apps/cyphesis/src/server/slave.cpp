@@ -29,7 +29,7 @@
 #include "common/log.h"
 #include "common/debug.h"
 #include "common/globals.h"
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/system.h"
 
 #include <varconf/config.h>

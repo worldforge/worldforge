@@ -18,16 +18,16 @@
 
 #include "CyPy_Task.h"
 #include "rules/python/CyPy_Operation.h"
-#include "rules/python/CyPy_LocatedEntity.h"
+#include "CyPy_LocatedEntity.h"
 #include "CyPy_UsageInstance.h"
 #include "rules/python/CyPy_EntityLocation.h"
 #include "rules/python/CyPy_Element.h"
 
-#include "rules/python/PythonWrapper.h"
+#include "rules/python/PythonWrapper_impl.h"
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
-#include <rules/entityfilter/python/CyPy_EntityFilter.h>
+#include <rules/entityfilter/python/CyPy_EntityFilter_impl.h>
 #include <modules/Variant.h>
 #include <rules/python/CyPy_Point3D.h>
 #include <rules/python/CyPy_Vector3D.h>
@@ -71,13 +71,11 @@ void CyPy_Task::init_type() {
 
 	behaviors().supportRichCompare();
 
-	PYCXX_ADD_VARARGS_METHOD(irrelevant, irrelevant, "");
-	PYCXX_ADD_VARARGS_METHOD(get_arg, getArg, "");
-	PYCXX_ADD_VARARGS_METHOD(start_action, start_action, "Starts an action that will be tied to this task.");
-	PYCXX_ADD_VARARGS_METHOD(stop_action, stop_action, "Stops an action that previously was started.");
-
-
-	PYCXX_ADD_NOARGS_METHOD(obsolete, obsolete, "");
+	register_method<&CyPy_Task::irrelevant>("irrelevant");
+	register_method<&CyPy_Task::getArg>("get_arg");
+	register_method<&CyPy_Task::start_action>("start_action", "Starts an action that will be tied to this task.");
+	register_method<&CyPy_Task::stop_action>("stop_action", "Stops an action that previously was started.");
+	register_method<&CyPy_Task::obsolete>("obsolete");
 
 	behaviors().readyType();
 
@@ -88,8 +86,8 @@ void CyPy_Task::init_type() {
 			Py::List list;
 
 			auto visitor = compose(
-					[&](const EntityLocation& value) {
-						list.append(CyPy_EntityLocation::wrap(value));
+					[&](const EntityLocation<LocatedEntity>& value) {
+						list.append(CyPy_EntityLocation<LocatedEntity, CyPy_LocatedEntity>::wrap(value));
 					},
 					[&](const WFMath::Point<3>& value) {
 						list.append(CyPy_Point3D::wrap(value));
@@ -201,7 +199,7 @@ Py::Object CyPy_Task::getattro(const Py::String& name) {
 					paramMap.setItem("min", Py::Long(param.second.min));
 				}
 				if (param.second.constraint) {
-					paramMap.setItem("constraint", CyPy_Filter::wrap(param.second.constraint));
+					paramMap.setItem("constraint", CyPy_Filter<LocatedEntity>::wrap(param.second.constraint));
 				}
 				switch (param.second.type) {
 					case UsageParameter::Type::DIRECTION:
@@ -286,7 +284,7 @@ int CyPy_Task::setattro(const Py::String& name, const Py::Object& attr) {
 						param.min = verifyLong(paramMap.getItem("min"));
 					}
 					if (paramMap.hasKey("constraint")) {
-						param.constraint = CyPy_Filter::value(paramMap.getItem("constraint"));
+						param.constraint = CyPy_Filter<LocatedEntity>::value(paramMap.getItem("constraint"));
 					}
 					if (paramMap.hasKey("type")) {
 						auto typeString = verifyString(paramMap.getItem("type"));

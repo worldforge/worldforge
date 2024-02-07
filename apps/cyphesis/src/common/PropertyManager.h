@@ -27,34 +27,36 @@
 #include <string>
 #include <memory>
 
+template<typename>
 class PropertyKit;
 
 /// \brief Base class for classes that handle creating Entity properties.
-class PropertyManager : public Singleton<PropertyManager> {
+template<typename EntityT>
+class PropertyManager : public Singleton<PropertyManager<EntityT>> {
 protected:
 	// Data structure for factories and the like?
-	std::map<std::string, std::unique_ptr<PropertyKit>> m_propertyFactories;
+	std::map<std::string, std::unique_ptr<PropertyKit<EntityT>>> m_propertyFactories;
 
 	PropertyManager();
 
 	void installFactory(const std::string&,
-						std::unique_ptr<PropertyKit>);
+						std::unique_ptr<PropertyKit<EntityT>>);
 
 public:
-	~PropertyManager() override;
+	virtual ~PropertyManager();
 
 	/// \brief Add a new named property to an Entity
 	///
 	/// @param name a string giving the name of the property.
-	virtual std::unique_ptr<PropertyBase> addProperty(const std::string& name) const = 0;
+	virtual std::unique_ptr<PropertyCore<EntityT>> addProperty(const std::string& name) const = 0;
 
 	virtual int installFactory(const std::string& type_name,
 							   const Atlas::Objects::Root& type_desc,
-							   std::unique_ptr<PropertyKit> factory);
+							   std::unique_ptr<PropertyKit<EntityT>> factory);
 
-	PropertyKit* getPropertyFactory(const std::string&) const;
+	PropertyKit<EntityT>* getPropertyFactory(const std::string&) const;
 
-	const std::map<std::string, std::unique_ptr<PropertyKit>>& getPropertyFactories() const {
+	const std::map<std::string, std::unique_ptr<PropertyKit<EntityT>>>& getPropertyFactories() const {
 		return m_propertyFactories;
 	}
 };

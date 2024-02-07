@@ -31,6 +31,7 @@
 #include <set>
 #include <array>
 #include <Atlas/Message/Element.h>
+#include "rules/simulation/LocatedEntity.h"
 
 class Entity;
 
@@ -40,6 +41,7 @@ class Database;
 
 class WorldRouter;
 
+template<typename>
 class PropertyManager;
 
 /// \brief StorageManager represents the subsystem which stores world storage
@@ -54,7 +56,7 @@ protected:
 	WorldRouter& m_world;
 	Database& m_db;
 	EntityBuilder& m_entityBuilder;
-	PropertyManager& m_propertyManager;
+	PropertyManager<LocatedEntity>& m_propertyManager;
 
 	/// \brief Queue of references to entities yet to be stored.
 	Entitystore m_unstoredEntities;
@@ -106,7 +108,7 @@ public:
 	explicit StorageManager(WorldRouter& world,
 							Database& db,
 							EntityBuilder& entityBuilder,
-							PropertyManager& propertyManager);
+							PropertyManager<LocatedEntity>& propertyManager);
 
 	virtual ~StorageManager();
 

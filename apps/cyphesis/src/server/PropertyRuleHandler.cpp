@@ -23,8 +23,8 @@
 
 #include "common/log.h"
 #include "common/debug.h"
-#include "common/PropertyManager.h"
-#include "common/PropertyFactory.h"
+#include "common/PropertyManager_impl.h"
+#include "common/PropertyFactory_impl.h"
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
@@ -34,7 +34,7 @@ using Atlas::Objects::Root;
 
 static const bool debug_flag = false;
 
-PropertyRuleHandler::PropertyRuleHandler(PropertyManager& propertyManager)
+PropertyRuleHandler::PropertyRuleHandler(PropertyManager<LocatedEntity>& propertyManager)
         : m_propertyManager(propertyManager)
 {
 }
@@ -54,14 +54,14 @@ int PropertyRuleHandler::install(const std::string& name,
                                  const Atlas::Objects::Root& desc,
                                  std::string& dependent,
                                  std::string& reason,
-                                 std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes)
+                                 std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes)
 {
     assert(desc->getObjtype() == "type");
     if (m_propertyManager.getPropertyFactory(name) != nullptr) {
         spdlog::error("Property rule \"{}\" already exists.", name);
         return -1;
     }
-    PropertyKit* parent_factory = m_propertyManager.getPropertyFactory(parent);
+    auto parent_factory = m_propertyManager.getPropertyFactory(parent);
     if (parent_factory == nullptr) {
         dependent = parent;
         reason = fmt::format("Property rule \"{}\" has parent \"{}\" which does "
@@ -76,7 +76,7 @@ int PropertyRuleHandler::install(const std::string& name,
 
 int PropertyRuleHandler::update(const std::string& name,
                                 const Atlas::Objects::Root& desc,
-                                std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes)
+                                std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes)
 {
     // There is not anything to be modified yet.
     return 0;

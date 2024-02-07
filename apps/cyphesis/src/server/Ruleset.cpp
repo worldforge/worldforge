@@ -34,7 +34,8 @@
 #include "common/debug.h"
 #include "common/globals.h"
 #include "common/const.h"
-#include "common/Inheritance.h"
+#include "common/TypeNode_impl.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/AtlasFileLoader.h"
 #include "common/AssetsManager.h"
 #include "Remotery.h"
@@ -58,7 +59,7 @@ typedef std::map<std::string, Root> RootDict;
 
 static const bool debug_flag = false;
 
-Ruleset::Ruleset(EntityBuilder& eb, boost::asio::io_context& io_context, PropertyManager& propertyManager) :
+Ruleset::Ruleset(EntityBuilder& eb, boost::asio::io_context& io_context, PropertyManager<LocatedEntity>& propertyManager) :
 		m_entityHandler(new EntityRuleHandler(eb, propertyManager)),
 		m_opHandler(new OpRuleHandler()),
 		m_propertyHandler(new PropertyRuleHandler(propertyManager)),
@@ -76,7 +77,7 @@ int Ruleset::installRuleInner(const std::string& class_name,
 							  const Root& class_desc,
 							  std::string& dependent,
 							  std::string& reason,
-							  std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) {
+							  std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) {
 	assert(class_name == class_desc->getId());
 
 	if (class_name.size() > consts::id_len) {
@@ -117,7 +118,7 @@ int Ruleset::installRule(const std::string& class_name,
 						 const std::string& section,
 						 const Root& class_desc) {
 	std::string dependent, reason;
-	std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+	std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 	// Possibly we should report some types of failure here.
 	int ret = installRuleInner(class_name, class_desc, dependent, reason, changes);
 
@@ -135,7 +136,7 @@ int Ruleset::installRule(const std::string& class_name,
 
 void Ruleset::installItem(const std::string& class_name,
 						  const Root& class_desc,
-						  std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) {
+						  std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) {
 	std::string dependent, reason;
 	int ret = installRuleInner(class_name, class_desc, dependent, reason, changes);
 	if (ret != 0) {
@@ -170,7 +171,7 @@ void Ruleset::installItem(const std::string& class_name,
 
 int Ruleset::modifyRule(const std::string& class_name,
 						const Root& class_desc) {
-	std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+	std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 	auto ret = modifyRuleInner(class_name, class_desc, changes);
 
 	if (!changes.empty()) {
@@ -187,7 +188,7 @@ int Ruleset::modifyRule(const std::string& class_name,
 
 int Ruleset::modifyRuleInner(const std::string& class_name,
 							 const Root& class_desc,
-							 std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) {
+							 std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) {
 	assert(class_name == class_desc->getId());
 
 	Root o = Inheritance::instance().getClass(class_name, Visibility::PRIVATE);
@@ -242,7 +243,7 @@ void Ruleset::processChangedRules() {
 			}
 		}
 		if (!updatedRules.empty()) {
-			std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+			std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 			for (auto& entry: updatedRules) {
 				auto& class_name = entry.first;
 				auto& class_desc = entry.second;
@@ -351,7 +352,7 @@ void Ruleset::loadRules(const std::string& ruleset) {
 	}
 
 	//Just ignore any changes, since this happens at startup before any clients are connected.
-	std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+	std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
 	for (auto& entry: ruleTable) {
 		const std::string& class_name = entry.first;

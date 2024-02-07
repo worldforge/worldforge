@@ -20,12 +20,13 @@
 #define RULESETS_TERRAIN_EFFECTOR_PROPERTY_H
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 
 class TerrainProperty;
 
 /// \brief Class to handle Entity terrain modifier property
 /// \ingroup PropertyClasses
-class TerrainEffectorProperty : public Property<Atlas::Message::MapType> {
+class TerrainEffectorProperty : public Property<Atlas::Message::MapType, LocatedEntity> {
 protected:
 	TerrainEffectorProperty(const TerrainEffectorProperty& rhs) = default;
 

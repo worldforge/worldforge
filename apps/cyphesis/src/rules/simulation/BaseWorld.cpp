@@ -22,7 +22,6 @@
 #include "common/log.h"
 #include "common/debug.h"
 #include "rules/Script.h"
-#include "rules/LocatedEntity.h"
 
 #include <cassert>
 #include <utility>

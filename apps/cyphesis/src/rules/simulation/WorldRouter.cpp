@@ -19,7 +19,7 @@
 #include "WorldRouter.h"
 
 #include "rules/simulation/World.h"
-#include "rules/Domain.h"
+#include "rules/simulation/Domain.h"
 
 #include "common/id.h"
 #include "common/debug.h"
@@ -27,6 +27,7 @@
 #include "common/Monitors.h"
 #include "common/Variable.h"
 #include "common/operations/Tick.h"
+#include "common/OperationsDispatcher_impl.h"
 
 #include "Remotery.h"
 
@@ -42,6 +43,12 @@ using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Entity::Anonymous;
 
 static const bool debug_flag = false;
+
+template
+class OperationsDispatcher<LocatedEntity>;
+
+template
+struct OpQueEntry<LocatedEntity>;
 
 /// \brief Constructor for the world object.
 WorldRouter::WorldRouter(Ref<LocatedEntity> baseEntity,

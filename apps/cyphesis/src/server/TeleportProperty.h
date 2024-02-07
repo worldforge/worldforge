@@ -20,10 +20,11 @@
 #define SERVER_TELEPORT_PROPERTY_H
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 
 class ServerRouting;
 
-class TeleportProperty : public Property<std::string> {
+class TeleportProperty : public Property<std::string, LocatedEntity> {
 public:
 	void install(LocatedEntity&, const std::string&) override;
 

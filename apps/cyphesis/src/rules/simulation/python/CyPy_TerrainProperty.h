@@ -20,7 +20,7 @@
 #define CYPHESIS_CYPY_TERRAINPROPERTY_H
 
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "modules/Ref.h"
 #include "pythonbase/WrapperBase.h"
 

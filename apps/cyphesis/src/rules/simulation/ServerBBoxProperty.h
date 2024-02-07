@@ -21,6 +21,7 @@
 
 
 #include "rules/BBoxProperty.h"
+#include "rules/simulation/LocatedEntity.h"
 
 /**
  * A specialization of the standard bbox property which also updates mass
@@ -28,7 +29,7 @@
  *
  * \ingroup PropertyClasses
  */
-class ServerBBoxProperty : public BBoxProperty {
+class ServerBBoxProperty : public BBoxProperty<LocatedEntity> {
 public:
 	ServerBBoxProperty() = default;
 

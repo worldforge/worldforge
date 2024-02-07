@@ -15,6 +15,7 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+#pragma once
 
 #ifndef COMMON_PROPERTY_IMPL_H
 #define COMMON_PROPERTY_IMPL_H
@@ -33,7 +34,7 @@ void PropertyCore<EntityT>::install(EntityT&, const std::string& name) {
 }
 
 template<typename EntityT>
-void PropertyCore<EntityT>::install(TypeNode&, const std::string& name) {
+void PropertyCore<EntityT>::install(TypeNode<EntityT>&, const std::string& name) {
 }
 
 template<typename EntityT>
@@ -59,7 +60,7 @@ void PropertyCore<EntityT>::add(const std::string& s,
 }
 
 template<typename EntityT>
-HandlerResult PropertyCore<EntityT>::operation(LocatedEntity&,
+HandlerResult PropertyCore<EntityT>::operation(EntityT&,
 											   const Operation&,
 											   OpVector& res) {
 	return OPERATION_IGNORED;
@@ -80,36 +81,98 @@ bool PropertyCore<EntityT>::operator!=(const PropertyCore& rhs) const {
 }
 
 /// \brief Constructor for immutable Properties
-template<typename T>
-Property<T>::Property(unsigned int flags) :
-		PropertyBase(flags) {
+template<typename T, typename EntityT>
+Property<T, EntityT>::Property(unsigned int flags) :
+		PropertyCore<EntityT>(flags) {
 }
 
-template<typename T>
-int Property<T>::get(Atlas::Message::Element& e) const {
+template<typename T, typename EntityT>
+int Property<T, EntityT>::get(Atlas::Message::Element& e) const {
 	e = m_data;
 	return 0;
 }
 
 // The following two are obsolete.
-template<typename T>
-void Property<T>::add(const std::string& s,
-					  Atlas::Message::MapType& ent) const {
+template<typename T, typename EntityT>
+void Property<T, EntityT>::add(const std::string& s,
+							   Atlas::Message::MapType& ent) const {
 	get(ent[s]);
 }
 
-template<typename T>
-void Property<T>::add(const std::string& s,
-					  const Atlas::Objects::Entity::RootEntity& ent) const {
+template<typename T, typename EntityT>
+void Property<T, EntityT>::add(const std::string& s,
+							   const Atlas::Objects::Entity::RootEntity& ent) const {
 	Atlas::Message::Element val;
 	get(val);
 	ent->setAttr(s, val);
 }
 
-template<typename T>
-Property<T>* Property<T>::copy() const {
-	return new Property<T>(*this);
+template<typename T, typename EntityT>
+Property<T, EntityT>* Property<T, EntityT>::copy() const {
+	return new Property<T, EntityT>(*this);
 }
+
+
+template<typename EntityT>
+SoftProperty<EntityT>::SoftProperty(Atlas::Message::Element data) :
+		PropertyCore<EntityT>(0), m_data(std::move(data)) {
+}
+
+template<typename EntityT>
+int SoftProperty<EntityT>::get(Atlas::Message::Element& val) const {
+	val = m_data;
+	return 0;
+}
+
+template<typename EntityT>
+void SoftProperty<EntityT>::set(const Atlas::Message::Element& val) {
+	m_data = val;
+}
+
+template<typename EntityT>
+SoftProperty<EntityT>* SoftProperty<EntityT>::copy() const {
+	return new SoftProperty(*this);
+}
+
+template<typename EntityT>
+Atlas::Message::Element& SoftProperty<EntityT>::data() {
+	return m_data;
+}
+
+template<typename EntityT>
+const Atlas::Message::Element& SoftProperty<EntityT>::data() const {
+	return m_data;
+}
+
+
+template<typename EntityT>
+int BoolProperty<EntityT>::get(Atlas::Message::Element& ent) const {
+	ent = this->m_flags.hasFlags(prop_flag_bool) ? 1 : 0;
+	return 0;
+}
+
+template<typename EntityT>
+void BoolProperty<EntityT>::set(const Atlas::Message::Element& ent) {
+	if (ent.isInt()) {
+		if (ent.Int() == 0) {
+			this->m_flags.removeFlags(prop_flag_bool);
+		} else {
+			this->m_flags.addFlags(prop_flag_bool);
+		}
+	}
+}
+
+template<typename EntityT>
+BoolProperty<EntityT>* BoolProperty<EntityT>::copy() const {
+	return new BoolProperty<EntityT>(*this);
+}
+
+template<typename EntityT>
+bool BoolProperty<EntityT>::isTrue() const {
+	return this->m_flags.hasFlags(prop_flag_bool);
+}
+
+
 
 
 #endif // COMMON_PROPERTY_IMPL_H

@@ -22,7 +22,7 @@
 #include "CyPy_Task.h"
 #include "CyPy_EntityProps.h"
 #include "rules/simulation/TasksProperty.h"
-#include "rules/entityfilter/python/CyPy_EntityFilter.h"
+#include "rules/entityfilter/python/CyPy_EntityFilter_impl.h"
 #include "rules/entityfilter/Providers.h"
 #include "rules/simulation/BaseWorld.h"
 #include "rules/python/CyPy_Operation.h"
@@ -64,6 +64,7 @@ void CyPy_Entity::init_type() {
 
 	behaviors().supportRichCompare();
 	behaviors().supportStr();
+
 
 	PYCXX_ADD_VARARGS_METHOD(get_child, get_child, "");
 	PYCXX_ADD_NOARGS_METHOD(as_entity, as_entity, "");
@@ -225,13 +226,13 @@ int CyPy_Entity::setattro(const Py::String& name, const Py::Object& attr) {
 
 Py::Object CyPy_Entity::find_in_contains(const Py::Tuple& args) {
 	args.verify_length(1);
-	auto& filter = verifyObject<CyPy_Filter>(args[0]);
+	auto& filter = verifyObject<CyPy_Filter<LocatedEntity>>(args[0]);
 
 	Py::List list;
 
 	if (this->m_value->m_contains) {
 		for (auto& entry: *this->m_value->m_contains) {
-			EntityFilter::QueryContext queryContext{{*entry}};
+			EntityFilter::QueryContext<LocatedEntity> queryContext{{*entry}};
 			queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
 			queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
 

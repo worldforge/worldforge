@@ -30,6 +30,7 @@
 #include <wfmath/vector.h>
 #include <wfmath/rotbox.h>
 #include <wfmath/segment.h>
+#include "rules/ScaleProperty_impl.h"
 
 
 static const bool debug_flag = true;
@@ -53,7 +54,7 @@ Steering::Steering(MemEntity& avatar) :
 	}
 
 
-	auto bbox = ScaleProperty::scaledBbox(mAvatar);
+	auto bbox = ScaleProperty<MemEntity>::scaledBbox(mAvatar);
 	if (bbox.isValid()) {
 		mAvatarHorizRadius = std::sqrt(boxSquareHorizontalBoundingRadius(bbox));
 	} else {
@@ -72,7 +73,7 @@ void Steering::setAwareness(Awareness* awareness) {
 }
 
 
-int Steering::queryDestination(const EntityLocation& destination, std::chrono::milliseconds currentServerTimestamp) {
+int Steering::queryDestination(const EntityLocation<MemEntity>& destination, std::chrono::milliseconds currentServerTimestamp) {
 //    if (mAwareness) {
 //
 //        auto currentAvatarPos = getCurrentAvatarPosition(currentServerTimestamp);
@@ -168,7 +169,7 @@ void Steering::setAwarenessArea(std::chrono::milliseconds currentServerTimestamp
 
 		if (resolvedPosition.position.isValid()) {
 			WFMath::Point<2> destination2d(resolvedPosition.position.x(), resolvedPosition.position.z());
-			auto pos = PositionProperty::extractPosition(mAvatar);
+			auto pos = PositionProperty<MemEntity>::extractPosition(mAvatar);
 			WFMath::Point<2> entityPosition2d(pos.x(), pos.z());
 
 			WFMath::Vector<2> direction(destination2d - entityPosition2d);
@@ -287,7 +288,7 @@ WFMath::Point<3> Steering::getCurrentAvatarPosition(std::chrono::milliseconds cu
 	return mAwareness ? mAwareness->projectPosition(mAvatar.getIntId(), currentTimestamp) : WFMath::Point<3>{};
 }
 
-WFMath::Vector<3> Steering::directionTo(std::chrono::milliseconds currentTimestamp, const EntityLocation& location) const {
+WFMath::Vector<3> Steering::directionTo(std::chrono::milliseconds currentTimestamp, const EntityLocation<MemEntity>& location) const {
 	auto currentEntityPos = getCurrentAvatarPosition(currentTimestamp);
 	auto resolvedDestination = resolvePosition(currentTimestamp, location);
 
@@ -298,7 +299,7 @@ WFMath::Vector<3> Steering::directionTo(std::chrono::milliseconds currentTimesta
 	return (resolvedDestination.position - currentEntityPos);
 }
 
-std::optional<double> Steering::distanceTo(std::chrono::milliseconds currentTimestamp, const EntityLocation& location, MeasureType fromSelf, MeasureType toDestination) const {
+std::optional<double> Steering::distanceTo(std::chrono::milliseconds currentTimestamp, const EntityLocation<MemEntity>& location, MeasureType fromSelf, MeasureType toDestination) const {
 	auto currentEntityPos = getCurrentAvatarPosition(currentTimestamp);
 	auto resolvedDestination = resolvePosition(currentTimestamp, location);
 
@@ -322,7 +323,7 @@ std::optional<double> Steering::distanceTo(std::chrono::milliseconds currentTime
 	return std::max(0.0, distance);
 }
 
-Steering::ResolvedPosition Steering::resolvePosition(std::chrono::milliseconds currentTimestamp, const EntityLocation& location) const {
+Steering::ResolvedPosition Steering::resolvePosition(std::chrono::milliseconds currentTimestamp, const EntityLocation<MemEntity>& location) const {
 	if (!mAwareness) {
 		return {};
 	}
@@ -376,7 +377,7 @@ SteeringResult Steering::update(std::chrono::milliseconds currentTimestamp) {
 	rmt_ScopedCPUSample(Steering_update, 0)
 	SteeringResult result{};
 	if (!mSteeringEnabled) {
-		auto propelProperty = mAvatar.getPropertyClass<Vector3Property>("_propel");
+		auto propelProperty = mAvatar.getPropertyClass<Vector3Property<MemEntity>>("_propel");
 		if (propelProperty && propelProperty->data().isValid() && propelProperty->data() != WFMath::Vector<3>::ZERO()) {
 			result.direction = WFMath::Vector<3>::ZERO();
 		}
@@ -436,7 +437,7 @@ SteeringResult Steering::update(std::chrono::milliseconds currentTimestamp) {
 
 				if (velocityNorm.isValid()) {
 					if (mLastSentVelocity.isValid()) {
-						auto velocityProp = mAvatar.getPropertyClassFixed<VelocityProperty>();
+						auto velocityProp = mAvatar.getPropertyClassFixed<VelocityProperty<MemEntity>>();
 						//If the entity has stopped, and we're not waiting for confirmation to a movement request we've made, we need to start moving.
 						if (velocityProp && velocityProp->data() == WFMath::Vector<3>::ZERO() && !mExpectingServerMovement) {
 							shouldSend = true;
@@ -457,7 +458,7 @@ SteeringResult Steering::update(std::chrono::milliseconds currentTimestamp) {
 				if (shouldSend) {
 					//If we're moving to a certain destination and aren't avoiding anything we should tell the server to move to the destination.
 					if (destination.isValid() && !avoiding) {
-						auto posProp = mAvatar.getPropertyClassFixed<PositionProperty>();
+						auto posProp = mAvatar.getPropertyClassFixed<PositionProperty<MemEntity>>();
 						auto y = posProp ? posProp->data().y() : 0.0;
 						result.destination = WFMath::Point<3>(destination.x(), y, destination.y());
 					}

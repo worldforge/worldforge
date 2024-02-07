@@ -18,10 +18,9 @@
 
 #include "CorePropertyManager.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "rules/simulation/LineProperty.h"
-#include "rules/SolidProperty.h"
 #include "rules/simulation/StatusProperty.h"
 #include "rules/simulation/TerrainModProperty.h"
 #include "rules/simulation/TerrainProperty.h"
@@ -38,11 +37,10 @@
 #include "rules/simulation/DensityProperty.h"
 #include "rules/simulation/AngularFactorProperty.h"
 #include "rules/simulation/GeometryProperty.h"
-#include "rules/QuaternionProperty.h"
-#include "rules/Vector3Property.h"
+#include "rules/QuaternionProperty_impl.h"
+#include "rules/Vector3Property_impl.h"
 #include "rules/simulation/PerceptionSightProperty.h"
-#include "rules/ScaleProperty.h"
-#include "rules/python/ScriptsProperty.h"
+#include "rules/ScaleProperty_impl.h"
 #include "rules/simulation/UsagesProperty.h"
 #include "rules/simulation/MindsProperty.h"
 #include "rules/simulation/AttachmentsProperty.h"
@@ -58,7 +56,10 @@
 #include "rules/simulation/WorldTimeProperty.h"
 
 #include "common/types.h"
-#include "common/Inheritance.h"
+#include "common/custom_impl.h"
+
+#include "common/Property_impl.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/PropertyFactory_impl.h"
 
 #include "common/debug.h"
@@ -70,8 +71,9 @@
 #include <Atlas/Objects/Operation.h>
 
 #include <iostream>
-#include "rules/AtlasProperties.h"
-#include "rules/PhysicalProperties.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/PhysicalProperties_impl.h"
+#include "common/PropertyManager_impl.h"
 
 
 using Atlas::Message::Element;
@@ -91,19 +93,19 @@ CorePropertyManager::CorePropertyManager(Inheritance& inheritance)
 	installBaseProperty<ListType>("list", "root_type");
 	installBaseProperty<MapType>("map", "root_type");
 
-	installProperty<PositionProperty>();
-	installProperty<VelocityProperty>();
-	installProperty<AngularVelocityProperty>();
-	installProperty<OrientationProperty>();
+	installProperty<PositionProperty<LocatedEntity>>();
+	installProperty<VelocityProperty<LocatedEntity>>();
+	installProperty<AngularVelocityProperty<LocatedEntity>>();
+	installProperty<OrientationProperty<LocatedEntity>>();
 
 	installProperty<EntityProperty>("entity_ref");
 	installProperty<ModeProperty>();
 	installProperty<LineProperty>("coords");
 	installProperty<LineProperty>("points");
-	installProperty<SolidProperty>();
+	installProperty<SolidProperty<LocatedEntity>>();
 	installProperty<StatusProperty>();
 	installProperty<TransientProperty>();
-	installProperty<Property<double>>("mass");
+	installProperty<Property<double, LocatedEntity>>("mass");
 	installProperty<ServerBBoxProperty>();
 	installProperty<AreaProperty>();
 	installProperty<VisibilityProperty>();
@@ -118,12 +120,12 @@ CorePropertyManager::CorePropertyManager(Inheritance& inheritance)
 	/**
 	 * The "direction" property is set by the mind to indicate the direction the body should be moving.
 	 */
-	installProperty<QuaternionProperty>("_direction");
+	installProperty<QuaternionProperty<LocatedEntity>>("_direction");
 	/**
 	 * The "_destination" property is set by the mind to indicate any destination the body should be moving to.
 	 * This is only to be used if the simulation easily can move the body there (it's close and nothing obscures it).
 	 */
-	installProperty<Vector3Property>("_destination");
+	installProperty<Vector3Property<LocatedEntity>>("_destination");
 
 
 	installProperty<DensityProperty>();
@@ -134,90 +136,85 @@ CorePropertyManager::CorePropertyManager(Inheritance& inheritance)
 	 * Friction is used by the physics system. 0 is no friction, 1 is full friction.
 	 * This is for "sliding", see "friction-roll" and "friction-spin".
 	 */
-	installProperty<Property<double>>("friction");
+	installProperty<Property<double, LocatedEntity>>("friction");
 	/**
 	 * Friction for rolling is used by the physics system. 0 is no friction, 1 is full friction.
 	 */
-	installProperty<Property<double>>("friction_roll");
+	installProperty<Property<double, LocatedEntity>>("friction_roll");
 	/**
 	 * Friction for spinning is used by the physics system. 0 is no friction, 1 is full friction.
 	 */
-	installProperty<Property<double>>("friction_spin");
+	installProperty<Property<double, LocatedEntity>>("friction_spin");
 
 	installProperty<AngularFactorProperty>();
 	installProperty<GeometryProperty>();
 
-	installProperty<BoolProperty>("floats");
+	installProperty<BoolProperty<LocatedEntity>>("floats");
 
 	/**
 	 * Vertical offset to use when entity is planted, and adjusted to the height of the terrain.
 	 */
-	installProperty<Property<double>>("planted_offset");
+	installProperty<Property<double, LocatedEntity>>("planted_offset");
 
 	/**
 	 * Vertical scaled offset to use when entity is planted, and adjusted to the height of the terrain.
 	 * The resulting offset is a product of this value and the height of the entity.
 	 */
-	installProperty<Property<double>>("planted_scaled_offset");
+	installProperty<Property<double, LocatedEntity>>("planted_scaled_offset");
 
 	/**
 	 * The rotation applied to the entity when it's planted.
 	 */
-	installProperty<QuaternionProperty>("planted_rotation");
+	installProperty<QuaternionProperty<LocatedEntity>>("planted_rotation");
 	/**
 	 * The current extra rotation applied to the entity.
 	 * This is closely matched with "planted_rotation" to keep track of when the entity has the planted rotation applied and not.
 	 */
-	installProperty<QuaternionProperty>("active_rotation");
+	installProperty<QuaternionProperty<LocatedEntity>>("active_rotation");
 
 
 	/**
 	 * Specifies how much the entity is allowed to step onto things when moving, as a factor of the entity's height.
 	 */
-	installProperty<Property<double>>("step_factor");
+	installProperty<Property<double, LocatedEntity>>("step_factor");
 
 	/**
 	 * Specifies a mesh, model or mapping to use for client side presentation.
 	 */
-	installProperty<Property<std::string> >("present");
+	installProperty<Property<std::string, LocatedEntity> >("present");
 
 	/**
 	 * The max speed in meters per second (m/s) when moving over ground.
 	 */
-	installProperty<Property<double>>("speed_ground");
+	installProperty<Property<double, LocatedEntity>>("speed_ground");
 	/**
 	 * The max speed in meters per second (m/s) when moving in water.
 	 */
-	installProperty<Property<double>>("speed_water");
+	installProperty<Property<double, LocatedEntity>>("speed_water");
 	/**
 	 * The max speed in meters per second (m/s) when flying.
 	 */
-	installProperty<Property<double>>("speed_flight");
+	installProperty<Property<double, LocatedEntity>>("speed_flight");
 	/**
 	 * The max speed in meters per second (m/s) when jumping.
 	 */
-	installProperty<Property<double>>("speed_jump");
+	installProperty<Property<double, LocatedEntity>>("speed_jump");
 
 	/**
 	 * If set to 1 the entity is a body of water, i.e. either an Ocean (if no bbox) or a lake/pond (if a bbox).
 	 */
-	installProperty<BoolProperty>("water_body");
+	installProperty<BoolProperty<LocatedEntity>>("water_body");
 
 	installProperty<PerceptionSightProperty>();
 
 	/**
 	 * How far away the entity can reach (used when interacting with things).
 	 */
-	installProperty<Property<double>>("reach");
+	installProperty<Property<double, LocatedEntity>>("reach");
 
-	installProperty<ScaleProperty>();
+	installProperty<ScaleProperty<LocatedEntity>>();
 
-	/**
-	 * "__scripts" is meant to be installed on the Type, whereas "__scripts_instance" is meant to be installed on the entity instance.
-	 * This way it should be possible to both override type scripts, and to alternatively add new ones to specific instances.
-	 */
-	installProperty<ScriptsProperty>("__scripts");
-	installProperty<ScriptsProperty>("__scripts_instance");
+
 
 	installProperty<UsagesProperty>("usages");
 	installProperty<UsagesProperty>("_usages");
@@ -226,13 +223,13 @@ CorePropertyManager::CorePropertyManager(Inheritance& inheritance)
 	 * Keeps track of when attachments are ready to be used again.
 	 * For example, if you swing a sword you can't do anything with the sword arm for a second or two.
 	 */
-	installProperty<Property<MapType>>("_ready_at_attached")->m_flags |= prop_flag_persistence_ephem;
+	installProperty<Property<MapType, LocatedEntity>>("_ready_at_attached")->m_flags |= prop_flag_persistence_ephem;
 
 	/**
 	 * Keeps track of when singular entities are ready to be used again.
 	 * This could be used on a magic scroll for example.
 	 */
-	installProperty<Property<double>>("ready_at")->m_flags |= prop_flag_persistence_ephem;
+	installProperty<Property<double, LocatedEntity>>("ready_at")->m_flags |= prop_flag_persistence_ephem;
 
 	installProperty<MindsProperty>();
 
@@ -241,7 +238,7 @@ CorePropertyManager::CorePropertyManager(Inheritance& inheritance)
 	/**
 	 * Goals for the minds.
 	 */
-	installProperty<Property<Atlas::Message::ListType>>("_goals");
+	installProperty<Property<Atlas::Message::ListType, LocatedEntity>>("_goals");
 
 	installProperty<AmountProperty>();
 
@@ -283,7 +280,7 @@ CorePropertyManager::~CorePropertyManager() = default;
 
 int CorePropertyManager::installFactory(const std::string& type_name,
 										const Root& type_desc,
-										std::unique_ptr<PropertyKit> factory) {
+										std::unique_ptr<PropertyKit<LocatedEntity>> factory) {
 	if (m_inheritance.addChild(type_desc) == nullptr) {
 		return -1;
 	}
@@ -299,7 +296,7 @@ std::unique_ptr<PropertyBase> CorePropertyManager::addProperty(const std::string
 	std::unique_ptr<PropertyBase> p;
 	auto I = m_propertyFactories.find(name);
 	if (I == m_propertyFactories.end()) {
-		p = std::make_unique<SoftProperty>();
+		p = std::make_unique<SoftProperty<LocatedEntity>>();
 	} else {
 		p = I->second->newProperty();
 	}

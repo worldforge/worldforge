@@ -19,6 +19,7 @@
 #define RULESETS_DENSITY_PROPERTY_H
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 
 /**
  * \brief Density property updates the mass automatically when the size of the entity changes.
@@ -27,7 +28,7 @@
  *
  * \ingroup PropertyClasses
  */
-class DensityProperty : public Property<double> {
+class DensityProperty : public Property<double, LocatedEntity> {
 public:
 
 	static constexpr const char* property_name = "density";

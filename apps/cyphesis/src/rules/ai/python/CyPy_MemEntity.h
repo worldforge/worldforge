@@ -21,12 +21,12 @@
 
 
 #include "rules/ai/MemEntity.h"
-#include "rules/python/CyPy_LocatedEntity_impl.h"
+#include "pythonbase/WrapperBase.h"
 
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_MemEntity : public CyPy_LocatedEntityBase<Ref<MemEntity>, CyPy_MemEntity> {
+class CyPy_MemEntity : public WrapperBase<Ref<MemEntity>, CyPy_MemEntity, Py::PythonClassInstanceWeak> {
 public:
 	CyPy_MemEntity(Py::PythonClassInstanceWeak* self, Py::Tuple& args, Py::Dict& kwds);
 
@@ -36,6 +36,13 @@ public:
 
 	static void init_type();
 
+	static Py::Object wrap(Ref<MemEntity> value);
+
+	Py::Object getattro(const Py::String&) override;
+
+	Py::Object rich_compare(const Py::Object&, int) override;
+
+	Py::Object str() override;
 
 protected:
 

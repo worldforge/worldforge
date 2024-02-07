@@ -18,7 +18,7 @@
 #ifndef INVENTORYDOMAIN_H_
 #define INVENTORYDOMAIN_H_
 
-#include "rules/Domain.h"
+#include "rules/simulation/Domain.h"
 #include <set>
 #include <string>
 #include <map>

@@ -19,7 +19,7 @@
 #include "PhysicalDomain.h"
 
 #include "TerrainProperty.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "PropelProperty.h"
 #include "rules/simulation/GeometryProperty.h"
 #include "rules/simulation/AngularFactorProperty.h"
@@ -32,14 +32,13 @@
 #include "common/operations/Tick.h"
 #include "rules/simulation/BaseWorld.h"
 #include "PerceptionSightProperty.h"
-#include "rules/BBoxProperty.h"
-#include "rules/SolidProperty.h"
-#include "rules/ScaleProperty.h"
+#include "rules/BBoxProperty_impl.h"
+#include "rules/ScaleProperty_impl.h"
 #include "SimulationSpeedProperty.h"
 #include "ModeDataProperty.h"
 #include "VisibilityDistanceProperty.h"
-#include "common/Inheritance.h"
 #include "Remotery.h"
+#include "common/AtlasFactories.h"
 
 #include <Mercator/Segment.h>
 #include <Mercator/TerrainMod.h>
@@ -60,6 +59,7 @@
 #include <optional>
 #include <algorithm>
 #include <fmt/format.h>
+#include "common/Property_impl.h"
 
 static const bool debug_flag = false;
 
@@ -82,7 +82,7 @@ float to_seconds(std::chrono::milliseconds duration) {
 }
 
 std::unique_ptr<btAxisSweep3> createVisibilityBroadphase(const LocatedEntity& entity, float scalingFactor) {
-	auto bbox = ScaleProperty::scaledBbox(entity);
+	auto bbox = ScaleProperty<LocatedEntity>::scaledBbox(entity);
 	if (!bbox.isValid()) {
 		return std::make_unique<btAxisSweep3>(btVector3{0, 0, 0}, btVector3{0, 0, 0});
 	} else {
@@ -480,7 +480,7 @@ PhysicalDomain::PhysicalDomain(LocatedEntity& entity) :
 							   mFakeProperties.angularVelocityProperty, mFakeProperties.orientationProperty},
 		m_terrain(nullptr),
 		m_ghostPairCallback(new WaterCollisionCallback()) {
-	mContainingEntityEntry.bbox = ScaleProperty::scaledBbox(m_entity);
+	mContainingEntityEntry.bbox = ScaleProperty<LocatedEntity>::scaledBbox(m_entity);
 
 	m_ghostPairCallback->m_domain = this;
 	m_dynamicsWorld->getPairCache()->setInternalGhostPairCallback(m_ghostPairCallback.get());
@@ -795,7 +795,7 @@ PhysicalDomain::TerrainEntry& PhysicalDomain::buildTerrainPage(Mercator::Segment
 }
 
 void PhysicalDomain::createDomainBorders() {
-	auto bbox = ScaleProperty::scaledBbox(m_entity);
+	auto bbox = ScaleProperty<LocatedEntity>::scaledBbox(m_entity);
 	if (bbox.isValid()) {
 		//We'll now place six planes representing the bounding box.
 
@@ -1041,21 +1041,21 @@ std::shared_ptr<btCollisionShape> PhysicalDomain::createCollisionShapeForEntry(L
 void PhysicalDomain::addEntity(LocatedEntity& entity) {
 	assert(m_entries.find(entity.getIntId()) == m_entries.end());
 
-	auto existingPosProp = entity.modPropertyClassFixed<PositionProperty>();
+	auto existingPosProp = entity.modPropertyClassFixed<PositionProperty<LocatedEntity>>();
 	if (!existingPosProp || !existingPosProp->data().isValid()) {
 		spdlog::warn("Tried to add entity {} to physical domain belonging to {}, but there's no valid position.", entity.describeEntity(), m_entity.describeEntity());
 		return;
 	}
 
 	auto& posProp = *existingPosProp;
-	auto& velocityProp = entity.requirePropertyClassFixed<VelocityProperty>(Atlas::Message::ListType{0, 0, 0});
-	auto& angularProp = entity.requirePropertyClassFixed<AngularVelocityProperty>(Atlas::Message::ListType{0, 0, 0});
-	auto& orientationProp = entity.requirePropertyClassFixed<OrientationProperty>(Atlas::Message::ListType{0, 0, 0, 1});
+	auto& velocityProp = entity.requirePropertyClassFixed<VelocityProperty<LocatedEntity>>(Atlas::Message::ListType{0, 0, 0});
+	auto& angularProp = entity.requirePropertyClassFixed<AngularVelocityProperty<LocatedEntity>>(Atlas::Message::ListType{0, 0, 0});
+	auto& orientationProp = entity.requirePropertyClassFixed<OrientationProperty<LocatedEntity>>(Atlas::Message::ListType{0, 0, 0, 1});
 
 
 	float mass = getMassForEntity(entity);
 
-	WFMath::AxisBox<3> bbox = ScaleProperty::scaledBbox(entity);
+	WFMath::AxisBox<3> bbox = ScaleProperty<LocatedEntity>::scaledBbox(entity);
 	btVector3 angularFactor(1, 1, 1);
 
 	auto result = m_entries.emplace(entity.getIntId(), std::unique_ptr<BulletEntry>(new BulletEntry{entity, posProp, velocityProp, angularProp, orientationProp, bbox}));
@@ -1066,7 +1066,7 @@ void PhysicalDomain::addEntity(LocatedEntity& entity) {
 		angularFactor = Convert::toBullet(angularFactorProp->data());
 	}
 
-	auto solidProperty = entity.getPropertyClassFixed<SolidProperty>();
+	auto solidProperty = entity.getPropertyClassFixed<SolidProperty<LocatedEntity>>();
 	if (solidProperty) {
 		entry.isSolid = solidProperty->isTrue();
 	} else {
@@ -1096,7 +1096,7 @@ void PhysicalDomain::addEntity(LocatedEntity& entity) {
 	short collisionGroup;
 	getCollisionFlagsForEntity(entry, collisionGroup, collisionMask);
 
-	auto waterBodyProp = entity.getPropertyClass<BoolProperty>("water_body");
+	auto waterBodyProp = entity.getPropertyClass<BoolProperty<LocatedEntity>>("water_body");
 	if (waterBodyProp && waterBodyProp->isTrue()) {
 
 		auto ghostObject = std::make_unique<btGhostObject>();
@@ -1199,7 +1199,7 @@ void PhysicalDomain::addEntity(LocatedEntity& entity) {
 			if (propelProp && propelProp->data().isValid() && propelProp->data() != WFMath::Vector<3>::ZERO()) {
 				applyPropel(entry, Convert::toBullet(propelProp->data()));
 			}
-			auto destinationProp = entity.getPropertyClass<Vector3Property>("_destination");
+			auto destinationProp = entity.getPropertyClass<Vector3Property<LocatedEntity>>("_destination");
 			if (destinationProp && destinationProp->data().isValid()) {
 				childEntityPropertyApplied("_destination", *destinationProp, entry);
 			}
@@ -1457,20 +1457,20 @@ void PhysicalDomain::childEntityPropertyApplied(const std::string& name, const P
 		bulletEntry.control.propelProperty = dynamic_cast<const PropelProperty*>(&prop);
 		m_propelUpdateQueue.insert(&bulletEntry);
 	} else if (name == "_direction") {
-		bulletEntry.control.directionProperty = dynamic_cast<const QuaternionProperty*>(&prop);
+		bulletEntry.control.directionProperty = dynamic_cast<const QuaternionProperty<LocatedEntity>*>(&prop);
 		m_directionUpdateQueue.insert(&bulletEntry);
 	} else if (name == "_destination") {
-		auto destinationProperty = dynamic_cast<const Vector3Property*>(&prop);
+		auto destinationProperty = dynamic_cast<const Vector3Property<LocatedEntity>*>(&prop);
 		if (destinationProperty->data().isValid()) {
 
-			bulletEntry.control.destinationProperty = dynamic_cast<const Vector3Property*>(&prop);
+			bulletEntry.control.destinationProperty = dynamic_cast<const Vector3Property<LocatedEntity>*>(&prop);
 		}
 
 		//Use the propel update queue for destination too, as they both concern propelling.
 		m_propelUpdateQueue.insert(&bulletEntry);
 	} else if (name == "friction") {
 		if (bulletEntry.collisionObject) {
-			auto frictionProp = dynamic_cast<const Property<double>*>(&prop);
+			auto frictionProp = dynamic_cast<const Property<double, LocatedEntity>*>(&prop);
 			bulletEntry.collisionObject->setFriction(static_cast<btScalar>(frictionProp->data()));
 			if (getMassForEntity(bulletEntry.entity) != 0) {
 				bulletEntry.collisionObject->activate();
@@ -1478,7 +1478,7 @@ void PhysicalDomain::childEntityPropertyApplied(const std::string& name, const P
 		}
 	} else if (name == "friction_roll") {
 		if (bulletEntry.collisionObject) {
-			auto frictionProp = dynamic_cast<const Property<double>*>(&prop);
+			auto frictionProp = dynamic_cast<const Property<double, LocatedEntity>*>(&prop);
 			bulletEntry.collisionObject->setRollingFriction(static_cast<btScalar>(frictionProp->data()));
 			if (getMassForEntity(bulletEntry.entity) != 0) {
 				bulletEntry.collisionObject->activate();
@@ -1489,7 +1489,7 @@ void PhysicalDomain::childEntityPropertyApplied(const std::string& name, const P
 #if BT_BULLET_VERSION < 285
 			spdlog::warn("Your version of Bullet doesn't support spinning friction.");
 #else
-			auto frictionProp = dynamic_cast<const Property<double>*>(&prop);
+			auto frictionProp = dynamic_cast<const Property<double, LocatedEntity>*>(&prop);
 			bulletEntry.collisionObject->setSpinningFriction(static_cast<btScalar>(frictionProp->data()));
 			if (getMassForEntity(bulletEntry.entity) != 0) {
 				bulletEntry.collisionObject->activate();
@@ -1585,8 +1585,8 @@ void PhysicalDomain::childEntityPropertyApplied(const std::string& name, const P
 			bulletEntry.markedAsMovingLastFrame = false;
 		}
 		return;
-	} else if (name == SolidProperty::property_name) {
-		auto solidProp = dynamic_cast<const SolidProperty*>(&prop);
+	} else if (name == SolidProperty<LocatedEntity>::property_name) {
+		auto solidProp = dynamic_cast<const SolidProperty<LocatedEntity>*>(&prop);
 
 		bulletEntry.isSolid = solidProp->isTrue();
 		if (bulletEntry.collisionObject) {
@@ -1632,9 +1632,9 @@ void PhysicalDomain::childEntityPropertyApplied(const std::string& name, const P
 			}
 		}
 
-	} else if (name == BBoxProperty::property_name || name == ScaleProperty::property_name) {
+	} else if (name == BBoxProperty<LocatedEntity>::property_name || name == ScaleProperty<LocatedEntity>::property_name) {
 		auto& bbox = bulletEntry.bbox;
-		bbox = ScaleProperty::scaledBbox(bulletEntry.entity);
+		bbox = ScaleProperty<LocatedEntity>::scaledBbox(bulletEntry.entity);
 		if (bbox.isValid()) {
 
 			if (bulletEntry.visibilitySphere) {
@@ -1696,11 +1696,11 @@ void PhysicalDomain::childEntityPropertyApplied(const std::string& name, const P
 	} else if (name == TerrainModProperty::property_name) {
 		updateTerrainMod(bulletEntry, true);
 	} else if (name == "speed_ground") {
-		bulletEntry.speedGround = dynamic_cast<const Property<double>*>(&prop)->data();
+		bulletEntry.speedGround = dynamic_cast<const Property<double, LocatedEntity>*>(&prop)->data();
 	} else if (name == "speed_water") {
-		bulletEntry.speedWater = dynamic_cast<const Property<double>*>(&prop)->data();
+		bulletEntry.speedWater = dynamic_cast<const Property<double, LocatedEntity>*>(&prop)->data();
 	} else if (name == "speed_flight") {
-		bulletEntry.speedFlight = dynamic_cast<const Property<double>*>(&prop)->data();
+		bulletEntry.speedFlight = dynamic_cast<const Property<double, LocatedEntity>*>(&prop)->data();
 	} else if (name == "floats") {
 		//TODO: find a better way to handle entities which are set to float. Perhaps it should just be handled by density?
 //        applyNewPositionForEntity(bulletEntry, bulletEntry.positionProperty.data());
@@ -1711,7 +1711,7 @@ void PhysicalDomain::childEntityPropertyApplied(const std::string& name, const P
 //        }
 //        sendMoveSight(*bulletEntry, true, false, false, false, false);
 	} else if (name == "step_factor") {
-		auto stepFactorProp = dynamic_cast<const Property<double>*>(&prop);
+		auto stepFactorProp = dynamic_cast<const Property<double, LocatedEntity>*>(&prop);
 		if (stepFactorProp) {
 			bulletEntry.step_factor = stepFactorProp->data();
 		} else {
@@ -1821,7 +1821,7 @@ void PhysicalDomain::getCollisionFlagsForEntity(const BulletEntry& entry, short&
 
 	//Water bodies behave in a special way, so check for that.
 	auto& entity = entry.entity;
-	auto waterBodyProp = entity.getPropertyClass<BoolProperty>("water_body");
+	auto waterBodyProp = entity.getPropertyClass<BoolProperty<LocatedEntity>>("water_body");
 	if (waterBodyProp && waterBodyProp->isTrue()) {
 		//A body of water should behave like terrain, and interact with both physical and non-physical entities.
 		collisionGroup = COLLISION_MASK_TERRAIN;
@@ -1869,12 +1869,12 @@ void PhysicalDomain::getCollisionFlagsForEntity(const BulletEntry& entry, short&
 
 void PhysicalDomain::entityPropertyApplied(const std::string& name, const PropertyBase& prop) {
 	if (name == "friction") {
-		auto frictionProp = dynamic_cast<const Property<double>*>(&prop);
+		auto frictionProp = dynamic_cast<const Property<double, LocatedEntity>*>(&prop);
 		for (auto& entry: m_terrainSegments) {
 			entry.second.rigidBody->setFriction(static_cast<btScalar>(frictionProp->data()));
 		}
 	} else if (name == "friction_roll") {
-		auto frictionRollingProp = dynamic_cast<const Property<double>*>(&prop);
+		auto frictionRollingProp = dynamic_cast<const Property<double, LocatedEntity>*>(&prop);
 		for (auto& entry: m_terrainSegments) {
 			entry.second.rigidBody->setRollingFriction(static_cast<btScalar>(frictionRollingProp->data()));
 		}
@@ -1882,7 +1882,7 @@ void PhysicalDomain::entityPropertyApplied(const std::string& name, const Proper
 #if BT_BULLET_VERSION < 285
 		spdlog::warn("Your version of Bullet doesn't support spinning friction.");
 #else
-		auto frictionSpinningProp = dynamic_cast<const Property<double>*>(&prop);
+		auto frictionSpinningProp = dynamic_cast<const Property<double, LocatedEntity>*>(&prop);
 		for (auto& entry: m_terrainSegments) {
 			entry.second.rigidBody->setSpinningFriction(static_cast<btScalar>(frictionSpinningProp->data()));
 		}
@@ -2177,7 +2177,7 @@ void PhysicalDomain::applyNewPositionForEntity(BulletEntry& entry, const WFMath:
 
 }
 
-void PhysicalDomain::applyDestination(std::chrono::milliseconds tickSize, BulletEntry& entry, const PropelProperty* propelProp, const Vector3Property& destinationProp) {
+void PhysicalDomain::applyDestination(std::chrono::milliseconds tickSize, BulletEntry& entry, const PropelProperty* propelProp, const Vector3Property<LocatedEntity>& destinationProp) {
 	bool hasDestination = destinationProp.data().isValid();
 	bool hasPropel = propelProp && propelProp->data().isValid() && propelProp->data() != WFMath::Vector<3>::ZERO();
 
@@ -2879,7 +2879,7 @@ void PhysicalDomain::tick(std::chrono::milliseconds tickSize, OpVector& res) {
 			auto& projectileData = modeDataProperty->getProjectileData();
 			//Copy any data found in "mode_data".
 			for (const auto& projectile_entry: projectileData.extra) {
-				ent->setAttr(projectile_entry.first, projectile_entry.second, &Inheritance::instance().getFactories());
+				ent->setAttr(projectile_entry.first, projectile_entry.second, &AtlasFactories::factories);
 			}
 		}
 		Atlas::Objects::Operation::Hit hit;

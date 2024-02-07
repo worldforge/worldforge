@@ -20,7 +20,7 @@
 #include <rules/python/CyPy_Vector3D.h>
 #include <rules/python/CyPy_Point3D.h>
 #include "CyPy_Domain.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "CyPy_Entity.h"
 
 CyPy_Domain::CyPy_Domain(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds)
@@ -39,7 +39,7 @@ void CyPy_Domain::init_type() {
 	behaviors().name("Domain");
 	behaviors().doc("");
 
-	PYCXX_ADD_VARARGS_METHOD(query_collisions, query_collisions, "");
+	register_method<&CyPy_Domain::query_collisions>("query_collisions");
 
 	behaviors().readyType();
 

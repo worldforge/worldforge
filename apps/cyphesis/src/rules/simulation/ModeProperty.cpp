@@ -16,7 +16,7 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include "ModeProperty.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "rules/QuaternionProperty.h"
 
@@ -26,7 +26,7 @@
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
 #include <wfmath/atlasconv.h>
-#include "rules/AtlasProperties.h"
+#include "rules/simulation/AtlasProperties.h"
 #include "rules/PhysicalProperties.h"
 
 
@@ -45,14 +45,14 @@ void ModeProperty::apply(LocatedEntity& entity) {
 		}
 	}
 
-	auto orientationProperty = entity.getPropertyClassFixed<OrientationProperty>();
+	auto orientationProperty = entity.getPropertyClassFixed<OrientationProperty<LocatedEntity>>();
 
 	if (m_mode == Mode::Planted) {
 		//See if there's a rotation we should apply
-		const auto* plantedRotation = entity.getPropertyClass<QuaternionProperty>("planted_rotation");
+		const auto* plantedRotation = entity.getPropertyClass<QuaternionProperty<LocatedEntity>>("planted_rotation");
 		if (plantedRotation && plantedRotation->data().isValid()) {
 			//Check that the rotation is applied already, otherwise apply it.
-			auto& activeRotationProp = entity.requirePropertyClass<QuaternionProperty>("active_rotation");
+			auto& activeRotationProp = entity.requirePropertyClass<QuaternionProperty<LocatedEntity>>("active_rotation");
 			if (activeRotationProp.data() != plantedRotation->data()) {
 				//TODO: is this right? perhaps we should just bail out if there's no valid orientation?
 				WFMath::Quaternion currentOrientation = (orientationProperty && orientationProperty->data().isValid()) ? orientationProperty->data() : WFMath::Quaternion::IDENTITY();
@@ -85,7 +85,7 @@ void ModeProperty::apply(LocatedEntity& entity) {
 			}
 		}
 	} else {
-		auto* activeRotationProp = entity.modPropertyClass<QuaternionProperty>("active_rotation");
+		auto* activeRotationProp = entity.modPropertyClass<QuaternionProperty<LocatedEntity>>("active_rotation");
 		if (activeRotationProp && activeRotationProp->data().isValid()) {
 			//TODO: is this right? perhaps we should just bail out if there's no valid orientation?
 			WFMath::Quaternion currentOrientation = (orientationProperty && orientationProperty->data().isValid()) ? orientationProperty->data() : WFMath::Quaternion::IDENTITY();

@@ -32,7 +32,6 @@
 #include "common/TypeNode.h"
 #include "common/ScriptKit.h"
 #include "common/debug.h"
-#include "common/Inheritance.h"
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
@@ -63,8 +62,8 @@ PossessionAccount::PossessionAccount(RouterId id, const MindKit& mindFactory, Po
 
 	m_python_connection = python_reload_scripts.connect([&]() {
 		for (auto& entry: m_minds) {
-			auto entity = entry.second;
-			m_mindFactory.m_scriptFactory->addScript(*entity);
+			auto& mind = entry.second;
+			mind->setScript(m_mindFactory.m_scriptFactory->createScriptWrapper(*mind));
 		}
 
 	});

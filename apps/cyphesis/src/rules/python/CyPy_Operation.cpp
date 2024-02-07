@@ -21,9 +21,9 @@
 #include "CyPy_RootEntity.h"
 #include "CyPy_Root.h"
 #include "CyPy_Oplist.h"
+#include "common/AtlasFactories.h"
 #include <Atlas/Objects/Generic.h>
 #include <Atlas/Objects/Entity.h>
-#include <common/Inheritance.h>
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -39,7 +39,7 @@ CyPy_Operation::CyPy_Operation(Py::PythonClassInstance* self, Py::Tuple& args, P
 	}
 
 	auto parent = verifyString(args.front());
-	Root r = Inheritance::instance().getFactories().createObject(parent);
+	Root r = AtlasFactories::factories.createObject(parent);
 	m_value = std::move(Atlas::Objects::smart_dynamic_cast<RootOperation>(r));
 	if (!m_value) {
 		m_value = Generic();
@@ -68,9 +68,9 @@ CyPy_Operation::CyPy_Operation(Py::PythonClassInstance* self, Atlas::Objects::Op
 
 void CyPy_Operation::addToArgs(std::vector<Root>& args, const Py::Object& arg) {
 	if (arg.isDict()) {
-		args.push_back(Inheritance::instance().getFactories().createObject(CyPy_Element::dictAsElement(Py::Dict(arg))));
+		args.push_back(AtlasFactories::factories.createObject(CyPy_Element::dictAsElement(Py::Dict(arg))));
 	} else if (CyPy_ElementMap::check(arg)) {
-		args.push_back(Inheritance::instance().getFactories().createObject(CyPy_ElementMap::value(arg)));
+		args.push_back(AtlasFactories::factories.createObject(CyPy_ElementMap::value(arg)));
 	} else if (CyPy_Operation::check(arg)) {
 		args.push_back(CyPy_Operation::value(arg));
 	} else if (CyPy_RootEntity::check(arg)) {
@@ -94,27 +94,26 @@ void CyPy_Operation::init_type() {
 	behaviors().supportMappingType(Py::PythonType::support_mapping_ass_subscript
 								   | Py::PythonType::support_mapping_subscript);
 
-
-	PYCXX_ADD_VARARGS_METHOD(set_serialno, setSerialno, PYCXX_SIG_DOC("set_serialno(long)", "Sets the serial number."));
-	PYCXX_ADD_VARARGS_METHOD(set_refno, setRefno, PYCXX_SIG_DOC("set_refno(long)", "Sets the reference number."));
-	PYCXX_ADD_VARARGS_METHOD(set_from, setFrom, PYCXX_SIG_DOC("set_from(string)", "Sets from which entity the operation is from."));
-	PYCXX_ADD_VARARGS_METHOD(set_to, setTo, PYCXX_SIG_DOC("set_to(string)", "Sets to which entity the operation is directed."));
-	PYCXX_ADD_VARARGS_METHOD(set_stamp, setStamp, "");
-	PYCXX_ADD_VARARGS_METHOD(set_future_seconds, setFutureSeconds, "");
-	PYCXX_ADD_VARARGS_METHOD(set_future_milliseconds, setFutureMilliseconds, "");
-	PYCXX_ADD_VARARGS_METHOD(set_name, setName, "");
-	PYCXX_ADD_VARARGS_METHOD(set_args, setArgs, PYCXX_SIG_DOC("set_args(sequence)", "Sets the argument list. The supplied sequence could be any of Operation|ElementMap|RootEntity|Python Dict."));
-	PYCXX_ADD_NOARGS_METHOD(get_serialno, getSerialno, "");
-	PYCXX_ADD_NOARGS_METHOD(is_default_serialno, isDefaultSerialno, "");
-	PYCXX_ADD_NOARGS_METHOD(get_refno, getRefno, "");
-	PYCXX_ADD_NOARGS_METHOD(get_from, getFrom, "");
-	PYCXX_ADD_NOARGS_METHOD(get_to, getTo, "");
-	PYCXX_ADD_NOARGS_METHOD(get_stamp, getStamp, "");
-	PYCXX_ADD_NOARGS_METHOD(get_future_seconds, getFutureSeconds, "");
-	PYCXX_ADD_NOARGS_METHOD(get_future_milliseconds, getFutureMilliseconds, "");
-	PYCXX_ADD_NOARGS_METHOD(get_args, getArgs, "");
-	PYCXX_ADD_NOARGS_METHOD(get_name, get_name, "");
-	PYCXX_ADD_NOARGS_METHOD(copy, copy, "Copies the operation into a new instance.");
+	register_method<&CyPy_Operation::setSerialno>("set_serialno", PYCXX_SIG_DOC("set_serialno(long)", "Sets the serial number."));
+	register_method<&CyPy_Operation::setRefno>("set_refno", PYCXX_SIG_DOC("set_refno(long)", "Sets the reference number."));
+	register_method<&CyPy_Operation::setFrom>("set_from", PYCXX_SIG_DOC("set_from(string)", "Sets from which entity the operation is from."));
+	register_method<&CyPy_Operation::setTo>("set_to", PYCXX_SIG_DOC("set_to(string)", "Sets to which entity the operation is directed."));
+	register_method<&CyPy_Operation::setStamp>("set_stamp", "");
+	register_method<&CyPy_Operation::setFutureSeconds>("set_future_seconds", "");
+	register_method<&CyPy_Operation::setFutureMilliseconds>("set_future_milliseconds", "");
+	register_method<&CyPy_Operation::setName>("set_name", "");
+	register_method<&CyPy_Operation::setArgs>("set_args",  PYCXX_SIG_DOC("set_args(sequence)", "Sets the argument list. The supplied sequence could be any of Operation|ElementMap|RootEntity|Python Dict."));
+	register_method<&CyPy_Operation::getSerialno>("get_serialno", "");
+	register_method<&CyPy_Operation::isDefaultSerialno>("is_default_serialno", "");
+	register_method<&CyPy_Operation::getRefno>("get_refno", "");
+	register_method<&CyPy_Operation::getFrom>("get_from", "");
+	register_method<&CyPy_Operation::getTo>("get_to", "");
+	register_method<&CyPy_Operation::getStamp>("get_stamp", "");
+	register_method<&CyPy_Operation::getFutureSeconds>("get_future_seconds", "");
+	register_method<&CyPy_Operation::getFutureMilliseconds>("get_future_milliseconds", "");
+	register_method<&CyPy_Operation::getArgs>("get_args", "");
+	register_method<&CyPy_Operation::get_name>("get_name", "");
+	register_method<&CyPy_Operation::copy>("copy", "Copies the operation into a new instance.");
 
 	behaviors().readyType();
 }
@@ -208,9 +207,9 @@ Py::Object CyPy_Operation::setArgs(const Py::Tuple& args) {
 		if (CyPy_Operation::check(item)) {
 			argslist.push_back(CyPy_Operation::value(item));
 		} else if (item.isDict()) {
-			argslist.push_back(Inheritance::instance().getFactories().createObject(CyPy_Element::dictAsElement(Py::Dict(item))));
+			argslist.push_back(AtlasFactories::factories.createObject(CyPy_Element::dictAsElement(Py::Dict(item))));
 		} else if (CyPy_ElementMap::check(item)) {
-			argslist.push_back(Inheritance::instance().getFactories().createObject(CyPy_ElementMap::value(item)));
+			argslist.push_back(AtlasFactories::factories.createObject(CyPy_ElementMap::value(item)));
 		} else if (CyPy_RootEntity::check(item)) {
 			argslist.push_back(CyPy_RootEntity::value(item));
 		} else {

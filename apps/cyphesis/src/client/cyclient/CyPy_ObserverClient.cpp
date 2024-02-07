@@ -37,13 +37,13 @@ void CyPy_ObserverClient::init_type() {
 	behaviors().name("ObserverClient");
 	behaviors().doc("");
 
-	PYCXX_ADD_VARARGS_METHOD(setup, setup, "");
-	PYCXX_ADD_VARARGS_METHOD(create_avatar, create_avatar, "");
-	PYCXX_ADD_VARARGS_METHOD(send, send, "");
-	PYCXX_ADD_VARARGS_METHOD(send_wait, send_wait, "");
-	PYCXX_ADD_NOARGS_METHOD(teardown, teardown, "");
-	PYCXX_ADD_NOARGS_METHOD(run, run, "");
-	PYCXX_ADD_NOARGS_METHOD(wait, wait, "");
+	register_method<&CyPy_ObserverClient::setup>("setup", "");
+	register_method<&CyPy_ObserverClient::create_avatar>("create_avatar", "");
+	register_method<&CyPy_ObserverClient::send>("send", "");
+	register_method<&CyPy_ObserverClient::send_wait>("send_wait", "");
+	register_method<&CyPy_ObserverClient::teardown>("teardown", "");
+	register_method<&CyPy_ObserverClient::run>("run", "");
+	register_method<&CyPy_ObserverClient::wait>("wait", "");
 
 	behaviors().readyType();
 }

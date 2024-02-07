@@ -21,12 +21,13 @@
 
 
 #include "common/PropertyManager.h"
+#include "rules/ai/MemEntity.h"
 
-class ClientPropertyManager : public PropertyManager {
+class ClientPropertyManager : public PropertyManager<MemEntity> {
 public:
 	ClientPropertyManager();
 
-	std::unique_ptr<PropertyBase> addProperty(const std::string& name) const override;
+	std::unique_ptr<PropertyCore<MemEntity>> addProperty(const std::string& name) const override;
 };
 
 

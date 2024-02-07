@@ -18,10 +18,10 @@
 
 #include <modules/WorldTime.h>
 #include "CyPy_World.h"
-#include "rules/python/CyPy_LocatedEntity.h"
-#include "rules/entityfilter/python/CyPy_EntityFilter.h"
+#include "CyPy_LocatedEntity.h"
+#include "rules/entityfilter/python/CyPy_EntityFilter_impl.h"
 #include "rules/entityfilter/Providers.h"
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 
 CyPy_World::CyPy_World(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds)
 		: WrapperBase(self, args, kwds) {
@@ -37,11 +37,10 @@ void CyPy_World::init_type() {
 	behaviors().name("World");
 	behaviors().doc("");
 
-	PYCXX_ADD_VARARGS_METHOD(get_entity, get_entity, "Gets the entity with the supplied id.");
-	PYCXX_ADD_VARARGS_METHOD(match_entity, match_entity, "Matches a filter against an entity.");
-
-	PYCXX_ADD_NOARGS_METHOD(get_time, get_time, "Get server time in milliseconds.");
-	PYCXX_ADD_NOARGS_METHOD(get_time_as_seconds, get_time_as_seconds, "");
+	register_method<&CyPy_World::get_entity>("get_entity", "Gets the entity with the supplied id.");
+	register_method<&CyPy_World::match_entity>("match_entity", "Matches a filter against an entity.");
+	register_method<&CyPy_World::get_time>("get_time", "Get server time in milliseconds.");
+	register_method<&CyPy_World::get_time_as_seconds>("get_time_as_seconds");
 
 	behaviors().readyType();
 }
@@ -66,11 +65,11 @@ Py::Object CyPy_World::get_entity(const Py::Tuple& args) {
 
 Py::Object CyPy_World::match_entity(const Py::Tuple& args) {
 	args.verify_length(2);
-	auto& filter = verifyObject<CyPy_Filter>(args.front());
+	auto& filter = verifyObject<CyPy_Filter<LocatedEntity>>(args.front());
 	auto entity = verifyObject<CyPy_LocatedEntity>(args[1]);
 
 
-	EntityFilter::QueryContext queryContext{*entity};
+	EntityFilter::QueryContext<LocatedEntity> queryContext{*entity};
 //    queryContext.report_error_fn = [&](const std::string& error) { errors.push_back(error); };
 	queryContext.entity_lookup_fn = [&](const std::string& id) { return m_value->getEntity(id); };
 	queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };

@@ -20,10 +20,15 @@
 #define COMMON_SCRIPT_KIT_H
 
 #include <string>
+#include <memory>
+
+template<typename>
+class Script;
+
 
 /// \brief Factory interface for creating scripts to attach to in game
 /// entity objects.
-template<class T>
+template<typename EntityT, typename ScriptObjectT>
 class ScriptKit {
 public:
 	virtual ~ScriptKit() = default;
@@ -32,10 +37,14 @@ public:
 	virtual const std::string& package() const = 0;
 
 	/// \brief Add a script to an entity
-	virtual int addScript(T& entity) const = 0;
+	virtual std::unique_ptr<Script<EntityT>> createScriptWrapper(ScriptObjectT& entity) const = 0;
 
 	/// \brief Reload the underlying class object from the script on disk
 	virtual int refreshClass() = 0;
+
+	virtual int setup() { return 0; }
+
+	static std::shared_ptr<ScriptKit<EntityT, ScriptObjectT>> createScriptFactory(std::string script_package, std::string script_class);
 };
 
 

@@ -18,7 +18,7 @@
 #ifndef RULESETS_ANGULARFACTOR_PROPERTY_H
 #define RULESETS_ANGULARFACTOR_PROPERTY_H
 
-#include "common/Property.h"
+#include "PropertyBase.h"
 #include <wfmath/vector.h>
 
 /**

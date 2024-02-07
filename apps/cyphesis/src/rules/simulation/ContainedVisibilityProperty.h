@@ -20,6 +20,7 @@
 #define CYPHESIS_CONTAINEDVISIBILITYPROPERTY_H
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 
 
 /**
@@ -28,7 +29,7 @@
  * This is to be used on things such as fires and effects.
  * \ingroup PropertyClasses
  */
-class ContainedVisibilityProperty : public BoolProperty {
+class ContainedVisibilityProperty : public BoolProperty<LocatedEntity> {
 public:
 	static constexpr const char* property_name = "contained_visibility";
 

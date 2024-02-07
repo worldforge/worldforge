@@ -19,11 +19,9 @@
 #ifndef RULESETS_ENTITY_H
 #define RULESETS_ENTITY_H
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <unordered_map>
-
-struct OperationsListener;
 
 /// \brief This is the base class from which all in-game objects inherit.
 ///
@@ -43,7 +41,7 @@ protected:
 	/// A static map tracking the number of existing entities per type.
 	/// A monitor by the name of "entity_count{type=*}" will be created
 	/// per type.
-	static std::unordered_map<const TypeNode*, int> s_monitorsMap;
+	static std::unordered_map<const TypeNode<LocatedEntity>*, int> s_monitorsMap;
 
 	std::unique_ptr<Domain> m_domain;
 
@@ -54,9 +52,9 @@ public:
 
 	~Entity() override;
 
-	std::vector<OperationsListener*> m_listeners;
+	std::vector<OperationsListener<LocatedEntity>*> m_listeners;
 
-	void setType(const TypeNode* t) override;
+	void setType(const TypeNode<LocatedEntity>* t) override;
 
 	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override;
 
@@ -114,9 +112,9 @@ public:
 
 	void sendWorld(Operation op) override;
 
-	void addListener(OperationsListener* listener) override;
+	void addListener(OperationsListener<LocatedEntity>* listener) override;
 
-	void removeListener(OperationsListener* listener) override;
+	void removeListener(OperationsListener<LocatedEntity>* listener) override;
 
 	Ref<LocatedEntity> createNewEntity(const Atlas::Objects::Entity::RootEntity& entity);
 

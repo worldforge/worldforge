@@ -21,8 +21,8 @@
 #include "EntityBuilder.h"
 #include "MindProperty.h"
 
-#include "rules/LocatedEntity.h"
-#include "rules/Domain.h"
+#include "rules/simulation/LocatedEntity.h"
+#include "rules/simulation/Domain.h"
 #include "rules/simulation/WorldRouter.h"
 
 #include "common/Database.h"
@@ -53,7 +53,7 @@ static const bool debug_flag = false;
 StorageManager::StorageManager(WorldRouter& world,
 							   Database& db,
 							   EntityBuilder& entityBuilder,
-							   PropertyManager& propertyManager) :
+							   PropertyManager<LocatedEntity>& propertyManager) :
 		m_world(world),
 		m_db(db),
 		m_entityBuilder(entityBuilder),

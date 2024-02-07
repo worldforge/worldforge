@@ -19,7 +19,7 @@
 #ifndef RULESETS_CALENDAR_PROPERTY_H
 #define RULESETS_CALENDAR_PROPERTY_H
 
-#include "common/Property.h"
+#include "PropertyBase.h"
 
 /// \brief Class to handle World calendar property
 /// \ingroup PropertyClasses

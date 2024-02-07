@@ -104,21 +104,19 @@ void CyPy_Vector3D::init_type() {
 
 	behaviors().supportIter(Py::PythonType::support_iter_iter);
 
-	PYCXX_ADD_VARARGS_METHOD(dot, dot, "");
-	PYCXX_ADD_VARARGS_METHOD(cross, cross, "");
-	PYCXX_ADD_VARARGS_METHOD(rotatex, rotatex, "");
-	PYCXX_ADD_VARARGS_METHOD(rotatey, rotatey, "");
-	PYCXX_ADD_VARARGS_METHOD(rotatez, rotatez, "");
-	PYCXX_ADD_VARARGS_METHOD(rotate, rotate, "");
-	PYCXX_ADD_VARARGS_METHOD(angle, angle, "");
-	PYCXX_ADD_VARARGS_METHOD(normalize, normalize, "");
-
-	PYCXX_ADD_NOARGS_METHOD(sqr_mag, sqr_mag, "");
-	PYCXX_ADD_NOARGS_METHOD(mag, mag, "");
-	PYCXX_ADD_NOARGS_METHOD(is_valid, is_valid, "");
-	PYCXX_ADD_NOARGS_METHOD(unit_vector, unit_vector, "");
-
-	PYCXX_ADD_VARARGS_METHOD(unit_vector_to, unit_vector_to, "");
+	register_method<&CyPy_Vector3D::dot>("dot");
+	register_method<&CyPy_Vector3D::cross>("cross");
+	register_method<&CyPy_Vector3D::rotatex>("rotatex");
+	register_method<&CyPy_Vector3D::rotatey>("rotatey");
+	register_method<&CyPy_Vector3D::rotatez>("rotatez");
+	register_method<&CyPy_Vector3D::rotate>("rotate");
+	register_method<&CyPy_Vector3D::angle>("angle");
+	register_method<&CyPy_Vector3D::normalize>("normalize");
+	register_method<&CyPy_Vector3D::sqr_mag>("sqr_mag");
+	register_method<&CyPy_Vector3D::mag>("mag");
+	register_method<&CyPy_Vector3D::is_valid>("is_valid");
+	register_method<&CyPy_Vector3D::unit_vector>("unit_vector");
+	register_method<&CyPy_Vector3D::unit_vector_to>("unit_vector_to");
 
 	behaviors().readyType();
 }

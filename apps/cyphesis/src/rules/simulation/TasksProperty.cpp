@@ -20,15 +20,16 @@
 #include <Atlas/Objects/Operation.h>
 #include "TasksProperty.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
+#include "rules/EntityLocation_impl.h"
 #include "Task.h"
 
 #include "common/debug.h"
 #include "common/operations/Update.h"
 #include "BaseWorld.h"
+#include "common/AtlasFactories.h"
 
 #include <wfmath/atlasconv.h>
-#include <common/Inheritance.h>
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -301,7 +302,7 @@ HandlerResult TasksProperty::UseOperation(LocatedEntity& e,
 			return OPERATION_BLOCKED;
 		}
 
-		auto innerArgs = Inheritance::instance().getFactories().parseListOfObjects(argsElem.asList());
+		auto innerArgs = AtlasFactories::factories.parseListOfObjects(argsElem.asList());
 
 		if (innerArgs.empty()) {
 			actor->error(op, "Use arg for task has empty args", res, actor->getId());

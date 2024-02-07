@@ -17,6 +17,9 @@
 
 
 #include "MemMap.h"
+#include "rules/EntityLocation_impl.h"
+
+#include "common/log.h"
 
 #include "MemEntity.h"
 #include "BaseMind.h"
@@ -27,9 +30,11 @@
 #include "common/debug.h"
 #include "common/TypeNode.h"
 
+#include "rules/PhysicalProperties_impl.h"
+#include "rules/Location.h"
+
 #include <Atlas/Objects/Anonymous.h>
-#include "rules/AtlasProperties.h"
-#include "rules/PhysicalProperties.h"
+#include <Atlas/Objects/Operation.h>
 
 static const bool debug_flag = false;
 
@@ -53,7 +58,10 @@ void MemMap::addEntity(const Ref<MemEntity>& entity) {
 	m_checkIterator = m_entities.find(next);
 }
 
-void MemMap::readEntity(const Ref<MemEntity>& entity, const RootEntity& ent, std::chrono::milliseconds timestamp)
+void MemMap::readEntity(const Ref<MemEntity>& entity,
+						const RootEntity& ent,
+						std::chrono::milliseconds timestamp,
+						OpVector& res)
 // Read the contents of an Atlas message into an entity
 {
 	entity->m_lastUpdated = timestamp;
@@ -72,13 +80,11 @@ void MemMap::readEntity(const Ref<MemEntity>& entity, const RootEntity& ent, std
 				assert(entity->m_parent);
 				assert(old_loc != entity->m_parent);
 				if (old_loc) {
-					assert(old_loc->m_contains != nullptr);
-					old_loc->m_contains->erase(entity);
+					old_loc->m_contains.erase(entity);
 				}
-				if (entity->m_parent->m_contains == nullptr) {
-					entity->m_parent->m_contains = std::make_unique<LocatedEntitySet>();
-				}
-				entity->m_parent->m_contains->insert(entity);
+				entity->m_parent->m_contains.clear();
+
+				entity->m_parent->m_contains.insert(entity);
 			}
 		}
 	}
@@ -90,12 +96,12 @@ void MemMap::readEntity(const Ref<MemEntity>& entity, const RootEntity& ent, std
 	if (ent->hasAttrFlag(Atlas::Objects::PARENT_FLAG)) {
 		auto& parent = ent->getParent();
 		if (!entity->getType()) {
-			OpVector res;
+			//OpVector res;
 			auto type = m_typeResolver.requestType(parent, res);
-			std::move(res.begin(), res.end(), std::back_inserter(m_typeResolverOps));
+			//std::move(res.begin(), res.end(), std::back_inserter(m_typeResolverOps));
 
 			if (type) {
-				entity->setType(type);
+				entity->m_type = type;
 				applyTypePropertiesToEntity(entity);
 
 				if (m_listener) {
@@ -127,7 +133,10 @@ void MemMap::applyTypePropertiesToEntity(const Ref<MemEntity>& entity) {
 	}
 }
 
-void MemMap::updateEntity(const Ref<MemEntity>& entity, const RootEntity& ent, std::chrono::milliseconds timestamp)
+void MemMap::updateEntity(const Ref<MemEntity>& entity,
+						  const RootEntity& ent,
+						  std::chrono::milliseconds timestamp,
+						  OpVector& res)
 // Update contents of entity an Atlas message.
 {
 	assert(entity != nullptr);
@@ -135,7 +144,7 @@ void MemMap::updateEntity(const Ref<MemEntity>& entity, const RootEntity& ent, s
 	cy_debug_print(" got " << entity->describeEntity())
 
 	auto old_loc = entity->m_parent;
-	readEntity(entity, ent, timestamp);
+	readEntity(entity, ent, timestamp, res);
 
 	//Only signal for those entities that have resolved types.
 	if (entity->getType()) {
@@ -147,14 +156,18 @@ void MemMap::updateEntity(const Ref<MemEntity>& entity, const RootEntity& ent, s
 }
 
 Ref<MemEntity> MemMap::newEntity(const RouterId& id,
-								 const RootEntity& ent, std::chrono::milliseconds timestamp)
+								 const RootEntity& ent,
+								 std::chrono::milliseconds timestamp,
+								 OpVector& res)
 // Create a new entity from an Atlas message.
 {
 	assert(m_entities.find(id.m_intId) == m_entities.end());
 
-	Ref<MemEntity> entity = new MemEntity(id);
+	auto type = ent->isDefaultParent() ? nullptr : m_typeResolver.getTypeStore().getType(ent->getParent());
 
-	readEntity(entity, ent, timestamp);
+	Ref<MemEntity> entity = new MemEntity(id, type);
+
+	readEntity(entity, ent, timestamp, res);
 
 	addEntity(entity);
 	return entity;
@@ -197,7 +210,7 @@ Ref<MemEntity> MemMap::addId(const RouterId& id)
 	cy_debug_print("MemMap::add_id")
 	m_additionsById.emplace_back(id.m_id);
 	//TODO: Should we perhaps wait with creating new entities until we've actually gotten the entity data?
-	Ref<MemEntity> entity(new MemEntity(id));
+	Ref<MemEntity> entity(new MemEntity(id, nullptr));
 	addEntity(entity);
 	return entity;
 }
@@ -295,7 +308,7 @@ void MemMap::addContents(const RootEntity& ent)
 	}
 }
 
-Ref<MemEntity> MemMap::updateAdd(const RootEntity& ent, std::chrono::milliseconds d)
+Ref<MemEntity> MemMap::updateAdd(const RootEntity& ent, std::chrono::milliseconds d, OpVector& res)
 // Update an entity in our memory, from an Atlas message
 // The mind code relies on this function never sending a Sight to
 // be sure that seeing something created does not imply that the created
@@ -323,12 +336,14 @@ Ref<MemEntity> MemMap::updateAdd(const RootEntity& ent, std::chrono::millisecond
 	auto I = m_entities.find(int_id);
 	Ref<MemEntity> entity;
 	if (I == m_entities.end()) {
-		entity = newEntity(RouterId{int_id}, ent, d);
+		entity = newEntity(RouterId{int_id}, ent, d, res);
 	} else {
 		entity = I->second;
-		updateEntity(entity, ent, d);
+		updateEntity(entity, ent, d, res);
 	}
-	entity->update(d);
+	if (entity) {
+		entity->update(d);
+	}
 	return entity;
 }
 
@@ -383,22 +398,19 @@ EntityVector MemMap::findByType(const std::string& what)
 	for (auto& entry: m_entities) {
 		auto item = entry.second;
 		cy_debug_print("Found" << what << ":" << item->describeEntity())
-		if (item->isVisible() && item->getType() && item->getType()->name() == what) {
+		if (item->getType() && item->getType()->name() == what) {
 			res.push_back(item.get());
 		}
 	}
 	return res;
 }
 
-EntityVector MemMap::findByLocation(const EntityLocation& loc,
+EntityVector MemMap::findByLocation(const EntityLocation<MemEntity>& loc,
 									WFMath::CoordType radius,
 									const std::string& what) const {
 	//TODO: move to awareness
 	EntityVector res;
 	auto place = loc.m_parent;
-	if (place->m_contains == nullptr) {
-		return res;
-	}
 #ifndef NDEBUG
 	auto place_by_id = get(place->getId());
 	if (place != place_by_id) {
@@ -411,13 +423,10 @@ EntityVector MemMap::findByLocation(const EntityLocation& loc,
 #endif // NDEBUG
 
 	WFMath::CoordType square_range = radius * radius;
-	for (auto& item: *place->m_contains) {
+	for (auto& item: place->m_contains) {
 		assert(item != nullptr);
 		if (!item) {
 			spdlog::error("Weird entity in memory");
-			continue;
-		}
-		if (!item->isVisible()) {
 			continue;
 		}
 
@@ -425,7 +434,7 @@ EntityVector MemMap::findByLocation(const EntityLocation& loc,
 		if (item->getType() && item->getType()->name() != what) {
 			continue;
 		}
-		auto posProp = item->getPropertyClassFixed<PositionProperty>();
+		auto posProp = item->getPropertyClassFixed<PositionProperty<MemEntity>>();
 		if (!posProp || !posProp->data().isValid()) {
 			continue;
 		}
@@ -443,8 +452,8 @@ void MemMap::check(std::chrono::milliseconds time) {
 	} else {
 		auto me = m_checkIterator->second;
 		assert(me);
-		if (me->getType() && !me->isVisible() && (time - me->lastSeen()) > std::chrono::seconds(600) &&
-			(me->m_contains == nullptr || me->m_contains->empty())) {
+		if (me->getType() && (time - me->lastSeen()) > std::chrono::seconds(600) &&
+			(!me->m_contains.empty())) {
 			m_checkIterator = m_entities.erase(m_checkIterator);
 
 			if (me->m_parent) {
@@ -454,7 +463,7 @@ void MemMap::check(std::chrono::milliseconds time) {
 
 		} else {
 			cy_debug_print(me->describeEntity() << "|"
-												<< me->lastSeen().count() << "|" << me->isVisible()
+												<< me->lastSeen().count()
 												<< " is fine")
 			++m_checkIterator;
 		}
@@ -465,6 +474,7 @@ void MemMap::flush() {
 	cy_debug_print("Flushing memory with " << m_entities.size()
 										   << " entities and " << m_entityRelatedMemory.size() << " entity memories.")
 	m_entities.clear();
+	m_checkIterator = m_entities.begin();
 	m_entityRelatedMemory.clear();
 }
 
@@ -472,14 +482,14 @@ void MemMap::setListener(MapListener* listener) {
 	m_listener = listener;
 }
 
-std::vector<Ref<MemEntity>> MemMap::resolveEntitiesForType(const TypeNode* typeNode) {
+std::vector<Ref<MemEntity>> MemMap::resolveEntitiesForType(const TypeNode<MemEntity>* typeNode) {
 	std::vector<Ref<MemEntity>> resolvedEntities;
 
 	auto I = m_unresolvedEntities.find(typeNode->name());
 	if (I != m_unresolvedEntities.end()) {
 		for (auto& entity: I->second) {
 			//spdlog::debug("Resolved entity {}.", entity->getId());
-			entity->setType(typeNode);
+			entity->m_type = typeNode;
 			applyTypePropertiesToEntity(entity);
 
 			if (m_listener) {
@@ -494,7 +504,7 @@ std::vector<Ref<MemEntity>> MemMap::resolveEntitiesForType(const TypeNode* typeN
 	return resolvedEntities;
 }
 
-const TypeStore& MemMap::getTypeStore() const {
+const TypeStore<MemEntity>& MemMap::getTypeStore() const {
 	return m_typeResolver.getTypeStore();
 }
 

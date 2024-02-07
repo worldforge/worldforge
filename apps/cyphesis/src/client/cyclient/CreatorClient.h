@@ -21,8 +21,9 @@
 
 #include "CharacterClient.h"
 
-class LocatedEntity;
+class MemEntity;
 
+template<typename>
 struct TypeStore;
 
 /// \brief Class to implement a creator entity in an admin client
@@ -31,12 +32,12 @@ public:
 	CreatorClient(RouterId mindId,
 				  const std::string& entityId,
 				  ClientConnection&,
-				  TypeStore& typeStore);
+				  TypeStore<MemEntity>& typeStore);
 
-	LocatedEntity* handleMakeResponse(const Atlas::Objects::Operation::RootOperation&,
+	MemEntity* handleMakeResponse(const Atlas::Objects::Operation::RootOperation&,
 									  std::chrono::milliseconds);
 
-	Ref<LocatedEntity> make(const Atlas::Objects::Entity::RootEntity&);
+	Ref<MemEntity> make(const Atlas::Objects::Entity::RootEntity&);
 
 	void sendSet(const std::string&, const Atlas::Objects::Entity::RootEntity&);
 

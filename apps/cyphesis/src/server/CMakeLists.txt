@@ -26,7 +26,6 @@ set(server_files
         ServerAccount.cpp
         Persistence.cpp
         EntityFactory.cpp
-        EntityFactory_impl.h
         ServerRouting.cpp
         StorageManager.cpp
         Ruleset.cpp
@@ -86,9 +85,6 @@ target_link_libraries(cyphesis
         cyphesis-server
         cyphesis-rulessimulation_python
         cyphesis-rulessimulation
-        cyphesis-entityfilter_python
-        cyphesis-entityfilter
-        cyphesis-rulesbase_python
         cyphesis-rulesbase
         cyphesis-atlas_python
         cyphesis-common_python

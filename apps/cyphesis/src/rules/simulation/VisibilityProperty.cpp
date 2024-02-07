@@ -17,7 +17,7 @@
 
 #include "VisibilityProperty.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 VisibilityProperty::VisibilityProperty()
 		: mData(Visibility::Public) {

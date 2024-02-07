@@ -17,8 +17,8 @@
 
 
 #include "TerrainProperty.h"
-#include "rules/LocatedEntity.h"
-#include "rules/Domain.h"
+#include "rules/simulation/LocatedEntity.h"
+#include "rules/simulation/Domain.h"
 
 #include "common/debug.h"
 #include "common/TypeNode.h"
@@ -212,7 +212,7 @@ std::optional<std::vector<LocatedEntity*>> TerrainProperty::findMods(LocatedEnti
 				continue;
 			}
 			cy_debug_print("Context has id" << c->m_id);
-			auto tc = static_cast<TerrainContext*>(c);
+			auto tc = static_cast<TerrainContext<LocatedEntity>*>(c);
 			cy_debug_print("Context has pointer " << tc->m_entity.get());
 			ret.push_back(tc->m_entity.get());
 		}

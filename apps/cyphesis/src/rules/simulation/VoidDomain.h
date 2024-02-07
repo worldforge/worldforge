@@ -18,7 +18,7 @@
 #ifndef VOIDDOMAIN_H_
 #define VOIDDOMAIN_H_
 
-#include "rules/Domain.h"
+#include "rules/simulation/Domain.h"
 
 /**
  * @brief An empty domain, in which nothing can move, and nothing can be seen.

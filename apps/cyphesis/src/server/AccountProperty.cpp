@@ -19,7 +19,7 @@
 #include "AccountProperty.h"
 #include "ServerRouting.h"
 #include "Account.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 ServerRouting* AccountProperty::s_serverRouting;
 

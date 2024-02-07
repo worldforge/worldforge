@@ -19,28 +19,31 @@
 #ifndef SERVER_CORE_PROPERTY_MANAGER_H
 #define SERVER_CORE_PROPERTY_MANAGER_H
 
-#include <common/Inheritance.h>
+#include "rules/simulation/Inheritance.h"
 #include "common/PropertyFactory.h"
 #include "common/PropertyManager.h"
 #include "common/Property.h"
+#include "common/custom.h"
+#include "rules/simulation/LocatedEntity.h"
+#include "common/type_utils.h"
 
 /// \brief Property manager for the core server. Handles assigning properties
 /// to entity instances in the world.
-class CorePropertyManager : public PropertyManager {
+class CorePropertyManager : public PropertyManager<LocatedEntity> {
 protected:
 	template<typename T>
-	PropertyFactory<Property<T>>* installBaseProperty(const std::string& type_name,
-													  const std::string& parent);
+	PropertyFactory<Property<T, LocatedEntity>, LocatedEntity>* installBaseProperty(const std::string& type_name,
+																					const std::string& parent);
 
 	template<class PropertyT>
-	PropertyFactory<PropertyT>* installProperty(const std::string& type_name,
-												const std::string& parent);
+	PropertyFactory<PropertyT, LocatedEntity>* installProperty(const std::string& type_name,
+															   const std::string& parent);
 
 	template<class PropertyT>
-	PropertyFactory<PropertyT>* installProperty(const std::string& type_name);
+	PropertyFactory<PropertyT, LocatedEntity>* installProperty(const std::string& type_name);
 
 	template<class PropertyT>
-	PropertyFactory<PropertyT>* installProperty();
+	PropertyFactory<PropertyT, LocatedEntity>* installProperty();
 
 	Inheritance& m_inheritance;
 
@@ -53,36 +56,36 @@ public:
 
 	int installFactory(const std::string& type_name,
 					   const Atlas::Objects::Root& type_desc,
-					   std::unique_ptr<PropertyKit> factory) override;
+					   std::unique_ptr<PropertyKit<LocatedEntity>> factory) override;
 
 };
 
 
 template<typename T>
-PropertyFactory<Property<T>>* CorePropertyManager::installBaseProperty(const std::string& type_name,
-																	   const std::string& parent) {
-	return this->installProperty<Property<T>>(type_name, parent);
+PropertyFactory<Property<T, LocatedEntity>, LocatedEntity>* CorePropertyManager::installBaseProperty(const std::string& type_name,
+																									 const std::string& parent) {
+	return this->installProperty<Property<T, LocatedEntity>>(type_name, parent);
 }
 
 template<typename PropertyT>
-PropertyFactory<PropertyT>* CorePropertyManager::installProperty(const std::string& type_name,
-																 const std::string& parent) {
-	auto factory = new PropertyFactory<PropertyT>{};
+PropertyFactory<PropertyT, LocatedEntity>* CorePropertyManager::installProperty(const std::string& type_name,
+																				const std::string& parent) {
+	auto factory = new PropertyFactory<PropertyT, LocatedEntity>{};
 	//Attach visibility flags. Properties that starts with "__" are private, "_" are protected and the rest are public.
 	factory->m_flags = PropertyUtil::flagsForPropertyName(type_name);
 	installFactory(type_name,
 				   atlasType(type_name, parent),
-				   std::unique_ptr<PropertyFactory<PropertyT>>(factory));
+				   std::unique_ptr<PropertyFactory<PropertyT, LocatedEntity>>(factory));
 	return factory;
 }
 
 template<typename PropertyT>
-PropertyFactory<PropertyT>* CorePropertyManager::installProperty(const std::string& type_name) {
+PropertyFactory<PropertyT, LocatedEntity>* CorePropertyManager::installProperty(const std::string& type_name) {
 	return this->installProperty<PropertyT>(type_name, PropertyT::property_atlastype);
 }
 
 template<typename PropertyT>
-PropertyFactory<PropertyT>* CorePropertyManager::installProperty() {
+PropertyFactory<PropertyT, LocatedEntity>* CorePropertyManager::installProperty() {
 	return this->installProperty<PropertyT>(PropertyT::property_name, PropertyT::property_atlastype);
 }
 

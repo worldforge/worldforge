@@ -19,7 +19,7 @@
 #ifndef RULESETS_MIND_PROPERTY_H
 #define RULESETS_MIND_PROPERTY_H
 
-#include "common/Property.h"
+#include "rules/simulation/PropertyBase.h"
 
 class MindKit;
 

@@ -18,7 +18,7 @@
 #ifndef RULESETS_PROPELPROPERTY_H_
 #define RULESETS_PROPELPROPERTY_H_
 
-#include "common/Property.h"
+#include "PropertyBase.h"
 
 #include <wfmath/vector.h>
 

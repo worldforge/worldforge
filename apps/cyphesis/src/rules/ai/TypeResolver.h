@@ -21,6 +21,7 @@
 
 #include "common/OperationRouter.h"
 #include "common/TypeStore.h"
+#include "MemEntity.h"
 
 #include <map>
 #include <string>
@@ -28,24 +29,23 @@
 #include <Atlas/Objects/RootEntity.h>
 #include <optional>
 
-class TypeNode;
 
 class TypeResolver {
 public:
 
-	explicit TypeResolver(TypeStore& typeStore);
+	explicit TypeResolver(TypeStore<MemEntity>& typeStore);
 
 	std::optional<std::string> m_typeProviderId;
 
-	std::set<const TypeNode*> InfoOperation(const Operation& op, OpVector& res);
+	std::set<const TypeNode<MemEntity>*> InfoOperation(const Operation& op, OpVector& res);
 
-	const TypeNode* requestType(const std::string& id, OpVector& res);
+	const TypeNode<MemEntity>* requestType(const std::string& id, OpVector& res);
 
-	const TypeStore& getTypeStore() const;
+	const TypeStore<MemEntity>& getTypeStore() const;
 
 private:
 
-	TypeStore& m_typeStore;
+	TypeStore<MemEntity>& m_typeStore;
 
 	struct PendingType {
 		Atlas::Objects::Root ent;
@@ -54,10 +54,10 @@ private:
 
 	std::map<std::string, PendingType> m_pendingTypes;
 
-	std::set<const TypeNode*> processTypeData(const Atlas::Objects::Root& data, OpVector& res);
+	std::set<const TypeNode<MemEntity>*> processTypeData(const Atlas::Objects::Root& data, OpVector& res);
 
 
-	std::set<const TypeNode*> resolveType(const std::string& id, const Atlas::Objects::Root& ent, OpVector& res);
+	std::set<const TypeNode<MemEntity>*> resolveType(const std::string& id, const Atlas::Objects::Root& ent, OpVector& res);
 };
 
 

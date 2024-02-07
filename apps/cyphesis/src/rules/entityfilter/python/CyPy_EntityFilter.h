@@ -19,7 +19,7 @@
 #ifndef CYPHESIS_CYPY_ENTITYFILTER_H
 #define CYPHESIS_CYPY_ENTITYFILTER_H
 
-#include <rules/entityfilter/Filter.h>
+#include "rules/entityfilter/Filter.h"
 #include "pycxx/CXX/Objects.hxx"
 #include "pycxx/CXX/Extensions.hxx"
 #include "pythonbase/WrapperBase.h"
@@ -29,12 +29,13 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Filter : public WrapperBase<std::shared_ptr<EntityFilter::Filter>, CyPy_Filter> {
+template <typename EntityT>
+class CyPy_Filter : public WrapperBase<std::shared_ptr<EntityFilter::Filter<EntityT>>, CyPy_Filter<EntityT>> {
 public:
 
 	CyPy_Filter(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-	CyPy_Filter(Py::PythonClassInstance* self, std::shared_ptr<EntityFilter::Filter> value);
+	CyPy_Filter(Py::PythonClassInstance* self, std::shared_ptr<EntityFilter::Filter<EntityT>> value);
 
 	static void init_type();
 
@@ -47,7 +48,8 @@ private:
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_EntityFilter : public Py::ExtensionModule<CyPy_EntityFilter> {
+template <typename EntityT>
+class CyPy_EntityFilter : public Py::ExtensionModule<CyPy_EntityFilter<EntityT>> {
 public:
 	CyPy_EntityFilter();
 

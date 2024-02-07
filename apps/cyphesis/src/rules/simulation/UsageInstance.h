@@ -21,6 +21,7 @@
 
 #include "rules/entityfilter/Filter.h"
 #include "rules/EntityLocation.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "modules/Ref.h"
 #include "common/Property.h"
 
@@ -39,7 +40,7 @@ class Object;
  * This struct defines the requirements for a parameter.
  */
 struct UsageParameter {
-	typedef boost::variant<EntityLocation, WFMath::Point<3>, WFMath::Vector<3>> UsageArg;
+	typedef boost::variant<EntityLocation<LocatedEntity>, WFMath::Point<3>, WFMath::Vector<3>> UsageArg;
 
 	/**
 	 * The type of parameter.
@@ -71,7 +72,7 @@ struct UsageParameter {
 	 * An optional constraint.
 	 * A shared_ptr to allow for easier Python bindings.
 	 */
-	std::shared_ptr<EntityFilter::Filter> constraint;
+	std::shared_ptr<EntityFilter::Filter<LocatedEntity>> constraint;
 	/*
 	 * The minimum number of entries required for this parameter.
 	 * Defaults to 1.
@@ -97,7 +98,7 @@ struct Usage {
 	 * The Python script which will handle this op.
 	 */
 	std::string handler;
-	std::shared_ptr<EntityFilter::Filter> constraint;
+	std::shared_ptr<EntityFilter::Filter<LocatedEntity>> constraint;
 };
 
 class UsageInstance {

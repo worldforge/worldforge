@@ -163,9 +163,9 @@ public:
 
 	virtual std::unique_ptr<ArchetypeFactory> duplicateFactory();
 
-	void addProperties(const PropertyManager& propertyManager) override;
+	void addProperties(const PropertyManager<LocatedEntity>& propertyManager) override;
 
-	void updateProperties(std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes, const PropertyManager& propertyManager) override;
+	void updateProperties(std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes, const PropertyManager<LocatedEntity>& propertyManager) override;
 
 
 	EntityBuilder& m_entityBuilder;

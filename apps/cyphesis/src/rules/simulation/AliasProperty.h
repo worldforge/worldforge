@@ -20,6 +20,7 @@
 #define CYPHESIS_ALIASPROPERTY_H
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 
 /**
  * Registers the entity to a certain "alias" in the system, allow rules and scripts to refer to it.
@@ -27,7 +28,7 @@
  * The alias is global for the whole system.
  * \ingroup PropertyClasses
  */
-class AliasProperty : public Property<std::string> {
+class AliasProperty : public Property<std::string, LocatedEntity> {
 public:
 	static constexpr const char* property_name = "__alias";
 

@@ -18,7 +18,7 @@
 #ifndef PHYSICALDOMAIN_H_
 #define PHYSICALDOMAIN_H_
 
-#include "rules/Domain.h"
+#include "rules/simulation/Domain.h"
 #include "rules/Location.h"
 #include "ModeProperty.h"
 #include "rules/PhysicalProperties.h"
@@ -140,10 +140,10 @@ protected:
 		 * The following properties are all "physical" properties which only make sense in this domain.
 		 * The current setup is to have them as regular properties, but in reality they are "owned" by this domain.
 		 */
-		PositionProperty& positionProperty;
-		VelocityProperty& velocityProperty;
-		AngularVelocityProperty& angularVelocityProperty;
-		OrientationProperty& orientationProperty;
+		PositionProperty<LocatedEntity>& positionProperty;
+		VelocityProperty<LocatedEntity>& velocityProperty;
+		AngularVelocityProperty<LocatedEntity>& angularVelocityProperty;
+		OrientationProperty<LocatedEntity>& orientationProperty;
 
 		/**
 		 * We keep a copy of the bbox here for quick lookup.
@@ -268,8 +268,8 @@ protected:
 		 */
 		struct {
 			const PropelProperty* propelProperty;
-			const QuaternionProperty* directionProperty;
-			const Vector3Property* destinationProperty;
+			const QuaternionProperty<LocatedEntity>* directionProperty;
+			const Vector3Property<LocatedEntity>* destinationProperty;
 		} control;
 
 	};
@@ -381,10 +381,10 @@ protected:
 	double m_visibilityCheckCountdown;
 
 	struct {
-		PositionProperty positionProperty;
-		VelocityProperty velocityProperty;
-		AngularVelocityProperty angularVelocityProperty;
-		OrientationProperty orientationProperty;
+		PositionProperty<LocatedEntity> positionProperty;
+		VelocityProperty<LocatedEntity> velocityProperty;
+		AngularVelocityProperty<LocatedEntity> angularVelocityProperty;
+		OrientationProperty<LocatedEntity> orientationProperty;
 	} mFakeProperties;
 
 
@@ -468,7 +468,7 @@ protected:
 
 	void processDirtyTerrainAreas();
 
-	void applyDestination(std::chrono::milliseconds tickSize, BulletEntry& entry, const PropelProperty* propelProp, const Vector3Property& destinationProp);
+	void applyDestination(std::chrono::milliseconds tickSize, BulletEntry& entry, const PropelProperty* propelProp, const Vector3Property<LocatedEntity>& destinationProp);
 
 	void applyPropel(BulletEntry& entry, btVector3 propel);
 

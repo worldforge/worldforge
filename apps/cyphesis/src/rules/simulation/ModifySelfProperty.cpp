@@ -18,9 +18,9 @@
 
 #include <rules/entityfilter/Providers.h>
 #include "ModifySelfProperty.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "BaseWorld.h"
-#include "common/Inheritance.h"
+#include "Inheritance.h"
 #include "ModifiersProperty.h"
 
 PropertyInstanceState<ModifySelfProperty::State> ModifySelfProperty::sInstanceState;
@@ -103,7 +103,7 @@ void ModifySelfProperty::checkIfActive(LocatedEntity& entity) {
 		if (!modifyEntry.constraint) {
 			apply = true;
 		} else {
-			EntityFilter::QueryContext queryContext{entity, &entity};
+			EntityFilter::QueryContext<LocatedEntity> queryContext{entity, &entity};
 			queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
 			queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
 			apply = modifyEntry.constraint->match(queryContext);

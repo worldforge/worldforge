@@ -20,13 +20,14 @@
 #define CYPHESIS_PERCEPTIONSIGHTPROPERTY_H
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 
 /**
  * Determines whether the entity is perceptive or not, and by which factor [0..1].
  *
  * \ingroup PropertyClasses
  */
-class PerceptionSightProperty : public Property<double> {
+class PerceptionSightProperty : public Property<double, LocatedEntity> {
 public:
 	static constexpr const char* property_name = "perception_sight";
 

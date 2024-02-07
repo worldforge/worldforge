@@ -20,9 +20,9 @@
 
 #include "rules/python/CyPy_Element.h"
 #include "rules/python/CyPy_RootEntity.h"
-#include "rules/python/CyPy_LocatedEntity.h"
 #include "rules/python/CyPy_Operation.h"
 #include "rules/ai/python/CyPy_MemMap.h"
+#include "rules/ai/python/CyPy_MemEntity.h"
 #include "rules/python/CyPy_Location.h"
 
 #include "common/TypeNode.h"
@@ -43,17 +43,15 @@ void CyPy_CreatorClient::init_type() {
 	behaviors().name("CreatorClient");
 	behaviors().doc("");
 
-	PYCXX_ADD_VARARGS_METHOD(make, make, "");
-	PYCXX_ADD_VARARGS_METHOD(set, set, "");
-	PYCXX_ADD_VARARGS_METHOD(send, send, "");
-	PYCXX_ADD_VARARGS_METHOD(look, look, "");
-	PYCXX_ADD_VARARGS_METHOD(look_for, look_for, "");
-	PYCXX_ADD_VARARGS_METHOD(delete, delete_, "");
+	register_method<&CyPy_CreatorClient::make>("make");
+	register_method<&CyPy_CreatorClient::set>("set");
+	register_method<&CyPy_CreatorClient::send>("send");
+	register_method<&CyPy_CreatorClient::look>("look");
+	register_method<&CyPy_CreatorClient::look_for>("look_for");
+	register_method<&CyPy_CreatorClient::delete_>("delete");
 
 	behaviors().readyType();
 }
-
-
 
 
 Py::Object CyPy_CreatorClient::make(const Py::Tuple& args) {
@@ -64,7 +62,7 @@ Py::Object CyPy_CreatorClient::make(const Py::Tuple& args) {
 	if (!retval) {
 		throw Py::RuntimeError("Entity creation failed");
 	}
-	return CyPy_LocatedEntity::wrap(retval);
+	return CyPy_MemEntity::wrap(retval);
 }
 
 Py::Object CyPy_CreatorClient::set(const Py::Tuple& args) {
@@ -79,7 +77,7 @@ Py::Object CyPy_CreatorClient::look(const Py::Tuple& args) {
 	if (!retval) {
 		throw Py::RuntimeError("Entity look failed");
 	}
-	return CyPy_LocatedEntity::wrap(std::move(retval));
+	return CyPy_MemEntity::wrap(std::move(retval));
 }
 
 Py::Object CyPy_CreatorClient::look_for(const Py::Tuple& args) {
@@ -88,7 +86,7 @@ Py::Object CyPy_CreatorClient::look_for(const Py::Tuple& args) {
 	if (!retval) {
 		return Py::None();
 	}
-	return CyPy_LocatedEntity::wrap(std::move(retval));
+	return CyPy_MemEntity::wrap(std::move(retval));
 }
 
 Py::Object CyPy_CreatorClient::send(const Py::Tuple& args) {
@@ -123,7 +121,7 @@ Py::Object CyPy_CreatorClient::getattro(const Py::String& name) {
 	}
 	if (nameStr == "entity") {
 		if (m_value->getEntity()) {
-			return CyPy_LocatedEntity::wrap(m_value->getEntity());
+			return CyPy_MemEntity::wrap(m_value->getEntity());
 		} else {
 			return Py::None();
 		}

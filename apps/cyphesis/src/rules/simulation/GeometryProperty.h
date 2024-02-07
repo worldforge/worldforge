@@ -19,6 +19,7 @@
 #define RULESETS_GEOMETRYPROPERTY_H_
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 #include <wfmath/axisbox.h>
 #include <wfmath/point.h>
 #include <wfmath/vector.h>
@@ -62,7 +63,7 @@ class OgreMeshDeserializer;
  *
  * @ingroup PropertyClasses
  */
-class GeometryProperty : public Property<Atlas::Message::MapType> {
+class GeometryProperty : public Property<Atlas::Message::MapType, LocatedEntity> {
 public:
 
 	static constexpr const char* property_name = "geometry";
@@ -73,7 +74,7 @@ public:
 
 	void set(const Atlas::Message::Element&) override;
 
-	void install(TypeNode&, const std::string&) override;
+	void install(TypeNode<LocatedEntity>&, const std::string&) override;
 
 	GeometryProperty* copy() const override;
 
@@ -119,7 +120,7 @@ protected:
 
 	WFMath::AxisBox<3> m_meshBounds;
 
-	boost::variant<LocatedEntity*, TypeNode*> m_owner;
+	boost::variant<LocatedEntity*, TypeNode<LocatedEntity>*> m_owner;
 
 	/**
 	 * Creator function used for creating a new shape instance.

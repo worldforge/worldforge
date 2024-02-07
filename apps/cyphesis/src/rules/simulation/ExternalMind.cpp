@@ -18,12 +18,12 @@
 
 #include "ExternalMind.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "rules/simulation/BaseWorld.h"
 #include "common/Link.h"
 #include "common/TypeNode.h"
-#include "common/Inheritance.h"
+#include "Inheritance.h"
 
 #include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Objects/Operation.h>

@@ -17,10 +17,10 @@
  */
 
 #include <rules/python/CyPy_Point3D.h>
-#include <rules/python/CyPy_EntityLocation.h>
-#include <rules/python/CyPy_Location.h>
-#include <rules/python/CyPy_LocatedEntity.h>
+#include <rules/python/CyPy_EntityLocation_impl.h>
+#include <rules/python/CyPy_Location_impl.h>
 #include <rules/python/CyPy_Vector3D.h>
+#include "CyPy_MemEntity.h"
 #include "CyPy_Steering.h"
 #include "navigation/Steering.h"
 
@@ -32,16 +32,16 @@ auto toMeasureType = [](long value) {
 	return Steering::MeasureType::EDGE;
 };
 
-//Allow both Location and EntityLocation as well as LocatedEntity
-auto toEntityLocation = [](const Py::Object& pyobj) -> EntityLocation {
+//Allow both Location and EntityLocation as well as MemEntity
+auto toEntityLocation = [](const Py::Object& pyobj) -> EntityLocation<MemEntity> {
 
-	if (CyPy_LocatedEntity::check(pyobj)) {
-		return EntityLocation(CyPy_LocatedEntity::value(pyobj));
+	if (CyPy_MemEntity::check(pyobj)) {
+		return EntityLocation<MemEntity>(CyPy_MemEntity::value(pyobj));
 	}
-	if (CyPy_Location::check(pyobj)) {
-		return CyPy_Location::value(pyobj);
+	if (CyPy_Location<MemEntity, CyPy_MemEntity>::check(pyobj)) {
+		return CyPy_Location<MemEntity, CyPy_MemEntity>::value(pyobj);
 	}
-	return verifyObject<CyPy_EntityLocation>(pyobj);
+	return verifyObject<CyPy_EntityLocation<MemEntity, CyPy_MemEntity>>(pyobj);
 };
 }
 
@@ -59,15 +59,13 @@ void CyPy_Steering::init_type() {
 	behaviors().name("Steering");
 	behaviors().doc("");
 
-	PYCXX_ADD_VARARGS_METHOD(set_destination, setDestination, "");
-	PYCXX_ADD_NOARGS_METHOD(is_at_current_destination, isAtCurrentDestination, "");
-	PYCXX_ADD_VARARGS_METHOD(set_speed, setSpeed, "");
-	PYCXX_ADD_VARARGS_METHOD(query_destination, queryDestination, "");
-	// PYCXX_ADD_VARARGS_METHOD(is_at_location, isAtLocation, "");
-	PYCXX_ADD_VARARGS_METHOD(distance_to, distanceTo, "");
-	PYCXX_ADD_VARARGS_METHOD(direction_to, direction_to, "");
-	//PYCXX_ADD_VARARGS_METHOD(distance_between, distanceBetween, "");
-	PYCXX_ADD_NOARGS_METHOD(refresh_path, refreshPath, "");
+	register_method<&CyPy_Steering::setDestination>("set_destination", "");
+	register_method<&CyPy_Steering::isAtCurrentDestination>("is_at_current_destination", "");
+	register_method<&CyPy_Steering::setSpeed>("set_speed", "");
+	register_method<&CyPy_Steering::queryDestination>("query_destination", "");
+	register_method<&CyPy_Steering::distanceTo>("distance_to", "");
+	register_method<&CyPy_Steering::direction_to>("direction_to", "");
+	register_method<&CyPy_Steering::refreshPath>("refresh_path", "");
 
 	behaviors().readyType();
 }
@@ -168,7 +166,7 @@ Py::Object CyPy_Steering::queryDestination(const Py::Tuple& args) {
 	args.verify_length(1);
 
 
-	auto& entityLocation = verifyObject<CyPy_EntityLocation>(args[0]);
+	auto& entityLocation = verifyObject<CyPy_EntityLocation<MemEntity, CyPy_MemEntity>>(args[0]);
 
 	auto steering = m_value->getSteering();
 	if (!steering) {

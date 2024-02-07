@@ -17,7 +17,7 @@
  */
 
 #include "TypeUpdateCoordinator.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "Account.h"
 #include "common/debug.h"
 #include <Atlas/Objects/Operation.h>
@@ -30,7 +30,7 @@ TypeUpdateCoordinator::TypeUpdateCoordinator(Inheritance& inheritance, WorldRout
     /**
         * When types are updated we will send an "change" op to all connected clients.
         */
-    inheritance.typesUpdated.connect([&](const std::map<const TypeNode*, TypeNode::PropertiesUpdate> typeNodes) {
+    inheritance.typesUpdated.connect([&](const std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> typeNodes) {
         //Send Change ops to all clients
         if (!typeNodes.empty()) {
             Atlas::Objects::Operation::Change change;

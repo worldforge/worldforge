@@ -19,7 +19,7 @@
 #ifndef RULESETS_LINE_PROPERTY_H
 #define RULESETS_LINE_PROPERTY_H
 
-#include "common/Property.h"
+#include "PropertyBase.h"
 
 #include "physics/Vector3D.h"
 

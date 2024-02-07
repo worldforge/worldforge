@@ -22,8 +22,7 @@
 #include <vector>
 
 
-struct IHeightProvider
-{
+struct IHeightProvider {
 	virtual ~IHeightProvider() = default;
 
 	/**
@@ -37,7 +36,6 @@ struct IHeightProvider
 	virtual void blitHeights(int xMin, int xMax, int yMin, int yMax, std::vector<float>& heights) const = 0;
 
 };
-
 
 
 #endif /* EMBER_DOMAIN_IHEIGHTPROVIDER_H_ */

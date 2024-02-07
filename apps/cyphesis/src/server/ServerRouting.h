@@ -79,15 +79,9 @@ public:
 
 	void disconnectAllConnections();
 
-	void registerConnection(Connection* connection) {
-		m_connections.insert(connection);
-		m_numClients++;
-	}
+	void registerConnection(Connection* connection);
 
-	void deregisterConnection(Connection* connection) {
-		m_connections.erase(connection);
-		m_numClients--;
-	}
+	void deregisterConnection(Connection* connection);
 
 	/// Accessor for the number of clients connected to this server.
 	size_t getClients() { return m_connections.size(); }

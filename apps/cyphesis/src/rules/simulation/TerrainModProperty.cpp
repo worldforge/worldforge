@@ -17,10 +17,10 @@
 
 #include "TerrainModProperty.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "TerrainModTranslator.h"
 #include "TerrainProperty.h"
-#include "rules/Domain.h"
+#include "rules/simulation/Domain.h"
 
 #include "common/debug.h"
 

@@ -29,8 +29,6 @@ struct IHeightProvider;
 
 class Awareness;
 
-class LocatedEntity;
-
 class MemEntity;
 
 class AwarenessStore {

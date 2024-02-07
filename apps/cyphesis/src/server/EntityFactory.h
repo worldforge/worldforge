@@ -99,9 +99,9 @@ public:
 
 	virtual std::unique_ptr<EntityFactoryBase> duplicateFactory() = 0;
 
-	void addProperties(const PropertyManager& propertyManager) override;
+	void addProperties(const PropertyManager<LocatedEntity>& propertyManager) override;
 
-	void updateProperties(std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes, const PropertyManager& propertyManager) override;
+	void updateProperties(std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes, const PropertyManager<LocatedEntity>& propertyManager) override;
 
 };
 

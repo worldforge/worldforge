@@ -23,43 +23,45 @@
 #include "Providers.h"
 
 namespace EntityFilter {
+struct Segment {
+	std::string delimiter;
+	std::string attribute;
+};
+typedef std::list<Segment> SegmentsList;
 
+template<typename EntityT>
 class ProviderFactory {
 public:
-	struct Segment {
-		std::string delimiter;
-		std::string attribute;
-	};
-	typedef std::list<Segment> SegmentsList;
+
 
 	virtual ~ProviderFactory() = default;
 
-	virtual std::shared_ptr<Consumer<QueryContext>> createProviders(SegmentsList segments) const;
+	virtual std::shared_ptr<Consumer<QueryContext<EntityT>>> createProviders(SegmentsList segments) const;
 
-	virtual std::shared_ptr<Consumer<QueryContext>> createProvider(Segment segment) const;
+	virtual std::shared_ptr<Consumer<QueryContext<EntityT>>> createProvider(Segment segment) const;
 
-	virtual std::shared_ptr<Consumer<QueryContext>> createSimpleGetEntityFunctionProvider(std::shared_ptr<Consumer<QueryContext>> entity_provider) const;
+	virtual std::shared_ptr<Consumer<QueryContext<EntityT>>> createSimpleGetEntityFunctionProvider(std::shared_ptr<Consumer<QueryContext<EntityT>>> entity_provider) const;
 
-	virtual std::shared_ptr<Consumer<QueryContext>> createGetEntityFunctionProvider(std::shared_ptr<Consumer<QueryContext>> entity_provider, SegmentsList segments) const;
+	virtual std::shared_ptr<Consumer<QueryContext<EntityT>>> createGetEntityFunctionProvider(std::shared_ptr<Consumer<QueryContext<EntityT>>> entity_provider, SegmentsList segments) const;
 
 protected:
 
-	std::shared_ptr<DynamicTypeNodeProvider> createDynamicTypeNodeProvider(SegmentsList segments) const;
+	std::shared_ptr<DynamicTypeNodeProvider<EntityT>> createDynamicTypeNodeProvider(SegmentsList segments) const;
 
 	template<typename T>
 	std::shared_ptr<T> createEntityProvider(SegmentsList segments) const;
 
-	std::shared_ptr<SelfEntityProvider> createSelfEntityProvider(SegmentsList segments) const;
+	std::shared_ptr<SelfEntityProvider<EntityT>> createSelfEntityProvider(SegmentsList segments) const;
 
-	std::shared_ptr<BBoxProvider> createBBoxProvider(SegmentsList segments) const;
+	std::shared_ptr<BBoxProvider<EntityT>> createBBoxProvider(SegmentsList segments) const;
 
-	std::shared_ptr<Consumer<LocatedEntity>> createPropertyProvider(SegmentsList segments) const;
+	std::shared_ptr<Consumer<EntityT>> createPropertyProvider(SegmentsList segments) const;
 
 	std::shared_ptr<MapProvider> createMapProvider(SegmentsList segments) const;
 
-	std::shared_ptr<TypeNodeProvider> createTypeNodeProvider(SegmentsList segments) const;
+	std::shared_ptr<TypeNodeProvider<EntityT>> createTypeNodeProvider(SegmentsList segments) const;
 
-	std::shared_ptr<MemoryProvider> createMemoryProvider(SegmentsList segments) const;
+	std::shared_ptr<MemoryProvider<EntityT>> createMemoryProvider(SegmentsList segments) const;
 };
 
 }

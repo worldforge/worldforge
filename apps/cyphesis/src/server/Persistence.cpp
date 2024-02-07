@@ -22,7 +22,7 @@
 #include "Player.h"
 #include "ServerAccount.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/id.h"
 #include "common/debug.h"

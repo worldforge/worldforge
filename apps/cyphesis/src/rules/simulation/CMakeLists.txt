@@ -1,12 +1,3 @@
-add_library(cyphesis-rulessimulationscripts
-        ScriptUtils.cpp
-)
-target_link_libraries(cyphesis-rulessimulationscripts PUBLIC
-        cyphesis-common
-        cyphesis-external-pycxx
-)
-
-
 add_library(cyphesis-rulessimulation
         BaseWorld.cpp
         Entity.cpp
@@ -67,12 +58,20 @@ add_library(cyphesis-rulessimulation
         FilterProperty.cpp
         AliasProperty.cpp
         ActionsProperty.cpp
+        Inheritance.cpp
+        ScriptsProperty.cpp
+        AtlasProperties.cpp
+        LocatedEntity.cpp
+        EntityProperties.cpp
+        Domain.cpp
+        PropertyBase.cpp
 )
 
 target_link_libraries(cyphesis-rulessimulation PUBLIC
-        cyphesis-entityfilter
-        cyphesis-rulessimulationscripts
+        cyphesis-external-pycxx
         cyphesis-modules
+        cyphesis-rulesbase
+        cyphesis-physics
         mercator
         ${BULLET_LIBRARIES}
 )

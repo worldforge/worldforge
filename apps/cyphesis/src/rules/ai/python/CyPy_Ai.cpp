@@ -21,6 +21,10 @@
 #include "CyPy_MemMap.h"
 #include "CyPy_MemEntity.h"
 #include "CyPy_Steering.h"
+#include "rules/entityfilter/python/CyPy_EntityFilter_impl.h"
+#include "rules/python/CyPy_Props_impl.h"
+#include "rules/python/CyPy_Location_impl.h"
+#include "rules/python/CyPy_EntityLocation_impl.h"
 
 CyPy_Ai::CyPy_Ai() : ExtensionModule("ai") {
 
@@ -28,6 +32,9 @@ CyPy_Ai::CyPy_Ai() : ExtensionModule("ai") {
 	CyPy_MemMap::init_type();
 	CyPy_Steering::init_type();
 	CyPy_MemEntity::init_type();
+//	CyPy_Props<MemEntity>::init_type();
+//	CyPy_Location<MemEntity, CyPy_MemEntity>::init_type();
+//	CyPy_EntityLocation<MemEntity, CyPy_MemEntity>::init_type();
 
 	initialize("Responsible for handling AI behaviour.");
 

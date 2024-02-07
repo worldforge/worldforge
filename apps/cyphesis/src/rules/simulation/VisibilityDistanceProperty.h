@@ -19,11 +19,12 @@
 #define RULESETS_VISIBILITYDISTANCE_PROPERTY_H
 
 #include "common/Property.h"
+#include "rules/simulation/LocatedEntity.h"
 
 /// \brief Allows overriding the default visibility calculations.
 
 /// \ingroup PropertyClasses
-class VisibilityDistanceProperty : public Property<float> {
+class VisibilityDistanceProperty : public Property<float, LocatedEntity> {
 public:
 	static constexpr const char* property_name = "vis_dist";
 

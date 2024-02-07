@@ -17,7 +17,7 @@
  */
 
 #include "CyPy_UsageInstance.h"
-#include "rules/python/CyPy_LocatedEntity.h"
+#include "CyPy_LocatedEntity.h"
 #include "rules/python/CyPy_EntityLocation.h"
 #include "rules/entityfilter/python/CyPy_EntityFilter.h"
 #include "rules/python/CyPy_Operation.h"
@@ -40,9 +40,8 @@ void CyPy_UsageInstance::init_type() {
 	behaviors().name("UsageInstance");
 	behaviors().doc("");
 
-	PYCXX_ADD_NOARGS_METHOD(is_valid, isValid, "");
-
-	PYCXX_ADD_VARARGS_METHOD(get_arg, getArg, "");
+	register_method<&CyPy_UsageInstance::isValid>("is_valid");
+	register_method<&CyPy_UsageInstance::getArg>("get_arg");
 
 	behaviors().readyType();
 
@@ -105,8 +104,8 @@ Py::Object CyPy_UsageInstance::getArg(const UsageInstance& usageInstance, const 
 	Py::Object returnObject;
 
 	auto visitor = compose(
-			[&](const EntityLocation& value) {
-				returnObject = CyPy_EntityLocation::wrap(value);
+			[&](const EntityLocation<LocatedEntity>& value) {
+				returnObject = CyPy_EntityLocation<LocatedEntity, CyPy_LocatedEntity>::wrap(value);
 			},
 			[&](const WFMath::Point<3>& value) {
 				returnObject = CyPy_Point3D::wrap(value);
@@ -143,7 +142,7 @@ Py::Object CyPy_Usage::getattro(const Py::String& name) {
 		return Py::String(m_value.description);
 	}
 	if (nameStr == "constraint") {
-		return CyPy_Filter::wrap(m_value.constraint);
+		return CyPy_Filter<LocatedEntity>::wrap(m_value.constraint);
 	}
 
 	return PythonExtensionBase::getattro(name);
