@@ -24,7 +24,6 @@
 #endif
 
 #include "../../PropertyCoverage.h"
-
 #include "rules/simulation/AreaProperty.h"
 
 using Atlas::Message::ListType;

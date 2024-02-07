@@ -28,30 +28,27 @@
 
 #include "rules/simulation/Thing.h"
 
-#include "rules/Domain.h"
+#include "rules/simulation/Domain.h"
 
 #include "common/const.h"
 #include "common/id.h"
 #include "common/log.h"
 #include "common/Property_impl.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
+#include "common/PropertyManager_impl.h"
 
 
-#include "../stubs/common/stubcustom.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/common/stubPropertyManager.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/rules/stubDomain.h"
-#include "../stubs/rules/simulation/stubPropelProperty.h"
-#include "../stubs/rules/simulation/stubModeDataProperty.h"
+#include "common/TypeNode_impl.h"
+#include "rules/Location_impl.h"
+
 #include "../TestDomain.h"
-
+#include "common/Monitors.h"
 
 #include <cstdlib>
 
 #include <cassert>
+
+Monitors monitors;
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -60,7 +57,7 @@ using Atlas::Objects::Entity::RootEntity;
 
 int main() {
 	Ref<Thing> e(new Thing(1));
-	TypeNode type("thing");
+	TypeNode<LocatedEntity> type("thing");
 	e->setType(&type);
 
 	IGEntityExerciser ee(e);
@@ -82,17 +79,10 @@ int main() {
 
 
 
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/simulation/stubEntityProperty.h"
-
-
-#define STUB_LocatedEntity_isVisibleForOtherEntity
-
 bool LocatedEntity::isVisibleForOtherEntity(const LocatedEntity& watcher) const {
 	return true;
 }
 
-#define STUB_LocatedEntity_makeContainer
 
 void LocatedEntity::makeContainer() {
 	if (m_contains == 0) {
@@ -100,7 +90,6 @@ void LocatedEntity::makeContainer() {
 	}
 }
 
-#define STUB_LocatedEntity_changeContainer
 
 void LocatedEntity::changeContainer(const Ref<LocatedEntity>& new_loc) {
 	assert(m_parent != nullptr);
@@ -123,16 +112,11 @@ void LocatedEntity::changeContainer(const Ref<LocatedEntity>& new_loc) {
 	onContainered(oldLoc);
 }
 
-#define STUB_LocatedEntity_broadcast
-
 void LocatedEntity::broadcast(const Atlas::Objects::Operation::RootOperation& op, OpVector& res, Visibility visibility) const {
 	auto copy = op.copy();
 	copy->setTo(getId());
 	res.push_back(copy);
 }
-
-#include "../stubs/rules/stubLocatedEntity.h"
-
 
 void addToEntity(const Point3D& p, std::vector<double>& vd) {
 	vd.resize(3);
@@ -141,9 +125,6 @@ void addToEntity(const Point3D& p, std::vector<double>& vd) {
 	vd[2] = p[2];
 }
 
-
-#ifndef STUB_BaseWorld_getEntity
-#define STUB_BaseWorld_getEntity
 
 Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const {
 	return getEntity(integerId(id));
@@ -159,13 +140,6 @@ Ref<LocatedEntity> BaseWorld::getEntity(long id) const {
 	}
 }
 
-#endif //STUB_BaseWorld_getEntity
-
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/rules/simulation/stubModeDataProperty.h"
-#include "../stubs/modules/stubWeakEntityRef.h"
-#include "../stubs/common/stublog.h"
-#include "../stubs/common/stubid.h"
 
 template<typename FloatT>
 int fromStdVector(Point3D& p, const std::vector<FloatT>& vf) {
@@ -200,5 +174,5 @@ WFMath::CoordType squareDistance(const Point3D& u, const Point3D& v) {
 	return 1.0;
 }
 
-#include "../stubs/rules/stubPhysicalProperties.h"
+#include "rules/PhysicalProperties_impl.h"
 

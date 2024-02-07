@@ -28,24 +28,24 @@
 
 #include "rules/simulation/Entity.h"
 
-#include "common/Property.h"
+#include "common/Property_impl.h"
 #include "common/PropertyManager.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 
 #include <cstdlib>
 
 #include <cassert>
 #include <server/EntityBuilder.h>
 #include <server/ArchetypeFactory.h>
-#include <server/EntityFactory.h>
+#include <server/EntityFactory_impl.h>
 #include <rules/simulation/World.h>
-#include <common/Inheritance.h>
+#include <rules/simulation/Inheritance.h>
 
 
 #include <Atlas/Objects/Decoder.h>
 #include <Atlas/Codecs/XML.h>
 #include <common/Monitors.h>
-#include "rules/AtlasProperties.h"
+#include "rules/simulation/AtlasProperties.h"
 #include <server/ArchetypeRuleHandler.h>
 #include <server/EntityRuleHandler.h>
 
@@ -109,7 +109,7 @@ struct Tested : public Cyphesis::TestBase {
 		Inheritance inheritance;
 		TestWorld testWorld;
 
-		TestPropertyManager propertyManager;
+		TestPropertyManager<LocatedEntity> propertyManager;
 		EntityBuilder eb;
 		EntityRuleHandler entityRuleHandler;
 		ArchetypeRuleHandler archetypeRuleHandler;
@@ -117,7 +117,7 @@ struct Tested : public Cyphesis::TestBase {
 
 		TestContext() :
 				world(new World()),
-				inheritance(factories),
+				inheritance(),
 				testWorld(world),
 				eb(),
 				entityRuleHandler(eb, propertyManager),
@@ -150,7 +150,7 @@ struct Tested : public Cyphesis::TestBase {
 
 			std::string dependents;
 			std::string reasons;
-			std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+			std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 			entityRuleHandler.install("thing1", "thing", fromXml(thing1), dependents, reasons, changes);
 		}
 
@@ -209,7 +209,7 @@ struct Tested : public Cyphesis::TestBase {
 ")";
 
 		std::string diagnose;
-		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
 		context.archetypeRuleHandler.install("archetype1", "archetype", fromXml(archetype1), diagnose, diagnose, changes);
 
@@ -261,7 +261,7 @@ struct Tested : public Cyphesis::TestBase {
 ")";
 
 		std::string diagnose;
-		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
 		context.archetypeRuleHandler.install("archetype1", "archetype", fromXml(archetype1), diagnose, diagnose, changes);
 
@@ -313,7 +313,7 @@ struct Tested : public Cyphesis::TestBase {
 ")";
 
 		std::string diagnose;
-		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
 		context.archetypeRuleHandler.install("archetype1", "archetype", fromXml(archetype1), diagnose, diagnose, changes);
 
@@ -358,11 +358,11 @@ int main() {
 
 // stubs
 
-#include "rules/AtlasProperties.h"
+#include "rules/simulation/AtlasProperties.h"
 #include "rules/Script.h"
 
 #include "common/id.h"
 
-#include "../stubs/server/stubTeleportProperty.h"
-#include "../stubs/server/stubExternalMindsManager.h"
-#include "../stubs/server/stubExternalMindsConnection.h"
+
+
+

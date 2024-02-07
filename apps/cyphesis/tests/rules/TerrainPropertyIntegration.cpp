@@ -28,7 +28,7 @@
 #include "../DatabaseNull.h"
 #include "../TestWorld.h"
 #include "common/Monitors.h"
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/operations/Thought.h"
 #include "rules/simulation/World.h"
 #include "../NullEntityCreator.h"
@@ -45,7 +45,7 @@
 #include <rules/simulation/TerrainProperty.h>
 #include <rules/simulation/TerrainPointsProperty.h>
 #include <rules/simulation/PhysicalDomain.h>
-#include "rules/BBoxProperty.h"
+#include "rules/BBoxProperty_impl.h"
 
 using Atlas::Objects::Operation::Set;
 using Atlas::Objects::Operation::Wield;
@@ -54,178 +54,172 @@ using Atlas::Objects::Entity::Anonymous;
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 
-struct TestContext
-{
+struct TestContext {
 
-    Atlas::Objects::Factories factories;
-    DatabaseNull database;
-    Ref<World> world;
-    Inheritance inheritance;
-    WorldRouter testWorld;
-    NullEntityCreator entityCreator;
-    CorePropertyManager propertyManager;
+	Atlas::Objects::Factories factories;
+	DatabaseNull database;
+	Ref<World> world;
+	Inheritance inheritance;
+	WorldRouter testWorld;
+	NullEntityCreator entityCreator;
+	CorePropertyManager propertyManager;
 
-    TestContext() :
-            world(new World()),
-            inheritance(factories),
-            testWorld(world, entityCreator, [] { return std::chrono::steady_clock::now().time_since_epoch(); }),
-            propertyManager(inheritance)
-    {
-    }
+	TestContext() :
+			world(new World()),
+			inheritance(),
+			testWorld(world, entityCreator, [] { return std::chrono::steady_clock::now().time_since_epoch(); }),
+			propertyManager(inheritance) {
+	}
 
 };
 
 
 double epsilon = 0.01;
 
-struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
-{
-    Tested()
-    {
-        ADD_TEST(test_adjust_entities_when_terrain_changes);
-        ADD_TEST(test_set_terrain);
-    }
+struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
+	Tested() {
+		ADD_TEST(test_adjust_entities_when_terrain_changes);
+		ADD_TEST(test_set_terrain);
+	}
 
 
-    void test_set_terrain(TestContext& context)
-    {
-        Ref<Thing> t1 = new Thing(1);
-        t1->requirePropertyClassFixed<BBoxProperty>().data() = {{-64, -10, -64},
-                                                                {64,  10,  64}};
-        t1->setAttrValue("domain", "physical");
-        t1->setAttrValue(TerrainProperty::property_name, ListType{MapType{
-                {"name",    "rock"},
-                {"pattern", "fill"}}});
+	void test_set_terrain(TestContext& context) {
+		Ref<Thing> t1 = new Thing(1);
+		t1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-64, -10, -64},
+																			   {64,  10,  64}};
+		t1->setAttrValue("domain", "physical");
+		t1->setAttrValue(TerrainProperty::property_name, ListType{MapType{
+				{"name",    "rock"},
+				{"pattern", "fill"}}});
 
-        t1->setAttrValue(TerrainPointsProperty::property_name, MapType{
-                {"-1x-1", ListType{-1.0, -1.0, 10.0}},
-                {"0x-1",  ListType{0.0, -1.0, 10.0}},
-                {"1x-1",  ListType{1.0, -1.0, 10.0}},
-                {"-1x0",  ListType{-1.0, 0.0, 10.0}},
-                {"0x0",   ListType{0.0, 0.0, 10.0}},
-                {"1x0",   ListType{1.0, 0.0, 10.0}},
-                {"-1x1",  ListType{-1.0, 1.0, 10.0}},
-                {"0x1",   ListType{0.0, 1.0, 10.0}},
-                {"1x1",   ListType{1.0, 1.0, 10.0}},
-        });
-        context.testWorld.addEntity(t1, context.world);
+		t1->setAttrValue(TerrainPointsProperty::property_name, MapType{
+				{"-1x-1", ListType{-1.0, -1.0, 10.0}},
+				{"0x-1",  ListType{0.0, -1.0, 10.0}},
+				{"1x-1",  ListType{1.0, -1.0, 10.0}},
+				{"-1x0",  ListType{-1.0, 0.0, 10.0}},
+				{"0x0",   ListType{0.0, 0.0, 10.0}},
+				{"1x0",   ListType{1.0, 0.0, 10.0}},
+				{"-1x1",  ListType{-1.0, 1.0, 10.0}},
+				{"0x1",   ListType{0.0, 1.0, 10.0}},
+				{"1x1",   ListType{1.0, 1.0, 10.0}},
+		});
+		context.testWorld.addEntity(t1, context.world);
 
-        auto terrainProp = t1->getPropertyClassFixed<TerrainProperty>();
-        ASSERT_NOT_NULL(terrainProp);
+		auto terrainProp = t1->getPropertyClassFixed<TerrainProperty>();
+		ASSERT_NOT_NULL(terrainProp);
 
-        float height;
-        terrainProp->getHeight(*t1, 10, 10, height);
-        ASSERT_FUZZY_EQUAL(10.0, height, epsilon)
+		float height;
+		terrainProp->getHeight(*t1, 10, 10, height);
+		ASSERT_FUZZY_EQUAL(10.0, height, epsilon)
 
-        t1->setAttrValue("terrain_points!prepend", MapType{
-                {"0x0", ListType{0.0, 0.0, 20.0}}
-        });
+		t1->setAttrValue("terrain_points!prepend", MapType{
+				{"0x0", ListType{0.0, 0.0, 20.0}}
+		});
 
-        terrainProp->getHeight(*t1, 10, 10, height);
-        ASSERT_FUZZY_EQUAL(14.6848, height, epsilon)
+		terrainProp->getHeight(*t1, 10, 10, height);
+		ASSERT_FUZZY_EQUAL(14.6848, height, epsilon)
 
-        //Update roughness
-        t1->setAttrValue("terrain_points!prepend", MapType{
-                {"0x0", ListType{0.0, 0.0, 20.0, 0.75}}
-        });
+		//Update roughness
+		t1->setAttrValue("terrain_points!prepend", MapType{
+				{"0x0", ListType{0.0, 0.0, 20.0, 0.75}}
+		});
 
-        terrainProp->getHeight(*t1, 10, 10, height);
-        ASSERT_FUZZY_EQUAL(15.2658, height, epsilon)
+		terrainProp->getHeight(*t1, 10, 10, height);
+		ASSERT_FUZZY_EQUAL(15.2658, height, epsilon)
 
-        //Set roughness to zero
-        t1->setAttrValue("terrain_points!prepend", MapType{
-                {"0x0", ListType{0.0, 0.0, 20.0, 0.0}}
-        });
+		//Set roughness to zero
+		t1->setAttrValue("terrain_points!prepend", MapType{
+				{"0x0", ListType{0.0, 0.0, 20.0, 0.0}}
+		});
 
-        terrainProp->getHeight(*t1, 10, 10, height);
-        ASSERT_FUZZY_EQUAL(16.12, height, epsilon)
+		terrainProp->getHeight(*t1, 10, 10, height);
+		ASSERT_FUZZY_EQUAL(16.12, height, epsilon)
 
-        //Handle ints
-        t1->setAttrValue("terrain_points!prepend", MapType{
-                {"0x0", ListType{0, 0, 20, 0}}
-        });
+		//Handle ints
+		t1->setAttrValue("terrain_points!prepend", MapType{
+				{"0x0", ListType{0, 0, 20, 0}}
+		});
 
-        terrainProp->getHeight(*t1, 10, 10, height);
-        ASSERT_FUZZY_EQUAL(16.12, height, epsilon)
+		terrainProp->getHeight(*t1, 10, 10, height);
+		ASSERT_FUZZY_EQUAL(16.12, height, epsilon)
 
-        t1->destroy();
-    }
+		t1->destroy();
+	}
 
-    void test_adjust_entities_when_terrain_changes(TestContext& context)
-    {
-        Ref<Thing> t1 = new Thing(1);
-        t1->requirePropertyClassFixed<BBoxProperty>().data() = {{-64, -10, -64},
-                                                                {64,  10,  64}};
-        t1->setAttrValue("domain", "physical");
-        t1->setAttrValue(TerrainProperty::property_name, ListType{MapType{
-                {"name",    "rock"},
-                {"pattern", "fill"}}});
+	void test_adjust_entities_when_terrain_changes(TestContext& context) {
+		Ref<Thing> t1 = new Thing(1);
+		t1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-64, -10, -64},
+																			   {64,  10,  64}};
+		t1->setAttrValue("domain", "physical");
+		t1->setAttrValue(TerrainProperty::property_name, ListType{MapType{
+				{"name",    "rock"},
+				{"pattern", "fill"}}});
 
-        t1->setAttrValue(TerrainPointsProperty::property_name, MapType{
-                {"-1x-1", ListType{-1.0, -1.0, 10.0}},
-                {"0x-1",  ListType{0.0, -1.0, 10.0}},
-                {"1x-1",  ListType{1.0, -1.0, 10.0}},
-                {"-1x0",  ListType{-1.0, 0.0, 10.0}},
-                {"0x0",   ListType{0.0, 0.0, 10.0}},
-                {"1x0",   ListType{1.0, 0.0, 10.0}},
-                {"-1x1",  ListType{-1.0, 1.0, 10.0}},
-                {"0x1",   ListType{0.0, 1.0, 10.0}},
-                {"1x1",   ListType{1.0, 1.0, 10.0}},
-        });
-        context.testWorld.addEntity(t1, context.world);
+		t1->setAttrValue(TerrainPointsProperty::property_name, MapType{
+				{"-1x-1", ListType{-1.0, -1.0, 10.0}},
+				{"0x-1",  ListType{0.0, -1.0, 10.0}},
+				{"1x-1",  ListType{1.0, -1.0, 10.0}},
+				{"-1x0",  ListType{-1.0, 0.0, 10.0}},
+				{"0x0",   ListType{0.0, 0.0, 10.0}},
+				{"1x0",   ListType{1.0, 0.0, 10.0}},
+				{"-1x1",  ListType{-1.0, 1.0, 10.0}},
+				{"0x1",   ListType{0.0, 1.0, 10.0}},
+				{"1x1",   ListType{1.0, 1.0, 10.0}},
+		});
+		context.testWorld.addEntity(t1, context.world);
 
-        auto terrainProp = t1->getPropertyClassFixed<TerrainProperty>();
+		auto terrainProp = t1->getPropertyClassFixed<TerrainProperty>();
 
-        Ref<Thing> tPlanted = new Thing(2);
-        tPlanted->requirePropertyClassFixed<BBoxProperty>().data() = {{-1, 0, -1},
-                                                                      {1,  2, 1}};
-        tPlanted->requirePropertyClassFixed<PositionProperty>().data() = {10, 100, 10};
-        tPlanted->setAttrValue("mode", "planted");
-        context.testWorld.addEntity(tPlanted, t1);
+		Ref<Thing> tPlanted = new Thing(2);
+		tPlanted->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
+																					 {1,  2, 1}};
+		tPlanted->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {10, 100, 10};
+		tPlanted->setAttrValue("mode", "planted");
+		context.testWorld.addEntity(tPlanted, t1);
 
 
-        Ref<Thing> tFixed = new Thing(3);
-        tFixed->requirePropertyClassFixed<BBoxProperty>().data() = {{-1, 0, -1},
-                                                                    {1,  2, 1}};
-        tFixed->requirePropertyClassFixed<PositionProperty>().data() = {20, 100, 10};
-        tFixed->setAttrValue("mode", "fixed");
-        context.testWorld.addEntity(tFixed, t1);
+		Ref<Thing> tFixed = new Thing(3);
+		tFixed->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
+																				   {1,  2, 1}};
+		tFixed->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {20, 100, 10};
+		tFixed->setAttrValue("mode", "fixed");
+		context.testWorld.addEntity(tFixed, t1);
 
-        //Height should not be adjusted to the height of the terrain.
-        ASSERT_FUZZY_EQUAL(100.0, tFixed->requirePropertyClassFixed<PositionProperty>().data().y(), epsilon)
+		//Height should not be adjusted to the height of the terrain.
+		ASSERT_FUZZY_EQUAL(100.0, tFixed->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), epsilon)
 
-        //Adjust the terrain
-        t1->setAttrValue("terrain_points!prepend", MapType{
-                {"1x1", ListType{1.0, 1.0, 20.0}}
-        });
+		//Adjust the terrain
+		t1->setAttrValue("terrain_points!prepend", MapType{
+				{"1x1", ListType{1.0, 1.0, 20.0}}
+		});
 
-        //First process the Tick op for the physical domain
-        context.testWorld.getOperationsHandler().dispatchNextOp();
-        //Then process the Move op generated.
-        context.testWorld.getOperationsHandler().dispatchNextOp();
-        //Process an extra op to catch any incorrect Move ops that would be generated for the fixed entity.
-        context.testWorld.getOperationsHandler().dispatchNextOp();
+		//First process the Tick op for the physical domain
+		context.testWorld.getOperationsHandler().dispatchNextOp();
+		//Then process the Move op generated.
+		context.testWorld.getOperationsHandler().dispatchNextOp();
+		//Process an extra op to catch any incorrect Move ops that would be generated for the fixed entity.
+		context.testWorld.getOperationsHandler().dispatchNextOp();
 
-        float height;
-        terrainProp->getHeight(*t1, tPlanted->requirePropertyClassFixed<PositionProperty>().data().x(), tPlanted->requirePropertyClassFixed<PositionProperty>().data().z(), height);
-        ASSERT_FUZZY_EQUAL(height, tPlanted->requirePropertyClassFixed<PositionProperty>().data().y(), epsilon)
-        ASSERT_FUZZY_EQUAL(100.0, tFixed->requirePropertyClassFixed<PositionProperty>().data().y(), epsilon)
+		float height;
+		terrainProp->getHeight(*t1, tPlanted->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().x(),
+							   tPlanted->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().z(), height);
+		ASSERT_FUZZY_EQUAL(height, tPlanted->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), epsilon)
+		ASSERT_FUZZY_EQUAL(100.0, tFixed->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), epsilon)
 
 
-        tFixed->destroy();
-        tPlanted->destroy();
-        t1->destroy();
+		tFixed->destroy();
+		tPlanted->destroy();
+		t1->destroy();
 
-    }
+	}
 
 };
 
 
-int main()
-{
-    Monitors m;
-    Tested t;
+int main() {
+	Monitors m;
+	Tested t;
 
-    return t.run();
+	return t.run();
 }
 

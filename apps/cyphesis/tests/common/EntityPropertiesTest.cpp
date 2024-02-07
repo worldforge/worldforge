@@ -23,15 +23,16 @@
 #define DEBUG
 #endif
 
+//Need to include this first to work around test specific linking rules.
+#include "../src/rules/simulation/EntityProperties.cpp"
 #include "../PropertyCoverage.h"
 
-#include "common/Property.h"
 #include "common/types.h"
 
 static void test_Property_IdList() {
-	Property<IdList> ap;
+	Property<IdList, LocatedEntity> ap;
 
-	PropertyChecker<Property<IdList>> pc(ap);
+	PropertyChecker<Property<IdList, LocatedEntity>> pc(ap);
 
 	// Coverage is complete, but it wouldn't hurt to add some bad data here.
 

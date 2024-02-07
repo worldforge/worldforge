@@ -33,6 +33,7 @@
 
 #include "common/operations/Connect.h"
 #include "common/CommSocket.h"
+#include "common/Monitors.h"
 
 #include <Atlas/Objects/Operation.h>
 
@@ -73,6 +74,8 @@ public:
 int stub_CommPeer_connect_return = 0;
 
 int main() {
+	Monitors m;
+
 	{
 		Juncture j(0, RouterId{1});
 
@@ -425,7 +428,7 @@ int main() {
 #include "common/log.h"
 
 #include <Atlas/Negotiate.h>
-#include "../stubs/common/stubLink.h"
+
 
 namespace Atlas {
 namespace Objects {
@@ -437,12 +440,11 @@ int CONNECT_NO = 500;
 }
 }
 
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubLobby.h"
-#include "../stubs/common/stubInheritance.h"
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/server/stubCommPeer.h"
+
+
+#include "common/TypeNode_impl.h"
+#include "common/Property_impl.h"
+
 
 Peer::Peer(CommSocket& client,
 		   ServerRouting& svr,
@@ -478,10 +480,6 @@ int Peer::teleportEntity(const LocatedEntity* ent) {
 void Peer::cleanTeleports() {
 }
 
-#include "../stubs/server/stubConnection.h"
-#include "../stubs/server/stubConnectableRouter.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/common/stublog.h"
 #include <common/Shaker.h>
 
 Shaker::Shaker() {
@@ -489,4 +487,13 @@ Shaker::Shaker() {
 
 std::string Shaker::generateSalt(size_t length) {
 	return "";
+}
+Connection::Connection(CommSocket& socket,
+					   ServerRouting& svr,
+					   const std::string& addr,
+					   RouterId id) :
+		Link(socket, std::move(id)), m_server(svr) {
+}
+
+Connection::~Connection() {
 }

@@ -37,11 +37,12 @@
 
 #include <cassert>
 #include <server/EntityBuilder.h>
+#include "common/Monitors.h"
 
 using Atlas::Message::Element;
 
 struct TestStorageManager : public StorageManager {
-	TestStorageManager(WorldRouter& w, Database& db, EntityBuilder& eb, PropertyManager& propertyManager) : StorageManager(w, db, eb, propertyManager) {}
+	TestStorageManager(WorldRouter& w, Database& db, EntityBuilder& eb, PropertyManager<LocatedEntity>& propertyManager) : StorageManager(w, db, eb, propertyManager) {}
 
 
 	void test_entityInserted(LocatedEntity& e) {
@@ -76,10 +77,11 @@ struct TestStorageManager : public StorageManager {
 };
 
 int main() {
+	Monitors m;
 	EntityBuilder eb;
 	DatabaseNull database;
 	Persistence persistence(database);
-	TestPropertyManager propertyManager;
+	TestPropertyManager<LocatedEntity> propertyManager;
 
 	Ref<LocatedEntity> le(new Entity(0));
 
@@ -181,30 +183,15 @@ int main() {
 
 // stubs
 
-#include "rules/simulation/CorePropertyManager.h"
-#include "server/EntityBuilder.h"
-
 #include "rules/Script.h"
 
 #include "modules/WeakEntityRef.h"
-#include "rules/Location.h"
+#include "rules/Location_impl.h"
 
-#include "common/const.h"
 #include "common/Database.h"
 #include "common/globals.h"
-#include "common/log.h"
-#include "common/Monitors.h"
 #include "common/PropertyManager.h"
 #include "common/Variable.h"
-
-#include "../stubs/rules/simulation/stubWorldRouter.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-
-#include <Atlas/Objects/RootOperation.h>
-#include <Atlas/Objects/SmartPtr.h>
 
 #include <cstdlib>
 
@@ -213,35 +200,18 @@ int main() {
 using Atlas::Message::MapType;
 using Atlas::Objects::Entity::RootEntity;
 
-#include "../stubs/server/stubEntityBuilder.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/common/stubRouter.h"
-
-#define STUB_Database_selectEntities
 
 DatabaseResult Database::selectEntities(const std::string& loc) {
 	return DatabaseResult(std::make_unique<DatabaseNullResultWorker>());
 }
 
-#define STUB_Database_selectProperties
-
 DatabaseResult Database::selectProperties(const std::string& loc) {
 	return DatabaseResult(std::make_unique<DatabaseNullResultWorker>());
 }
 
-#define STUB_Database_selectThoughts
-
 DatabaseResult Database::selectThoughts(const std::string& loc) {
 	return DatabaseResult(std::make_unique<DatabaseNullResultWorker>());
 }
-
-#include "../stubs/common/stubDatabase.h"
-#include "../stubs/server/stubPersistence.h"
-
-#include "../stubs/common/stubPropertyManager.h"
-
-#include "../stubs/rules/stubScript.h"
-#include "../stubs/modules/stubWeakEntityRef.h"
 
 template<typename T>
 Variable<T>::Variable(const T& variable) : m_variable(variable) {
@@ -270,9 +240,6 @@ class Variable<const char*>;
 template
 class Variable<std::string>;
 
-#include "../stubs/common/stubMonitors.h"
-#include "../stubs/common/stubOperationsDispatcher.h"
-
 long forceIntegerId(const std::string& id) {
 	long intId = strtol(id.c_str(), 0, 10);
 	if (intId == 0 && id != "0") {
@@ -282,7 +249,6 @@ long forceIntegerId(const std::string& id) {
 	return intId;
 }
 
-#include "../stubs/common/stublog.h"
 
 bool database_flag = true;
 
@@ -295,5 +261,34 @@ const long rootWorldIntId = 0L;
 
 }
 
-#include "../stubs/common/stubcustom.h"
-#include "../stubs/common/stubProperty.h"
+
+int EntityBuilder::installFactory(const std::string& class_name, const Root& class_desc, std::unique_ptr<EntityKit> factory) {
+	return 0;
+}
+
+long Database::entitiesCount() const {
+	return 0;
+}
+
+int Database::insertEntity(const std::string& id,
+						   const std::string& loc,
+						   const std::string& type,
+						   int seq,
+						   const std::string& value) {
+	return 0;
+}
+
+int Database::updateEntity(const std::string& id,
+						   int seq,
+						   const std::string& location_data,
+						   const std::string& location_entity_id) {
+	return 0;
+
+}
+
+int Database::updateEntityWithoutLoc(const std::string& id,
+									 int seq,
+									 const std::string& location_data) {
+	return 0;
+
+}

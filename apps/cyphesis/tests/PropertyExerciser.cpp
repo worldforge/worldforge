@@ -26,8 +26,8 @@
 #include "PropertyExerciser.h"
 
 #include "common/random.h"
-#include "common/Property.h"
-#include "common/Inheritance.h"
+#include "common/Property_impl.h"
+#include "rules/simulation/Inheritance.h"
 
 #include <Atlas/Objects/Anonymous.h>
 
@@ -49,7 +49,7 @@ using Atlas::Objects::Entity::Anonymous;
 Atlas::Objects::Factories factories;
 
 PropertyExerciser::PropertyExerciser()
-		: m_inheritance(std::make_unique<Inheritance>(factories)) {
+		: m_inheritance(std::make_unique<Inheritance>()) {
 	integer_values.push_back(0);
 	integer_values.push_back(-1);
 	integer_values.push_back(23);

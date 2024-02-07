@@ -41,12 +41,7 @@ int main() {
 
 // stubs
 
-#include "../../stubs/rules/ai/stubMemMap.h"
-#include "../../stubs/rules/ai/stubBaseMind.h"
-#include "../../stubs/rules/stubMemEntity.h"
-#include "../../stubs/rules/stubLocatedEntity.h"
-#include "../../stubs/common/stubRouter.h"
-#include "../../stubs/rules/stubLocation.h"
+#include "rules/Location_impl.h"
 
 void WorldTime::initTimeInfo() {
 }

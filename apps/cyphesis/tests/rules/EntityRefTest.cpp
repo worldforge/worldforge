@@ -23,14 +23,11 @@
 #define DEBUG
 #endif
 
-#include "modules/WeakEntityRef.h"
+#include "modules/WeakEntityRef_impl.h"
 
 #include "rules/simulation/Entity.h"
 
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
+#include "rules/Location_impl.h"
 
 #include <sigc++/functors/ptr_fun.h>
 
@@ -49,7 +46,7 @@ void checkSignal() {
 		emitted = false;
 
 		Entity e(RouterId{1});
-		WeakEntityRef ref;
+		WeakEntityRef<LocatedEntity> ref;
 
 		assert(emitted == false);
 
@@ -57,7 +54,7 @@ void checkSignal() {
 
 		assert(emitted == false);
 
-		ref = WeakEntityRef(&e);
+		ref = WeakEntityRef<LocatedEntity>(&e);
 
 		assert(ref.get() == &e);
 		assert(emitted == true);
@@ -69,7 +66,7 @@ void checkSignal() {
 		emitted = false;
 
 		Entity e(RouterId{1});
-		WeakEntityRef ref(&e);
+		WeakEntityRef<LocatedEntity> ref(&e);
 
 		assert(emitted == false);
 
@@ -77,7 +74,7 @@ void checkSignal() {
 
 		assert(emitted == false);
 
-		ref = WeakEntityRef(&e);
+		ref = WeakEntityRef<LocatedEntity>(&e);
 
 		assert(ref.get() == &e);
 		assert(emitted == false);
@@ -88,15 +85,12 @@ void checkSignal() {
 		emitted = false;
 
 		Entity e(RouterId{1});
+		e.incRef();
 		Ref<Entity> container = new Entity(RouterId{2});
 
-		// Set the location of the entity being tested, as destroy requires it.
-		e.m_parent = container.get();
-		// Make sure the container has a contains structure, as destroy
-		// requires it.
-		container->m_contains.reset(new LocatedEntitySet);
+		container->addChild(e);
 
-		WeakEntityRef ref(&e);
+		WeakEntityRef<LocatedEntity> ref(&e);
 
 		assert(ref);
 		assert(emitted == false);
@@ -118,33 +112,33 @@ void checkSignal() {
 int main() {
 	{
 		// Check the default constructor
-		WeakEntityRef ref;
+		WeakEntityRef<LocatedEntity> ref;
 	}
 
 	{
 		// Check the default constructor initialises to nullptr via get
-		WeakEntityRef ref;
+		WeakEntityRef<LocatedEntity> ref;
 
 		assert(ref.get() == 0);
 	}
 
 	{
 		// Check the default constructor initialises to nullptr via dereference
-		WeakEntityRef ref;
+		WeakEntityRef<LocatedEntity> ref;
 
 		assert(&(*ref) == 0);
 	}
 
 	{
 		// Check the default constructor initialises to nullptr via ->
-		WeakEntityRef ref;
+		WeakEntityRef<LocatedEntity> ref;
 
 		assert(ref.operator->() == 0);
 	}
 
 	{
 		// Check the default constructor initialises to nullptr via ==
-		WeakEntityRef ref;
+		WeakEntityRef<LocatedEntity> ref;
 
 		assert(ref == 0);
 	}
@@ -152,7 +146,7 @@ int main() {
 	{
 		// Check the initialising constructor via get
 		Ref<Entity> e = new Entity(RouterId{1});
-		WeakEntityRef ref(e);
+		WeakEntityRef<LocatedEntity> ref(e);
 
 		assert(ref.get() == e.get());
 	}
@@ -160,7 +154,7 @@ int main() {
 	{
 		// Check the initialising constructor via dereference
 		Ref<Entity> e = new Entity(RouterId{1});
-		WeakEntityRef ref(e);
+		WeakEntityRef<LocatedEntity> ref(e);
 
 		assert(&(*ref) == e.get());
 	}
@@ -168,7 +162,7 @@ int main() {
 	{
 		// Check the initialising constructor via ->
 		Ref<Entity> e = new Entity(RouterId{1});
-		WeakEntityRef ref(e);
+		WeakEntityRef<LocatedEntity> ref(e);
 
 		assert(ref.operator->() == e.get());
 	}
@@ -176,7 +170,7 @@ int main() {
 	{
 		// Check the initialising constructor via ==
 		Ref<Entity> e = new Entity(RouterId{1});
-		WeakEntityRef ref(e);
+		WeakEntityRef<LocatedEntity> ref(e);
 
 		assert(ref == e.get());
 	}
@@ -184,8 +178,8 @@ int main() {
 	{
 		// Check the copy constructor
 		Ref<Entity> e = new Entity(RouterId{1});
-		WeakEntityRef ref(e);
-		WeakEntityRef ref2(ref);
+		WeakEntityRef<LocatedEntity> ref(e);
+		WeakEntityRef<LocatedEntity> ref2(ref);
 
 		assert(ref2.get() == e.get());
 	}
@@ -193,8 +187,8 @@ int main() {
 	{
 		// Check the comparison operator
 		Ref<Entity> e = new Entity(RouterId{1});
-		WeakEntityRef ref(e);
-		WeakEntityRef ref2(e);
+		WeakEntityRef<LocatedEntity> ref(e);
+		WeakEntityRef<LocatedEntity> ref2(e);
 
 		assert(ref == ref2);
 	}
@@ -203,8 +197,8 @@ int main() {
 		// Check the comparison operator
 		Ref<Entity> e = new Entity(RouterId{1});
 		Ref<Entity> e2 = new Entity(RouterId{2});
-		WeakEntityRef ref(e);
-		WeakEntityRef ref2(e2);
+		WeakEntityRef<LocatedEntity> ref(e);
+		WeakEntityRef<LocatedEntity> ref2(e2);
 
 		assert(!(ref == ref2));
 	}
@@ -214,8 +208,8 @@ int main() {
 	{
 		// Check the comparison operator
 		Entity e(1);
-		WeakEntityRef ref(&e);
-		WeakEntityRef ref2(&e);
+		WeakEntityRef<LocatedEntity> ref(&e);
+		WeakEntityRef<LocatedEntity> ref2(&e);
 
 		assert(!(ref != ref2));
 	}
@@ -224,8 +218,8 @@ int main() {
 		// Check the comparison operator
 		Entity e(1);
 		Entity e2(2);
-		WeakEntityRef ref(&e);
-		WeakEntityRef ref2(&e2);
+		WeakEntityRef<LocatedEntity> ref(&e);
+		WeakEntityRef<LocatedEntity> ref2(&e2);
 
 		assert(ref != ref2);
 	}
@@ -234,8 +228,8 @@ int main() {
 	{
 		// Check the less than operator
 		Ref<Entity> e = new Entity(RouterId{1});
-		WeakEntityRef ref(e);
-		WeakEntityRef ref2(e);
+		WeakEntityRef<LocatedEntity> ref(e);
+		WeakEntityRef<LocatedEntity> ref2(e);
 
 		assert(!(ref < ref2) && !(ref2 < ref));
 	}
@@ -244,8 +238,8 @@ int main() {
 		// Check the less than operator
 		Ref<Entity> e = new Entity(RouterId{1});
 		Ref<Entity> e2 = new Entity(RouterId{2});
-		WeakEntityRef ref(e);
-		WeakEntityRef ref2(e2);
+		WeakEntityRef<LocatedEntity> ref(e);
+		WeakEntityRef<LocatedEntity> ref2(e2);
 
 		assert(ref < ref2 || ref2 < ref);
 	}
@@ -253,9 +247,9 @@ int main() {
 	{
 		// Check the assignment operator
 		Ref<Entity> e = new Entity(RouterId{1});
-		WeakEntityRef ref;
+		WeakEntityRef<LocatedEntity> ref;
 
-		ref = WeakEntityRef(e);
+		ref = WeakEntityRef<LocatedEntity>(e);
 
 		assert(ref.get() == e.get());
 	}
@@ -263,15 +257,12 @@ int main() {
 	{
 		// Check that destroying the Entity makes the reference null.
 		Entity e(RouterId{1});
+		e.incRef();
 		Ref<Entity> container = new Entity(RouterId{2});
 
-		// Set the location of the entity being tested, as destroy requires it.
-		e.m_parent = container.get();
-		// Make sure the container has a contains structure, as destroy
-		// requires it.
-		container->m_contains.reset(new LocatedEntitySet);
+		container->addChild(e);
 
-		WeakEntityRef ref(&e);
+		WeakEntityRef<LocatedEntity> ref(&e);
 
 		assert(ref.get() == &e);
 		e.destroy();

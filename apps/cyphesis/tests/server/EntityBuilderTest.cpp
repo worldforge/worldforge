@@ -28,7 +28,7 @@
 
 #include "rules/simulation/CorePropertyManager.h"
 #include "server/EntityBuilder.h"
-#include "server/EntityFactory.h"
+#include "server/EntityFactory_impl.h"
 #include "server/ArchetypeFactory.h"
 
 #include "rules/simulation/Thing.h"
@@ -37,18 +37,18 @@
 #include "rules/simulation/Task.h"
 
 #include "common/id.h"
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/log.h"
 #include "common/Monitors.h"
 #include "common/Property_impl.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 #include "common/Variable.h"
 #include "common/ScriptKit.h"
 
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stubVariable.h"
-#include "../stubs/common/stubMonitors.h"
+
+#include "rules/Location_impl.h"
+
+
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/RootOperation.h>
@@ -56,7 +56,7 @@
 #include <cstdlib>
 
 #include <cassert>
-#include "rules/AtlasProperties.h"
+#include "rules/simulation/AtlasProperties.h"
 #include "rules/PhysicalProperties.h"
 
 using Atlas::Message::Element;
@@ -104,7 +104,7 @@ EntityBuildertest::EntityBuildertest() {
 }
 
 void EntityBuildertest::setup() {
-	inheritance = new Inheritance(factories);
+	inheritance = new Inheritance();
 	e = new Entity(1);
 	test_world = new TestWorld(e);
 	eb = new EntityBuilder();
@@ -187,7 +187,7 @@ void EntityBuildertest::test_sequence3() {
 }
 
 void EntityBuildertest::test_sequence4() {
-	TypeNode factoryType("custom_type");
+	TypeNode<LocatedEntity> factoryType("custom_type");
 	// Attributes for test entities being created
 	Anonymous attributes;
 
@@ -219,7 +219,7 @@ void EntityBuildertest::test_sequence4() {
 		ASSERT_EQUAL(ret, 0);
 	}
 
-	PropertyBase* p = new Property<std::string>;
+	PropertyBase* p = new Property<std::string, LocatedEntity>;
 	p->set("test_value");
 	custom_type_factory->m_type->injectProperty("test_custom_type_attr", std::unique_ptr<PropertyBase>(p));
 
@@ -253,7 +253,7 @@ void EntityBuildertest::test_sequence4() {
 }
 
 void EntityBuildertest::test_sequence5() {
-	TypeNode factoryType("custom_scripted_type");
+	TypeNode<LocatedEntity> factoryType("custom_scripted_type");
 	Anonymous attributes;
 
 	// Get a reference to the internal dictionary of entity factories.
@@ -317,6 +317,7 @@ void EntityBuildertest::test_installFactory_duplicate() {
 }
 
 int main(int argc, char** argv) {
+	Monitors m;
 	EntityBuildertest t;
 
 	return t.run();
@@ -326,36 +327,6 @@ int main(int argc, char** argv) {
 
 
 
-
-
-#define STUB_EntityFactory_newEntity
-
-template<class T>
-Ref<Entity> EntityFactory<T>::newEntity(RouterId id,
-										const Atlas::Objects::Entity::RootEntity& attributes) {
-	++m_createdCount;
-	auto* e = new Entity(id);
-	e->setType(m_type);
-	return e;
-}
-
-#define STUB_EntityFactory_duplicateFactory
-
-template<typename T>
-std::unique_ptr<EntityFactoryBase> EntityFactory<T>::duplicateFactory() {
-	auto f = std::unique_ptr<EntityFactory<T>>(new EntityFactory<T>(*this));
-	f->m_parent = this;
-	return f;
-}
-
-
-#define STUB_ArchetypeFactory_duplicateFactory
-
-std::unique_ptr<ArchetypeFactory> ArchetypeFactory::duplicateFactory() {
-	auto f = std::unique_ptr<ArchetypeFactory>(new ArchetypeFactory(*this));
-	f->m_parent = this;
-	return f;
-}
 
 
 class World;
@@ -370,11 +341,6 @@ class Thing;
 
 class Character;
 
-class Creator;
-
-class Plant;
-
-class Stackable;
 
 template
 class EntityFactory<Entity>;
@@ -383,21 +349,7 @@ template
 class EntityFactory<Thing>;
 
 template
-class EntityFactory<Character>;
-
-template
-class EntityFactory<Creator>;
-
-template
-class EntityFactory<Plant>;
-
-template
-class EntityFactory<Stackable>;
-
-template
 class EntityFactory<World>;
-
-#define STUB_LocatedEntity_makeContainer
 
 void LocatedEntity::makeContainer() {
 	if (m_contains == 0) {
@@ -405,15 +357,14 @@ void LocatedEntity::makeContainer() {
 	}
 }
 
-#define STUB_LocatedEntity_merge
 
 void LocatedEntity::merge(const MapType& ent) {
 	switch (LocatedEntity_merge_action) {
 		case SET_POS:
-			this->requirePropertyClassFixed<PositionProperty>().data().setValid();
+			this->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().setValid();
 			break;
 		case SET_VELOCITY:
-			this->requirePropertyClassFixed<VelocityProperty>().data().setValid();
+			this->requirePropertyClassFixed<VelocityProperty<LocatedEntity>>().data().setValid();
 			break;
 		case DO_NOTHING:
 		default:
@@ -422,8 +373,6 @@ void LocatedEntity::merge(const MapType& ent) {
 
 }
 
-#ifndef STUB_Inheritance_Inheritance
-#define STUB_Inheritance_Inheritance
 
 Inheritance::Inheritance(Atlas::Objects::Factories& factories) : noClass(0), m_factories(factories) {
 	Atlas::Objects::Entity::Anonymous root_desc;
@@ -431,18 +380,14 @@ Inheritance::Inheritance(Atlas::Objects::Factories& factories) : noClass(0), m_f
 	root_desc->setObjtype("meta");
 	root_desc->setId("root");
 
-	TypeNode* root = new TypeNode("root", root_desc);
+	auto root = new TypeNode<LocatedEntity>("root", root_desc);
 
 	atlasObjects["root"].reset(root);
 	installStandardObjects(*this);
 }
 
-#endif //STUB_Inheritance_Inheritance
 
-#ifndef STUB_Inheritance_getType
-#define STUB_Inheritance_getType
-
-const TypeNode* Inheritance::getType(const std::string& parent) const {
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
 	auto I = atlasObjects.find(parent);
 	if (I == atlasObjects.end()) {
 		return 0;
@@ -450,12 +395,8 @@ const TypeNode* Inheritance::getType(const std::string& parent) const {
 	return I->second.get();
 }
 
-#endif //STUB_Inheritance_getType
 
-#ifndef STUB_Inheritance_addChild
-#define STUB_Inheritance_addChild
-
-TypeNode* Inheritance::addChild(const Atlas::Objects::Root& obj) {
+TypeNode<LocatedEntity>* Inheritance::addChild(const Atlas::Objects::Root& obj) {
 	const std::string& child = obj->getId();
 	const std::string& parent = obj->getParent();
 	if (atlasObjects.find(child) != atlasObjects.end()) {
@@ -478,7 +419,7 @@ TypeNode* Inheritance::addChild(const Atlas::Objects::Root& obj) {
 	}
 	I->second->description(Visibility::PRIVATE)->setAttr("children", children);
 
-	TypeNode* type = new TypeNode(child, obj);
+	auto type = new TypeNode<LocatedEntity>(child, obj);
 	type->setParent(I->second.get());
 
 	atlasObjects[child].reset(type);
@@ -486,9 +427,8 @@ TypeNode* Inheritance::addChild(const Atlas::Objects::Root& obj) {
 	return type;
 }
 
-#endif //STUB_Inheritance_addChild
 
-void installStandardObjects(TypeStore& i) {
+void installStandardObjects(TypeStore<LocatedEntity>& i) {
 
 	i.addChild(atlasClass("root_entity", "root"));
 	i.addChild(atlasClass("admin_entity", "root_entity"));
@@ -499,17 +439,6 @@ void installStandardObjects(TypeStore& i) {
 	i.addChild(atlasClass("game_entity", "root_entity"));
 }
 
-
-#define STUB_TypeNode_injectProperty
-
-TypeNode::PropertiesUpdate TypeNode::injectProperty(const std::string& name,
-													std::unique_ptr<PropertyBase> p) {
-	m_defaults[name] = std::move(p);
-	return {};
-}
-
-#ifndef STUB_BaseWorld_getEntity
-#define STUB_BaseWorld_getEntity
 
 Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const {
 	return getEntity(integerId(id));
@@ -525,23 +454,6 @@ Ref<LocatedEntity> BaseWorld::getEntity(long id) const {
 	}
 }
 
-#endif //STUB_BaseWorld_getEntity
-
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/rules/simulation/stubCorePropertyManager.h"
-#include "../stubs/common/stubPropertyManager.h"
-#include "../stubs/common/stubid.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/rules/stubScript.h"
-#include "../stubs/rules/simulation/stubTask.h"
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/common/stubInheritance.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/common/stublog.h"
-#include "../stubs/server/stubArchetypeFactory.h"
-#include "../stubs/rules/python/stubScriptsProperty.h"
-#include "../stubs/server/stubEntityFactory.h"
-#include "../stubs/server/stubEntityKit.h"
 
 Root atlasClass(const std::string& name, const std::string& parent) {
 	Atlas::Objects::Entity::Anonymous r;
@@ -552,6 +464,3 @@ Root atlasClass(const std::string& name, const std::string& parent) {
 }
 
 sigc::signal<void()> python_reload_scripts;
-
-#include "../stubs/rules/stubPhysicalProperties.h"
-#include "../stubs/common/stubProperty.h"

@@ -25,8 +25,7 @@
 
 #include "../PropertyCoverage.h"
 
-#include "../stubs/common/stubcustom.h"
-#include "../stubs/common/stubTypeNode.h"
+#include "common/TypeNode_impl.h"
 
 #include "rules/simulation/TerrainProperty.h"
 
@@ -87,6 +86,4 @@ int main()
 
 
 #include "modules/TerrainContext.h"
-
-#include "../stubs/modules/stubWeakEntityRef.h"
 

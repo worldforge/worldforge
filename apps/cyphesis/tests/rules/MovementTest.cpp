@@ -26,6 +26,7 @@
 #include "rules/simulation/Movement.h"
 
 #include "rules/simulation/Entity.h"
+#include "rules/Location_impl.h"
 
 #include "common/const.h"
 
@@ -43,11 +44,11 @@ public:
 		return 0.;
 	}
 
-	virtual int getUpdatedLocation(Location& return_location) {
+	virtual int getUpdatedLocation(Location<LocatedEntity>& return_location) {
 		return 0;
 	}
 
-	virtual Atlas::Objects::Operation::RootOperation generateMove(const Location& new_location) {
+	virtual Atlas::Objects::Operation::RootOperation generateMove(const Location<LocatedEntity>& new_location) {
 		return Atlas::Objects::Operation::Move();
 	}
 
@@ -56,7 +57,7 @@ public:
 int main() {
 	TestMovement* m = new TestMovement(*(Entity*) 0);
 
-	Location loc;
+	Location<LocatedEntity> loc;
 	m->updateNeeded(loc);
 
 	m->reset();
@@ -66,4 +67,3 @@ int main() {
 	return 0;
 }
 
-#include "../stubs/rules/stubLocation.h"

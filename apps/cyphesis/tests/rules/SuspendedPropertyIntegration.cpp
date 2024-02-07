@@ -28,15 +28,17 @@
 #include "rules/simulation/SuspendedProperty.h"
 
 #include "rules/simulation/BaseWorld.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 #include "common/operations/Tick.h"
 #include "common/custom.h"
-#include "common/PropertyManager.h"
+#include "common/PropertyManager_impl.h"
 
 #include <Atlas/Objects/Operation.h>
 
 
 #include <functional>
+#include "common/Property_impl.h"
+#include "common/id.h"
 
 std::function<void(Operation)> worldMessageCallback;
 std::function<void(bool)> worldSetSuspendedCallback;
@@ -55,7 +57,7 @@ class TestEntity : public Entity
 
 };
 
-class TestPropertyManager : public PropertyManager
+class TestPropertyManager : public PropertyManager<LocatedEntity>
 {
     public:
         std::unique_ptr<PropertyBase> addProperty(const std::string& name) const override
@@ -112,7 +114,7 @@ void SuspendedPropertyintegration::teardown()
 void SuspendedPropertyintegration::test_suspending_entity_should_prevent_ticks()
 {
     Ref<TestEntity> entity = new TestEntity(1);
-    struct TickListener : OperationsListener
+    struct TickListener : OperationsListener<LocatedEntity>
     {
         bool wasCalled = false;
 
@@ -182,13 +184,6 @@ int main()
 
 // stubs
 
-//#include "Property_stub_impl.h"
-
-
-#include "../stubs/common/stubid.h"
-
-#ifndef STUB_BaseWorld_getEntity
-#define STUB_BaseWorld_getEntity
 
 Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const
 {
@@ -206,26 +201,11 @@ Ref<LocatedEntity> BaseWorld::getEntity(long id) const
     }
 }
 
-#endif //STUB_BaseWorld_getEntity
-
-#ifndef STUB_BaseWorld_setIsSuspended
-#define STUB_BaseWorld_setIsSuspended
 
 void BaseWorld::setIsSuspended(bool suspended)
 {
     worldSetSuspendedCallback(suspended);
 }
 
-#endif //STUB_BaseWorld_setIsSuspended
-
-
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/common/stublog.h"
-#include "../stubs/rules/stubModifier.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/common/stubPropertyManager.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/rules/simulation/stubDomainProperty.h"
-#include "../stubs/rules/stubAtlasProperties.h"
-#include "../stubs/rules/stubPhysicalProperties.h"
+#include "rules/Location_impl.h"
+#include "rules/PhysicalProperties_impl.h"

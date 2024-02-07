@@ -25,19 +25,19 @@
 
 #include "server/OpRuleHandler.h"
 
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 
 #include <Atlas/Objects/Anonymous.h>
 
 #include <cstdlib>
-#include <common/Inheritance.h>
+#include <rules/simulation/Inheritance.h>
 #include <Atlas/Objects/Factories.h>
 
 using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 
-static TypeNode* stub_addChild_result = 0;
+static TypeNode<LocatedEntity>* stub_addChild_result = 0;
 Atlas::Objects::Factories factories;
 
 int main() {
@@ -79,7 +79,7 @@ int main() {
 
 		Anonymous description;
 		std::string dependent, reason;
-		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
 		int ret = rh->install("", "", description, dependent, reason, changes);
 
@@ -94,9 +94,9 @@ int main() {
 
 		Anonymous description;
 		std::string dependent, reason;
-		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
-		stub_addChild_result = (TypeNode*) malloc(sizeof(TypeNode));
+		stub_addChild_result = (TypeNode<LocatedEntity>*) malloc(sizeof(TypeNode<LocatedEntity>));
 		int ret = rh->install("", "", description, dependent, reason, changes);
 
 		assert(ret == 0);
@@ -107,7 +107,7 @@ int main() {
 		delete rh;
 	}
 	{
-		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 		RuleHandler* rh = new OpRuleHandler();
 
 		Anonymous description;
@@ -124,35 +124,21 @@ int main() {
 
 // stubs
 
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/log.h"
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/common/stubProperty.h"
+#include "common/TypeNode_impl.h"
+#include "common/Property_impl.h"
 
-#ifndef STUB_Inheritance_addChild
-#define STUB_Inheritance_addChild
 
-TypeNode* Inheritance::addChild(const Atlas::Objects::Root& obj) {
+TypeNode<LocatedEntity>* Inheritance::addChild(const Atlas::Objects::Root& obj) {
 	return stub_addChild_result;
 }
 
-#endif //STUB_Inheritance_addChild
-
-
-#ifndef STUB_Inheritance_hasClass
-#define STUB_Inheritance_hasClass
 
 bool Inheritance::hasClass(const std::string& parent) {
 	return true;
 }
 
-#endif //STUB_Inheritance_hasClass
-
-#include "../stubs/common/stubInheritance.h"
-
-
 Root atlasOpDefinition(const std::string& name, const std::string& parent) {
 	return Root();
 }
-
-#include "../stubs/common/stublog.h"

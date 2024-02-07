@@ -25,7 +25,7 @@
 
 #include <Python.h>
 #include <rules/simulation/python/CyPy_Server.h>
-#include <rules/python/CyPy_Rules.h>
+#include <rules/python/CyPy_Rules_impl.h>
 #include <rules/python/CyPy_Physics.h>
 #include <rules/python/CyPy_Atlas.h>
 #include <rules/python/CyPy_Common.h>
@@ -83,7 +83,7 @@ int main()
             return testProp.module().ptr();
         });
         init_python_api({&CyPy_Server::init,
-                         &CyPy_Rules::init,
+                         &CyPy_Rules<LocatedEntity, CyPy_LocatedEntity>::init,
                          &CyPy_Atlas::init,
                          &CyPy_Physics::init,
                          &CyPy_Common::init});

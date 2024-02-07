@@ -25,7 +25,7 @@
 #define DEBUG
 #endif
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "server/Persistence.h"
 #include "../DatabaseNull.h"
 
@@ -58,23 +58,15 @@ int main() {
 #include "common/Shaker.h"
 
 
-#define STUB_Database_selectSimpleRowBy
-
 DatabaseResult Database::selectSimpleRowBy(const std::string& name,
 										   const std::string& column,
 										   const std::string& value) {
 	return DatabaseResult(std::make_unique<DatabaseNullResultWorker>());
 }
 
-
-#include "../stubs/common/stubDatabase.h"
-
 const char* const CYPHESIS = "cyphesis";
 
 std::string instance("deeds");
-
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/server/stubAccount.h"
 
 ServerAccount::ServerAccount(Connection* conn,
 							 const std::string& username,
@@ -88,16 +80,8 @@ const char* ServerAccount::getType() const {
 }
 
 
-#include "../stubs/server/stubAdmin.h"
-#include "../stubs/server/stubPlayer.h"
-#include "../stubs/rules/simulation/stubExternalMind.h"
-
-
 Shaker::Shaker() {}
 
 std::string Shaker::generateSalt(size_t) {
 	return "";
 }
-
-#include "../stubs/common/stublog.h"
-#include "../stubs/common/stubid.h"

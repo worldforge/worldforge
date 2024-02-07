@@ -25,16 +25,17 @@
 
 #include "../PropertyCoverage.h"
 
-#include "rules/BBoxProperty.h"
-#include "rules/Location.h"
-
+#include "rules/BBoxProperty_impl.h"
+#include "rules/ScaleProperty_impl.h"
+#include "rules/Location_impl.h"
+#include "../../src/rules/simulation/LocatedEntity.h"
 using Atlas::Message::ListType;
 
 int main()
 {
-    BBoxProperty ap;
+    BBoxProperty<LocatedEntity> ap;
 
-    PropertyChecker<BBoxProperty> pc(ap);
+    PropertyChecker<BBoxProperty<LocatedEntity>> pc(ap);
 
     pc.testDataAppend(ListType(3, 1.f));
     pc.testDataAppend(ListType(6, 1.f));
@@ -50,5 +51,3 @@ int main()
 // stubs
 
 #include "../TestWorld.h"
-#include "../stubs/rules/simulation/stubDensityProperty.h"
-#include "../stubs/rules/stubScaleProperty.h"

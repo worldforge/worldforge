@@ -25,19 +25,21 @@
 
 #include "../TestBase.h"
 
-#include "server/EntityFactory.h"
+#include "server/EntityFactory_impl.h"
 
 #include "rules/simulation/World.h"
 
 #include "common/ScriptKit.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 
 #include <Atlas/Objects/Entity.h>
 #include <cassert>
 #include "common/debug.h"
 #include "../TestPropertyManager.h"
+#include "rules/Script_impl.h"
+#include "common/Monitors.h"
 
-class TestScriptFactory : public ScriptKit<LocatedEntity> {
+class TestScriptFactory : public ScriptKit<LocatedEntity, LocatedEntity> {
 protected:
 	std::string m_package;
 public:
@@ -45,9 +47,10 @@ public:
 		return m_package;
 	}
 
-	int addScript(LocatedEntity& entity) const override {
-		return 0;
+	std::unique_ptr<Script<LocatedEntity>> createScriptWrapper(LocatedEntity& entity) const override {
+		return {};
 	}
+
 
 	int refreshClass() override {
 		return 0;
@@ -66,7 +69,7 @@ struct EntityFactorytest : public Cyphesis::TestBase {
 
 	void setup() override {
 		m_ek = new EntityFactory<Thing>;
-		m_ek->m_type = new TypeNode("foo");
+		m_ek->m_type = new TypeNode<LocatedEntity>("foo");
 	}
 
 	void teardown() override {
@@ -310,20 +313,20 @@ struct EntityFactorytest : public Cyphesis::TestBase {
 	}
 
 	void test_updateProperties() {
-		TestPropertyManager propertyManager;
-		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		TestPropertyManager<LocatedEntity> propertyManager;
+		std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 		m_ek->updateProperties(changes, propertyManager);
 	}
 
 	void test_updateProperties_child() {
-		TestPropertyManager propertyManager{};
+		TestPropertyManager<LocatedEntity> propertyManager{};
 		EntityFactory<Thing> ekc{};
 		ekc.m_type = m_ek->m_type;
 		ekc.m_classAttributes.emplace("foo", ClassAttribute{"value"});
 
 		m_ek->m_children.insert(&ekc);
 
-		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 		m_ek->updateProperties(changes, propertyManager);
 
 		assert(ekc.m_attributes.find("foo") != ekc.m_attributes.end());
@@ -332,6 +335,7 @@ struct EntityFactorytest : public Cyphesis::TestBase {
 
 
 int main() {
+	Monitors m;
 	EntityFactorytest t;
 
 	return t.run();
@@ -339,15 +343,15 @@ int main() {
 
 // stubs
 
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/common/stubProperty.h"
+
+
+
+
+#include "common/TypeNode_impl.h"
 #include "common/Property_impl.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stublog.h"
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/common/stubPropertyManager.h"
+#include "common/Property_impl.h"
+#include "rules/Location_impl.h"
+
+#include "common/Property_impl.h"
+#include "common/PropertyManager_impl.h"
 

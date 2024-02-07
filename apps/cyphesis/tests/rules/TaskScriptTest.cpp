@@ -163,7 +163,7 @@ bool Script::operation(const std::string& opname,
 void Script::hook(const std::string& function, LocatedEntity* entity) {
 }
 
-#include "../stubs/rules/stubLocation.h"
+#include "rules/Location_impl.h"
 
 
 Character::Character(const std::string& id, long intId) :
@@ -436,5 +436,4 @@ void LocatedEntity::makeContainer() {
 void LocatedEntity::merge(const Atlas::Message::MapType& ent) {
 }
 
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/common/stublog.h"
+

@@ -25,15 +25,16 @@
 
 #include "../TestBase.h"
 
-#include "common/Property.h"
-#include "common/PropertyFactory.h"
-#include "common/PropertyManager.h"
+#include "common/Property_impl.h"
+#include "common/PropertyFactory_impl.h"
+#include "common/PropertyManager_impl.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <Atlas/Objects/RootOperation.h>
 
 #include <cassert>
 
-class TestPropertyManager : public PropertyManager {
+class TestPropertyManager : public PropertyManager<LocatedEntity> {
 public:
 	TestPropertyManager() {}
 
@@ -42,7 +43,7 @@ public:
 	}
 };
 
-class TestPropertyFactory : public PropertyKit {
+class TestPropertyFactory : public PropertyKit<LocatedEntity> {
 public:
 	std::unique_ptr<PropertyBase> newProperty() override {
 		return {};
@@ -55,7 +56,7 @@ public:
 
 class PropertyManagertest : public Cyphesis::TestBase {
 private:
-	PropertyManager* m_pm;
+	PropertyManager<LocatedEntity>* m_pm;
 public:
 	PropertyManagertest();
 
@@ -107,8 +108,8 @@ void PropertyManagertest::test_installFactory() {
 }
 
 void PropertyManagertest::test_installFactory_duplicate() {
-	PropertyKit* first = new TestPropertyFactory;
-	m_pm->installFactory("test_property_factory2", {}, std::unique_ptr<PropertyKit>(first));
+	auto first = new TestPropertyFactory;
+	m_pm->installFactory("test_property_factory2", {}, std::unique_ptr<PropertyKit<LocatedEntity>>(first));
 
 	ASSERT_TRUE(m_pm->getPropertyFactories().find("test_property_factory2") !=
 				m_pm->getPropertyFactories().end());
@@ -134,8 +135,8 @@ void PropertyManagertest::test_installFactory_duplicate() {
 }
 
 void PropertyManagertest::test_getPropertyFactory() {
-	PropertyKit* first = new TestPropertyFactory;
-	m_pm->installFactory("test_property_factory3", {}, std::unique_ptr<PropertyKit>(first));
+	auto first = new TestPropertyFactory;
+	m_pm->installFactory("test_property_factory3", {}, std::unique_ptr<PropertyKit<LocatedEntity>>(first));
 
 	ASSERT_TRUE(m_pm->getPropertyFactories().find("test_property_factory3") !=
 				m_pm->getPropertyFactories().end());
@@ -149,15 +150,15 @@ void PropertyManagertest::test_getPropertyFactory() {
 						 {},
 						 std::make_unique<TestPropertyFactory>());
 
-	PropertyKit* factory = m_pm->getPropertyFactory("test_property_factory3");
+	auto factory = m_pm->getPropertyFactory("test_property_factory3");
 
 	ASSERT_NOT_NULL(factory);
 	ASSERT_EQUAL(factory, first);
 }
 
 void PropertyManagertest::test_getPropertyFactory_nonexist() {
-	PropertyKit* first = new TestPropertyFactory;
-	m_pm->installFactory("test_property_factory4", {}, std::unique_ptr<PropertyKit>(first));
+	auto first = new TestPropertyFactory;
+	m_pm->installFactory("test_property_factory4", {}, std::unique_ptr<PropertyKit<LocatedEntity>>(first));
 
 	ASSERT_TRUE(m_pm->getPropertyFactories().find("test_property_factory4") !=
 				m_pm->getPropertyFactories().end());
@@ -171,7 +172,7 @@ void PropertyManagertest::test_getPropertyFactory_nonexist() {
 						 {},
 						 std::make_unique<TestPropertyFactory>());
 
-	PropertyKit* factory = m_pm->getPropertyFactory("non_existent_factory");
+	auto factory = m_pm->getPropertyFactory("non_existent_factory");
 
 	ASSERT_NULL(factory);
 }

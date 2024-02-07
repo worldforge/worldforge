@@ -35,7 +35,7 @@
 #include "server/Player.h"
 #include "server/ServerRouting.h"
 
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/log.h"
 #include "common/CommSocket.h"
 #include "common/Property_impl.h"
@@ -48,6 +48,8 @@
 #include <cstdio>
 
 #include <cassert>
+#include "common/Property_impl.h"
+#include "common/Monitors.h"
 
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;
@@ -168,7 +170,7 @@ Connectiontest::Connectiontest() {
 }
 
 void Connectiontest::setup() {
-	m_inheritance = new Inheritance(factories);
+	m_inheritance = new Inheritance();
 	Router_error_called = false;
 
 	m_server = new ServerRouting(*(BaseWorld*) 0,
@@ -438,7 +440,7 @@ void Connectiontest::test_disconnectObject_used_Entity() {
 
 	Ref<Entity> avatar(new Entity(5));
 	ExternalMind mind(6, avatar);
-	avatar->modPropertyClassFixed<MindsProperty>()->addMind(&mind);
+	avatar->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
 	mind.linkUp(m_connection);
 	m_connection->m_routers[avatar->getIntId()].router = avatar.get();
 	ac.addCharacter(avatar);
@@ -472,7 +474,7 @@ void Connectiontest::test_disconnectObject_others_used_Entity() {
 
 	Ref<Entity> avatar(new Entity(5));
 	ExternalMind mind(6, avatar);
-	avatar->modPropertyClassFixed<MindsProperty>()->addMind(&mind);
+	avatar->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
 	mind.linkUp(m_connection);
 	m_connection->m_routers[avatar->getIntId()].router = avatar.get();
 	ac.addCharacter(avatar);
@@ -506,7 +508,7 @@ void Connectiontest::test_disconnectObject_unlinked_Entity() {
 
 	Ref<Entity> avatar(new Entity(5));
 	ExternalMind mind(6, avatar);
-	avatar->modPropertyClassFixed<MindsProperty>()->addMind(&mind);
+	avatar->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
 	m_connection->m_routers[avatar->getIntId()].router = avatar.get();
 	ac.addCharacter(avatar);
 
@@ -550,6 +552,7 @@ void Connectiontest::test_disconnectObject_non_Entity() {
 }
 
 int main() {
+	Monitors m;
 	Connectiontest t;
 
 	return t.run();
@@ -574,44 +577,22 @@ int CommSocket::flush() {
 	return 0;
 }
 
-#include "../stubs/server/stubPlayer.h"
-
-#define STUB_Account_addCharacter
-
 // Simplified stub version to allow us to test Connection::disconnectObject
 void Account::addCharacter(const Ref<LocatedEntity>& chr) {
 
 	m_charactersDict[chr->getIntId()] = chr;
 }
 
-#include "../stubs/server/stubAccount.h"
-#include "../stubs/server/stubConnectableRouter.h"
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubLobby.h"
-
-#define STUB_ExternalMind_connectionId
 
 const std::string& ExternalMind::connectionId() {
 	assert(m_link != 0);
 	return m_link->getId();
 }
 
-#define STUB_ExternalMind_linkUp
 
 void ExternalMind::linkUp(Link* c) {
 	m_link = c;
 }
-
-#include "../stubs/rules/simulation/stubExternalMind.h"
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/rules/simulation/stubMindsProperty.h"
-#include "../stubs/common/stubLink.h"
-#include "../stubs/common/stubid.h"
-
-
-#define STUB_Router_error
 
 void Router::error(const Operation& op,
 				   const std::string& errstring,
@@ -620,8 +601,6 @@ void Router::error(const Operation& op,
 	Connectiontest::set_Router_error_called();
 }
 
-#define STUB_Router_clientError
-
 void Router::clientError(const Operation& op,
 						 const std::string& errstring,
 						 OpVector& res,
@@ -629,25 +608,14 @@ void Router::clientError(const Operation& op,
 	Connectiontest::set_Router_clientError_called();
 }
 
-#include "../stubs/common/stubRouter.h"
-
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/server/stubExternalMindsManager.h"
-#include "../stubs/server/stubExternalMindsConnection.h"
-
-#define STUB_Inheritance_getClass
+#include "common/TypeNode_impl.h"
+#include "rules/Location_impl.h"
 
 const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Visibility) const {
 	return noClass;
 }
 
-
-#define STUB_Inheritance_getType
-
-const TypeNode* Inheritance::getType(const std::string& parent) const {
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
 	auto I = atlasObjects.find(parent);
 	if (I == atlasObjects.end()) {
 		return 0;
@@ -655,14 +623,9 @@ const TypeNode* Inheritance::getType(const std::string& parent) const {
 	return I->second.get();
 }
 
-
-#include "../stubs/common/stubInheritance.h"
-#include "../stubs/common/stublog.h"
-
 void hash_password(const std::string& pwd, const std::string& salt,
 				   std::string& hash) {
 }
-
 
 void addToEntity(const Vector3D& v, std::vector<double>& vd) {
 	vd.resize(3);
@@ -682,4 +645,22 @@ Shaker::Shaker() {
 
 std::string Shaker::generateSalt(size_t length) {
 	return "";
+}
+
+long stubId = 1;
+
+RouterId newId() {
+	return RouterId{stubId++};
+}
+
+void Account::store() const {
+}
+
+Account* ServerRouting::getAccountByName(const std::string& username) {
+	return nullptr;
+}
+void Account::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
+}
+
+void ServerRouting::addToEntity(const RootEntity& ent) const {
 }

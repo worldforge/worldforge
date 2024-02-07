@@ -28,7 +28,10 @@
 #include "rules/simulation/AreaProperty.h"
 #include "rules/simulation/Entity.h"
 
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
+#include "common/Property_impl.h"
+#include "common/PropertyManager_impl.h"
+#include "common/Monitors.h"
 
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;
@@ -38,7 +41,7 @@ using Atlas::Message::MapType;
 // Shape needs to be copied 
 class AreaPropertyintegration : public Cyphesis::TestBase {
 private:
-	TypeNode* m_char_type;
+	TypeNode<LocatedEntity>* m_char_type;
 	PropertyBase* m_char_property;
 	Ref<Entity> m_char1;
 	Ref<Entity> m_char2;
@@ -57,7 +60,7 @@ AreaPropertyintegration::AreaPropertyintegration() {
 }
 
 void AreaPropertyintegration::setup() {
-	m_char_type = new TypeNode("char_type");
+	m_char_type = new TypeNode<LocatedEntity>("char_type");
 
 	m_char_property = new AreaProperty;
 	m_char_property->addFlags(prop_flag_class);
@@ -98,6 +101,7 @@ void AreaPropertyintegration::test_copy() {
 }
 
 int main() {
+	Monitors m;
 	AreaPropertyintegration t;
 
 	return t.run();
@@ -113,57 +117,14 @@ const TerrainProperty* TerrainEffectorProperty::getTerrain(LocatedEntity& owner,
 
 // stubs
 
-#include "rules/AtlasProperties.h"
-#include "rules/Domain.h"
-#include "rules/Script.h"
-
-#include "rules/simulation/BaseWorld.h"
-#include "common/log.h"
-#include "common/PropertyManager.h"
-#include "common/TypeNode.h"
-
-#include "rules/simulation/DomainProperty.h"
-#include "../../stubs/common/stubcustom.h"
-#include "../../stubs/rules/stubDomain.h"
-#include "../../stubs/rules/simulation/stubDomainProperty.h"
-#include "../../stubs/common/stubVariable.h"
-#include "../../stubs/common/stubMonitors.h"
-#include "../../stubs/common/stubProperty.h"
-#include "../../stubs/common/stubLink.h"
-#include "../../stubs/common/stubRouter.h"
-
-#define STUB_TypeNode_TypeNode
-
-TypeNode::TypeNode(std::string name) : m_name(name), m_parent(0) {
-}
-
-#define STUB_TypeNode_TypeNode_DTOR
-
-TypeNode::~TypeNode() {
-	m_defaults.clear();
-}
-
-#define STUB_TypeNode_injectProperty
-
-TypeNode::PropertiesUpdate TypeNode::injectProperty(const std::string& name,
-													std::unique_ptr<PropertyBase> p) {
-	m_defaults[name] = std::move(p);
-	return {};
-}
-
-#include "../../stubs/common/stubTypeNode.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/simulation/Domain.h"
 
 
-void addToEntity(const Point3D& p, std::vector<double>& vd) {
-}
+#include "common/TypeNode_impl.h"
 
-#include "../../stubs/rules/simulation/stubBaseWorld.h"
 
-#include "../../stubs/rules/stubScript.h"
-#include "../../stubs/rules/stubLocation.h"
-#include "../../stubs/rules/stubAtlasProperties.h"
-#include "../../stubs/rules/stubPhysicalProperties.h"
-#include "../../stubs/common/stubPropertyManager.h"
-#include "../../stubs/common/stubid.h"
-#include "../../stubs/common/stublog.h"
-#include "../../stubs/rules/stubModifier.h"
+#include "rules/Script_impl.h"
+#include "rules/Location_impl.h"
+#include "rules/PhysicalProperties_impl.h"
+

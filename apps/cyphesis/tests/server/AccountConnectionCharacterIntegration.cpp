@@ -36,7 +36,7 @@
 
 #include "common/const.h"
 #include "common/log.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 #include "../DatabaseNull.h"
 
 #include <Atlas/Objects/Operation.h>
@@ -65,7 +65,7 @@ protected:
 	Connection* m_connection;
 	Account* m_account;
 	Ref<Entity> m_character;
-	TypeNode* m_characterType;
+	TypeNode<LocatedEntity>* m_characterType;
 	std::unique_ptr<TestWorld> m_world;
 public:
 	AccountConnectionCharacterintegration();
@@ -118,7 +118,7 @@ void AccountConnectionCharacterintegration::setup() {
 						   "25846125-f1bb-4963-852e-856a8be45515",
 						   m_id_counter++);
 	m_character = new Entity(m_id_counter++);
-	m_characterType = new TypeNode("test_avatar");
+	m_characterType = new TypeNode<LocatedEntity>("test_avatar");
 	m_character->setType(m_characterType);
 
 }
@@ -265,9 +265,9 @@ int main() {
 #include "server/Persistence.h"
 #include "server/PossessionAuthenticator.h"
 
-#include "rules/AtlasProperties.h"
-#include "rules/BBoxProperty.h"
-#include "rules/Domain.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/BBoxProperty_impl.h"
+#include "rules/simulation/Domain.h"
 #include "rules/simulation/EntityProperty.h"
 #include "rules/Script.h"
 #include "rules/simulation/StatusProperty.h"
@@ -275,7 +275,7 @@ int main() {
 #include "rules/simulation/TasksProperty.h"
 
 #include "common/CommSocket.h"
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/Property_impl.h"
 #include "common/PropertyManager.h"
 
@@ -285,15 +285,3 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 
 bool restricted_flag;
-
-
-#include "../stubs/server/stubExternalMindsManager.h"
-#include "../stubs/server/stubExternalMindsConnection.h"
-#include "../stubs/server/stubPossessionAuthenticator.h"
-#include "../stubs/server/stubPlayer.h"
-#include "../stubs/server/stubConnectableRouter.h"
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubPersistence.h"
-#include "../stubs/server/stubLobby.h"
-#include "../stubs/rules/entityfilter/stubProviderFactory.h"
-#include "../stubs/rules/entityfilter/stubFilter.h"

@@ -39,7 +39,7 @@
 
 #include <cassert>
 #include <rules/simulation/PhysicalDomain.h>
-#include <common/TypeNode.h>
+#include <common/TypeNode_impl.h>
 #include <rules/simulation/ModeProperty.h>
 #include <rules/simulation/TerrainProperty.h>
 #include <Mercator/BasePoint.h>
@@ -48,10 +48,9 @@
 #include <rules/simulation/AngularFactorProperty.h>
 #include <chrono>
 #include <rules/simulation/VisibilityProperty.h>
-#include <rules/BBoxProperty.h>
-#include <rules/SolidProperty.h>
+#include <rules/BBoxProperty_impl.h>
 
-#include "../stubs/common/stublog.h"
+
 #include "common/Monitors.h"
 
 using Atlas::Message::Element;

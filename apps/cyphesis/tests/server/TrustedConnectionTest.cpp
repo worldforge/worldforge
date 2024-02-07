@@ -25,7 +25,7 @@
 
 #include "server/TrustedConnection.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "server/Account.h"
 #include "rules/simulation/ExternalMind.h"
 #include "server/Lobby.h"
@@ -35,9 +35,10 @@
 #include "rules/simulation/WorldRouter.h"
 #include "server/SystemAccount.h"
 
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/log.h"
 #include "common/CommSocket.h"
+#include "common/Monitors.h"
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Operation.h>
@@ -110,6 +111,7 @@ public:
 };
 
 int main() {
+	Monitors m;
 	// WorldRouter world(SystemTime());
 	// Entity & e = world.m_gameWorld;
 
@@ -160,7 +162,7 @@ int main() {
 
 		int ret = tc.test_verifyCredentials(*ac, creds);
 
-		assert(ret == 0);
+		assert(ret == -1);
 		delete ac;
 	}
 }
@@ -182,56 +184,26 @@ int CommSocket::flush() {
 	return 0;
 }
 
-#include "../stubs/server/stubAdmin.h"
-#include "../stubs/server/stubPlayer.h"
-#include "../stubs/server/stubSystemAccount.h"
-#include "../stubs/server/stubAccount.h"
-#include "../stubs/server/stubConnectableRouter.h"
-#include "../stubs/server/stubConnection.h"
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubLobby.h"
-
-#define STUB_ExternalMind_connectionId
 
 const std::string& ExternalMind::connectionId() {
 	assert(m_link != 0);
 	return m_link->getId();
 }
 
-#define STUB_ExternalMind_linkUp
-
 void ExternalMind::linkUp(Link* c) {
 	m_link = c;
 }
 
-#include "../stubs/rules/simulation/stubExternalMind.h"
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
 
-#include "../stubs/common/stubLink.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/rules/stubLocation.h"
-#include "common/Property_impl.h"
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-
-
-#ifndef STUB_Inheritance_getClass
-#define STUB_Inheritance_getClass
+#include "common/TypeNode_impl.h"
+#include "rules/Location_impl.h"
 
 const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Visibility) const {
 	return noClass;
 }
 
-#endif //STUB_Inheritance_getClass
 
-
-#ifndef STUB_Inheritance_getType
-#define STUB_Inheritance_getType
-
-const TypeNode* Inheritance::getType(const std::string& parent) const {
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
 	auto I = atlasObjects.find(parent);
 	if (I == atlasObjects.end()) {
 		return 0;
@@ -239,16 +211,8 @@ const TypeNode* Inheritance::getType(const std::string& parent) const {
 	return I->second.get();
 }
 
-#endif //STUB_Inheritance_getType
-
-#include "../stubs/common/stubInheritance.h"
-
-
 void encrypt_password(const std::string& pwd, std::string& hash) {
 }
-
-#include "../stubs/common/stublog.h"
-
 
 static long idGenerator = 0;
 

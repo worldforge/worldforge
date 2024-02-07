@@ -25,14 +25,13 @@
 
 #include "../PropertyCoverage.h"
 
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 #include "rules/simulation/Entity.h"
 #include "rules/simulation/TerrainModProperty.h"
 #include "rules/simulation/TerrainProperty.h"
 
 
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/common/stubcustom.h"
+#include "common/TypeNode_impl.h"
 
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;
@@ -156,5 +155,3 @@ std::unique_ptr<Mercator::TerrainMod> TerrainModTranslator::parseData(const WFMa
     p.addCorner(0, WFMath::Point<2>(0., 0.));
     return std::make_unique<Mercator::LevelTerrainMod<WFMath::Polygon>>(1.f, p);
 }
-
-#include "../stubs/modules/stubWeakEntityRef.h"

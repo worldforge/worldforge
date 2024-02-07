@@ -19,41 +19,45 @@
 #ifndef TESTS_TEST_PROPERTY_MANAGER_H
 #define TESTS_TEST_PROPERTY_MANAGER_H
 
-#include "common/PropertyManager.h"
-#include "common/Property.h"
-#include "common/PropertyFactory.h"
+#include "common/PropertyManager_impl.h"
+#include "common/Property_impl.h"
+#include "common/PropertyFactory_impl.h"
 
 #include <map>
 
+template<typename>
 class PropertyKit;
 
-typedef std::map<std::string, PropertyKit*> PropertyFactoryDict;
-
-class TestPropertyManager : public PropertyManager {
+template<typename EntityT>
+class TestPropertyManager : public PropertyManager<EntityT> {
 public:
 	TestPropertyManager();
 
 	~TestPropertyManager() override;
 
-	std::unique_ptr<PropertyBase> addProperty(const std::string& name) const override;
+	std::unique_ptr<PropertyCore<EntityT>> addProperty(const std::string& name) const override;
 
-	void installPropertyFactory(const std::string&, std::unique_ptr<PropertyKit>);
+	void installPropertyFactory(const std::string&, std::unique_ptr<PropertyKit<EntityT>>);
 };
 
 
-inline TestPropertyManager::TestPropertyManager() = default;
+template<typename EntityT>
+inline TestPropertyManager<EntityT>::TestPropertyManager() = default;
 
-inline TestPropertyManager::~TestPropertyManager() = default;
+template<typename EntityT>
+inline TestPropertyManager<EntityT>::~TestPropertyManager() = default;
 
-inline void TestPropertyManager::installPropertyFactory(const std::string& name,
-														std::unique_ptr<PropertyKit> factory) {
-	m_propertyFactories.emplace(name, std::move(factory));
+template<typename EntityT>
+inline void TestPropertyManager<EntityT>::installPropertyFactory(const std::string& name,
+																 std::unique_ptr<PropertyKit<EntityT>> factory) {
+	this->m_propertyFactories.emplace(name, std::move(factory));
 }
 
-inline std::unique_ptr<PropertyBase> TestPropertyManager::addProperty(const std::string& name) const {
-	auto I = m_propertyFactories.find(name);
-	if (I == m_propertyFactories.end()) {
-		return std::make_unique<SoftProperty>();
+template<typename EntityT>
+inline std::unique_ptr<PropertyCore<EntityT>> TestPropertyManager<EntityT>::addProperty(const std::string& name) const {
+	auto I = this->m_propertyFactories.find(name);
+	if (I == this->m_propertyFactories.end()) {
+		return std::make_unique<SoftProperty<EntityT>>();
 	} else {
 		return I->second->newProperty();
 	}

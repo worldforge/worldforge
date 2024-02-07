@@ -120,4 +120,3 @@ int main() {
 // stubs
 
 #include "common/debug.h"
-#include "../stubs/common/stublog.h"

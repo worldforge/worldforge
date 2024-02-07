@@ -23,7 +23,7 @@
 
 #include <list>
 #include <memory>
-#include <common/Inheritance.h>
+#include <rules/simulation/Inheritance.h>
 
 
 class PropertyExerciser {

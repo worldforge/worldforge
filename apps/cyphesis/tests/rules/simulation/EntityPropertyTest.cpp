@@ -90,7 +90,7 @@ int main() {
 
 		PropertyBase* pb = new EntityProperty;
 
-		MapType::const_iterator I = map.find(key);
+		auto I = map.find(key);
 		assert(I == map.end());
 
 		pb->add(key, map);
@@ -219,10 +219,4 @@ int main() {
 // stubs
 
 #include "rules/simulation/BaseWorld.h"
-
-#include "../../stubs/rules/simulation/stubEntity.h"
-#include "../../stubs/rules/stubLocatedEntity.h"
-#include "../../stubs/common/stubRouter.h"
-#include "../../stubs/rules/simulation/stubBaseWorld.h"
-#include "../../stubs/rules/stubLocation.h"
-#include "../../stubs/common/stublog.h"
+#include "rules/Location_impl.h"

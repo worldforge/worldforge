@@ -46,8 +46,10 @@
 #include <cassert>
 #include <server/Persistence.h>
 #include <server/PossessionAuthenticator.h>
-#include "rules/AtlasProperties.h"
+#include "rules/simulation/AtlasProperties.h"
 #include "rules/PhysicalProperties.h"
+#include "common/Property_impl.h"
+#include "common/Monitors.h"
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -383,7 +385,7 @@ void Accounttest::setup() {
 		Ref<Entity> ne = Accounttest::get_TestWorld_addNewEntity_ret_value();
 		if (ne != nullptr) {
 			ne->m_parent = m_gw.get();
-			ne->requirePropertyClassFixed<PositionProperty>().data() = Point3D(0, 0, 0);
+			ne->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = Point3D(0, 0, 0);
 		}
 		return ne;
 	};
@@ -407,8 +409,8 @@ void Accounttest::setup() {
 
 void Accounttest::teardown() {
 	delete m_world;
-	delete m_server;
 	delete m_account;
+	delete m_server;
 	delete m_persistence;
 }
 
@@ -1168,6 +1170,7 @@ int TestAccount::characterError(const Operation& op,
 }
 
 int main() {
+	Monitors m;
 	Accounttest t;
 
 	return t.run();
@@ -1186,10 +1189,6 @@ int main() {
 
 #include <cstdlib>
 
-#include "../stubs/server/stubConnection.h"
-#include "../stubs/server/stubConnectableRouter.h"
-
-#define STUB_ServerRouting_ServerRouting
 
 ServerRouting::ServerRouting(BaseWorld& wrld,
 							 Persistence& persistence,
@@ -1203,19 +1202,12 @@ ServerRouting::ServerRouting(BaseWorld& wrld,
 		m_persistence(persistence) {
 }
 
-#include "../stubs/server/stubServerRouting.h"
-
-#define STUB_PossessionAuthenticator_authenticatePossession
 
 Ref<LocatedEntity> PossessionAuthenticator::authenticatePossession(const std::string& entity_id,
 																   const std::string& possess_key) {
 	Ref<Entity> ne = Accounttest::get_TeleportAuthenticator_ret_value();
 	return ne;
 }
-
-#include "../stubs/server/stubPossessionAuthenticator.h"
-#include "../stubs/server/stubPersistence.h"
-
 
 Lobby::Lobby(ServerRouting& s, RouterId id) :
 		Router(id),
@@ -1242,23 +1234,11 @@ void Lobby::operation(const Operation& op, OpVector& res) {
 	Accounttest::set_Lobby_operation_called(op->getClassNo());
 }
 
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/common/stubVariable.h"
-#include "../stubs/common/stubMonitors.h"
-#include "../stubs/common/stubid.h"
-
-
-#define STUB_Entity_addToEntity
 
 void Entity::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
 	ent->setId(getId());
 }
 
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/common/stubDatabase.h"
-
-#define STUB_Link_send
 
 void Link::send(const Operation& op) const {
 	Accounttest::append_Link_send_sent(op);
@@ -1267,16 +1247,6 @@ void Link::send(const Operation& op) const {
 void Link::send(const OpVector& ops) const {
 }
 
-#include "../stubs/common/stubLink.h"
-#include "../stubs/common/stubcustom.h"
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/rules/simulation/stubExternalMind.h"
-#include "../stubs/rules/simulation/stubMindsProperty.h"
-
-
-#define STUB_Router_error
-
 void Router::error(const Operation& op,
 				   const std::string& errstring,
 				   OpVector& res,
@@ -1284,7 +1254,6 @@ void Router::error(const Operation& op,
 	res.push_back(Atlas::Objects::Operation::Error());
 }
 
-#define STUB_Router_clientError
 
 void Router::clientError(const Operation& op,
 						 const std::string& errstring,
@@ -1293,11 +1262,8 @@ void Router::clientError(const Operation& op,
 	res.push_back(Atlas::Objects::Operation::Error());
 }
 
-#include "../stubs/common/stubRouter.h"
 
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stublog.h"
-
+#include "rules/Location_impl.h"
 
 bool database_flag = false;
 
@@ -1310,5 +1276,8 @@ std::string Shaker::generateSalt(size_t length) {
 	return "";
 }
 
-#include "../stubs/rules/stubPhysicalProperties.h"
+#include "rules/PhysicalProperties_impl.h"
 
+void Link::disconnect() {
+//	m_commSocket.disconnect();
+}

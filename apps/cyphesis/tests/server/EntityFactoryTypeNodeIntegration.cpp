@@ -23,21 +23,21 @@
 #define DEBUG
 #endif
 
-#include "server/EntityFactory.h"
+#include "server/EntityFactory_impl.h"
 
 #include "../TestPropertyManager.h"
 
 #include "rules/simulation/Thing.h"
 
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 
 #include <cassert>
 
 int main() {
-	TestPropertyManager tpm;
-	std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+	TestPropertyManager<LocatedEntity> tpm;
+	std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
-	TypeNode typeNode("thing");
+	TypeNode<LocatedEntity> typeNode("thing");
 	EntityFactory<Thing> ek;
 
 	ek.m_type = &typeNode;
@@ -53,7 +53,7 @@ int main() {
 
 	assert(ek.m_type->defaults().size() == 1);
 
-	TypeNode subType("subclass");
+	TypeNode<LocatedEntity> subType("subclass");
 	EntityFactory<Thing> subclass_ek;
 	subclass_ek.m_type = &subType;
 	subclass_ek.m_type->setParent(ek.m_type);
@@ -88,11 +88,11 @@ int main() {
 
 // stubs
 
-#include "rules/python/PythonScriptFactory.h"
+#include "rules/python/PythonScriptFactory_impl.h"
 
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stublog.h"
+
+
+
+
+#include "rules/Location_impl.h"
+

@@ -19,9 +19,8 @@
 #ifndef TESTS_ENTITY_EXERCISER_H
 #define TESTS_ENTITY_EXERCISER_H
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
-#define STUB_TypeNode_injectProperty
 
 #include <Atlas/Objects/RootOperation.h>
 
@@ -31,7 +30,7 @@
 #include <common/PropertyManager.h>
 
 struct LocatedEntityTest : public LocatedEntity {
-	static PropertyManager* propertyManager;
+	static PropertyManager<LocatedEntity>* propertyManager;
 
 	LocatedEntityTest(RouterId id) :
 			LocatedEntity(id) {}
@@ -52,7 +51,7 @@ struct LocatedEntityTest : public LocatedEntity {
 
 class EntityExerciser {
 protected:
-	std::unique_ptr<TypeNode> test_type;
+	std::unique_ptr<TypeNode<LocatedEntity>> test_type;
 	Ref<LocatedEntity> m_parentEntity;
 	Ref<LocatedEntity> m_ent;
 	std::set<int> attr_types;

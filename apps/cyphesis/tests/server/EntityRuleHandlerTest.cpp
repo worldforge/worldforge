@@ -23,13 +23,13 @@
 #define DEBUG
 #endif
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "server/EntityRuleHandler.h"
 
 #include "server/EntityBuilder.h"
 
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 #include "../TestPropertyManager.h"
 
 #include <Atlas/Objects/Anonymous.h>
@@ -40,11 +40,11 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 
-static TypeNode* stub_addChild_result = nullptr;
+static TypeNode<LocatedEntity>* stub_addChild_result = nullptr;
 
 int main() {
 	EntityBuilder eb;
-	TestPropertyManager propertyManager;
+	TestPropertyManager<LocatedEntity> propertyManager;
 
 	{
 		RuleHandler* rh = new EntityRuleHandler(eb, propertyManager);
@@ -80,7 +80,7 @@ int main() {
 
 	{
 		RuleHandler* rh = new EntityRuleHandler(eb, propertyManager);
-		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
 		Anonymous description;
 		description->setId("class_name");
@@ -98,13 +98,13 @@ int main() {
 	// Install a rule with addChild rigged to give a correct result
 	{
 		RuleHandler* rh = new EntityRuleHandler(eb, propertyManager);
-		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
 		Anonymous description;
 		description->setId("class_name");
 		std::string dependent, reason;
 
-		stub_addChild_result = (TypeNode*) malloc(sizeof(TypeNode));
+		stub_addChild_result = (TypeNode<LocatedEntity>*) malloc(sizeof(TypeNode<LocatedEntity>));
 		int ret = rh->install("class_name", "parent_name",
 							  description, dependent, reason, changes);
 
@@ -118,7 +118,7 @@ int main() {
 	}
 	{
 		RuleHandler* rh = new EntityRuleHandler(eb, propertyManager);
-		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
 		Anonymous description;
 		int ret = rh->update("", description, changes);
@@ -134,116 +134,66 @@ int main() {
 
 // stubs
 
-#include "server/EntityFactory.h"
+#include "server/EntityFactory_impl.h"
 #include "server/Player.h"
 
 #include "rules/python/PythonScriptFactory.h"
 
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/log.h"
+#include "rules/simulation/python/CyPy_LocatedEntity.h"
 
-#include "../stubs/server/stubEntityBuilder.h"
-#include "../stubs/common/stubTypeNode.h"
 
-template<class T>
-PythonScriptFactory<T>::PythonScriptFactory(const std::string& package,
-											const std::string& type) :
+template<typename EntityT, typename ScriptObjectT>
+PythonScriptFactory<EntityT, ScriptObjectT>::PythonScriptFactory(const std::string& package,
+																 const std::string& type) :
 		PythonClass(package,
 					type) {
 }
 
-template<class T>
-int PythonScriptFactory<T>::setup() {
+template<typename EntityT, typename ScriptObjectT>
+int PythonScriptFactory<EntityT, ScriptObjectT>::setup() {
 	return 0;
 }
 
-template<class T>
-const std::string& PythonScriptFactory<T>::package() const {
+template<typename EntityT, typename ScriptObjectT>
+const std::string& PythonScriptFactory<EntityT, ScriptObjectT>::package() const {
 	return m_package;
 }
 
-template<class T>
-int PythonScriptFactory<T>::addScript(T& entity) const {
-	return 0;
-}
-
 template
-class PythonScriptFactory<LocatedEntity>;
+class PythonScriptFactory<LocatedEntity, CyPy_LocatedEntity>;
 
-template<class T>
-int PythonScriptFactory<T>::refreshClass() {
+template<typename EntityT, typename ScriptObjectT>
+int PythonScriptFactory<EntityT, ScriptObjectT>::refreshClass() {
 	return 0;
 }
 
-#include "../stubs/pythonbase/stubPythonClass.h"
+template<typename EntityT, typename ScriptObjectT>
+std::unique_ptr<Script<EntityT>> PythonScriptFactory<EntityT, ScriptObjectT>::createScriptWrapper(ScriptObjectT& entity) const {
+	return {};
+}
 
-
-#ifndef STUB_Inheritance_addChild
-#define STUB_Inheritance_addChild
-
-TypeNode* Inheritance::addChild(const Atlas::Objects::Root& obj) {
+TypeNode<LocatedEntity>* Inheritance::addChild(const Atlas::Objects::Root& obj) {
 	return stub_addChild_result;
 }
-
-#endif //STUB_Inheritance_addChild
-
-
-#ifndef STUB_Inheritance_hasClass
-#define STUB_Inheritance_hasClass
 
 bool Inheritance::hasClass(const std::string& parent) {
 	return true;
 }
 
-#endif //STUB_Inheritance_hasClass
-
-#include "../stubs/common/stubInheritance.h"
-
 Root atlasOpDefinition(const std::string& name, const std::string& parent) {
 	return Root();
 }
 
-#include "../stubs/common/stublog.h"
-#include "../stubs/server/stubEntityKit.h"
-#include "../stubs/server/stubEntityFactory.h"
-#include "../stubs/rules/simulation/stubCorePropertyManager.h"
-#include "../stubs/common/stubPropertyManager.h"
+int EntityBuilder::installFactory(const std::string& class_name, const Atlas::Objects::Root& class_desc, std::unique_ptr<EntityKit> factory) {
+	return 0;
+}
 
-class Thing;
+#include "common/TypeNode_impl.h"
 
-class Character;
+#include "common/PropertyManager_impl.h"
 
-class Creator;
-
-class Plant;
-
-class Stackable;
-
-class Entity;
-
-class World;
-
-template
-class EntityFactory<Entity>;
-
-template
-class EntityFactory<Thing>;
-
-template
-class EntityFactory<Character>;
-
-template
-class EntityFactory<Creator>;
-
-template
-class EntityFactory<Plant>;
-
-template
-class EntityFactory<Stackable>;
-
-template
-class EntityFactory<World>;
-
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/common/stubPropertyManager.h"
+#include "common/Property_impl.h"
+#include "common/PropertyManager_impl.h"
 

@@ -77,17 +77,11 @@ int main()
 
 // stubs
 
-#define STUB_Task_initTask
 void Task::initTask(const std::string& id, OpVector & res)
 {
     this->m_obsolete = true;
 }
 
-#include "../stubs/rules/simulation/stubTask.h"
-#include "../stubs/rules/entityfilter/stubFilter.h"
-#include "../stubs/rules/simulation/stubUsageInstance.h"
-#include "../stubs/common/stubInheritance.h"
 
-#include "../stubs/common/stubcustom.h"
-#include "../stubs/common/stubTypeNode.h"
+#include "common/TypeNode_impl.h"
 

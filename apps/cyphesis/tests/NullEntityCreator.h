@@ -20,7 +20,7 @@
 #define TESTS_NULL_ENTITY_CREATOR_H
 
 #include <rules/simulation/EntityCreator.h>
-#include <rules/LocatedEntity.h>
+#include <rules/simulation/LocatedEntity.h>
 #include <string>
 
 struct NullEntityCreator : public EntityCreator {

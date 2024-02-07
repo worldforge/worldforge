@@ -24,13 +24,14 @@
 #endif
 
 #include "rules/ai/MemEntity.h"
-#include "rules/SolidProperty.h"
 #include "common/Property_impl.h"
+#include "rules/BBoxProperty_impl.h"
+#include "rules/ScaleProperty_impl.h"
 
 #include <cassert>
 
 int main() {
-	auto* me = new MemEntity(RouterId{1});
+	auto* me = new MemEntity(RouterId{1}, nullptr);
 
 	delete me;
 	// The is no code in operations.cpp to execute, but we need coverage.
@@ -39,11 +40,5 @@ int main() {
 
 // stubs
 
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/rules/stubLocation.h"
+#include "rules/Location_impl.h"
 
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/rules/stubBBoxProperty.h"
-#include "../stubs/rules/stubScaleProperty.h"
-#include "../stubs/rules/stubSolidProperty.h"

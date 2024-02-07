@@ -28,8 +28,9 @@
 #include "rules/simulation/Entity.h"
 #include "rules/simulation/TerrainEffectorProperty.h"
 #include "rules/simulation/TerrainProperty.h"
+#include "rules/Location_impl.h"
+#include "common/Property_impl.h"
 
-#include "../stubs/rules/simulation/stubTerrainProperty.h"
 
 class TerrainEffectorPropertytest : public Cyphesis::TestBase
 {
@@ -84,7 +85,7 @@ void TerrainEffectorPropertytest::test_not_terrain()
     ASSERT_EQUAL(m_entity->m_parent, m_world.get());
 
     m_world->setProperty("terrain",
-                         std::unique_ptr<PropertyBase>(new Property<Atlas::Message::MapType>));
+                         std::unique_ptr<PropertyBase>(new Property<Atlas::Message::MapType, LocatedEntity>));
 
     const TerrainProperty * res = m_property->getTerrain(*m_entity);
 
@@ -113,10 +114,3 @@ int main()
 
 // stubs
 
-
-#include "../stubs/rules/simulation/stubEntity.h"
-
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stubProperty.h"

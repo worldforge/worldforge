@@ -30,10 +30,14 @@
 #include "rules/simulation/Entity.h"
 
 #include "rules/simulation/BaseWorld.h"
+#include "common/TypeNode_impl.h"
 
 #include <Atlas/Objects/Operation.h>
 
 #include <cassert>
+
+template
+class TypeNode<LocatedEntity>;
 
 class TestExternalMind : public ExternalMind {
 public:
@@ -252,42 +256,27 @@ int main() {
 
 using Atlas::Message::MapType;
 
-#include "../stubs/server/stubConnection.h"
-#include "../stubs/common/stubInheritance.h"
-#include "../stubs/common/stubcustom.h"
-#include "../stubs/common/stubTypeNode.h"
-
-#define STUB_Entity_destroy
-
 void Entity::destroy() {
 	destroyed.emit();
 }
-
-#define STUB_Entity_sendWorld
 
 void Entity::sendWorld(Operation op) {
 	BaseWorld::instance().message(op, *this);
 }
 
-
-#include "../stubs/rules/simulation/stubEntity.h"
-
-
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/rules/stubScript.h"
-
-#include "../stubs/rules/stubLocation.h"
-
-#define STUB_Link_send
+#include "rules/Location_impl.h"
 
 void Link::send(const Operation& op) const {
 	stub_link_send_op = op->getClassNo();
 	++stub_link_send_count;
 }
 
+Connection::Connection(CommSocket& socket,
+					   ServerRouting& svr,
+					   const std::string& addr,
+					   RouterId id) :
+		Link(socket, std::move(id)), m_server(svr) {
+}
 
-#include "../stubs/common/stubLink.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/common/stublog.h"
-
+Connection::~Connection() {
+}

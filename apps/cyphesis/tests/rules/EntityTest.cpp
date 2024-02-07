@@ -29,27 +29,35 @@
 
 #include "rules/simulation/Entity.h"
 
-#include "rules/AtlasProperties.h"
-#include "rules/Domain.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/simulation/Domain.h"
 #include "rules/Script.h"
 #include "rules/simulation/DomainProperty.h"
 
 #include "common/id.h"
 #include "common/Property_impl.h"
 #include "common/PropertyFactory_impl.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
+#include "common/PropertyManager_impl.h"
+
 
 #include <cstdlib>
 
 #include <cassert>
+#include "common/Property_impl.h"
+#include "rules/entityfilter/ParserDefinitions_impl.h"
+#include "common/Monitors.h"
+
+template
+struct EntityFilter::parser::query_parser<std::string::const_iterator, LocatedEntity>;
 
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 
 class Entitytest : public Cyphesis::TestBase {
 private:
-	TestPropertyManager* m_pm;
-	TypeNode* m_type;
+	TestPropertyManager<LocatedEntity>* m_pm;
+	TypeNode<LocatedEntity>* m_type;
 	Ref<Entity> m_entity;
 
 	static bool m_TestProperty_install_called;
@@ -69,7 +77,7 @@ public:
 
 	void test_sequence();
 
-	class TestProperty : public Property<int> {
+	class TestProperty : public Property<int, LocatedEntity> {
 	public:
 		virtual void install(LocatedEntity&, const std::string&);
 
@@ -110,9 +118,9 @@ Entitytest::Entitytest() {
 }
 
 void Entitytest::setup() {
-	m_pm = new TestPropertyManager;
-	m_pm->installPropertyFactory("test_int_property", std::make_unique<PropertyFactory<TestProperty>>());
-	m_type = new TypeNode("test_type");
+	m_pm = new TestPropertyManager<LocatedEntity>;
+	m_pm->installPropertyFactory("test_int_property", std::make_unique<PropertyFactory<TestProperty, LocatedEntity>>());
+	m_type = new TypeNode<LocatedEntity>("test_type");
 	m_entity = new Entity(1);
 	m_entity->setType(m_type);
 
@@ -245,11 +253,12 @@ void Entitytest::test_sequence() {
 	}
 
 	{
-		m_entity->setProperty("new_test_prop", std::unique_ptr<PropertyBase>(new SoftProperty));
+		m_entity->setProperty("new_test_prop", std::unique_ptr<PropertyBase>(new SoftProperty<LocatedEntity>));
 	}
 }
 
 int main() {
+	Monitors m;
 	Entitytest t;
 
 	return t.run();
@@ -267,8 +276,6 @@ void addToEntity(const Point3D& p, std::vector<double>& vd) {
 	vd[2] = p[2];
 }
 
-#ifndef STUB_BaseWorld_getEntity
-#define STUB_BaseWorld_getEntity
 
 Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const {
 	return getEntity(integerId(id));
@@ -284,24 +291,8 @@ Ref<LocatedEntity> BaseWorld::getEntity(long id) const {
 	}
 }
 
-#endif //STUB_BaseWorld_getEntity
 
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/common/stubcustom.h"
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/rules/stubLocation.h"
+#include "common/TypeNode_impl.h"
+#include "rules/Location_impl.h"
 
-#include "../stubs/rules/stubDomain.h"
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/common/stubMonitors.h"
-#include "../stubs/common/stubVariable.h"
-#include "../stubs/rules/simulation/stubDomainProperty.h"
-#include "../stubs/rules/stubAtlasProperties.h"
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/rules/stubScript.h"
-#include "../stubs/common/stubLink.h"
-#include "../stubs/common/stubPropertyManager.h"
-#include "../stubs/common/stubid.h"
-#include "../stubs/common/stublog.h"
-#include "../stubs/rules/stubModifier.h"
-#include "../stubs/rules/stubPhysicalProperties.h"
+#include "rules/PhysicalProperties_impl.h"

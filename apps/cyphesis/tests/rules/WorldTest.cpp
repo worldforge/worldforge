@@ -29,35 +29,25 @@
 
 #include "rules/simulation/World.h"
 
-#include "rules/AtlasProperties.h"
-#include "rules/BBoxProperty.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/BBoxProperty_impl.h"
 #include "rules/simulation/CalendarProperty.h"
-#include "rules/Domain.h"
+#include "rules/simulation/Domain.h"
 #include "rules/Script.h"
 #include "rules/simulation/StatusProperty.h"
 #include "rules/simulation/TerrainProperty.h"
 
 #include "common/id.h"
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/log.h"
 #include "common/Property_impl.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
+#include "common/PropertyManager_impl.h"
 
-#include "../stubs/common/stubcustom.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/common/stubPropertyManager.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/rules/stubAtlasProperties.h"
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/rules/simulation/stubStatusProperty.h"
-#include "../stubs/rules/stubBBoxProperty.h"
-#include "../stubs/rules/simulation/stubTerrainProperty.h"
-#include "../stubs/rules/simulation/stubCalendarProperty.h"
-#include "../stubs/rules/stubDomain.h"
+
+#include "rules/Location_impl.h"
+#include "rules/PhysicalProperties_impl.h"
+#include "common/Monitors.h"
 
 
 #include <cstdlib>
@@ -69,9 +59,25 @@ using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 using Atlas::Objects::Entity::RootEntity;
 
+template
+class Vector3Property<LocatedEntity>;
+
+template
+class VelocityProperty<LocatedEntity>;
+
+template
+class Point3Property<LocatedEntity>;
+
+template
+class OrientationProperty<LocatedEntity>;
+
+template
+class PositionProperty<LocatedEntity>;
+
 int main() {
+	Monitors m;
 	Ref<World> e(new World());
-	TypeNode type("world");
+	TypeNode<LocatedEntity> type("world");
 	e->setType(&type);
 
 	IGEntityExerciser ee(e);
@@ -101,8 +107,6 @@ void addToEntity(const Point3D& p, std::vector<double>& vd) {
 	vd[2] = p[2];
 }
 
-#ifndef STUB_BaseWorld_getEntity
-#define STUB_BaseWorld_getEntity
 
 Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const {
 	return getEntity(integerId(id));
@@ -118,14 +122,6 @@ Ref<LocatedEntity> BaseWorld::getEntity(long id) const {
 	}
 }
 
-#endif //STUB_BaseWorld_getEntity
 
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/rules/simulation/stubWorldTimeProperty.h"
-#include "../stubs/rules/simulation/stubVoidDomain.h"
-#include "../stubs/common/stubconst.h"
-#include "../stubs/common/stublog.h"
-#include "../stubs/common/stubid.h"
-#include "../stubs/rules/stubPhysicalProperties.h"
 
 

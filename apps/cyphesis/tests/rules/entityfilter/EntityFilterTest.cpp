@@ -7,23 +7,22 @@
 
 #include "../../TestBaseWithContext.h"
 
-#include "rules/entityfilter/Filter.h"
+#include "rules/entityfilter/ParserDefinitions_impl.h"
+#include "rules/entityfilter/ProviderFactory_impl.h"
+#include "rules/entityfilter/Predicates_impl.h"
+#include "rules/entityfilter/Filter_impl.h"
+#include "rules/entityfilter/Providers_impl.h"
 
-#include "rules/entityfilter/Providers.h"
-
-#include "rules/entityfilter/ParserDefinitions.h"
-
-#include "rules/simulation/EntityProperty.h"
-#include "rules/Domain.h"
-#include "rules/AtlasProperties.h"
-#include "rules/BBoxProperty.h"
-#include "rules/simulation/BaseWorld.h"
+#include "rules/simulation/Domain.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/BBoxProperty_impl.h"
+#include "rules/ScaleProperty_impl.h"
 #include "rules/simulation/Entity.h"
 
-#include "common/Property.h"
-#include "common/log.h"
-#include "common/Inheritance.h"
-#include "common/TypeNode.h"
+#include "common/Property_impl.h"
+#include "rules/simulation/Inheritance.h"
+#include "common/TypeNode_impl.h"
+#include "common/Monitors.h"
 
 #include <wfmath/point.h>
 #include <Atlas/Objects/Anonymous.h>
@@ -38,7 +37,36 @@ using Atlas::Objects::Entity::Anonymous;
 
 using namespace EntityFilter;
 
-static std::map<std::string, std::unique_ptr<TypeNode>>* s_types;
+
+namespace std {
+
+std::ostream& operator<<(std::ostream& os, const std::vector<Atlas::Message::Element>& v);
+
+std::ostream& operator<<(std::ostream& os, const std::vector<Atlas::Message::Element>& v) {
+	os << "[Atlas vector]";
+	return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& v);
+
+std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& v) {
+	os << "[Atlas Element]";
+	return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const EntityFilter::ComparePredicate<LocatedEntity>::Comparator& v);
+
+std::ostream& operator<<(std::ostream& os, const EntityFilter::ComparePredicate<LocatedEntity>::Comparator& v) {
+	os << "[Comparator]";
+	return os;
+}
+}
+
+
+static std::map<std::string, std::unique_ptr<TypeNode<LocatedEntity>>>* s_types;
+
+template
+class EntityFilter::ComparePredicate<LocatedEntity>;
 
 struct TestEntity : Entity {
 	explicit TestEntity(RouterId id) : Entity(id) {
@@ -111,9 +139,9 @@ struct TestDomain : Domain {
 struct TestContext {
 	Atlas::Objects::Factories factories;
 	Inheritance m_inheritance;
-	std::map<std::string, std::unique_ptr<TypeNode>> types;
+	std::map<std::string, std::unique_ptr<TypeNode<LocatedEntity>>> types;
 
-	ProviderFactory m_factory;
+	ProviderFactory<LocatedEntity> m_factory;
 
 	//Entities for testing
 
@@ -138,43 +166,43 @@ struct TestContext {
 
 	std::map<std::string, Atlas::Message::MapType> m_memory;
 
-	TestContext() : m_inheritance(factories) {
+	TestContext() : m_inheritance() {
 		s_types = &types;
 //Set up testing environment for Type/Soft properties
 		m_b1 = new TestEntity(RouterId{1});
 		add_entity(m_b1);
 
-		types["thing"] = std::make_unique<TypeNode>("thing");
+		types["thing"] = std::make_unique<TypeNode<LocatedEntity>>("thing");
 
-		types["barrel"] = std::make_unique<TypeNode>("barrel");
+		types["barrel"] = std::make_unique<TypeNode<LocatedEntity>>("barrel");
 		types["barrel"]->setParent(types["thing"].get());
 		m_b1->setType(types["barrel"].get());
-		m_b1->setProperty("mass", std::make_unique<SoftProperty>(30));
-		m_b1->setProperty("burn_speed", std::make_unique<SoftProperty>(0.3));
-		m_b1->setProperty("isVisible", std::make_unique<SoftProperty>(true));
+		m_b1->setProperty("mass", std::make_unique<SoftProperty<LocatedEntity>>(30));
+		m_b1->setProperty("burn_speed", std::make_unique<SoftProperty<LocatedEntity>>(0.3));
+		m_b1->setProperty("isVisible", std::make_unique<SoftProperty<LocatedEntity>>(true));
 
 		m_b2 = new TestEntity(RouterId{2});
 		add_entity(m_b2);
-		m_b2->setProperty("mass", std::make_unique<SoftProperty>(20));
-		m_b2->setProperty("burn_speed", std::make_unique<SoftProperty>(0.25));
+		m_b2->setProperty("mass", std::make_unique<SoftProperty<LocatedEntity>>(20));
+		m_b2->setProperty("burn_speed", std::make_unique<SoftProperty<LocatedEntity>>(0.25));
 		m_b2->setType(types["barrel"].get());
-		m_b2->setProperty("isVisible", std::make_unique<SoftProperty>(false));
+		m_b2->setProperty("isVisible", std::make_unique<SoftProperty<LocatedEntity>>(false));
 
 		m_b3 = new TestEntity(RouterId{3});
 		add_entity(m_b3);
-		m_b3->setProperty("mass", std::make_unique<SoftProperty>(25));
-		m_b3->setProperty("burn_speed", std::make_unique<SoftProperty>(0.25));
+		m_b3->setProperty("mass", std::make_unique<SoftProperty<LocatedEntity>>(25));
+		m_b3->setProperty("burn_speed", std::make_unique<SoftProperty<LocatedEntity>>(0.25));
 		m_b3->setType(types["barrel"].get());
 
-		types["boulder"] = std::make_unique<TypeNode>("boulder");
+		types["boulder"] = std::make_unique<TypeNode<LocatedEntity>>("boulder");
 		m_bl1 = new TestEntity(RouterId{4});
 		add_entity(m_bl1);
-		m_bl1->setProperty("mass", std::make_unique<SoftProperty>(25));
+		m_bl1->setProperty("mass", std::make_unique<SoftProperty<LocatedEntity>>(25));
 		m_bl1->setType(types["boulder"].get());
 
-		m_bl1->setProperty("float_list", std::make_unique<SoftProperty>(std::vector<Element>{25.0, 20.0}));
+		m_bl1->setProperty("float_list", std::make_unique<SoftProperty<LocatedEntity>>(std::vector<Element>{25.0, 20.0}));
 
-		m_bl1->setProperty("string_list", std::make_unique<SoftProperty>(std::vector<Element>{"foo", "bar"}));
+		m_bl1->setProperty("string_list", std::make_unique<SoftProperty<LocatedEntity>>(std::vector<Element>{"foo", "bar"}));
 
 // Create an entity-related memory map
 		Atlas::Message::MapType entity_memory_map{{"disposition", 25}};
@@ -193,42 +221,42 @@ struct TestContext {
 
 
 //Set up testing environment for Outfit property
-		types["gloves"] = std::make_unique<TypeNode>("gloves");
-		types["boots"] = std::make_unique<TypeNode>("boots");
-		types["character"] = std::make_unique<TypeNode>("character");
-		types["cloth"] = std::make_unique<TypeNode>("cloth");
-		types["leather"] = std::make_unique<TypeNode>("leather");
+		types["gloves"] = std::make_unique<TypeNode<LocatedEntity>>("gloves");
+		types["boots"] = std::make_unique<TypeNode<LocatedEntity>>("boots");
+		types["character"] = std::make_unique<TypeNode<LocatedEntity>>("character");
+		types["cloth"] = std::make_unique<TypeNode<LocatedEntity>>("cloth");
+		types["leather"] = std::make_unique<TypeNode<LocatedEntity>>("leather");
 
 		m_glovesEntity = new TestEntity(RouterId{5});
 		add_entity(m_glovesEntity);
 		m_glovesEntity->setType(types["gloves"].get());
-		m_glovesEntity->setProperty("color", std::make_unique<SoftProperty>("brown"));
-		m_glovesEntity->setProperty("mass", std::make_unique<SoftProperty>(5));
+		m_glovesEntity->setProperty("color", std::make_unique<SoftProperty<LocatedEntity>>("brown"));
+		m_glovesEntity->setProperty("mass", std::make_unique<SoftProperty<LocatedEntity>>(5));
 		//Mark it with a "reach" so we can use it in the "can_reach ... with" tests
-		auto reachProp = new Property<double>();
+		auto reachProp = new Property<double, LocatedEntity>();
 		reachProp->data() = 10.0f;
 		m_glovesEntity->setProperty("reach", std::unique_ptr<PropertyBase>(reachProp));
 
 		m_bootsEntity = new TestEntity(RouterId{6});
 		add_entity(m_bootsEntity);
 		m_bootsEntity->setType(types["boots"].get());
-		m_bootsEntity->setProperty("color", std::make_unique<SoftProperty>("black"));
-		m_bootsEntity->setProperty("mass", std::make_unique<SoftProperty>(10));
+		m_bootsEntity->setProperty("color", std::make_unique<SoftProperty<LocatedEntity>>("black"));
+		m_bootsEntity->setProperty("mass", std::make_unique<SoftProperty<LocatedEntity>>(10));
 
 
 		m_cloth = new TestEntity(RouterId{8});
 		add_entity(m_cloth);
 		m_cloth->setType(types["cloth"].get());
-		m_cloth->setProperty("color", std::make_unique<SoftProperty>("green"));
+		m_cloth->setProperty("color", std::make_unique<SoftProperty<LocatedEntity>>("green"));
 
 		m_leather = new TestEntity(RouterId{9});
 		add_entity(m_leather);
 		m_leather->setType(types["leather"].get());
-		m_leather->setProperty("color", std::make_unique<SoftProperty>("pink"));
+		m_leather->setProperty("color", std::make_unique<SoftProperty<LocatedEntity>>("pink"));
 
 		//The m_cloth entity is attached to the gloves by the "thumb" attachment
 		{
-			auto attachedProp = std::make_unique<SoftProperty>();
+			auto attachedProp = std::make_unique<SoftProperty<LocatedEntity>>();
 			attachedProp->data() = Atlas::Message::MapType{{"$eid", m_cloth->getId()}};
 			m_glovesEntity->setProperty("attached_thumb", std::move(attachedProp));
 
@@ -247,7 +275,7 @@ struct TestContext {
 
 		//The m_glovesEntity entity is attached to the m_ch1 by the "hand_primary" attachment
 		{
-			auto attachedHandPrimaryProp = std::make_unique<SoftProperty>();
+			auto attachedHandPrimaryProp = std::make_unique<SoftProperty<LocatedEntity>>();
 			attachedHandPrimaryProp->data() = Atlas::Message::MapType{{"$eid", m_glovesEntity->getId()}};
 			m_ch1->setProperty("attached_hand_primary", std::move(attachedHandPrimaryProp));
 		}
@@ -258,11 +286,11 @@ struct TestContext {
 			m_glovesEntity->setProperty(ModeDataProperty::property_name, std::move(modeDataProp));
 		}
 
-		auto bbox1 = std::make_unique<BBoxProperty>();
+		auto bbox1 = std::make_unique<BBoxProperty<LocatedEntity>>();
 		bbox1->set((std::vector<Element>{-1, -3, -2, 1, 3, 2}));
 		m_b1->setProperty("bbox", std::unique_ptr<PropertyBase>(bbox1->copy()));
 
-		auto bbox2 = std::make_unique<BBoxProperty>();
+		auto bbox2 = std::make_unique<BBoxProperty<LocatedEntity>>();
 		bbox2->set(std::vector<Element>{-3, -2, -1, 1, 3, 2});
 		m_bl1->setProperty("bbox", std::unique_ptr<PropertyBase>(bbox2->copy()));
 
@@ -271,7 +299,7 @@ struct TestContext {
 		//The m_entityOnlyReachableWithPosition is a child of b1
 		m_entityOnlyReachableWithPosition = new TestEntity(RouterId{10});
 		add_entity(m_entityOnlyReachableWithPosition);
-		m_entityOnlyReachableWithPosition->setProperty("only_reachable_with_pos", std::make_unique<SoftProperty>(Element(1)));
+		m_entityOnlyReachableWithPosition->setProperty("only_reachable_with_pos", std::make_unique<SoftProperty<LocatedEntity>>(Element(1)));
 		m_entityOnlyReachableWithPosition->setType(types["barrel"].get());
 		m_b1->m_contains->emplace(m_entityOnlyReachableWithPosition);
 		m_entityOnlyReachableWithPosition->m_parent = m_b1.get();
@@ -283,8 +311,8 @@ struct TestContext {
 		}
 	};
 
-	QueryContext makeContext(const Ref<Entity>& entity) {
-		QueryContext queryContext{*entity};
+	QueryContext<LocatedEntity> makeContext(const Ref<Entity>& entity) {
+		QueryContext<LocatedEntity> queryContext{*entity};
 		queryContext.entity_lookup_fn = [&](const std::string& id) { return find_entity(id); };
 		queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
 		queryContext.memory_lookup_fn = [&](const std::string& id) -> const Atlas::Message::MapType& {
@@ -323,35 +351,35 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 				   const std::string& query,
 				   std::initializer_list<Ref<Entity>> entitiesToPass,
 				   std::initializer_list<Ref<Entity>> entitiesToFail) {
-		TestQuery(testContext, query, entitiesToPass, entitiesToFail, EntityFilter::ProviderFactory());
+		TestQuery(testContext, query, entitiesToPass, entitiesToFail, EntityFilter::ProviderFactory<LocatedEntity>());
 	}
 
 	void TestQuery(TestContext& testContext,
 				   const std::string& query,
 				   std::initializer_list<Ref<Entity>> entitiesToPass,
 				   std::initializer_list<Ref<Entity>> entitiesToFail,
-				   const EntityFilter::ProviderFactory& factory) {
-		EntityFilter::Filter f(query, factory);
+				   const EntityFilter::ProviderFactory<LocatedEntity>& factory) {
+		EntityFilter::Filter<LocatedEntity> f(query, factory);
 		for (const auto& entity: entitiesToPass) {
-			QueryContext queryContext = testContext.makeContext(entity);
+			QueryContext<LocatedEntity> queryContext = testContext.makeContext(entity);
 			assert(f.match(queryContext));
 		}
 		for (const auto& entity: entitiesToFail) {
-			QueryContext queryContext = testContext.makeContext(entity);
+			QueryContext<LocatedEntity> queryContext = testContext.makeContext(entity);
 			assert(!f.match(queryContext));
 		}
 	}
 
 	void TestContextQuery(const std::string& query,
-						  std::initializer_list<QueryContext> contextsToPass,
-						  std::initializer_list<QueryContext> contextsToFail) {
-		TestContextQuery(query, contextsToPass, contextsToFail, EntityFilter::ProviderFactory());
+						  std::initializer_list<QueryContext<LocatedEntity>> contextsToPass,
+						  std::initializer_list<QueryContext<LocatedEntity>> contextsToFail) {
+		TestContextQuery(query, contextsToPass, contextsToFail, EntityFilter::ProviderFactory<LocatedEntity>());
 	}
 
 	void TestContextQuery(const std::string& query,
-						  std::initializer_list<QueryContext> contextsToPass,
-						  std::initializer_list<QueryContext> contextsToFail,
-						  const EntityFilter::ProviderFactory& factory) {
+						  std::initializer_list<QueryContext<LocatedEntity>> contextsToPass,
+						  std::initializer_list<QueryContext<LocatedEntity>> contextsToFail,
+						  const EntityFilter::ProviderFactory<LocatedEntity>& factory) {
 		EntityFilter::Filter f(query, factory);
 		for (auto& context: contextsToPass) {
 			assert(f.match(context));
@@ -384,11 +412,11 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 			//Test a tricky filter we had some issues with.
 			EntityFilter::Filter f(
 					"describe('Must be able to reach the bloomery.', actor can_reach tool) and describe('There must be charcoal or lumber in the bloomery.', contains(tool.contains, child.type=types.charcoal) or contains(tool.contains, child.type=types.lumber)) and describe('There must be hematite in the bloomery.', contains(tool.contains, child.type=types.hematite))",
-					EntityFilter::ProviderFactory());
+					EntityFilter::ProviderFactory<LocatedEntity>());
 		}
 		{
-			EntityFilter::Filter f("describe('Should burn.', entity.burn_speed != none)", EntityFilter::ProviderFactory());
-			QueryContext queryContext = context.makeContext(context.m_bl1);
+			EntityFilter::Filter f("describe('Should burn.', entity.burn_speed != none)", EntityFilter::ProviderFactory<LocatedEntity>());
+			QueryContext<LocatedEntity> queryContext = context.makeContext(context.m_bl1);
 			std::vector<std::string> errors;
 			queryContext.report_error_fn = [&](const std::string& error) { errors.push_back(error); };
 			f.match(queryContext);
@@ -412,7 +440,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 	void test_CanReach(TestContext& context) {
 		//TestDomain prevents context.m_b1 from reaching context.m_b2
 		{
-			QueryContext c{*context.m_b1};
+			QueryContext<LocatedEntity> c{*context.m_b1};
 			c.actor = context.m_b2.get();
 			TestContextQuery("actor can_reach entity", {}, {c});
 			TestContextQuery("entity can_reach actor", {}, {c});
@@ -420,7 +448,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		//TestDomain allows context.m_b1 from reaching context.m_bl1
 		{
-			QueryContext c{*context.m_b1};
+			QueryContext<LocatedEntity> c{*context.m_b1};
 			c.actor = context.m_bl1.get();
 			TestContextQuery("actor can_reach entity", {c}, {});
 			TestContextQuery("entity can_reach actor", {c}, {});
@@ -428,7 +456,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		//Test "with". context.m_glovesEntity has "reach" set, and our TestDomain will return false for any "reach" values that aren't zero
 		{
-			QueryContext c{*context.m_b1};
+			QueryContext<LocatedEntity> c{*context.m_b1};
 			c.actor = context.m_bl1.get();
 			c.tool = context.m_glovesEntity.get();
 			TestContextQuery("actor can_reach entity with tool", {}, {c});
@@ -437,7 +465,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		//context.m_bootsEntity has no "reach" property so should work
 		{
-			QueryContext c{*context.m_b1};
+			QueryContext<LocatedEntity> c{*context.m_b1};
 			c.actor = context.m_bl1.get();
 			c.tool = context.m_bootsEntity.get();
 			TestContextQuery("actor can_reach entity with tool", {c}, {});
@@ -446,7 +474,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		//context.m_entityOnlyReachableWithPosition can only be reached if the position is sent along, which happens if we use "entity_location"
 		{
-			QueryContext c{*context.m_entityOnlyReachableWithPosition};
+			QueryContext<LocatedEntity> c{*context.m_entityOnlyReachableWithPosition};
 			WFMath::Point<3> pos(1, 1, 1);
 			c.entityLoc.pos = &pos;
 			c.actor = context.m_bl1.get();
@@ -629,14 +657,14 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 				  {context.m_b1, context.m_bl1, context.m_glovesEntity}, {});
 
 		{
-			QueryContext queryContext{*context.m_ch1};
+			QueryContext<LocatedEntity> queryContext{*context.m_ch1};
 			queryContext.entity_lookup_fn = [&](const std::string& id) { return context.find_entity(id); };
 			queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
 			queryContext.tool = context.m_glovesEntity.get();
 			TestContextQuery("get_entity(entity.attached_hand_primary) = tool", {queryContext}, {});
 		}
 		{
-			QueryContext queryContext{*context.m_b1};
+			QueryContext<LocatedEntity> queryContext{*context.m_b1};
 			queryContext.entity_lookup_fn = [&](const std::string& id) { return context.find_entity(id); };
 			queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
 
@@ -644,7 +672,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		}
 
 		{
-			QueryContext queryContext{*context.m_ch1};
+			QueryContext<LocatedEntity> queryContext{*context.m_ch1};
 			queryContext.entity_lookup_fn = [&](const std::string& id) { return context.find_entity(id); };
 			queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
 
@@ -743,6 +771,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 
 int main() {
+	Monitors m;
+
 	Tested t;
 
 	return t.run();
@@ -762,7 +792,7 @@ int main() {
 	 segments.push_back(ProviderFactory::Segment { "", "self" });
 	 segments.push_back(ProviderFactory::Segment { ".", "mass" });
 	 auto lhs_provider5 = factory.createProviders(segments);
-	 QueryContext qc { bl1 };
+	 QueryContext<LocatedEntity> qc { bl1 };
 	 qc.self_entity = &b1;
 
 	 lhs_provider5->value(value, qc);
@@ -778,43 +808,16 @@ int main() {
 	 ComparePredicate compPred16(lhs_provider6,
 	 new FixedElementProvider("barrel"),
 	 ComparePredicate::Comparator::EQUALS);
-	 assert(compPred15.isMatch(QueryContext { b1, memory }));
+	 assert(compPred15.isMatch(QueryContext<LocatedEntity> { b1, memory }));
 
 	 */
 
 }
 
-
-//Stubs
-
-#include "../../stubs/common/stubVariable.h"
-#include "../../stubs/common/stubMonitors.h"
-#include "../../stubs/common/stubLink.h"
-#include "../../stubs/rules/simulation/stubDomainProperty.h"
-#include "../../stubs/rules/stubAtlasProperties.h"
-#include "../../stubs/rules/simulation/stubDensityProperty.h"
-#include "../../stubs/rules/stubScaleProperty.h"
-#include "../../stubs/rules/simulation/stubModeProperty.h"
-
-
-#include "../../stubs/common/stubcustom.h"
-#include "../../stubs/common/stubRouter.h"
-
-#include "../../stubs/rules/simulation/stubBaseWorld.h"
-#include "../../stubs/rules/stubLocation.h"
-#include "../../stubs/rules/stubDomain.h"
-
-#define STUB_Inheritance_getType
-
-const TypeNode* Inheritance::getType(const std::string& parent) const {
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
 	auto I = s_types->find(parent);
 	if (I == s_types->end()) {
-		return 0;
+		return nullptr;
 	}
 	return I->second.get();
 }
-
-#include "../../stubs/common/stubInheritance.h"
-#include "../../stubs/common/stublog.h"
-#include "../../stubs/rules/stubModifier.h"
-#include "../../stubs/rules/stubPhysicalProperties.h"

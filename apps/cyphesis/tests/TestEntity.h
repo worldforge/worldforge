@@ -19,9 +19,9 @@
 #ifndef TESTS_TEST_ENTITY_H
 #define TESTS_TEST_ENTITY_H
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
-struct TestEntity : LocatedEntity {
+struct TestEntity : public LocatedEntity {
 	static long idGenerator;
 
 	static std::function<void(TestEntity&, const Operation&, OpVector&)> operationFn;

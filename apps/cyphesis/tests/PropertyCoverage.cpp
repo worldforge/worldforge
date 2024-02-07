@@ -130,16 +130,9 @@ void PropertyCoverage::testDataAppend(const Element& o) {
 
 // stubs
 
-#include "stubs/rules/simulation/stubThing.h"
-
-
-#define STUB_Entity_destroy
-
 void Entity::destroy() {
 	destroyed.emit();
 }
-
-#define STUB_LocatedEntity_getProperty
 
 const PropertyBase* LocatedEntity::getProperty(const std::string& name) const {
 	auto I = m_properties.find(name);
@@ -148,12 +141,3 @@ const PropertyBase* LocatedEntity::getProperty(const std::string& name) const {
 	}
 	return 0;
 }
-
-#include "stubs/rules/simulation/stubEntity.h"
-
-
-#include "stubs/rules/stubLocatedEntity.h"
-#include "stubs/common/stubRouter.h"
-#include "stubs/rules/simulation/stubBaseWorld.h"
-#include "stubs/rules/stubLocation.h"
-#include "stubs/common/stublog.h"

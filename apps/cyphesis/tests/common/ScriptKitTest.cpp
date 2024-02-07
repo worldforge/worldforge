@@ -24,24 +24,26 @@
 #endif
 
 #include "common/ScriptKit.h"
+#include "rules/Script_impl.h"
+#include "rules/simulation/python/CyPy_LocatedEntity_impl.h"
 
 class LocatedEntity;
 
-class TestScriptKit : public ScriptKit<LocatedEntity> {
+class TestScriptKit : public ScriptKit<LocatedEntity, CyPy_LocatedEntity> {
 public:
 	std::string m_package;
 
-	virtual const std::string& package() const { return m_package; }
+	const std::string& package() const override { return m_package; }
 
-	virtual int addScript(LocatedEntity& entity) const { return 0; }
+	std::unique_ptr<Script<LocatedEntity>> createScriptWrapper(CyPy_LocatedEntity& entity) const override { return nullptr; }
 
-	virtual int refreshClass() { return 0; }
+	int refreshClass() override { return 0; }
 };
 
 int main() {
 	// The is no code in ScriptKit.cpp to execute, but we need coverage.
 	{
-		ScriptKit<LocatedEntity>* sk = new TestScriptKit;
+		auto* sk = new TestScriptKit;
 
 		delete sk;
 	}

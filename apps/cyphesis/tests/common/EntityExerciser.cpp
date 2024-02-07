@@ -26,8 +26,8 @@
 #include "EntityExerciser.h"
 
 #include "common/OperationRouter.h"
-#include "common/TypeNode.h"
-#include "common/Property.h"
+#include "common/TypeNode_impl.h"
+#include "common/Property_impl.h"
 
 #include "common/operations/Connect.h"
 #include "common/operations/Monitor.h"
@@ -41,8 +41,16 @@
 #include <set>
 
 #include <cassert>
+// stubs
 
-PropertyManager* LocatedEntityTest::propertyManager = nullptr;
+template<>
+TypeNode<LocatedEntity>::PropertiesUpdate TypeNode<LocatedEntity>::injectProperty(const std::string& name,
+																				  std::unique_ptr<PropertyCore<LocatedEntity>> p) {
+	m_defaults[name] = std::move(p);
+	return {};
+}
+
+PropertyManager<LocatedEntity>* LocatedEntityTest::propertyManager = nullptr;
 
 void LocatedEntityTest::operation(const Operation&, OpVector&) {
 }
@@ -60,8 +68,8 @@ EntityExerciser::EntityExerciser(Ref<LocatedEntity> e) : m_ent(e) {
 		m_parentEntity->m_contains->insert(e);
 	}
 	if (e->getType() == 0) {
-		test_type = std::make_unique<TypeNode>("test_type");
-		test_type->injectProperty("test_default", std::make_unique<SoftProperty>());
+		test_type = std::make_unique<TypeNode<LocatedEntity>>("test_type");
+		test_type->injectProperty("test_default", std::make_unique<SoftProperty<LocatedEntity>>());
 		e->setType(test_type.get());
 	}
 	attr_types.insert(Atlas::Message::Element::TYPE_INT);
@@ -257,10 +265,3 @@ void EntityExerciser::flushOperations(OpVector& ops) {
 	ops.clear();
 }
 
-// stubs
-
-TypeNode::PropertiesUpdate TypeNode::injectProperty(const std::string& name,
-													std::unique_ptr<PropertyBase> p) {
-	m_defaults[name] = std::move(p);
-	return {};
-}

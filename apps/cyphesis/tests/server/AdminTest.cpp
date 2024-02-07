@@ -37,7 +37,8 @@
 
 #include "common/CommSocket.h"
 #include "common/debug.h"
-#include "common/Inheritance.h"
+#include "common/type_utils_impl.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/operations/Monitor.h"
 #include "../TestPropertyManager.h"
 #include "../DatabaseNull.h"
@@ -50,6 +51,8 @@
 
 #include <cassert>
 #include <server/EntityBuilder.h>
+#include "common/Property_impl.h"
+#include "common/Monitors.h"
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -353,7 +356,7 @@ long Admintest::newId() {
 Atlas::Objects::Factories factories;
 
 void Admintest::setup() {
-	inheritance = new Inheritance(factories);
+	inheritance = new Inheritance();
 	Atlas::Objects::Operation::MONITOR_NO = m_id_counter++;
 
 	m_gw = new Entity(RouterId{m_id_counter++});
@@ -374,13 +377,12 @@ void Admintest::setup() {
 }
 
 void Admintest::teardown() {
-	m_gw.reset();
-	delete m_world;
-	delete inheritance;
-
-	delete m_server;
 	delete m_account;
 	delete m_connection;
+	delete m_server;
+	delete m_world;
+	m_gw.reset();
+	delete inheritance;
 }
 
 void Admintest::test_null() {
@@ -1222,7 +1224,8 @@ void Admintest::test_createObject_juncture_serialno() {
 
 
 int main() {
-	TestPropertyManager propertyManager;
+	Monitors m;
+	TestPropertyManager<LocatedEntity> propertyManager;
 	boost::asio::io_context io_context;
 	EntityBuilder eb;
 	Ruleset ruleset(eb, io_context, propertyManager);
@@ -1242,15 +1245,11 @@ int main() {
 #include "common/globals.h"
 #include "common/id.h"
 #include "common/log.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 
 #include <cstdlib>
 #include <cstdio>
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/common/stubPropertyManager.h"
-#include "../stubs/server/stubPersistence.h"
-
-#define STUB_Account_operation
+#include "common/PropertyManager_impl.h"
 
 void Account::operation(const Operation& op, OpVector& res) {
 	if (op->getClassNo() == Atlas::Objects::Operation::LOGOUT_NO) {
@@ -1258,41 +1257,22 @@ void Account::operation(const Operation& op, OpVector& res) {
 	}
 }
 
-#define STUB_Account_LogoutOperation
-
 void Account::LogoutOperation(const Operation&, OpVector&) {
 	Admintest::set_Account_LogoutOperation_called(this);
 }
-
-#define STUB_Account_SetOperation
 
 void Account::SetOperation(const Operation&, OpVector&) {
 	Admintest::set_Account_SetOperation_called(this);
 }
 
-#include "../stubs/server/stubAccount.h"
 
-
-#include "../stubs/server/stubConnection.h"
-#include "../stubs/rules/stubLocation.h"
-
-#include "../stubs/server/stubRuleHandler.h"
-
-#include "../stubs/server/stubEntityRuleHandler.h"
-#include "../stubs/server/stubArchetypeRuleHandler.h"
-#include "../stubs/server/stubOpRuleHandler.h"
-#include "../stubs/server/stubPropertyRuleHandler.h"
-#include "../stubs/server/stubConnectableRouter.h"
-
-#define STUB_Ruleset_modifyRule
+#include "rules/Location_impl.h"
 
 int Ruleset::modifyRule(const std::string& class_name,
 						const Root& class_desc) {
 	Admintest::set_Ruleset_modifyRule_called();
 	return Admintest::get_Ruleset_modifyRule_retval();
 }
-
-#define STUB_Ruleset_installRule
 
 int Ruleset::installRule(const std::string& class_name,
 						 const std::string& section,
@@ -1301,10 +1281,6 @@ int Ruleset::installRule(const std::string& class_name,
 	return Admintest::get_Ruleset_installRule_retval();
 }
 
-#include "../stubs/server/stubRuleset.h"
-#include "../stubs/server/stubJuncture.h"
-
-#define STUB_ServerRouting_getObject
 
 ConnectableRouter* ServerRouting::getObject(const std::string& id) const {
 	auto I = m_routers.find(integerId(id));
@@ -1315,33 +1291,16 @@ ConnectableRouter* ServerRouting::getObject(const std::string& id) const {
 	}
 }
 
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubLobby.h"
-#include "../stubs/server/stubPossessionAuthenticator.h"
-
-
-#include "../stubs/server/stubPersistence.h"
-#include "../stubs/rules/simulation/stubThing.h"
-
-#define STUB_Entity_addToEntity
 
 void Entity::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
 	ent->setId(getId());
 }
 
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-
-#define STUB_Link_send
 
 void Link::send(const Operation& op) const {
 	Admintest::set_Link_sent_called();
 }
 
-#include "../stubs/common/stubLink.h"
-
-
-#define STUB_Inheritance_Inheritance
 
 Inheritance::Inheritance(Atlas::Objects::Factories& factories)
 		: Singleton(), noClass(0), m_factories(factories) {
@@ -1350,22 +1309,18 @@ Inheritance::Inheritance(Atlas::Objects::Factories& factories)
 	root_desc->setObjtype("meta");
 	root_desc->setId("root");
 
-	TypeNode* root = new TypeNode("root", root_desc);
+	auto root = new TypeNode<LocatedEntity>("root", root_desc);
 
 	atlasObjects["root"].reset(root);
 }
 
-#define STUB_Inheritance_getType
-
-const TypeNode* Inheritance::getType(const std::string& parent) const {
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
 	auto I = atlasObjects.find(parent);
 	if (I == atlasObjects.end()) {
 		return 0;
 	}
 	return I->second.get();
 }
-
-#define STUB_Inheritance_getClass
 
 const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Visibility v) const {
 	auto I = atlasObjects.find(parent);
@@ -1376,8 +1331,6 @@ const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Vis
 }
 
 
-#define STUB_Inheritance_hasClass
-
 bool Inheritance::hasClass(const std::string& parent) {
 	auto I = atlasObjects.find(parent);
 	if (I == atlasObjects.end()) {
@@ -1386,9 +1339,7 @@ bool Inheritance::hasClass(const std::string& parent) {
 	return true;
 }
 
-#define STUB_Inheritance_addChild
-
-TypeNode* Inheritance::addChild(const Atlas::Objects::Root& obj) {
+TypeNode<LocatedEntity>* Inheritance::addChild(const Atlas::Objects::Root& obj) {
 	const std::string& child = obj->getId();
 	const std::string& parent = obj->getParent();
 	assert(atlasObjects.find(child) == atlasObjects.end());
@@ -1403,7 +1354,7 @@ TypeNode* Inheritance::addChild(const Atlas::Objects::Root& obj) {
 	}
 	I->second->description(Visibility::PRIVATE)->setAttr("children", children);
 
-	TypeNode* type = new TypeNode(child, obj);
+	auto type = new TypeNode<LocatedEntity>(child, obj);
 	type->setParent(I->second.get());
 
 	atlasObjects[child].reset(type);
@@ -1411,7 +1362,6 @@ TypeNode* Inheritance::addChild(const Atlas::Objects::Root& obj) {
 	return type;
 }
 
-#include "../stubs/common/stubInheritance.h"
 
 Root atlasClass(const std::string& name, const std::string& parent) {
 	Atlas::Objects::Entity::Anonymous r;
@@ -1423,11 +1373,8 @@ Root atlasClass(const std::string& name, const std::string& parent) {
 	return r;
 }
 
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/rules/simulation/stubAdminMind.h"
-#include "../stubs/rules/simulation/stubExternalMind.h"
-#include "../stubs/server/stubEntityBuilder.h"
+#include "common/TypeNode_impl.h"
+
 
 Router::Router(RouterId id) : RouterIdentifiable(id) {
 }
@@ -1467,12 +1414,9 @@ long integerId(const std::string& id) {
 	return intId;
 }
 
-#include "../stubs/common/stublog.h"
-
 
 bool database_flag = false;
 
-#include "../stubs/common/stubcustom.h"
 
 #include <common/Shaker.h>
 
@@ -1481,4 +1425,14 @@ Shaker::Shaker() {
 
 std::string Shaker::generateSalt(size_t length) {
 	return "";
+}
+
+int EntityBuilder::installFactory(const std::string& class_name, const Root& class_desc, std::unique_ptr<EntityKit> factory) {
+	return 0;
+}
+
+void ServerRouting::disconnectAllConnections() {
+}
+
+void ServerRouting::deregisterConnection(Connection* connection) {
 }

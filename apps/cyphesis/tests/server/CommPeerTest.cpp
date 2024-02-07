@@ -29,6 +29,7 @@
 #include "server/Peer.h"
 
 #include "common/log.h"
+#include "common/Monitors.h"
 
 #include <Atlas/Codec.h>
 #include <Atlas/Negotiate.h>
@@ -85,6 +86,7 @@ public:
 };
 
 int main() {
+	Monitors m;
 	ServerRouting server(*(BaseWorld*) 0, *(Persistence*) nullptr, "deeds", "test_server",
 						 2);
 
@@ -150,10 +152,10 @@ int CommSocket::flush() {
 	return 0;
 }
 
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubLobby.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/common/stubLink.h"
+
+
+
+
 
 Peer::Peer(CommSocket& client,
 		   ServerRouting& svr,

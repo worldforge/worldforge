@@ -179,7 +179,6 @@ int main()
 #include "common/log.h"
 
 #include "pythonbase/Python_Script_Utils.h"
-#include "../stubs/common/stublog.h"
 
 
 Py::Object Get_PyClass(const Py::Module& module,

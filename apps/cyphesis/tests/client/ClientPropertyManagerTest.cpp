@@ -24,6 +24,11 @@
 #endif
 
 #include "client/ClientPropertyManager.h"
+#include "rules/BBoxProperty_impl.h"
+#include "rules/Vector3Property_impl.h"
+#include "rules/PhysicalProperties_impl.h"
+#include "rules/ScaleProperty_impl.h"
+#include "common/Property_impl.h"
 
 #include <cassert>
 
@@ -41,11 +46,3 @@ int main() {
 
 	return 0;
 }
-
-#include "../stubs/rules/stubBBoxProperty.h"
-#include "../stubs/rules/stubAtlasProperties.h"
-#include "../stubs/rules/stubScaleProperty.h"
-#include "../stubs/rules/stubSolidProperty.h"
-#include "../stubs/rules/stubVector3Property.h"
-#include "../stubs/rules/stubPhysicalProperties.h"
-#include "../stubs/common/stubProperty.h"

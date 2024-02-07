@@ -54,9 +54,9 @@ return 0;
 
 #include "common/log.h"
 #include "common/Shaker.h"
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubLobby.h"
-#include "../stubs/common/stubRouter.h"
+
+
+
 
 
 std::chrono::steady_clock::duration BaseWorld::getTime() const
@@ -74,7 +74,7 @@ int CommSocket::flush()
 return 0;
 }
 
-#include "../stubs/common/stublog.h"
+
 
 
 namespace consts {

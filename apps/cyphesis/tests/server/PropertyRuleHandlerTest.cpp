@@ -27,7 +27,7 @@
 
 #include "server/PropertyRuleHandler.h"
 
-#include "common/Property.h"
+#include "common/Property_impl.h"
 #include "common/PropertyFactory.h"
 #include "common/PropertyManager.h"
 
@@ -39,10 +39,10 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 
-struct TestPropertyManager : public PropertyManager {
+struct TestPropertyManager : public PropertyManager<LocatedEntity> {
 
 	TestPropertyManager() {
-		m_propertyFactories["int"] = std::make_unique<PropertyFactory<Property<int>>>();
+		m_propertyFactories["int"] = std::make_unique<PropertyFactory<Property<int, LocatedEntity>, LocatedEntity>>();
 	}
 
 	std::unique_ptr<PropertyBase> addProperty(const std::string& name) const override {
@@ -54,7 +54,7 @@ struct TestPropertyManager : public PropertyManager {
 class PropertyRuleHandlertest : public Cyphesis::TestBase {
 private:
 	PropertyRuleHandler* rh;
-	PropertyManager* propertyManager;
+	PropertyManager<LocatedEntity>* propertyManager;
 public:
 	PropertyRuleHandlertest();
 
@@ -120,7 +120,7 @@ void PropertyRuleHandlertest::test_check_pass() {
 }
 
 void PropertyRuleHandlertest::test_install() {
-	std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+	std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
 	Anonymous description;
 	description->setObjtype("type");
@@ -132,7 +132,7 @@ void PropertyRuleHandlertest::test_install() {
 }
 
 void PropertyRuleHandlertest::test_install_noparent() {
-	std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+	std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
 	Anonymous description;
 	description->setObjtype("type");
@@ -144,11 +144,11 @@ void PropertyRuleHandlertest::test_install_noparent() {
 }
 
 void PropertyRuleHandlertest::test_install_exists() {
-	std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+	std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
 	propertyManager->installFactory("existing_int_type",
 									Root(),
-									std::make_unique<PropertyFactory<Property<int>>>());
+									std::make_unique<PropertyFactory<Property<int, LocatedEntity>, LocatedEntity>>());
 
 	Anonymous description;
 	description->setObjtype("type");
@@ -156,11 +156,11 @@ void PropertyRuleHandlertest::test_install_exists() {
 
 	int ret = rh->install("existing_int_type", "int", description, dependent, reason, changes);
 
-	assert(ret == 0);
+	assert(ret == -1);
 }
 
 void PropertyRuleHandlertest::test_update() {
-	std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+	std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
 	Anonymous description;
 	int ret = rh->update("", description, changes);
@@ -175,17 +175,8 @@ int main() {
 	return t.run();
 }
 
-// stubs
-
-#include "../stubs/common/stubProperty.h"
-#include "common/Inheritance.h"
-#include "common/log.h"
-#include "common/PropertyFactory_impl.h"
-
-#ifndef STUB_PropertyManager_getPropertyFactory
-#define STUB_PropertyManager_getPropertyFactory
-
-PropertyKit* PropertyManager::getPropertyFactory(const std::string& name) const {
+template<>
+PropertyKit<LocatedEntity>* PropertyManager<LocatedEntity>::getPropertyFactory(const std::string& name) const {
 	auto I = m_propertyFactories.find(name);
 	if (I != m_propertyFactories.end()) {
 		assert(I->second != 0);
@@ -194,13 +185,9 @@ PropertyKit* PropertyManager::getPropertyFactory(const std::string& name) const 
 	return 0;
 }
 
-#endif //STUB_PropertyManager_getPropertyFactory
-
-#include "../stubs/common/stubPropertyManager.h"
+#include "common/PropertyManager_impl.h"
 
 Root atlasOpDefinition(const std::string& name, const std::string& parent) {
 	return Root();
 }
-
-#include "../stubs/common/stublog.h"
 

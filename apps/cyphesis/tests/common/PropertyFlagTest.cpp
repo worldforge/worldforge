@@ -26,13 +26,13 @@
 #include "../TestWorld.h"
 #include "../TestPropertyManager.h"
 
-#include "common/Property.h"
+#include "common/Property_impl.h"
 
 #include "rules/simulation/World.h"
 
 
 int main(int argc, char** argv) {
-	TestPropertyManager tpm;
+	TestPropertyManager<LocatedEntity> tpm;
 	// database_flag = false;
 
 	Ref<Entity> thing(new Thing(1));
@@ -82,8 +82,8 @@ int main(int argc, char** argv) {
 
 
 
-#include "rules/AtlasProperties.h"
-#include "rules/Domain.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/simulation/Domain.h"
 #include "rules/simulation/DomainProperty.h"
 
 #include "common/const.h"
@@ -91,25 +91,10 @@ int main(int argc, char** argv) {
 
 using Atlas::Objects::Entity::RootEntity;
 
-#include "../stubs/common/stubcustom.h"
-#include "../stubs/rules/stubAtlasProperties.h"
-#include "../stubs/rules/simulation/stubDomainProperty.h"
-#include "../stubs/common/stubMonitors.h"
-#include "../stubs/common/stubVariable.h"
-#include "../stubs/rules/simulation/stubPropelProperty.h"
-#include "../stubs/rules/simulation/stubEntityProperty.h"
-#include "../stubs/rules/simulation/stubModeDataProperty.h"
 
+#include "rules/Location_impl.h"
+#include "rules/PhysicalProperties_impl.h"
 
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/common/stubLink.h"
-#include "../stubs/modules/stubWeakEntityRef.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/rules/stubAtlasProperties.h"
-#include "../stubs/rules/stubPhysicalProperties.h"
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/common/stubPropertyManager.h"
-#include "../stubs/common/stubTypeNode.h"
 
 void addToEntity(const Point3D& p, std::vector<double>& vd) {
 }
@@ -140,5 +125,3 @@ int fromStdVector<double>(Vector3D& v, const std::vector<double>& vf) {
 	return 0;
 }
 
-#include "../stubs/rules/stubModifier.h"
-#include "../stubs/common/stublog.h"

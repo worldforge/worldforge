@@ -50,6 +50,7 @@ public:
 };
 
 int main() {
+	Monitors m;
 	global_conf = varconf::Config::inst();
 
 	{
@@ -149,8 +150,8 @@ int main() {
 
 // stubs
 
-#include "../stubs/common/stubMonitors.h"
-#include "../stubs/common/stublog.h"
+
+
 
 
 varconf::Config* global_conf = nullptr;

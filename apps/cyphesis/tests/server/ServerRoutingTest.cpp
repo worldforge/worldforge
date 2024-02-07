@@ -30,6 +30,7 @@
 #include "rules/simulation/BaseWorld.h"
 #include "common/id.h"
 #include "common/log.h"
+#include "common/Monitors.h"
 #include "../DatabaseNull.h"
 
 #include <Atlas/Objects/Anonymous.h>
@@ -79,6 +80,7 @@ public:
 };
 
 int main() {
+	Monitors m;
 	TestWorld world;
 
 	std::string ruleset = "test_rules";
@@ -249,13 +251,7 @@ int main() {
 
 #include <cstdio>
 #include <cstdlib>
-#include "../stubs/common/stubDatabase.h"
-#include "../stubs/server/stubAccount.h"
-#include "../stubs/server/stubConnectableRouter.h"
-#include "../stubs/rules/simulation/stubExternalMind.h"
-#include "../stubs/common/stubLink.h"
 
-#define STUB_Persistence_getAccount
 
 std::unique_ptr<Account> Persistence::getAccount(const std::string& name) {
 	if (!stub_generate_accounts) {
@@ -268,13 +264,9 @@ std::unique_ptr<Account> Persistence::getAccount(const std::string& name) {
 	return std::make_unique<TestAccount>(nullptr, name, "", id);
 }
 
-#include "../stubs/server/stubPersistence.h"
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/server/stubConnection.h"
-#include "../stubs/server/stubLobby.h"
-#include "../stubs/common/stubVariable.h"
-#include "../stubs/common/stubMonitors.h"
-#include "../stubs/server/stubBuildid.h"
+
+#include "common/TypeNode_impl.h"
+
 
 bool_config_register::bool_config_register(bool& var,
 										   const char* section,
@@ -282,10 +274,6 @@ bool_config_register::bool_config_register(bool& var,
 										   const char* help) {
 }
 
-#include "../stubs/common/stubRouter.h"
-
-#ifndef STUB_BaseWorld_getEntity
-#define STUB_BaseWorld_getEntity
 
 Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const {
 	return getEntity(integerId(id));
@@ -301,10 +289,6 @@ Ref<LocatedEntity> BaseWorld::getEntity(long id) const {
 	}
 }
 
-#endif //STUB_BaseWorld_getEntity
-
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/common/stubid.h"
 
 const char* const CYPHESIS = "cyphesis";
 
@@ -315,7 +299,6 @@ int timeoffset = 0;
 bool database_flag = false;
 std::string assets_directory = "";
 
-#include "../stubs/common/stubconst.h"
 
 #include <common/Shaker.h>
 
@@ -324,4 +307,10 @@ Shaker::Shaker() {
 
 std::string Shaker::generateSalt(size_t length) {
 	return "";
+}
+
+long stubId = 1;
+
+RouterId newId() {
+	return RouterId{stubId++};
 }

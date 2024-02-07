@@ -34,20 +34,21 @@
 #include <cassert>
 #include <rules/python/CyPy_Atlas.h>
 #include <rules/python/CyPy_Physics.h>
-#include <rules/python/CyPy_Rules.h>
+#include <rules/python/CyPy_Rules_impl.h>
 #include <rules/python/CyPy_Common.h>
 #include <rules/python/CyPy_Element.h>
 #include <Atlas/Objects/Factories.h>
-#include <common/Inheritance.h>
+#include <rules/simulation/Inheritance.h>
 #include "pythonbase/PythonMalloc.h"
 #include "common/debug.h"
+#include "rules/simulation/python/CyPy_LocatedEntity_impl.h"
 
-Atlas::Objects::Factories factories;
-Inheritance inheritance(factories);
 
 using Atlas::Message::Element;
 
 int main() {
+	Atlas::Objects::Factories factories;
+	Inheritance inheritance;
 
 	setupPythonMalloc();
 	class Test : public Py::ExtensionModule<Test> {
@@ -72,7 +73,7 @@ int main() {
 			return testModule.module().ptr();
 		});
 
-		init_python_api({&CyPy_Rules::init,
+		init_python_api({&CyPy_Rules<LocatedEntity, CyPy_LocatedEntity>::init,
 						 &CyPy_Atlas::init,
 						 &CyPy_Physics::init,
 						 &CyPy_Common::init});

@@ -135,9 +135,6 @@ int main() {
 
 }
 
-#include "../stubs/common/stublog.h"
-
-
 bool exit_flag = false;
 bool exit_flag_soft = false;
 bool exit_soft_enabled = false;

@@ -24,6 +24,7 @@
 #endif
 
 #include "../../PropertyCoverage.h"
+#include "common/Property_impl.h"
 
 #include "rules/simulation/CalendarProperty.h"
 

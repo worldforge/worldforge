@@ -39,8 +39,9 @@
 #include <Atlas/Objects/SmartPtr.h>
 
 #include <cassert>
-#include "rules/AtlasProperties.h"
+#include "rules/simulation/AtlasProperties.h"
 #include "rules/PhysicalProperties.h"
+#include "common/Monitors.h"
 
 using Atlas::Message::MapType;
 using Atlas::Objects::Root;
@@ -94,7 +95,7 @@ void ServerAccounttest::setup() {
 		auto ne = ServerAccounttest::get_TestWorld_addNewEntity_ret_value();
 		if (ne) {
 			ne->m_parent = gw.get();
-			ne->requirePropertyClassFixed<PositionProperty>().data() = Point3D(0, 0, 0);
+			ne->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = Point3D(0, 0, 0);
 		}
 		return ne;
 	};
@@ -117,11 +118,11 @@ void ServerAccounttest::setup() {
 }
 
 void ServerAccounttest::teardown() {
-	delete m_world;
 	delete m_possessionAuthenticator;
-	delete m_server;
 	delete m_account;
 	delete m_connection;
+	delete m_server;
+	delete m_world;
 }
 
 void ServerAccounttest::test_getType() {
@@ -132,6 +133,7 @@ void ServerAccounttest::test_getType() {
 
 
 int main() {
+	Monitors m;
 	ServerAccounttest t;
 
 	return t.run();
@@ -139,31 +141,13 @@ int main() {
 
 // stubs
 
-#include "server/Connection.h"
 #include "server/Persistence.h"
 
 #include "common/globals.h"
-#include "common/id.h"
-#include "common/log.h"
 
-#include <cstdlib>
 
-#include "../stubs/server/stubAccount.h"
-#include "../stubs/server/stubConnection.h"
-#include "../stubs/server/stubConnectableRouter.h"
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubLobby.h"
-#include "../stubs/server/stubPossessionAuthenticator.h"
-#include "../stubs/server/stubPersistence.h"
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/common/stubLink.h"
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/rules/stubPhysicalProperties.h"
-#include "../stubs/common/stubProperty.h"
-
-#define STUB_Router_error
+#include "rules/PhysicalProperties_impl.h"
+#include "common/Property_impl.h"
 
 void Router::error(const Operation& op,
 				   const std::string& errstring,
@@ -172,9 +156,8 @@ void Router::error(const Operation& op,
 	res.push_back(Atlas::Objects::Operation::Error());
 }
 
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stublog.h"
+
+#include "rules/Location_impl.h"
 
 
 bool database_flag = false;

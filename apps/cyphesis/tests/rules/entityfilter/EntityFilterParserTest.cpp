@@ -11,21 +11,21 @@
 
 #include "../../TestBase.h"
 
-#include "rules/entityfilter/Filter.h"
-#include "rules/entityfilter/ParserDefinitions.h"
-#include "rules/entityfilter/Providers.h"
+#include "rules/entityfilter/Filter_impl.h"
+#include "rules/entityfilter/ParserDefinitions_impl.h"
+#include "rules/entityfilter/Providers_impl.h"
 
 #include "rules/simulation/EntityProperty.h"
-#include "rules/Domain.h"
-#include "rules/AtlasProperties.h"
-#include "rules/BBoxProperty.h"
-#include "common/Property.h"
+#include "rules/simulation/Domain.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/BBoxProperty_impl.h"
+#include "common/Property_impl.h"
 #include "rules/simulation/BaseWorld.h"
 #include "common/log.h"
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 
 #include "rules/simulation/Entity.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 
 #include <wfmath/point.h>
 #include <Atlas/Objects/Anonymous.h>
@@ -33,7 +33,7 @@
 
 #include <cassert>
 
-static std::map<std::string, TypeNode*> types;
+static std::map<std::string, TypeNode<LocatedEntity>*> types;
 
 using namespace EntityFilter;
 using namespace boost::spirit;
@@ -57,9 +57,9 @@ std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& v) {
 	return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const EntityFilter::ComparePredicate::Comparator& v);
+std::ostream& operator<<(std::ostream& os, const EntityFilter::ComparePredicate<LocatedEntity>::Comparator& v);
 
-std::ostream& operator<<(std::ostream& os, const EntityFilter::ComparePredicate::Comparator& v) {
+std::ostream& operator<<(std::ostream& os, const EntityFilter::ComparePredicate<LocatedEntity>::Comparator& v) {
 	os << "[Comparator]";
 	return os;
 }
@@ -69,7 +69,7 @@ std::ostream& operator<<(std::ostream& os, const EntityFilter::ComparePredicate:
 ///correct predicates for given queries
 struct ParserTest : public Cyphesis::TestBase {
 	//A helper function to build a predicate for a given query
-	std::shared_ptr<Predicate> ConstructPredicate(const std::string& query);
+	std::shared_ptr<Predicate<LocatedEntity>> ConstructPredicate(const std::string& query);
 
 	ParserTest() {
 		ADD_TEST(ParserTest::test_parsePredicate);
@@ -79,7 +79,7 @@ struct ParserTest : public Cyphesis::TestBase {
 	}
 
 	void setup() {
-		m_inheritance = new Inheritance(factories);
+		m_inheritance = new Inheritance();
 	}
 
 
@@ -88,44 +88,44 @@ struct ParserTest : public Cyphesis::TestBase {
 	}
 
 	void test_ComparisonOperators() {
-		std::shared_ptr<Predicate> pred;
+		std::shared_ptr<Predicate<LocatedEntity>> pred;
 
 		pred = ConstructPredicate("1 = 2");
-		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::EQUALS);
+		assert(static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_comparator == ComparePredicate<LocatedEntity>::Comparator::EQUALS);
 
 		pred = ConstructPredicate("1 != 2");
-		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::NOT_EQUALS);
+		assert(static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_comparator == ComparePredicate<LocatedEntity>::Comparator::NOT_EQUALS);
 
 		pred = ConstructPredicate("1 > 2");
-		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::GREATER);
+		assert(static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_comparator == ComparePredicate<LocatedEntity>::Comparator::GREATER);
 
 		pred = ConstructPredicate("1 < 2");
-		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::LESS);
+		assert(static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_comparator == ComparePredicate<LocatedEntity>::Comparator::LESS);
 
 		pred = ConstructPredicate("1 <= 2");
-		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::LESS_EQUAL);
+		assert(static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_comparator == ComparePredicate<LocatedEntity>::Comparator::LESS_EQUAL);
 
 		pred = ConstructPredicate("1 >= 2");
-		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::GREATER_EQUAL);
+		assert(static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_comparator == ComparePredicate<LocatedEntity>::Comparator::GREATER_EQUAL);
 
 		pred = ConstructPredicate("entity.container includes 1");
-		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::INCLUDES);
+		assert(static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_comparator == ComparePredicate<LocatedEntity>::Comparator::INCLUDES);
 
 		pred = ConstructPredicate("1 in entity.container");
-		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::IN);
+		assert(static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_comparator == ComparePredicate<LocatedEntity>::Comparator::IN);
 
 		pred = ConstructPredicate("entity can_reach entity");
-		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::CAN_REACH);
+		assert(static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_comparator == ComparePredicate<LocatedEntity>::Comparator::CAN_REACH);
 
 		pred = ConstructPredicate("entity can_reach entity with entity");
-		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::CAN_REACH);
+		assert(static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_comparator == ComparePredicate<LocatedEntity>::Comparator::CAN_REACH);
 
 		//Instance_of can only be created for existing types
-		TypeNode* thingType = new TypeNode("thing");
+		auto thingType = new TypeNode<LocatedEntity>("thing");
 		types["thing"] = thingType;
 		pred = ConstructPredicate(
 				"types.thing = entity.type");
-		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::EQUALS);
+		assert(static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_comparator == ComparePredicate<LocatedEntity>::Comparator::EQUALS);
 		types["thing"] = nullptr;
 		delete thingType;
 
@@ -134,49 +134,49 @@ struct ParserTest : public Cyphesis::TestBase {
 	}
 
 	void test_LogicalOperators() {
-		std::shared_ptr<Predicate> pred;
+		std::shared_ptr<Predicate<LocatedEntity>> pred;
 
 		pred = ConstructPredicate("1 = 2 or 3 = 4");
-		assert(typeid(*pred) == typeid(OrPredicate));
+		assert(typeid(*pred) == typeid(OrPredicate<LocatedEntity>));
 
 		pred = ConstructPredicate("1 = 2 and 3 = 4");
-		assert(typeid(*pred) == typeid(AndPredicate));
+		assert(typeid(*pred) == typeid(AndPredicate<LocatedEntity>));
 
 		pred = ConstructPredicate("!5 = 6");
-		assert(typeid(*pred) == typeid(NotPredicate));
+		assert(typeid(*pred) == typeid(NotPredicate<LocatedEntity>));
 
 		pred = ConstructPredicate("not 7 = 8");
-		assert(typeid(*pred) == typeid(NotPredicate));
+		assert(typeid(*pred) == typeid(NotPredicate<LocatedEntity>));
 
 		//Test precedence. not should be applied to 1 = 2, not the whole expression
 		pred = ConstructPredicate("not 1 = 2 and 3 = 4");
-		assert(typeid(*pred) == typeid(AndPredicate));
+		assert(typeid(*pred) == typeid(AndPredicate<LocatedEntity>));
 	}
 
 	void test_Literals() {
-		std::shared_ptr<Predicate> pred;
+		std::shared_ptr<Predicate<LocatedEntity>> pred;
 		using Atlas::Message::Element;
 
 		//Test int and single quote string
 		pred = ConstructPredicate("1 = '1'");
-		FixedElementProvider* lhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_lhs.get();
-		FixedElementProvider* rhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_rhs.get();
+		auto lhs = (FixedElementProvider<LocatedEntity>*) static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_lhs.get();
+		auto rhs = (FixedElementProvider<LocatedEntity>*) static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_rhs.get();
 
 		ASSERT_TRUE(lhs->m_element == Element(1));
 		ASSERT_TRUE(rhs->m_element == Element("1"));
 
 		//Test double and bool
 		pred = ConstructPredicate("1.25 = true");
-		lhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_lhs.get();
-		rhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_rhs.get();
+		lhs = (FixedElementProvider<LocatedEntity>*) static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_lhs.get();
+		rhs = (FixedElementProvider<LocatedEntity>*) static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_rhs.get();
 
 		ASSERT_TRUE(lhs->m_element == Element(1.25));
 		ASSERT_TRUE(rhs->m_element == Element(true));
 
 		//Test list and double quoted string
 		pred = ConstructPredicate("[1, 2, 3] = '\"literal\"'");
-		lhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_lhs.get();
-		rhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_rhs.get();
+		lhs = (FixedElementProvider<LocatedEntity>*) static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_lhs.get();
+		rhs = (FixedElementProvider<LocatedEntity>*) static_cast<ComparePredicate<LocatedEntity>*>(pred.get())->m_rhs.get();
 
 		ASSERT_TRUE(lhs->m_element == Element(std::vector<Element>{1, 2, 3}));
 		ASSERT_TRUE(rhs->m_element == Element("\"literal\""));
@@ -184,25 +184,25 @@ struct ParserTest : public Cyphesis::TestBase {
 	}
 
 	void test_parsePredicate() {
-		std::shared_ptr<Predicate> pred;
+		std::shared_ptr<Predicate<LocatedEntity>> pred;
 		pred = ConstructPredicate("describe('One is one', 1 = 1)");
-		ASSERT_NOT_NULL(dynamic_cast<const DescribePredicate*>(pred.get()));
+		ASSERT_NOT_NULL(dynamic_cast<const DescribePredicate<LocatedEntity>*>(pred.get()));
 		pred = ConstructPredicate("describe(\"One is one\", 1 = 1)");
-		ASSERT_NOT_NULL(dynamic_cast<const DescribePredicate*>(pred.get()));
+		ASSERT_NOT_NULL(dynamic_cast<const DescribePredicate<LocatedEntity>*>(pred.get()));
 		pred = ConstructPredicate("describe(\"False\", false)");
-		ASSERT_NOT_NULL(dynamic_cast<const DescribePredicate*>(pred.get()));
+		ASSERT_NOT_NULL(dynamic_cast<const DescribePredicate<LocatedEntity>*>(pred.get()));
 	}
 
 	Inheritance* m_inheritance;
 };
 
-std::shared_ptr<Predicate> ParserTest::ConstructPredicate(const std::string& query) {
+std::shared_ptr<Predicate<LocatedEntity>> ParserTest::ConstructPredicate(const std::string& query) {
 	auto iter_begin = query.begin();
 	auto iter_end = query.end();
-	ProviderFactory factory{};
-	parser::query_parser<std::string::const_iterator> grammar(factory);
+	ProviderFactory<LocatedEntity> factory{};
+	parser::query_parser<std::string::const_iterator, LocatedEntity> grammar(factory);
 
-	std::shared_ptr<Predicate> pred;
+	std::shared_ptr<Predicate<LocatedEntity>> pred;
 
 	bool parse_success = qi::phrase_parse(iter_begin, iter_end, grammar,
 										  boost::spirit::qi::space, pred);
@@ -223,30 +223,5 @@ int main(int argc, char** argv) {
 	return t.run();
 }
 
-//Stubs
 
-#include "../../stubs/common/stubVariable.h"
-#include "../../stubs/common/stubMonitors.h"
-#include "../../stubs/common/stubLink.h"
-#include "../../stubs/rules/simulation/stubDomainProperty.h"
-#include "../../stubs/rules/simulation/stubDensityProperty.h"
-#include "../../stubs/rules/stubScaleProperty.h"
-#include "../../stubs/rules/stubAtlasProperties.h"
-#include "../../stubs/common/stubcustom.h"
-#include "../../stubs/common/stubRouter.h"
-#include "../../stubs/rules/simulation/stubBaseWorld.h"
-#include "../../stubs/rules/stubLocation.h"
-
-#define STUB_Inheritance_getType
-
-const TypeNode* Inheritance::getType(const std::string& parent) const {
-	auto I = types.find(parent);
-	if (I == types.end()) {
-		return nullptr;
-	}
-	return I->second;
-}
-
-#include "../../stubs/common/stubInheritance.h"
-#include "../../stubs/common/stublog.h"
-#include "../../stubs/rules/stubModifier.h"
+#include "rules/Location_impl.h"

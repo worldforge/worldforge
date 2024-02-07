@@ -25,8 +25,7 @@
 
 #include <Mercator/TerrainMod.h>
 #include "rules/simulation/TerrainModTranslator.h"
-#include "../stubs/common/stubcustom.h"
-#include "../stubs/rules/stubLocation.h"
+#include "rules/Location_impl.h"
 
 #include <wfmath/quaternion.h>
 
@@ -308,4 +307,3 @@ int main()
 // stubs
 
 #include "common/log.h"
-#include "../stubs/common/stublog.h"

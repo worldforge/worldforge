@@ -21,7 +21,7 @@
 
 #include "rules/simulation/BaseWorld.h"
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/Task.h"
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <Atlas/Objects/RootEntity.h>

@@ -205,4 +205,3 @@ int main() {
 }
 
 // stubs
-#include "../stubs/common/stublog.h"

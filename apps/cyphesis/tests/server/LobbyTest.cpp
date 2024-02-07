@@ -216,10 +216,14 @@ int main() {
 // Stub functions
 
 #include "common/log.h"
-#include "../stubs/server/stubAccount.h"
-#include "../stubs/server/stubConnectableRouter.h"
-#include "../stubs/server/stubConnection.h"
-#include "../stubs/common/stubLink.h"
-#include "../stubs/common/stubRouter.h"
+
 #include "rules/simulation/ExternalMind.h"
-#include "../stubs/common/stublog.h"
+
+Connection::Connection(CommSocket& socket,
+					   ServerRouting& svr,
+					   const std::string& addr,
+					   RouterId id) :
+		Link(socket, std::move(id)), m_server(svr) {
+}
+Connection::~Connection() {
+}

@@ -160,13 +160,13 @@ int main() {
 	return 0;
 }
 
-#include "../stubs/common/stubid.h"
-#include "../stubs/common/stublog.h"
+
+
 
 
 int timeoffset = 0;
 
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stubRouter.h"
+
+
+#include "rules/Location_impl.h"
+

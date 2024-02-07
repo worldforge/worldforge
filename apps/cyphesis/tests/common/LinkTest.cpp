@@ -211,7 +211,6 @@ int main() {
 
 // stubs
 
-#include "../stubs/common/stubRouter.h"
 
 
 int CommSocket::flush() {

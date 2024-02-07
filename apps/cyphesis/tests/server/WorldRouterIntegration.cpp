@@ -29,15 +29,15 @@
 
 #include "server/EntityBuilder.h"
 #include "server/EntityRuleHandler.h"
-#include "server/EntityFactory.h"
+#include "server/EntityFactory_impl.h"
 
-#include "rules/AtlasProperties.h"
-#include "rules/Domain.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/simulation/Domain.h"
 #include "rules/simulation/World.h"
 
 #include "common/globals.h"
 #include "common/id.h"
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 
 #include "common/operations/Tick.h"
 #include "common/Variable.h"
@@ -50,6 +50,7 @@
 
 #include "../DatabaseNull.h"
 #include "../TestPropertyManager.h"
+#include "common/Monitors.h"
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
@@ -129,13 +130,13 @@ struct WorldRouterintegration : public Cyphesis::TestBase {
 
 
 void WorldRouterintegration::setup() {
-	m_inheritance = new Inheritance(factories);
+	m_inheritance = new Inheritance();
 	m_eb = new EntityBuilder();
-	TestPropertyManager propertyManager;
+	TestPropertyManager<LocatedEntity> propertyManager;
 
 	class TestEntityRuleHandler : public EntityRuleHandler {
 	public:
-		explicit TestEntityRuleHandler(EntityBuilder& eb, const PropertyManager& propertyManager) : EntityRuleHandler(eb, propertyManager) {}
+		explicit TestEntityRuleHandler(EntityBuilder& eb, const PropertyManager<LocatedEntity>& propertyManager) : EntityRuleHandler(eb, propertyManager) {}
 
 		int test_installEntityClass(const std::string& class_name,
 									const std::string& parent,
@@ -143,7 +144,7 @@ void WorldRouterintegration::setup() {
 									std::string& dependent,
 									std::string& reason,
 									std::unique_ptr<EntityFactoryBase> factory) {
-			std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+			std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 			return installEntityClass(class_name, parent, class_desc, dependent, reason, std::move(factory), changes);
 		}
 	};
@@ -200,7 +201,7 @@ void WorldRouterintegration::test_sequence() {
 
 	Ref<Entity> ent2 = new Thing(id);
 	assert(ent2 != 0);
-	ent2->requirePropertyClassFixed<PositionProperty>().data() = Point3D(0, 0, 0);
+	ent2->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = Point3D(0, 0, 0);
 	test_world.addEntity(ent2, base);
 
 	Tick tick;
@@ -217,6 +218,7 @@ void WorldRouterintegration::test_sequence() {
 }
 
 int main() {
+	Monitors m;
 	WorldRouterintegration t;
 
 	t.m_database.idGeneratorFn = []() {
@@ -230,13 +232,13 @@ int main() {
 
 // stubs
 
-#include "server/EntityFactory.h"
+#include "server/EntityFactory_impl.h"
 #include "server/ArchetypeFactory.h"
 #include "rules/simulation/CorePropertyManager.h"
 
 #include "rules/simulation/AreaProperty.h"
-#include "rules/AtlasProperties.h"
-#include "rules/BBoxProperty.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/BBoxProperty_impl.h"
 #include "rules/simulation/CalendarProperty.h"
 #include "rules/simulation/EntityProperty.h"
 #include "rules/simulation/StatusProperty.h"
@@ -247,95 +249,15 @@ int main() {
 #include "rules/simulation/ExternalMind.h"
 #include "rules/simulation/Task.h"
 
-#include "rules/python/PythonScriptFactory.h"
+#include "rules/python/PythonScriptFactory_impl.h"
+#include "rules/simulation/python/CyPy_LocatedEntity_impl.h"
 
-#define STUB_PythonScriptFactory_PythonScriptFactory
+#include "rules/BBoxProperty_impl.h"
+#include "rules/Location_impl.h"
 
-template<>
-PythonScriptFactory<LocatedEntity>::PythonScriptFactory(const std::string& p,
-														const std::string& t) :
-		PythonClass(p, t) {
-}
-
-template<>
-int PythonScriptFactory<LocatedEntity>::setup() {
-	return load();
-}
-
-#include "../stubs/rules/stubBBoxProperty.h"
-#include "../stubs/rules/stubAtlasProperties.h"
-#include "../stubs/rules/simulation/stubTasksProperty.h"
-#include "../stubs/rules/simulation/stubTerrainProperty.h"
-#include "../stubs/rules/simulation/stubDomainProperty.h"
-#include "../stubs/rules/ai/stubBaseMind.h"
-#include "../stubs/rules/ai/stubMemEntity.h"
-#include "../stubs/rules/ai/stubMemMap.h"
-#include "../stubs/rules/simulation/stubPropelProperty.h"
-#include "../stubs/pythonbase/stubPythonClass.h"
-#include "../stubs/rules/simulation/stubMovement.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/rules/simulation/stubUsagesProperty.h"
-#include "../stubs/rules/entityfilter/stubFilter.h"
-
-#include "../stubs/common/stubOperationsDispatcher.h"
-#include "../stubs/common/stubScriptKit.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/server/stubConnectableRouter.h"
-#include "../stubs/server/stubAccount.h"
-#include "../stubs/server/stubPlayer.h"
-#include "../stubs/server/stubExternalMindsManager.h"
-#include "../stubs/server/stubExternalMindsConnection.h"
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubLobby.h"
-#include "../stubs/rules/simulation/stubEntityProperty.h"
-#include "../stubs/rules/python/stubPythonScriptFactory.h"
-
-#include "../stubs/common/stubMonitors.h"
 
 #include <Atlas/Objects/Operation.h>
-#include "../stubs/rules/python/stubScriptsProperty.h"
 
-#define STUB_CorePropertyManager_addProperty
-
-std::unique_ptr<PropertyBase> CorePropertyManager::addProperty(const std::string& name) const {
-	return std::make_unique<Property<float>>();
-}
-
-#include "../stubs/rules/simulation/stubCorePropertyManager.h"
-
-
-#define STUB_ArchetypeFactory_newEntity
-
-Ref<Entity> ArchetypeFactory::newEntity(RouterId id, const Atlas::Objects::Entity::RootEntity& attributes) {
-	return new Entity(id);
-}
-
-#include "../stubs/server/stubArchetypeFactory.h"
-
-
-class World;
-
-
-#include "../stubs/rules/simulation/stubAreaProperty.h"
-#include "../stubs/rules/simulation/stubCalendarProperty.h"
-#include "../stubs/rules/simulation/stubWorldTimeProperty.h"
-#include "../stubs/rules/simulation/stubVoidDomain.h"
-
-
-#include "../stubs/rules/simulation/stubTask.h"
-#include "../stubs/rules/stubAtlasProperties.h"
-#include "../stubs/rules/stubPhysicalProperties.h"
-#include "../stubs/rules/simulation/stubStatusProperty.h"
-#include "../stubs/rules/simulation/stubModeDataProperty.h"
-#include "../stubs/rules/simulation/stubModeProperty.h"
-
-#define STUB_ExternalMind_linkUp
-
-void ExternalMind::linkUp(Link* c) {
-	m_link = c;
-}
-
-#include "../stubs/rules/simulation/stubExternalMind.h"
 
 sigc::signal<void()> python_reload_scripts;
 

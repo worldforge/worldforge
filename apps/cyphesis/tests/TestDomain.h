@@ -18,8 +18,8 @@
 #ifndef TESTS_TESTDOMAIN_H_
 #define TESTS_TESTDOMAIN_H_
 
-#include "rules/Domain.h"
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/Domain.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "common/const.h"
 
 class TestDomain : public Domain {

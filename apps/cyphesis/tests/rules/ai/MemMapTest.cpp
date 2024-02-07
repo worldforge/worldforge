@@ -27,10 +27,10 @@
 #include "rules/ai/MemMap.h"
 
 #include "rules/ai/MemEntity.h"
-#include "rules/Script.h"
-#include "rules/PhysicalProperties.h"
+#include "rules/Script_impl.h"
+#include "rules/PhysicalProperties_impl.h"
 
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Operation.h>
@@ -38,7 +38,9 @@
 #include <cstdlib>
 
 #include <cassert>
-#include <rules/SimpleTypeStore.h>
+#include "client/SimpleTypeStore.h"
+#include "rules/Location_impl.h"
+#include "client/ClientPropertyManager.h"
 #include <rules/ai/TypeResolver.h>
 
 using Atlas::Objects::Entity::Anonymous;
@@ -56,7 +58,8 @@ struct TestMemMap : public MemMap {
 	}
 
 	void _readEntity(const Ref<MemEntity>& ent, const Atlas::Objects::Entity::RootEntity& rootEntity, std::chrono::milliseconds timestamp) {
-		readEntity(ent, rootEntity, timestamp);
+		OpVector res;
+		readEntity(ent, rootEntity, timestamp, res);
 	}
 
 	void injectEntity(const Ref<MemEntity>& entity) {
@@ -64,11 +67,11 @@ struct TestMemMap : public MemMap {
 	}
 };
 
-struct TestTypeStore : public TypeStore {
-	std::map<std::string, TypeNode*> m_types;
+struct TestTypeStore : public TypeStore<MemEntity> {
+	std::map<std::string, TypeNode<MemEntity>*> m_types;
 	Atlas::Objects::Factories m_factories;
 
-	const TypeNode* getType(const std::string& parent) const override {
+	const TypeNode<MemEntity>* getType(const std::string& parent) const override {
 		auto I = m_types.find(parent);
 		if (I != m_types.end()) {
 			return I->second;
@@ -80,8 +83,8 @@ struct TestTypeStore : public TypeStore {
 		return m_types.size();
 	}
 
-	TypeNode* addChild(const Atlas::Objects::Root& obj) override {
-		auto type = new TypeNode(obj->getId());
+	TypeNode<MemEntity>* addChild(const Atlas::Objects::Root& obj) override {
+		auto type = new TypeNode<MemEntity>(obj->getId());
 		type->setDescription(obj);
 		m_types[obj->getId()] = type;
 		return type;
@@ -98,12 +101,12 @@ struct TestTypeStore : public TypeStore {
 
 class MemMaptest : public Cyphesis::TestBase {
 private:
-	TypeNode* m_sampleType;
-	TypeStore* m_typeStore;
+	TypeNode<MemEntity>* m_sampleType;
+	TypeStore<MemEntity>* m_typeStore;
 	TypeResolver* m_typeResolver;
 
 	static std::string m_Script_hook_called;
-	static LocatedEntity* m_Script_hook_called_with;
+	static MemEntity* m_Script_hook_called_with;
 
 public:
 	MemMaptest();
@@ -140,23 +143,25 @@ public:
 
 	void test_findByLoc_consistency_check();
 
-	static void Script_hook_called(const std::string&, LocatedEntity*);
+	static void Script_hook_called(const std::string&, MemEntity*);
 };
 
-std::string MemMaptest::m_Script_hook_called;
-LocatedEntity* MemMaptest::m_Script_hook_called_with = 0;
+ClientPropertyManager propertyManager;
 
-void MemMaptest::Script_hook_called(const std::string& hook, LocatedEntity* ent) {
+std::string MemMaptest::m_Script_hook_called;
+MemEntity* MemMaptest::m_Script_hook_called_with = 0;
+
+void MemMaptest::Script_hook_called(const std::string& hook, MemEntity* ent) {
 	m_Script_hook_called = hook;
 	m_Script_hook_called_with = ent;
 }
 
-class TestScript : public Script {
+class TestScript : public Script<MemEntity> {
 public:
-	virtual void hook(const std::string& function, LocatedEntity* entity);
+	virtual void hook(const std::string& function, MemEntity* entity);
 };
 
-void TestScript::hook(const std::string& function, LocatedEntity* entity) {
+void TestScript::hook(const std::string& function, MemEntity* entity) {
 	MemMaptest::Script_hook_called(function, entity);
 }
 
@@ -218,7 +223,7 @@ void MemMaptest::test_addEntity() {
 	RouterId new_id(3);
 	ASSERT_FALSE(tested.get(new_id.m_id));
 
-	Ref<MemEntity> ent = new MemEntity(new_id);
+	Ref<MemEntity> ent = new MemEntity(new_id, nullptr);
 	ent->setType(m_sampleType);
 	tested.addEntity(ent);
 
@@ -232,7 +237,7 @@ void MemMaptest::test_readEntity() {
 
 	Anonymous data;
 
-	Ref<MemEntity> ent = new MemEntity(new_id);
+	Ref<MemEntity> ent = new MemEntity(new_id, nullptr);
 	ent->setType(m_sampleType);
 
 	tested._readEntity(ent, data, std::chrono::milliseconds{0});
@@ -245,7 +250,7 @@ void MemMaptest::test_readEntity_type() {
 	Anonymous data;
 	data->setParent("sample_type");
 
-	Ref<MemEntity> ent = new MemEntity(new_id);
+	Ref<MemEntity> ent = new MemEntity(new_id, nullptr);
 
 	tested._readEntity(ent, data, std::chrono::milliseconds{0});
 
@@ -259,7 +264,7 @@ void MemMaptest::test_readEntity_type_nonexist() {
 	Anonymous data;
 	data->setParent("non_sample_type");
 
-	Ref<MemEntity> ent = new MemEntity(new_id);
+	Ref<MemEntity> ent = new MemEntity(new_id, nullptr);
 
 	tested._readEntity(ent, data, std::chrono::milliseconds{0});
 
@@ -317,26 +322,23 @@ void MemMaptest::test_getEntityRelatedMemory() {
 
 void MemMaptest::test_findByLoc() {
 	TestMemMap tested(*m_typeResolver);
-	Ref<MemEntity> tlve = new MemEntity(3);
-	tlve->setVisible();
+	Ref<MemEntity> tlve = new MemEntity(3, nullptr);
 	tested.injectEntity(tlve);
-	tlve->m_contains.reset(new LocatedEntitySet);
+	tlve->m_contains.clear();
 
-	Ref<MemEntity> e4 = new MemEntity(4);
-	e4->setVisible();
+	Ref<MemEntity> e4 = new MemEntity(4, nullptr);
 	e4->setType(m_sampleType);
 	tested.injectEntity(e4);
 	e4->m_parent = tlve.get();
-	e4->requirePropertyClassFixed<PositionProperty>().data() = Point3D(1, 1, 0);
-	tlve->m_contains->insert(e4);
+	e4->requirePropertyClassFixed<PositionProperty<MemEntity>>().data() = Point3D(1, 1, 0);
+	tlve->m_contains.insert(e4);
 
-	Ref<MemEntity> e5(new MemEntity(5));
-	e5->setVisible();
+	Ref<MemEntity> e5(new MemEntity(5, nullptr));
 	e5->setType(m_sampleType);
 	tested.injectEntity(e5);
 	e5->m_parent = tlve.get();
-	e5->requirePropertyClassFixed<PositionProperty>().data() = Point3D(2, 2, 0);
-	tlve->m_contains->insert(e5);
+	e5->requirePropertyClassFixed<PositionProperty<MemEntity>>().data() = Point3D(2, 2, 0);
+	tlve->m_contains.insert(e5);
 
 	Location find_here(tlve);
 
@@ -348,26 +350,23 @@ void MemMaptest::test_findByLoc() {
 
 void MemMaptest::test_findByLoc_results() {
 	TestMemMap tested(*m_typeResolver);
-	Ref<MemEntity> tlve = new MemEntity(3);
-	tlve->setVisible();
+	Ref<MemEntity> tlve = new MemEntity(3, nullptr);
 	tested.injectEntity(tlve);
-	tlve->m_contains.reset(new LocatedEntitySet);
+	tlve->m_contains.clear();
 
-	Ref<MemEntity> e4 = new MemEntity(4);
-	e4->setVisible();
+	Ref<MemEntity> e4 = new MemEntity(4, nullptr);
 	e4->setType(m_sampleType);
 	tested.injectEntity(e4);
 	e4->m_parent = tlve.get();
-	e4->requirePropertyClassFixed<PositionProperty>().data() = Point3D(1, 1, 0);
-	tlve->m_contains->insert(e4);
+	e4->requirePropertyClassFixed<PositionProperty<MemEntity>>().data() = Point3D(1, 1, 0);
+	tlve->m_contains.insert(e4);
 
-	Ref<MemEntity> e5 = new MemEntity(5);
-	e5->setVisible();
+	Ref<MemEntity> e5 = new MemEntity(5, nullptr);
 	e5->setType(m_sampleType);
 	tested.injectEntity(e5);
 	e5->m_parent = tlve.get();
-	e5->requirePropertyClassFixed<PositionProperty>().data() = Point3D(2, 2, 0);
-	tlve->m_contains->insert(e5);
+	e5->requirePropertyClassFixed<PositionProperty<MemEntity>>().data() = Point3D(2, 2, 0);
+	tlve->m_contains.insert(e5);
 
 	EntityLocation find_here(tlve);
 
@@ -379,26 +378,23 @@ void MemMaptest::test_findByLoc_results() {
 
 void MemMaptest::test_findByLoc_invalid() {
 	TestMemMap tested(*m_typeResolver);
-	Ref<MemEntity> tlve(new MemEntity(3));
-	tlve->setVisible();
+	Ref<MemEntity> tlve(new MemEntity(3, nullptr));
 	tested.injectEntity(tlve);
-	tlve->m_contains.reset(new LocatedEntitySet);
+	tlve->m_contains.clear();
 
-	Ref<MemEntity> e4 = new MemEntity(4);
-	e4->setVisible();
+	Ref<MemEntity> e4 = new MemEntity(4, nullptr);
 	e4->setType(m_sampleType);
 	tested.injectEntity(e4);
 	e4->m_parent = tlve.get();
-	e4->requirePropertyClassFixed<PositionProperty>().data() = Point3D(1, 1, 0);
-	tlve->m_contains->insert(e4);
+	e4->requirePropertyClassFixed<PositionProperty<MemEntity>>().data() = Point3D(1, 1, 0);
+	tlve->m_contains.insert(e4);
 
-	Ref<MemEntity> e5 = new MemEntity(5);
-	e5->setVisible();
+	Ref<MemEntity> e5 = new MemEntity(5, nullptr);
 	e5->setType(m_sampleType);
 	tested.injectEntity(e5);
 	e5->m_parent = tlve.get();
-	e5->requirePropertyClassFixed<PositionProperty>().data() = Point3D(2, 2, 0);
-	tlve->m_contains->insert(e5);
+	e5->requirePropertyClassFixed<PositionProperty<MemEntity>>().data() = Point3D(2, 2, 0);
+	tlve->m_contains.insert(e5);
 
 	// Look in a location where these is nothing - no contains at all
 	Location find_here(e4);
@@ -411,38 +407,35 @@ void MemMaptest::test_findByLoc_invalid() {
 
 void MemMaptest::test_findByLoc_consistency_check() {
 	TestMemMap tested(*m_typeResolver);
-	Ref<MemEntity> tlve = new MemEntity(3);
-	tlve->setVisible();
+	Ref<MemEntity> tlve = new MemEntity(3, nullptr);
 	tlve->setType(m_sampleType);
 	tested.injectEntity(tlve);
-	tlve->m_contains.reset(new LocatedEntitySet);
+	tlve->m_contains.clear();
 
-	Ref<MemEntity> e4 = new MemEntity(4);
-	e4->setVisible();
+	Ref<MemEntity> e4 = new MemEntity(4, nullptr);
 	e4->setType(m_sampleType);
 	tested.injectEntity(e4);
 	e4->m_parent = tlve.get();
-	e4->requirePropertyClassFixed<PositionProperty>().data() = Point3D(1, 1, 0);
-	tlve->m_contains->insert(e4);
+	e4->requirePropertyClassFixed<PositionProperty<MemEntity>>().data() = Point3D(1, 1, 0);
+	tlve->m_contains.insert(e4);
 
-	Ref<MemEntity> e5 = new MemEntity(5);
-	e5->setVisible();
+	Ref<MemEntity> e5 = new MemEntity(5, nullptr);
 	e5->setType(m_sampleType);
 	tested.injectEntity(e5);
 	e5->m_parent = tlve.get();
-	e5->requirePropertyClassFixed<PositionProperty>().data() = Point3D(2, 2, 0);
-	tlve->m_contains->insert(e5);
+	e5->requirePropertyClassFixed<PositionProperty<MemEntity>>().data() = Point3D(2, 2, 0);
+	tlve->m_contains.insert(e5);
 
 	// Duplicated of tlve. Same ID, but not the same entity as in
 	// memmap. This will fail, but via a different path depending on
 	// DEBUG/NDEBUG. In debug build, the check in findByLoc will fail
 	// resulting in early return. In ndebug build, it will return empty
 	// by a longer path, as e3_dup contains no other entities.
-	Ref<MemEntity> e3_dup = new MemEntity(3);
+	Ref<MemEntity> e3_dup = new MemEntity(3, nullptr);
 	e3_dup->setType(m_sampleType);
-	tlve->m_contains.reset(new LocatedEntitySet);
+	tlve->m_contains.clear();
 
-	Location find_here(e3_dup);
+	Location<MemEntity> find_here(e3_dup);
 
 	EntityVector res = tested.findByLocation(find_here, 5.f, "sample_type");
 
@@ -457,32 +450,22 @@ int main() {
 
 // stubs
 
-//#include "../../stubs/rules/stubMemEntity.h"
-#include "../../stubs/rules/stubLocatedEntity.h"
-#include "../../stubs/common/stubRouter.h"
-#include "../../stubs/common/stubTypeNode.h"
-#include "../../stubs/rules/stubLocation.h"
 
-#define STUB_TypeResolver_requestType
 
-const TypeNode* TypeResolver::requestType(const std::string& id, OpVector& res) {
+const TypeNode<MemEntity>* TypeResolver::requestType(const std::string& id, OpVector& res) {
 	return m_typeStore.getType(id);
 }
 
-#define STUB_TypeResolver_getTypeStore
 
-const TypeStore& TypeResolver::getTypeStore() const {
+const TypeStore<MemEntity>& TypeResolver::getTypeStore() const {
 	return m_typeStore;
 }
 
-#include "../../stubs/rules/ai/stubTypeResolver.h"
-#include "../../stubs/rules/stubScript.h"
-#include "../../stubs/rules/stubPhysicalProperties.h"
-#include "../../stubs/common/stubProperty.h"
 
 WFMath::CoordType squareDistance(const Point3D& u, const Point3D& v) {
 	return 1.0;
 }
 
-#include "../../stubs/common/stublog.h"
-#include "../../stubs/common/stubid.h"
+std::uint32_t PropertyUtil::flagsForPropertyName(const std::string& name) {
+	return 0;
+}

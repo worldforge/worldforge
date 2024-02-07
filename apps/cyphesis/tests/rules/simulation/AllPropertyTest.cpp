@@ -26,7 +26,7 @@
 #include "../../PropertyExerciser.h"
 
 #include "rules/simulation/AreaProperty.h"
-#include "rules/AtlasProperties.h"
+#include "rules/simulation/AtlasProperties.h"
 #include "rules/simulation/CalendarProperty.h"
 #include "rules/simulation/EntityProperty.h"
 #include "rules/simulation/LineProperty.h"
@@ -35,9 +35,9 @@
 #include "rules/simulation/BaseWorld.h"
 #include "common/log.h"
 #include "common/Property_impl.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 
-#include "../../stubs/rules/stubLocation.h"
+#include "rules/Location_impl.h"
 
 #include <Mercator/Terrain.h>
 
@@ -57,27 +57,27 @@ int main() {
 	PropertyExerciser exerciser;
 
 	{
-		Property<int> test_property(0);
+		Property<int, LocatedEntity> test_property(0);
 		assert(exerciser.exerciseProperty(test_property, TYPE_INT) == 0);
 	}
 
 	{
-		Property<long> test_property(0);
+		Property<long, LocatedEntity> test_property(0);
 		assert(exerciser.exerciseProperty(test_property, TYPE_INT) == 0);
 	}
 
 	{
-		Property<float> test_property(0);
+		Property<float, LocatedEntity> test_property(0);
 		assert(exerciser.exerciseProperty(test_property, TYPE_FLOAT) == 0);
 	}
 
 	{
-		Property<double> test_property(0);
+		Property<double, LocatedEntity> test_property(0);
 		assert(exerciser.exerciseProperty(test_property, TYPE_FLOAT) == 0);
 	}
 
 	{
-		Property<std::string> test_property(0);
+		Property<std::string, LocatedEntity> test_property(0);
 		assert(exerciser.exerciseProperty(test_property, TYPE_STRING) == 0);
 	}
 
@@ -125,7 +125,7 @@ int main() {
 	// protect property code from getting given pointers from outside.
 	// Atlas-C++ must not allow pointers to come in from the network.
 	{
-		WeakEntityRef test_entityref_data;
+		WeakEntityRef<LocatedEntity> test_entityref_data;
 		EntityProperty test_property(test_entityref_data);
 		assert(exerciser.exerciseProperty(test_property, TYPE_STRING) == 0);
 	}
@@ -146,35 +146,5 @@ int main() {
 	return 0;
 }
 
-// stubs
 
-#include "../../stubs/rules/simulation/stubBaseWorld.h"
-#include "../../stubs/rules/stubLocatedEntity.h"
-#include "../../stubs/common/stubRouter.h"
-
-#define STUB_TypeNode_isTypeOf
-
-bool TypeNode::isTypeOf(const std::string& base_type) const {
-	const TypeNode* node = this;
-	do {
-		if (node->name() == base_type) {
-			return true;
-		}
-		node = node->parent();
-	} while (node != 0);
-	return false;
-}
-
-bool TypeNode::isTypeOf(const TypeNode* base_type) const {
-	const TypeNode* node = this;
-	do {
-		if (node == base_type) {
-			return true;
-		}
-		node = node->parent();
-	} while (node != 0);
-	return false;
-}
-
-#include "../../stubs/common/stubTypeNode.h"
-#include "../../stubs/common/stublog.h"
+#include "common/TypeNode_impl.h"

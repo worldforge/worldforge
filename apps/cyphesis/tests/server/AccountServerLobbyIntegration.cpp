@@ -38,6 +38,8 @@
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Operation.h>
 #include <server/Persistence.h>
+#include "common/Property_impl.h"
+#include "common/Monitors.h"
 
 class CommSocket;
 
@@ -185,6 +187,7 @@ TestAccount::~TestAccount() {
 }
 
 int main() {
+	Monitors m;
 	AccountServerLobbyintegration test_case;
 
 	return test_case.run();
@@ -208,20 +211,6 @@ int main() {
 
 std::string assets_directory("");
 
-#include "../stubs/server/stubConnectableRouter.h"
-#include "../stubs/server/stubPossessionAuthenticator.h"
-#include "../stubs/server/stubPersistence.h"
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/common/stubVariable.h"
-#include "../stubs/common/stubMonitors.h"
-#include "../stubs/common/stubDatabase.h"
-#include "../stubs/server/stubBuildid.h"
-
-#include "../stubs/server/stubConnection.h"
-
-#define STUB_Link_send
 
 void Link::send(const Operation& op) const {
 	++test_send_count;
@@ -230,23 +219,11 @@ void Link::send(const Operation& op) const {
 void Link::send(const OpVector& opVector) const {
 }
 
-#include "../stubs/common/stubLink.h"
-
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/rules/simulation/stubExternalMind.h"
-#include "../stubs/rules/simulation/stubMindsProperty.h"
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/common/stubcustom.h"
-#include "../stubs/common/stubid.h"
-#include "../stubs/common/stublog.h"
+#include "rules/Location_impl.h"
 
 
 bool database_flag = false;
 std::string instance("130779df-1e84-4c61-9caf-3e1506597fe1");
-
-#include "../stubs/common/stubconst.h"
 
 
 const char* const CYPHESIS = "cyphesis";
@@ -265,4 +242,17 @@ Shaker::Shaker() {
 
 std::string Shaker::generateSalt(size_t length) {
 	return "";
+}
+
+void Link::disconnect() {
+}
+
+Connection::Connection(CommSocket& socket,
+					   ServerRouting& svr,
+					   const std::string& addr,
+					   RouterId id) :
+		Link(socket, std::move(id)), m_server(svr) {
+}
+
+Connection::~Connection() {
 }

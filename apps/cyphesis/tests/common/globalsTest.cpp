@@ -48,7 +48,6 @@ int main(int argc, char** argv) {
 }
 
 // stubs
-#include "../stubs/common/stublog.h"
 
 
 void getinstallprefix() {

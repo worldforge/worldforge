@@ -28,9 +28,10 @@
 #include "server/EntityKit.h"
 
 #include "common/ScriptKit.h"
-#include "common/TypeNode.h"
-#include "rules/LocatedEntity.h"
+#include "common/TypeNode_impl.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "../TestPropertyManager.h"
+#include "rules/simulation/python/CyPy_LocatedEntity_impl.h"
 #include <Atlas/Message/Element.h>
 
 #include <cassert>
@@ -46,13 +47,13 @@ public:
 
 	static EntityKit* duplicateFactory() { return nullptr; }
 
-	void addProperties(const PropertyManager&) override {}
+	void addProperties(const PropertyManager<LocatedEntity>&) override {}
 
-	void updateProperties(std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes, const PropertyManager&) override {
+	void updateProperties(std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes, const PropertyManager<LocatedEntity>&) override {
 	}
 };
 
-class TestScriptKit : public ScriptKit<LocatedEntity> {
+class TestScriptKit : public ScriptKit<LocatedEntity, CyPy_LocatedEntity> {
 public:
 	std::string m_package;
 
@@ -85,7 +86,7 @@ EntityKittest::EntityKittest() {
 
 void EntityKittest::setup() {
 	m_ek = new TestEntityKit;
-	m_ek->m_type = new TypeNode("foo");
+	m_ek->m_type = new TypeNode<LocatedEntity>("foo");
 }
 
 void EntityKittest::teardown() {
@@ -94,13 +95,13 @@ void EntityKittest::teardown() {
 }
 
 void EntityKittest::test_addProperties() {
-	TestPropertyManager propertyManager{};
+	TestPropertyManager<LocatedEntity> propertyManager{};
 	m_ek->addProperties(propertyManager);
 }
 
 void EntityKittest::test_updateProperties() {
-	TestPropertyManager propertyManager{};
-	std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+	TestPropertyManager<LocatedEntity> propertyManager{};
+	std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 	m_ek->updateProperties(changes, propertyManager);
 }
 
@@ -112,6 +113,3 @@ int main() {
 
 // stubs
 
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/common/stubPropertyManager.h"

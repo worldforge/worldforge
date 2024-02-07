@@ -23,15 +23,16 @@
 #define DEBUG
 #endif
 
-#include "rules/LocatedEntity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "server/Ruleset.h"
 #include "server/EntityBuilder.h"
 
 #include "common/const.h"
 #include "common/globals.h"
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 #include "../NullPropertyManager.h"
+#include "common/Monitors.h"
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Factories.h>
@@ -44,7 +45,7 @@ using Atlas::Objects::Root;
 
 class ExposedRuleset : public Ruleset {
 public:
-	ExposedRuleset(EntityBuilder& eb, boost::asio::io_context& io_context, PropertyManager& propertyManager) : Ruleset(eb, io_context, propertyManager) {}
+	ExposedRuleset(EntityBuilder& eb, boost::asio::io_context& io_context, PropertyManager<LocatedEntity>& propertyManager) : Ruleset(eb, io_context, propertyManager) {}
 
 	void test_getRulesFromFiles(const std::string& ruleset,
 								std::map<std::string, Root>& rules) {
@@ -56,9 +57,10 @@ public:
 const std::string data_path = TESTDATADIR;
 
 int main(int argc, char** argv) {
+	Monitors m;
 	boost::asio::io_context io_context;
 	int ret;
-	NullPropertyManager propertyManager;
+	NullPropertyManager<LocatedEntity> propertyManager;
 
 	std::string ruleset("caaa1085-9ef4-4dc2-b1ad-3d1f15b31060");
 
@@ -352,14 +354,13 @@ int main(int argc, char** argv) {
 #include "server/PropertyRuleHandler.h"
 #include "server/ArchetypeRuleHandler.h"
 #include "server/Persistence.h"
-#include "server/EntityFactory.h"
+#include "server/EntityFactory_impl.h"
 #include "rules/simulation/CorePropertyManager.h"
 
 #include "common/AtlasFileLoader.h"
 #include "common/log.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 
-#define STUB_OpRuleHandler_check
 
 int OpRuleHandler::check(const Atlas::Objects::Root& desc) {
 	if (desc->getObjtype() != "op_definition") {
@@ -368,10 +369,6 @@ int OpRuleHandler::check(const Atlas::Objects::Root& desc) {
 	return 0;
 }
 
-#include "../stubs/server/stubOpRuleHandler.h"
-
-#define STUB_PropertyRuleHandler_check
-
 int PropertyRuleHandler::check(const Atlas::Objects::Root& desc) {
 	if (desc->getObjtype() != "type") {
 		return -1;
@@ -379,9 +376,6 @@ int PropertyRuleHandler::check(const Atlas::Objects::Root& desc) {
 	return 0;
 }
 
-#include "../stubs/server/stubPropertyRuleHandler.h"
-
-#define STUB_EntityRuleHandler_check
 
 int EntityRuleHandler::check(const Atlas::Objects::Root& desc) {
 	if (desc->getObjtype() != "class") {
@@ -391,8 +385,6 @@ int EntityRuleHandler::check(const Atlas::Objects::Root& desc) {
 }
 
 
-#define STUB_ArchetypeRuleHandler_check
-
 int ArchetypeRuleHandler::check(const Atlas::Objects::Root& desc) {
 	if (desc->getObjtype() != "archetype") {
 		return -1;
@@ -400,10 +392,6 @@ int ArchetypeRuleHandler::check(const Atlas::Objects::Root& desc) {
 	return 0;
 }
 
-#include "../stubs/server/stubArchetypeRuleHandler.h"
-#include "../stubs/server/stubEntityBuilder.h"
-#include "../stubs/server/stubPersistence.h"
-#include "../stubs/common/stubglobals.h"
 
 AtlasFileLoader::AtlasFileLoader(const Atlas::Objects::Factories& factories, const std::string& filename,
 								 std::map<std::string, Root>& m) :
@@ -427,8 +415,6 @@ void AtlasFileLoader::read() {
 }
 
 
-#define STUB_Inheritance_getClass
-
 const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Visibility visibility) const {
 	auto I = atlasObjects.find(parent);
 	if (I == atlasObjects.end()) {
@@ -437,22 +423,19 @@ const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Vis
 	return I->second->description(visibility);
 }
 
-#define STUB_Inheritance_addChild
 
-TypeNode* Inheritance::addChild(const Atlas::Objects::Root& obj) {
+TypeNode<LocatedEntity>* Inheritance::addChild(const Atlas::Objects::Root& obj) {
 	const std::string& child = obj->getId();
-	TypeNode* type = new TypeNode(child, obj);
+	auto* type = new TypeNode<LocatedEntity>(child, obj);
 	atlasObjects[child].reset(type);
 	return type;
 }
 
-#include "../stubs/common/stubInheritance.h"
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/common/stublog.h"
-#include "../stubs/server/stubEntityKit.h"
-#include "../stubs/server/stubEntityFactory.h"
-#include "../stubs/server/stubEntityRuleHandler.h"
-#include "../stubs/common/stubPropertyManager.h"
-#include "../stubs/common/stubAssetsManager.h"
-#include "../stubs/common/stubFileSystemObserver.h"
+int EntityRuleHandler::install(const std::string& class_name, const std::string& parent, const Atlas::Objects::Root& desc, std::string& dependent, std::string& reason,
+							   std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) {
+	return 0;
+}
 
+int EntityRuleHandler::update(const std::string& name, const Atlas::Objects::Root& desc, std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate>& changes) {
+	return 0;
+}

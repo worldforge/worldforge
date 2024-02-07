@@ -49,43 +49,22 @@ int main() {
 
 #include "../TestWorld.h"
 #include "rules/ai/BaseMind.h"
-#include "rules/python/PythonScriptFactory.h"
+#include "rules/python/PythonScriptFactory_impl.h"
 
-#include "../stubs/server/stubExternalMindsManager.h"
-#include "../stubs/server/stubExternalMindsConnection.h"
-#include "../stubs/server/stubPossessionAuthenticator.h"
-#include "../stubs/common/stubcustom.h"
-#include "../stubs/pythonbase/stubPythonClass.h"
+
+
+
+
+
+#include "rules/ai/python/CyPy_BaseMind.h"
 
 template<>
-PythonScriptFactory<BaseMind>::PythonScriptFactory(const std::string& package,
-												   const std::string& type) :
+PythonScriptFactory<MemEntity, BaseMind>::PythonScriptFactory(const std::string& package,
+																  const std::string& type) :
 		PythonClass(package,
 					type) {
 }
 
-template<class T>
-int PythonScriptFactory<T>::setup() {
-	return 0;
-}
-
-template<class T>
-const std::string& PythonScriptFactory<T>::package() const {
-	return m_package;
-}
-
-template<class T>
-int PythonScriptFactory<T>::addScript(T& entity) const {
-	return 0;
-}
-
-template<class T>
-int PythonScriptFactory<T>::refreshClass() {
-	return 0;
-}
-
-template
-class PythonScriptFactory<BaseMind>;
 
 int GetScriptDetails(const Atlas::Message::MapType& script,
 					 const std::string& class_name,

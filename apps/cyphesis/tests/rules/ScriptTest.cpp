@@ -23,7 +23,8 @@
 #define DEBUG
 #endif
 
-#include "rules/Script.h"
+#include "rules/Script_impl.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/SmartPtr.h>
@@ -34,7 +35,7 @@ using Atlas::Message::MapType;
 
 int main() {
 	{
-		Script test_script;
+		Script<LocatedEntity> test_script;
 		OpVector res;
 		Atlas::Objects::Operation::Get op;
 
@@ -49,7 +50,7 @@ int main() {
 	{
 		std::string p, c;
 
-		int ret = Script::getScriptDetails(MapType(),
+		int ret = Script<LocatedEntity>::getScriptDetails(MapType(),
 										   "7d7a418d-52b0-4961-96cb-6030c4f8666a", "RuleHandlertest", p, c);
 		assert(ret == -1);
 
@@ -62,7 +63,7 @@ int main() {
 
 		MapType script;
 		script["name"] = 0x48f9;
-		int ret = Script::getScriptDetails(script,
+		int ret = Script<LocatedEntity>::getScriptDetails(script,
 										   "", "RuleHandlertest", p, c);
 		assert(ret == -1);
 
@@ -75,7 +76,7 @@ int main() {
 
 		MapType script;
 		script["name"] = "foo.bar";
-		int ret = Script::getScriptDetails(script,
+		int ret = Script<LocatedEntity>::getScriptDetails(script,
 										   "", "RuleHandlertest", p, c);
 		assert(ret == -1);
 
@@ -89,7 +90,7 @@ int main() {
 		MapType script;
 		script["name"] = "foo.bar";
 		script["language"] = 0x8c39;
-		int ret = Script::getScriptDetails(script,
+		int ret = Script<LocatedEntity>::getScriptDetails(script,
 										   "", "RuleHandlertest", p, c);
 		assert(ret == -1);
 
@@ -103,7 +104,7 @@ int main() {
 		MapType script;
 		script["name"] = "foo.bar";
 		script["language"] = "ruby"; // not python
-		int ret = Script::getScriptDetails(script,
+		int ret = Script<LocatedEntity>::getScriptDetails(script,
 										   "", "RuleHandlertest", p, c);
 		assert(ret == -1);
 
@@ -117,7 +118,7 @@ int main() {
 		MapType script;
 		script["name"] = "foo.bar";
 		script["language"] = "python";
-		int ret = Script::getScriptDetails(script,
+		int ret = Script<LocatedEntity>::getScriptDetails(script,
 										   "", "RuleHandlertest", p, c);
 		assert(ret == 0);
 
@@ -131,7 +132,7 @@ int main() {
 		MapType script;
 		script["name"] = "foo";
 		script["language"] = "python";
-		int ret = Script::getScriptDetails(script,
+		int ret = Script<LocatedEntity>::getScriptDetails(script,
 										   "", "RuleHandlertest", p, c);
 		assert(ret == -1);
 
@@ -140,4 +141,3 @@ int main() {
 	}
 }
 
-#include "../stubs/common/stublog.h"

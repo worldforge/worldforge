@@ -34,7 +34,7 @@
 #include "server/SystemAccount.h"
 
 #include "common/id.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 #include "common/CommSocket.h"
 #include "../DatabaseNull.h"
 #include "rules/simulation/Entity.h"
@@ -44,8 +44,9 @@
 
 #include <cassert>
 #include <server/Persistence.h>
-#include "rules/AtlasProperties.h"
+#include "rules/simulation/AtlasProperties.h"
 #include "rules/PhysicalProperties.h"
+#include "common/Monitors.h"
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -69,7 +70,7 @@ public:
 
 	void addEntity(const Ref<LocatedEntity>& ent, const Ref<LocatedEntity>& parent) override {
 		ent->m_parent = parent.get();
-		ent->requirePropertyClassFixed<PositionProperty>().data() = WFMath::Point<3>(0, 0, 0);
+		ent->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(0, 0, 0);
 		m_eobjects[ent->getIntId()] = ent;
 	}
 
@@ -79,7 +80,7 @@ public:
 
 		Ref<Entity> e = new Entity(id);
 
-		e->setType(new TypeNode(t));
+		e->setType(new TypeNode<LocatedEntity>(t));
 		addEntity(e, m_gw);
 		return e;
 	}
@@ -234,6 +235,7 @@ void AccountConnectionintegration::test_account_creation() {
 }
 
 int main() {
+	Monitors m;
 	AccountConnectionintegration t;
 
 	return t.run();
@@ -257,8 +259,7 @@ int main() {
 #include "common/Variable.h"
 
 #include <cstdlib>
-#include "../stubs/server/stubBuildid.h"
-#include "../stubs/common/stubconst.h"
+
 
 // globals - why do we have these again?
 
@@ -271,26 +272,16 @@ int CommSocket::flush() {
 }
 
 
-#define STUB_ExternalMind_connectionId
-
 const std::string& ExternalMind::connectionId() {
 	assert(m_link != 0);
 	return m_link->getId();
 }
 
-#define STUB_ExternalMind_linkUp
 
 void ExternalMind::linkUp(Link* c) {
 	m_link = c;
 }
 
-#include "../stubs/rules/simulation/stubExternalMind.h"
-#include "../stubs/rules/simulation/stubMindsProperty.h"
-#include "../stubs/rules/simulation/stubAdminMind.h"
-
-#include "../stubs/server/stubJuncture.h"
-
-#define STUB_Link_send
 
 void Link::send(const OpVector& opVector) const {
 	for (const auto& op: opVector) {
@@ -303,28 +294,13 @@ void Link::send(const Operation& op) const {
 }
 
 
-#include "../stubs/common/stubLink.h"
 #include "server/PropertyRuleHandler.h"
 #include "server/ArchetypeRuleHandler.h"
 #include "server/EntityRuleHandler.h"
 #include "server/OpRuleHandler.h"
-#include "../stubs/server/stubRuleset.h"
-#include "../stubs/common/stubDatabase.h"
-#include "../stubs/server/stubPossessionAuthenticator.h"
-#include "../stubs/server/stubPersistence.h"
-#include "../stubs/common/stublog.h"
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/common/stubVariable.h"
-#include "../stubs/common/stubMonitors.h"
-#include "../stubs/server/stubExternalMindsManager.h"
-#include "../stubs/server/stubExternalMindsConnection.h"
-#include "../stubs/common/stubOperationsDispatcher.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stubPropertyManager.h"
-#include "../stubs/common/stubid.h"
-#include "../stubs/rules/stubPhysicalProperties.h"
+#include "rules/Location_impl.h"
+#include "common/PropertyManager_impl.h"
+#include "rules/PhysicalProperties_impl.h"
 
 #include <cstdio>
 

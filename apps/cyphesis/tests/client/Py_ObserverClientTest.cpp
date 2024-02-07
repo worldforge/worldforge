@@ -32,14 +32,15 @@
 #include "client/cyclient/CyPy_ObserverClient.h"
 
 #include "pythonbase/Python_API.h"
-#include "rules/SimpleTypeStore.h"
+#include "client/SimpleTypeStore.h"
 #include "../NullPropertyManager.h"
 
 #include <cassert>
 #include <rules/simulation/python/CyPy_Server.h>
 #include <rules/python/CyPy_Atlas.h>
-#include <common/Inheritance.h>
+#include <rules/simulation/Inheritance.h>
 #include "pythonbase/PythonMalloc.h"
+#include "client/cyclient/CreatorClient.h"
 
 Atlas::Objects::Factories factories;
 
@@ -52,10 +53,10 @@ static bool stub_wait_fail = false;
 int main() {
 	setupPythonMalloc();
 	{
-		NullPropertyManager propertyManager;
+		NullPropertyManager<MemEntity> propertyManager;
 		SimpleTypeStore typeStore(propertyManager);
 
-		Inheritance inheritance(factories);
+		Inheritance inheritance;
 		boost::asio::io_context io_context;
 
 		init_python_api({&CyPy_Server::init, &CyPy_Atlas::init});
@@ -107,20 +108,6 @@ int main() {
 	return 0;
 }
 
-// stubs
-
-#include "client/cyclient/ObserverClient.h"
-#include "client/cyclient/CreatorClient.h"
-
-#include <Atlas/Objects/Operation.h>
-
-using Atlas::Objects::Entity::RootEntity;
-
-#include "../stubs/client/cyclient/stubCharacterClient.h"
-#include "../stubs/client/cyclient/stubCreatorClient.h"
-
-#define STUB_ObserverClient_setup
-
 int ObserverClient::setup(const std::string& account, const std::string& password, const std::string& avatar) {
 	if (stub_setup_fail) {
 		return -1;
@@ -128,21 +115,14 @@ int ObserverClient::setup(const std::string& account, const std::string& passwor
 	return 0;
 }
 
-#include "../stubs/client/cyclient/stubObserverClient.h"
 
-#define STUB_BaseClient_createCharacter
-
-Ref<CreatorClient> BaseClient::createCharacter(const std::string& type) {
+Ref<CreatorClient> BaseClientLegacy::createCharacter(const std::string& type) {
 	if (stub_createCharacter_fail) {
-		return 0;
+		return nullptr;
 	}
 	return Ref<CreatorClient>(new CreatorClient(1, "2", m_connection, m_typeStore));
 }
 
-#include "../stubs/client/cyclient/stubBaseClient.h"
-
-
-#define STUB_ClientConnection_wait
 
 int ClientConnection::wait() {
 	if (stub_wait_fail) {
@@ -151,7 +131,6 @@ int ClientConnection::wait() {
 	return 0;
 }
 
-#define STUB_ClientConnection_sendAndWaitReply
 
 int ClientConnection::sendAndWaitReply(const Operation& op, OpVector& res) {
 	if (stub_send_wait_fail) {
@@ -162,6 +141,3 @@ int ClientConnection::sendAndWaitReply(const Operation& op, OpVector& res) {
 	}
 	return 0;
 }
-
-#include "../stubs/client/cyclient/stubClientConnection.h"
-

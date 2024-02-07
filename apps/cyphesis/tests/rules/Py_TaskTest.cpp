@@ -36,7 +36,7 @@
 #include <cassert>
 #include <rules/simulation/python/CyPy_Task.h>
 #include <rules/simulation/python/CyPy_UsageInstance.h>
-#include <rules/python/CyPy_LocatedEntity.h>
+#include <rules/simulation/python/CyPy_LocatedEntity_impl.h>
 #include <rules/simulation/python/CyPy_Server.h>
 #include "pythonbase/PythonMalloc.h"
 

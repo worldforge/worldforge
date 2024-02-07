@@ -38,6 +38,7 @@
 #include <cassert>
 #include "pythonbase/PythonMalloc.h"
 #include "pythonbase/Python_API.h"
+#include "common/Property_impl.h"
 
 struct TestTask : public Task {
 	TestTask(UsageInstance usageInstance, Py::Object script) : Task(usageInstance, script) {}
@@ -224,25 +225,13 @@ int main() {
 
 #include "common/log.h"
 
-#include "../stubs/common/stubcustom.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/rules/simulation/stubScriptUtils.h"
-#include "../stubs/common/stubProperty.h"
-//#include "../stubs/rules/simulation/stubActionsProperty.h"
-#include "../stubs/rules/simulation/stubBaseWorld.h"
+#include "rules/Location_impl.h"
 
-#define STUB_Script_operation
 
-HandlerResult Script::operation(const std::string& opname,
-								const Atlas::Objects::Operation::RootOperation& op,
-								OpVector& res) {
+template<>
+HandlerResult Script<LocatedEntity>::operation(const std::string& opname,
+											   const Atlas::Objects::Operation::RootOperation& op,
+											   OpVector& res) {
 	return Tasktest::get_Script_operation_ret();
 }
-
-#include "../stubs/rules/stubScript.h"
-#include "../stubs/common/stublog.h"
-#include "../stubs/rules/simulation/stubActionsProperty.h"
 

@@ -36,6 +36,8 @@
 #include "common/const.h"
 
 #include <cstdio>
+#include "common/Property_impl.h"
+#include "common/Monitors.h"
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -94,6 +96,7 @@ void ConnectionShakerintegration::teardown() {
 }
 
 int main() {
+	Monitors m;
 	ConnectionShakerintegration t;
 	return t.run();
 }
@@ -103,8 +106,8 @@ int main() {
 #include "server/Lobby.h"
 #include "server/Player.h"
 
-#include "common/Inheritance.h"
-#include "../stubs/common/stubLink.h"
+#include "rules/simulation/Inheritance.h"
+
 
 using Atlas::Objects::Root;
 
@@ -123,52 +126,28 @@ int CommSocket::flush() {
 	return 0;
 }
 
-#include "../stubs/server/stubPlayer.h"
-#include "../stubs/server/stubAccount.h"
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubLobby.h"
-#include "../stubs/server/stubPersistence.h"
-
-#define STUB_ExternalMind_connectionId
-
 const std::string& ExternalMind::connectionId() {
 	assert(m_link != 0);
 	return m_link->getId();
 }
 
-#define STUB_ExternalMind_linkUp
-
 void ExternalMind::linkUp(Link* c) {
 	m_link = c;
 }
 
-#include "../stubs/rules/simulation/stubExternalMind.h"
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/server/stubExternalMindsManager.h"
-#include "../stubs/server/stubExternalMindsConnection.h"
-#include "../stubs/common/stubOperationsDispatcher.h"
-#include "../stubs/common/stubTypeNode.h"
 
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stubProperty.h"
+#include "common/TypeNode_impl.h"
 
 
-#ifndef STUB_Inheritance_getClass
-#define STUB_Inheritance_getClass
+#include "rules/Location_impl.h"
+
 
 const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Visibility) const {
 	return noClass;
 }
 
-#endif //STUB_Inheritance_getClass
 
-#ifndef STUB_Inheritance_getType
-#define STUB_Inheritance_getType
-
-const TypeNode* Inheritance::getType(const std::string& parent) const {
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
 	auto I = atlasObjects.find(parent);
 	if (I == atlasObjects.end()) {
 		return 0;
@@ -176,17 +155,10 @@ const TypeNode* Inheritance::getType(const std::string& parent) const {
 	return I->second.get();
 }
 
-#endif //STUB_Inheritance_getType
-
-#include "../stubs/common/stubInheritance.h"
-#include "../stubs/common/stublog.h"
-
 void hash_password(const std::string& pwd, const std::string& salt,
 				   std::string& hash) {
 	salt_length = salt.length();
 }
-
-#include "../stubs/common/stubid.h"
 
 void addToEntity(const Vector3D& v, std::vector<double>& vd) {
 	vd.resize(3);
@@ -197,4 +169,13 @@ void addToEntity(const Vector3D& v, std::vector<double>& vd) {
 
 int check_password(const std::string& pwd, const std::string& hash) {
 	return 0;
+}
+
+long stubId = 1;
+
+RouterId newId() {
+	return RouterId{stubId++};
+}
+
+void Account::store() const {
 }

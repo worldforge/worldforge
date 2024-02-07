@@ -26,6 +26,7 @@
 #include "../PropertyCoverage.h"
 
 #include "rules/simulation/ModeProperty.h"
+#include "rules/PhysicalProperties_impl.h"
 
 int main()
 {
@@ -44,6 +45,3 @@ int main()
 #include "../TestWorld.h"
 
 //stubs
-#include "../stubs/rules/simulation/stubModeDataProperty.h"
-#include "../stubs/modules/stubWeakEntityRef.h"
-#include "../stubs/rules/stubPhysicalProperties.h"

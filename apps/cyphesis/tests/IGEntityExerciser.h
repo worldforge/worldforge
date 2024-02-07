@@ -30,7 +30,7 @@
 
 class IGEntityExerciser : public EntityExerciser {
 protected:
-	TestPropertyManager m_propertyManager;
+	TestPropertyManager<LocatedEntity> m_propertyManager;
 	std::unique_ptr<TestWorld> m_testWorld;
 	Ref<Entity> m_ent;
 public:

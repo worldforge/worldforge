@@ -86,7 +86,7 @@ public:
 	}
 };
 
-Atlas::Objects::Operation::RootOperation stub_CommClient_sent_op(0);
+Atlas::Objects::Operation::RootOperation stub_CommClient_sent_op(nullptr);
 
 int main() {
 	MyTestWorld world;
@@ -244,12 +244,13 @@ int main() {
 
 		Ref<Entity> e(new Entity(RouterId{3}));
 		ExternalMind mind(RouterId{1}, e);
-		auto mindsProp = e->modPropertyClassFixed<MindsProperty>();
-		mindsProp->addMind(&mind);
+		auto& mindsProp = e->requirePropertyClassFixed<MindsProperty>();
+		mindsProp.addMind(&mind);
 		int ret = p.teleportEntity(e.get());
 		assert(ret == 0);
 		assert(stub_CommClient_sent_op.isValid());
-		assert(stub_CommClient_sent_op->getArgs().size() == 1);
+		//Should have an additional possess arg
+		assert(stub_CommClient_sent_op->getArgs().size() == 2);
 	}
 
 	// Entity (external mind, connected)
@@ -263,13 +264,14 @@ int main() {
 		Ref<Entity> e(new Entity(RouterId{3}));
 		ExternalMind mind(RouterId{1}, e);
 		mind.linkUp((Link*) 23);
-		auto mindsProp = e->modPropertyClassFixed<MindsProperty>();
-		mindsProp->addMind(&mind);
+		auto& mindsProp = e->requirePropertyClassFixed<MindsProperty>();
+		mindsProp.addMind(&mind);
 
 		int ret = p.teleportEntity(e.get());
 		assert(ret == 0);
 		assert(stub_CommClient_sent_op.isValid());
-		assert(stub_CommClient_sent_op->getArgs().size() == 1);
+		//Should have an additional possess arg
+		assert(stub_CommClient_sent_op->getArgs().size() == 2);
 	}
 
 	// No arg
@@ -381,8 +383,8 @@ int main() {
 		Ref<Entity> e(new Entity(RouterId{23}));
 		ExternalMind mind(RouterId{1}, e);
 		mind.linkUp((Link*) 23);
-		auto mindsProp = e->modPropertyClassFixed<MindsProperty>();
-		mindsProp->addMind(&mind);
+		auto& mindsProp = e->requirePropertyClassFixed<MindsProperty>();
+		mindsProp.addMind(&mind);
 		int ret = p.teleportEntity(e.get());
 		assert(ret == 0);
 
@@ -432,7 +434,7 @@ int main() {
 
 #include "common/id.h"
 #include "common/log.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 
 #include <Atlas/Negotiate.h>
 
@@ -470,35 +472,20 @@ int CommSocket::flush() {
 	return 0;
 }
 
-#define STUB_ExternalMind_linkUp
-
 void ExternalMind::linkUp(Link* c) {
 	m_link = c;
 }
 
-#include "../stubs/rules/simulation/stubExternalMind.h"
-#include "../stubs/rules/simulation/stubMindsProperty.h"
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/common/stubProperty.h"
 
-
-#define STUB_Link_send
+#include "common/Property_impl.h"
 
 void Link::send(const Operation& op) const {
 	stub_CommClient_sent_op = op;
 }
 
-#include "../stubs/common/stubLink.h"
-#include "../stubs/rules/stubScript.h"
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/rules/stubLocation.h"
 
-
-#ifndef STUB_BaseWorld_getEntity
-#define STUB_BaseWorld_getEntity
+#include "common/TypeNode_impl.h"
+#include "rules/Location_impl.h"
 
 Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const {
 	return getEntity(integerId(id));
@@ -514,8 +501,7 @@ Ref<LocatedEntity> BaseWorld::getEntity(long id) const {
 	}
 }
 
-#endif //STUB_BaseWorld_getEntity
 
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/common/stublog.h"
-#include "../stubs/common/stubid.h"
+
+
+

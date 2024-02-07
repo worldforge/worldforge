@@ -68,8 +68,7 @@ public:
 };
 
 template<typename ContextT>
-inline TestBaseWithContext<ContextT>::~TestBaseWithContext() {
-}
+inline TestBaseWithContext<ContextT>::~TestBaseWithContext() = default;
 
 template<typename ContextT>
 void TestBaseWithContext<ContextT>::addTest(Test<ContextT> t) {

@@ -25,13 +25,13 @@
 
 #include "../PropertyCoverage.h"
 
-#include "rules/SolidProperty.h"
+#include "rules/PhysicalProperties_impl.h"
 
 int main()
 {
-    SolidProperty ap;
+    SolidProperty<LocatedEntity> ap;
 
-    PropertyChecker<SolidProperty> pc(ap);
+    PropertyChecker<SolidProperty<LocatedEntity>> pc(ap);
 
     // Coverage is complete, but it wouldn't hurt to add some bad data here.
 

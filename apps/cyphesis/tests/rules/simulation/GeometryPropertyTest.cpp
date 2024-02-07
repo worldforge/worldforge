@@ -24,14 +24,12 @@
 #endif
 
 #include "../../PropertyCoverage.h"
-#include "../../stubs/common/stubcustom.h"
-#include "../../stubs/common/stubglobals.h"
-#include "../../stubs/rules/stubQuaternionProperty.h"
-#include "../../stubs/rules/simulation/stubOgreMeshDeserializer.h"
-#include "../../stubs/rules/stubBBoxProperty.h"
-#include "../../stubs/common/stubTypeNode.h"
 
+#include "common/TypeNode_impl.h"
 #include "rules/simulation/GeometryProperty.h"
+#include "rules/QuaternionProperty_impl.h"
+#include "../../TestWorld.h"
+
 
 int main() {
 	GeometryProperty ap;
@@ -46,9 +44,4 @@ int main() {
 	return 0;
 }
 
-#include "../../TestWorld.h"
 
-
-#include "../../stubs/common/stubAssetsManager.h"
-#include "../../stubs/common/stubFileSystemObserver.h"
-#include "../../stubs/common/stubInheritance.h"

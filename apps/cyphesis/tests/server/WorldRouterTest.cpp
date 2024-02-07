@@ -29,13 +29,13 @@
 
 #include "server/EntityBuilder.h"
 
-#include "rules/Domain.h"
+#include "rules/simulation/Domain.h"
 #include "rules/simulation/World.h"
 
 #include "common/const.h"
 #include "common/globals.h"
 #include "common/id.h"
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/log.h"
 #include "common/Monitors.h"
 #include "common/operations/Tick.h"
@@ -47,6 +47,7 @@
 #include <cstdlib>
 
 #include <cassert>
+#include "rules/Script_impl.h"
 
 using Atlas::Message::MapType;
 using Atlas::Objects::Entity::Anonymous;
@@ -102,9 +103,9 @@ WorldRoutertest::WorldRoutertest() {
 
 void WorldRoutertest::setup() {
 	m_rootEntity = new Entity(0);
-	m_inheritance = new Inheritance(factories);
+	m_inheritance = new Inheritance();
 	m_eb = new EntityBuilder();
-	test_world = new WorldRouter(m_rootEntity, *m_eb, {});
+	test_world = new WorldRouter(m_rootEntity, *m_eb, []() { return std::chrono::milliseconds(0); });
 }
 
 void WorldRoutertest::teardown() {
@@ -147,8 +148,9 @@ void WorldRoutertest::test_addEntity() {
 	auto id = newId();
 
 	auto ent2 = new Entity(id);
+	ent2->incRef();
 	assert(ent2 != 0);
-	ent2->m_parent = m_rootEntity.get();
+	m_rootEntity->addChild(*ent2);
 	test_world->addEntity(ent2, m_rootEntity);
 }
 
@@ -157,7 +159,7 @@ void WorldRoutertest::test_addEntity_tick() {
 
 	auto ent2 = new Entity(id);
 	assert(ent2 != 0);
-	ent2->m_parent = m_rootEntity.get();
+	m_rootEntity->addChild(*ent2);
 	test_world->addEntity(ent2, m_rootEntity);
 
 	Tick tick;
@@ -172,7 +174,7 @@ void WorldRoutertest::test_addEntity_tick_get() {
 
 	auto ent2 = new Entity(id);
 	assert(ent2 != 0);
-	ent2->m_parent = m_rootEntity.get();
+	m_rootEntity->addChild(*ent2);
 	test_world->addEntity(ent2, m_rootEntity);
 
 	Tick tick;
@@ -188,7 +190,7 @@ void WorldRoutertest::test_delEntity() {
 
 	auto ent2 = new Entity(id);
 	assert(ent2 != 0);
-	ent2->m_parent = m_rootEntity.get();
+	m_rootEntity->addChild(*ent2);
 	test_world->addEntity(ent2, m_rootEntity);
 
 	test_world->delEntity(ent2);
@@ -200,6 +202,7 @@ void WorldRoutertest::test_delEntity_world() {
 }
 
 int main() {
+	Monitors m;
 	WorldRoutertest t;
 
 	return t.run();
@@ -222,20 +225,14 @@ int TICK_NO = -1;
 }
 }
 
-#include "../stubs/rules/simulation/stubWorld.h"
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubDomain.h"
-#include "../stubs/common/stubOperationsDispatcher.h"
-#include "../stubs/common/stubTypeNode.h"
+
+#include "common/TypeNode_impl.h"
 
 template
 class OperationsDispatcher<LocatedEntity>;
 
 template
 struct OpQueEntry<LocatedEntity>;
-
-#define STUB_LocatedEntity_LocatedEntity_DTOR
 
 // Deletions and reference count decrements are required to ensure map
 // memory management works correctly.
@@ -245,7 +242,6 @@ LocatedEntity::~LocatedEntity() {
 	}
 }
 
-#define STUB_LocatedEntity_makeContainer
 
 void LocatedEntity::makeContainer() {
 	if (!m_contains) {
@@ -253,14 +249,6 @@ void LocatedEntity::makeContainer() {
 	}
 }
 
-
-#include "../stubs/rules/stubLocatedEntity.h"
-
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/common/stubLink.h"
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubLobby.h"
-#include "../stubs/common/stubShaker.h"
 
 long integerId(const std::string& id) {
 	long intId = strtol(id.c_str(), 0, 10);
@@ -271,13 +259,12 @@ long integerId(const std::string& id) {
 	return intId;
 }
 
-#include "../stubs/common/stublog.h"
 
 static inline float sqr(float x) {
 	return x * x;
 }
 
-#include "../stubs/rules/stubLocation.h"
+#include "rules/Location_impl.h"
 
 static long idGenerator = 2;
 
@@ -289,8 +276,6 @@ RouterId newId() {
 	return {new_id};
 }
 
-#ifndef STUB_BaseWorld_getEntity
-#define STUB_BaseWorld_getEntity
 
 Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const {
 	return getEntity(integerId(id));
@@ -306,15 +291,8 @@ Ref<LocatedEntity> BaseWorld::getEntity(long id) const {
 	}
 }
 
-#endif //STUB_BaseWorld_getEntity
 
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-
-
-#ifndef STUB_Inheritance_getType
-#define STUB_Inheritance_getType
-
-const TypeNode* Inheritance::getType(const std::string& parent) const {
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
 	auto I = atlasObjects.find(parent);
 	if (I == atlasObjects.end()) {
 		return 0;
@@ -322,20 +300,6 @@ const TypeNode* Inheritance::getType(const std::string& parent) const {
 	return I->second.get();
 }
 
-#endif //STUB_Inheritance_getType
-
-#include "../stubs/common/stubInheritance.h"
-
-
-#include "../stubs/rules/simulation/stubTask.h"
-#include "../stubs/common/stubVariable.h"
-#include "../stubs/common/stubMonitors.h"
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/common/stubPropertyManager.h"
-#include "rules/simulation/CorePropertyManager.h"
-#include "common/Property_impl.h"
-
-#define STUB_EntityBuilder_newEntity
 
 Ref<Entity> EntityBuilder::newEntity(RouterId id,
 									 const std::string& type,
@@ -347,6 +311,8 @@ Ref<Entity> EntityBuilder::newEntity(RouterId id,
 	return 0;
 }
 
-#include "../stubs/server/stubEntityBuilder.h"
-#include "../stubs/modules/stubWeakEntityRef.h"
+
+int EntityBuilder::installFactory(const std::string& class_name, const Root& class_desc, std::unique_ptr<EntityKit> factory) {
+	return 0;
+}
 

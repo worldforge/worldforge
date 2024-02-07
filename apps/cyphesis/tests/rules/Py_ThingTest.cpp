@@ -36,9 +36,9 @@
 #include "rules/simulation/Entity.h"
 
 #include <cassert>
-#include <common/Inheritance.h>
+#include <rules/simulation/Inheritance.h>
 #include "pythonbase/Python_Script_Utils.h"
-#include <rules/python/CyPy_LocatedEntity.h>
+#include <rules/simulation/python/CyPy_LocatedEntity_impl.h>
 #include <rules/simulation/python/CyPy_UsageInstance.h>
 #include <rules/simulation/python/CyPy_Server.h>
 #include <rules/simulation/python/CyPy_Entity.h>
@@ -46,21 +46,22 @@
 #include <rules/python/CyPy_Atlas.h>
 #include <rules/python/CyPy_Physics.h>
 #include <rules/python/CyPy_Common.h>
-#include <rules/python/CyPy_Rules.h>
+#include <rules/python/CyPy_Rules_impl.h>
 #include "pythonbase/PythonMalloc.h"
-
-#include "../stubs/common/stubMonitors.h"
+#include "common/Monitors.h"
 
 Atlas::Objects::Factories factories;
 
 int main() {
 
+	Monitors m;
+
 	setupPythonMalloc();
 	{
-		Inheritance inheritance(factories);
-		TestPropertyManager testPropertyManager;
+		Inheritance inheritance;
+		TestPropertyManager<LocatedEntity> testPropertyManager;
 		init_python_api({&CyPy_Server::init,
-						 &CyPy_Rules::init,
+						 &CyPy_Rules<LocatedEntity, CyPy_LocatedEntity>::init,
 						 &CyPy_Atlas::init,
 						 &CyPy_Physics::init,
 						 &CyPy_Common::init});
@@ -99,7 +100,7 @@ int main() {
 		Ref<Entity> e = new Entity(1);
 
 		{
-			auto prop = std::make_unique<SoftProperty>();
+			auto prop = std::make_unique<SoftProperty<LocatedEntity>>();
 			prop->set("bar");
 			e->setProperty("foo", std::move(prop));
 		}

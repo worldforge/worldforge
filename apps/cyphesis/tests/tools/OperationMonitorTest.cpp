@@ -52,4 +52,3 @@ int main() {
 // stubs
 
 #include "common/log.h"
-#include "../stubs/common/stublog.h"

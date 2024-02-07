@@ -19,11 +19,12 @@
 #ifndef TESTS_NULL_PROPERTY_MANAGER_H
 #define TESTS_NULL_PROPERTY_MANAGER_H
 
-#include "common/PropertyManager.h"
+#include "common/PropertyManager_impl.h"
 
-struct NullPropertyManager : PropertyManager {
+template<typename EntityT>
+struct NullPropertyManager : PropertyManager<EntityT> {
 
-	virtual std::unique_ptr<PropertyBase> addProperty(const std::string& name) const {
+	virtual std::unique_ptr<PropertyCore<EntityT>> addProperty(const std::string& name) const {
 		return {};
 	}
 };

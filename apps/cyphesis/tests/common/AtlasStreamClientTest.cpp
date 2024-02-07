@@ -192,7 +192,6 @@ int main() {
 
 #include "common/debug.h"
 #include "common/system.h"
-#include "../stubs/common/stublog.h"
 
 using Atlas::Message::Element;
 

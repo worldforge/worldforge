@@ -23,8 +23,9 @@
 #define DEBUG
 #endif
 
-#include "common/Property.h"
-#include "../TestEntity.h"
+#include "rules/simulation/LocatedEntity.h"
+#include "common/Property_impl.h"
+#include "../../TestEntity.h"
 
 #include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Objects/Anonymous.h>
@@ -46,7 +47,7 @@ public:
 	virtual MinimalProperty* copy() const { return new MinimalProperty; }
 };
 
-static void exerciseProperty(PropertyBase* pb, LocatedEntity& entity) {
+static void exerciseProperty(PropertyCore<LocatedEntity>* pb, LocatedEntity& entity) {
 	pb->install(entity, "test_prop");
 	pb->apply(entity);
 	MapType map;
@@ -140,14 +141,14 @@ int main() {
 	Element val;
 
 	{
-		PropertyBase* pb = new MinimalProperty;
+		auto* pb = new MinimalProperty;
 		exerciseProperty(pb, entity);
 		delete pb;
 	}
 
 	{
 		long i = 23;
-		PropertyBase* pb = new SoftProperty;
+		auto* pb = new SoftProperty<LocatedEntity>;
 		assert(pb->flags().m_flags == 0);
 		pb->set(i);
 		pb->get(val);
@@ -158,7 +159,7 @@ int main() {
 
 	{
 		long i = 23;
-		PropertyBase* pb = new SoftProperty(i);
+		auto* pb = new SoftProperty<LocatedEntity>(i);
 		assert(pb->flags().m_flags == 0);
 		pb->get(val);
 		assert(val == i);
@@ -168,7 +169,7 @@ int main() {
 
 	{
 		long i = 23;
-		PropertyBase* pb = new Property<int>(0);
+		PropertyBase* pb = new Property<int, LocatedEntity>(0);
 		assert(pb->flags().m_flags == 0);
 		pb->set(i);
 		pb->get(val);
@@ -179,7 +180,7 @@ int main() {
 
 	{
 		long i = 23;
-		PropertyBase* pb = new Property<long>(0);
+		PropertyBase* pb = new Property<long, LocatedEntity>(0);
 		assert(pb->flags().m_flags == 0);
 		pb->set(i);
 		pb->get(val);
@@ -190,7 +191,7 @@ int main() {
 
 	{
 		float f = 17.2f;
-		PropertyBase* pb = new Property<float>(1);
+		PropertyBase* pb = new Property<float, LocatedEntity>(1);
 		assert(pb->flags().m_flags == 1);
 		pb->set(f);
 		pb->get(val);
@@ -201,7 +202,7 @@ int main() {
 
 	{
 		double d = 65.4;
-		PropertyBase* pb = new Property<double>(2);
+		PropertyBase* pb = new Property<double, LocatedEntity>(2);
 		assert(pb->flags().m_flags == 2);
 		pb->set(d);
 		pb->get(val);
@@ -212,7 +213,7 @@ int main() {
 
 	{
 		std::string s = "Test String";
-		PropertyBase* pb = new Property<std::string>(3);
+		PropertyBase* pb = new Property<std::string, LocatedEntity>(3);
 		assert(pb->flags().m_flags == 3);
 		pb->set(s);
 		pb->get(val);
@@ -223,7 +224,7 @@ int main() {
 
 	{
 		long i = 23;
-		PropertyBase* pb = new Property<long>(4);
+		PropertyBase* pb = new Property<long, LocatedEntity>(4);
 		assert(pb->flags().m_flags == 4);
 		pb->set(i);
 		pb->get(val);
@@ -235,7 +236,7 @@ int main() {
 	{
 		MapType m;
 		m.emplace("foo", "bar");
-		PropertyBase* pb = new Property<MapType>(5);
+		PropertyBase* pb = new Property<MapType, LocatedEntity>(5);
 		assert(pb->flags().m_flags == 5);
 		pb->set(m);
 		pb->get(val);
@@ -246,7 +247,7 @@ int main() {
 
 	{
 		long i = 1;
-		PropertyBase* pb = new BoolProperty();
+		PropertyBase* pb = new BoolProperty<LocatedEntity>();
 		assert(pb->flags().m_flags == 0);
 		pb->set(i);
 		pb->get(val);
@@ -259,7 +260,4 @@ int main() {
 	}
 }
 
-#include "../stubs/common/stublog.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/rules/stubLocation.h"
+#include "rules/Location_impl.h"

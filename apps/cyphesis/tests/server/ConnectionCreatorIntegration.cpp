@@ -35,7 +35,7 @@
 
 #include "common/const.h"
 #include "common/log.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 
 #include <Atlas/Objects/Operation.h>
 
@@ -44,7 +44,7 @@
 
 #include <cassert>
 #include <rules/simulation/Entity.h>
-#include <common/TypeNode.h>
+#include <common/TypeNode_impl.h>
 #include <rules/simulation/AdminMind.h>
 #include <rules/simulation/MindsProperty.h>
 #include <common/Monitors.h>
@@ -93,7 +93,7 @@ protected:
 	Connection* m_connection;
 	Ref<Entity> m_gw;
 	Ref<Entity> m_creator;
-	TypeNode* m_creatorType;
+	TypeNode<LocatedEntity>* m_creatorType;
 	std::unique_ptr<TestWorld> m_world;
 public:
 
@@ -160,7 +160,7 @@ void ConnectionCreatorintegration::setup() {
 								  "25251955-7e8c-4043-8a5e-adfb8a1e76f7",
 								  m_id_counter++);
 	m_creator = new Entity(m_id_counter++);
-	m_creatorType = new TypeNode("test_avatar");
+	m_creatorType = new TypeNode<LocatedEntity>("test_avatar");
 	m_creator->setType(m_creatorType);
 	m_world->addEntity(m_creator, m_gw);
 
@@ -315,9 +315,9 @@ int main() {
 #include "server/Lobby.h"
 #include "server/Player.h"
 
-#include "rules/AtlasProperties.h"
-#include "rules/BBoxProperty.h"
-#include "rules/Domain.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/BBoxProperty_impl.h"
+#include "rules/simulation/Domain.h"
 #include "rules/simulation/EntityProperty.h"
 #include "rules/Script.h"
 #include "rules/simulation/StatusProperty.h"
@@ -326,11 +326,11 @@ int main() {
 
 #include "common/CommSocket.h"
 #include "common/id.h"
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/Property_impl.h"
 #include "common/PropertyManager.h"
-#include "../stubs/rules/entityfilter/stubFilter.h"
-#include "../stubs/rules/entityfilter/stubProviderFactory.h"
+
+
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
@@ -339,12 +339,12 @@ using Atlas::Objects::Entity::RootEntity;
 
 bool restricted_flag;
 
-#include "../stubs/server/stubExternalMindsManager.h"
-#include "../stubs/server/stubExternalMindsConnection.h"
 
-#include "../stubs/server/stubPlayer.h"
-#include "../stubs/server/stubAccount.h"
-#include "../stubs/server/stubConnectableRouter.h"
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubLobby.h"
+
+
+
+
+
+
+
 

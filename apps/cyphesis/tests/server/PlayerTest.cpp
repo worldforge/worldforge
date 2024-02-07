@@ -38,6 +38,7 @@
 #include "common/CommSocket.h"
 #include "common/debug.h"
 #include "../NullPropertyManager.h"
+#include "common/Monitors.h"
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Operation.h>
@@ -122,10 +123,10 @@ void Playertest::setup() {
 }
 
 void Playertest::teardown() {
-	delete m_world;
-	delete m_server;
 	delete m_account;
 	delete m_connection;
+	delete m_server;
+	delete m_world;
 }
 
 void Playertest::test_getType() {
@@ -137,9 +138,10 @@ void Playertest::test_getType() {
 
 
 int main() {
+	Monitors m;
 	boost::asio::io_context io_context;
 	EntityBuilder eb;
-	NullPropertyManager propertyManager;
+	NullPropertyManager<LocatedEntity> propertyManager;
 	Ruleset ruleset(eb, io_context, propertyManager);
 
 	Playertest t;
@@ -156,54 +158,48 @@ int main() {
 
 #include "common/globals.h"
 #include "common/id.h"
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 #include "common/log.h"
 
 #include <cstdlib>
 #include <cstdio>
 
-#include "../stubs/server/stubAccount.h"
-#include "../stubs/server/stubConnection.h"
-#include "../stubs/server/stubEntityBuilder.h"
 
-#include "../stubs/server/stubRuleHandler.h"
 
-#include "../stubs/server/stubEntityRuleHandler.h"
-#include "../stubs/server/stubArchetypeRuleHandler.h"
-#include "../stubs/server/stubOpRuleHandler.h"
-#include "../stubs/server/stubPropertyRuleHandler.h"
-#include "../stubs/server/stubConnectableRouter.h"
-#include "../stubs/server/stubRuleset.h"
-#include "../stubs/server/stubJuncture.h"
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubLobby.h"
-#include "../stubs/server/stubPossessionAuthenticator.h"
 
-#include "../stubs/server/stubPersistence.h"
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/common/stubLink.h"
-#include "../stubs/common/stubTypeNode.h"
 
-#define STUB_Inheritance_getClass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include "common/TypeNode_impl.h"
 
 const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Visibility) const {
 	return noClass;
 }
 
 
-#define STUB_Inheritance_getType
-
-const TypeNode* Inheritance::getType(const std::string& parent) const {
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
 	auto I = atlasObjects.find(parent);
 	if (I == atlasObjects.end()) {
 		return 0;
 	}
 	return I->second.get();
 }
-
-#define STUB_Inheritance_hasClass
 
 bool Inheritance::hasClass(const std::string& parent) {
 	auto I = atlasObjects.find(parent);
@@ -213,9 +209,6 @@ bool Inheritance::hasClass(const std::string& parent) {
 	return true;
 }
 
-#include "../stubs/common/stubInheritance.h"
-
-#define STUB_Router_clientError
 
 void Router::clientError(const Operation& op,
 						 const std::string& errstring,
@@ -224,7 +217,6 @@ void Router::clientError(const Operation& op,
 	res.push_back(Atlas::Objects::Operation::Error());
 }
 
-#define STUB_Router_error
 
 void Router::error(const Operation& op,
 				   const std::string& errstring,
@@ -233,18 +225,18 @@ void Router::error(const Operation& op,
 	res.push_back(Atlas::Objects::Operation::Error());
 }
 
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stubProperty.h"
-#include "../stubs/common/stubPropertyManager.h"
+
+
+#include "rules/Location_impl.h"
+#include "common/Property_impl.h"
+#include "common/PropertyManager_impl.h"
 
 RouterId newId() {
 	long new_id = Playertest::newId();
 	return RouterId{new_id};
 }
 
-#include "../stubs/common/stublog.h"
+
 
 bool database_flag = false;
 
@@ -263,4 +255,8 @@ Shaker::Shaker() {
 
 std::string Shaker::generateSalt(size_t length) {
 	return "";
+}
+
+int EntityBuilder::installFactory(const std::string& class_name, const Root& class_desc, std::unique_ptr<EntityKit> factory) {
+	return 0;
 }

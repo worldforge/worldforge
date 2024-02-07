@@ -33,13 +33,13 @@
 #include "server/Connection.h"
 #include "rules/simulation/WorldRouter.h"
 
-#include "rules/Domain.h"
+#include "rules/simulation/Domain.h"
 #include "rules/simulation/Entity.h"
 #include "rules/simulation/ExternalMind.h"
 #include "rules/simulation/MindsProperty.h"
 
 #include "common/CommSocket.h"
-#include "common/Inheritance.h"
+#include "rules/simulation/Inheritance.h"
 
 #include "../TestWorld.h"
 #include "../DatabaseNull.h"
@@ -149,7 +149,7 @@ public:
 	Inheritance* m_inheritance;
 	Ref<Entity> m_rootEntity;
 	EntityBuilder* m_eb;
-	PropertyManager* m_propertyManager;
+	PropertyManager<LocatedEntity>* m_propertyManager;
 };
 
 Accountintegration::Accountintegration() {
@@ -189,9 +189,9 @@ Atlas::Objects::Root composeDeclaration(std::string class_name, std::string pare
 void Accountintegration::setup() {
 	m_rootEntity = new Entity(0);
 	m_persistence = new Persistence(m_database);
-	m_inheritance = new Inheritance(factories);
+	m_inheritance = new Inheritance();
 	m_eb = new EntityBuilder();
-	m_propertyManager = new TestPropertyManager();
+	m_propertyManager = new TestPropertyManager<LocatedEntity>();
 	m_entityRuleHandler = new EntityRuleHandler(*m_eb, *m_propertyManager);
 
 	m_world = new WorldRouter(m_rootEntity, *m_eb, []() { return std::chrono::milliseconds(0); });
@@ -207,7 +207,7 @@ void Accountintegration::setup() {
 
 	{
 		auto decl = composeDeclaration("thing", "game_entity", {});
-		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 		m_entityRuleHandler->install(decl->getId(), decl->getParent(), decl, dependent, reason, changes);
 	}
 }
@@ -403,7 +403,7 @@ int main() {
 	return t.run();
 }
 
-#include "server/EntityFactory.h"
+#include "server/EntityFactory_impl.h"
 #include "server/ArchetypeFactory.h"
 #include "server/Juncture.h"
 #include "server/Persistence.h"
@@ -412,13 +412,12 @@ int main() {
 #include "server/TeleportProperty.h"
 
 #include "rules/simulation/AreaProperty.h"
-#include "rules/AtlasProperties.h"
-#include "rules/BBoxProperty.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/BBoxProperty_impl.h"
 #include "rules/simulation/CalendarProperty.h"
 #include "rules/simulation/EntityProperty.h"
 #include "rules/simulation/LineProperty.h"
 #include "server/MindProperty.h"
-#include "rules/SolidProperty.h"
 #include "rules/simulation/SpawnProperty.h"
 #include "rules/simulation/StatusProperty.h"
 #include "rules/simulation/TasksProperty.h"
@@ -434,11 +433,11 @@ int main() {
 #include "common/globals.h"
 #include "common/log.h"
 #include "common/Monitors.h"
-#include "common/PropertyFactory.h"
+#include "common/PropertyFactory_impl.h"
 #include "common/system.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 #include "common/Variable.h"
 
 
-#include "rules/python/PythonScriptFactory.h"
+#include "rules/python/PythonScriptFactory_impl.h"
 

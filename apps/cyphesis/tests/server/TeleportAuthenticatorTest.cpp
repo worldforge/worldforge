@@ -184,11 +184,6 @@ int main() {
 }
 
 // Stubs
-#include "../stubs/common/stubid.h"
-#include "../stubs/common/stublog.h"
-
-#ifndef STUB_BaseWorld_getEntity
-#define STUB_BaseWorld_getEntity
 
 Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const {
 	return getEntity(integerId(id));
@@ -203,10 +198,6 @@ Ref<LocatedEntity> BaseWorld::getEntity(long id) const {
 		return nullptr;
 	}
 }
-
-#endif //STUB_BaseWorld_getEntity
-
-#include "../stubs/rules/simulation/stubBaseWorld.h"
 
 PendingPossession::PendingPossession(const std::string& id, const std::string& key)
 		: m_entity_id(id),
@@ -227,8 +218,8 @@ void PendingPossession::setValidated() {
 	m_valid = true;
 }
 
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stubRouter.h"
+
+
+#include "rules/Location_impl.h"
+
 

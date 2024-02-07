@@ -30,7 +30,7 @@
 
 #include "rules/simulation/Entity.h"
 
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 
 #include "common/operations/Connect.h"
 #include "common/operations/Monitor.h"
@@ -41,7 +41,7 @@
 #include <Atlas/Message/Element.h>
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Operation.h>
-#include "rules/AtlasProperties.h"
+#include "rules/simulation/AtlasProperties.h"
 #include "rules/PhysicalProperties.h"
 
 IGEntityExerciser::IGEntityExerciser(const Ref<Entity>& e) :
@@ -200,7 +200,7 @@ void IGEntityExerciser::runOperations() {
 		}
 
 		move_arg->setLoc(this->m_ent->getId());
-		addToEntity(this->m_ent->requirePropertyClassFixed<PositionProperty>().data(), move_arg->modifyPos());
+		addToEntity(this->m_ent->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data(), move_arg->modifyPos());
 		this->m_ent->MoveOperation(op, ov);
 		if (!ov.empty()) {
 			assert(ov.front()->getClassNo() == Atlas::Objects::Operation::ERROR_NO);
@@ -396,12 +396,12 @@ void IGEntityExerciser::runOperations() {
 		this->m_ent->UpdateOperation(op, ov);
 		this->flushOperations(ov);
 
-		this->m_ent->requirePropertyClassFixed<VelocityProperty>().data() = Vector3D();
+		this->m_ent->requirePropertyClassFixed<VelocityProperty<LocatedEntity>>().data() = Vector3D();
 		this->m_ent->UpdateOperation(op, ov);
 		this->flushOperations(ov);
 
-		this->m_ent->requirePropertyClassFixed<PositionProperty>().data() = Point3D(0, 0, 0);
-		this->m_ent->requirePropertyClassFixed<VelocityProperty>().data() = Vector3D(1, 0, 0);
+		this->m_ent->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = Point3D(0, 0, 0);
+		this->m_ent->requirePropertyClassFixed<VelocityProperty<LocatedEntity>>().data() = Vector3D(1, 0, 0);
 		this->m_ent->UpdateOperation(op, ov);
 		this->flushOperations(ov);
 	}

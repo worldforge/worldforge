@@ -43,7 +43,6 @@
 #include <BulletCollision/CollisionShapes/btCompoundShape.h>
 #include <BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h>
 
-#include "../../stubs/physics/stubVector3D.h"
 #include <fmt/ostream.h>
 
 template<>

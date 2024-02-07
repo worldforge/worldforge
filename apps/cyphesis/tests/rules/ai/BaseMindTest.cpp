@@ -33,13 +33,14 @@
 #include <Atlas/Objects/SmartPtr.h>
 
 #include <cassert>
-#include "rules/SimpleTypeStore.h"
+#include "client/SimpleTypeStore.h"
+#include "common/Property_impl.h"
 
 class BaseMindtest : public Cyphesis::TestBase {
 protected:
 	Ref<BaseMind> bm;
-	std::unique_ptr<TestPropertyManager> propertyManager;
-	std::unique_ptr<TypeStore> typeStore;
+	std::unique_ptr<TestPropertyManager<MemEntity>> propertyManager;
+	std::unique_ptr<TypeStore<MemEntity>> typeStore;
 public:
 	BaseMindtest();
 
@@ -91,7 +92,7 @@ BaseMindtest::BaseMindtest() {
 }
 
 void BaseMindtest::setup() {
-	propertyManager = std::make_unique<TestPropertyManager>();
+	propertyManager = std::make_unique<TestPropertyManager<MemEntity>>();
 	typeStore = std::make_unique<SimpleTypeStore>(*propertyManager);
 	bm = new BaseMind(1, "2", *typeStore);
 }
@@ -132,8 +133,6 @@ void BaseMindtest::test_sightOperation() {
 	op->setArgs1(Atlas::Objects::Entity::Anonymous());
 	bm->operation(op, res);
 
-	op->setArgs1(Atlas::Objects::Entity::RootEntity(0));
-	bm->operation(op, res);
 
 	op->setArgs1(Atlas::Objects::Operation::Get());
 	bm->operation(op, res);
@@ -149,8 +148,6 @@ void BaseMindtest::test_sightCreateOperation() {
 	sub_op->setArgs1(Atlas::Objects::Entity::Anonymous());
 	bm->operation(op, res);
 
-	sub_op->setArgs1(Atlas::Objects::Entity::Anonymous(0));
-	bm->operation(op, res);
 }
 
 void BaseMindtest::test_sightDeleteOperation() {
@@ -161,9 +158,6 @@ void BaseMindtest::test_sightDeleteOperation() {
 	bm->operation(op, res);
 
 	sub_op->setArgs1(Atlas::Objects::Entity::Anonymous());
-	bm->operation(op, res);
-
-	sub_op->setArgs1(Atlas::Objects::Entity::Anonymous(0));
 	bm->operation(op, res);
 
 	Atlas::Objects::Entity::Anonymous arg;
@@ -182,9 +176,6 @@ void BaseMindtest::test_sightMoveOperation() {
 	sub_op->setArgs1(Atlas::Objects::Entity::Anonymous());
 	bm->operation(op, res);
 
-	sub_op->setArgs1(Atlas::Objects::Entity::Anonymous(0));
-	bm->operation(op, res);
-
 	Atlas::Objects::Entity::Anonymous arg;
 	arg->setId("2");
 	sub_op->setArgs1(arg);
@@ -201,8 +192,6 @@ void BaseMindtest::test_sightSetOperation() {
 	sub_op->setArgs1(Atlas::Objects::Entity::Anonymous());
 	bm->operation(op, res);
 
-	sub_op->setArgs1(Atlas::Objects::Entity::Anonymous(0));
-	bm->operation(op, res);
 
 	Atlas::Objects::Entity::Anonymous arg;
 	arg->setId("2");
@@ -270,31 +259,8 @@ int main() {
 	return t.run();
 }
 
-// stubs
 
-#include "rules/Script.h"
-
-#include "common/Inheritance.h"
-#include "common/log.h"
-#include "common/TypeNode.h"
-
-#include "../../stubs/common/stubcustom.h"
-#include "../../stubs/common/stubRouter.h"
-#include "../../stubs/common/stubInheritance.h"
-#include "../../stubs/rules/ai/stubMemEntity.h"
-#include "../../stubs/rules/stubLocatedEntity.h"
-#include "../../stubs/common/stubProperty.h"
-#include "../../stubs/common/stubPropertyManager.h"
-
-
-#include "../../stubs/rules/stubScript.h"
-#include "../../stubs/rules/stubLocation.h"
-#include "../../stubs/common/stubTypeNode.h"
-#include "../../stubs/rules/ai/stubTypeResolver.h"
-#include "../../stubs/rules/stubSimpleTypeStore.h"
-#include "../../stubs/common/stublog.h"
-#include "../../stubs/common/stubid.h"
-#include "../../stubs/rules/stubPhysicalProperties.h"
+#include "rules/Location_impl.h"
 
 
 static inline WFMath::CoordType sqr(WFMath::CoordType x) {

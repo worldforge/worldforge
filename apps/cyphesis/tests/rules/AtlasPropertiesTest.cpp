@@ -23,7 +23,7 @@
 #define DEBUG
 #endif
 
-#include "rules/AtlasProperties.h"
+#include "rules/simulation/AtlasProperties.h"
 
 #include "../PropertyCoverage.h"
 #include "../TestEntity.h"

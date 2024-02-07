@@ -23,14 +23,12 @@
 #define DEBUG
 #endif
 
-#include "rules/Location.h"
+#include "rules/Location_impl.h"
 
 #include "../TestEntity.h"
 
 #include "common/log.h"
 
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/rules/stubLocatedEntity.h"
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/SmartPtr.h>
@@ -42,7 +40,7 @@
 
 void testDistanceFunctions() {
 	{
-		Location* l = new Location;
+		auto l = new Location<LocatedEntity>;
 		delete l;
 	}
 
@@ -340,7 +338,7 @@ void testDistanceFunctions() {
 
 int main() {
 	{
-		Location testloc;
+		Location<LocatedEntity> testloc;
 
 		assert(!testloc.m_parent);
 		assert(!testloc.pos().isValid());
@@ -351,7 +349,7 @@ int main() {
 	}
 
 	{
-		Location testloc(0);
+		Location<LocatedEntity> testloc(0);
 
 		assert(!testloc.m_parent);
 		assert(!testloc.pos().isValid());
@@ -361,7 +359,7 @@ int main() {
 
 	{
 		Point3D testPos;
-		Location testloc(0, testPos);
+		Location<LocatedEntity> testloc(0, testPos);
 
 		assert(!testPos.isValid());
 
@@ -373,7 +371,7 @@ int main() {
 
 	{
 		Point3D testPos(0, 0, 0);
-		Location testloc(0, testPos);
+		Location<LocatedEntity> testloc(0, testPos);
 
 		assert(testPos.isValid());
 
@@ -386,7 +384,7 @@ int main() {
 	{
 		Point3D testPos(0, 0, 0);
 		Vector3D testVel;
-		Location testloc(0, testPos, testVel);
+		Location<LocatedEntity> testloc(0, testPos, testVel);
 
 		assert(testPos.isValid());
 		assert(!testVel.isValid());
@@ -400,7 +398,7 @@ int main() {
 	{
 		Point3D testPos(0, 0, 0);
 		Vector3D testVel(0, 0, 0);
-		Location testloc(0, testPos, testVel);
+		Location<LocatedEntity> testloc(0, testPos, testVel);
 
 		assert(testPos.isValid());
 		assert(testVel.isValid());
@@ -417,7 +415,7 @@ int main() {
 	}
 
 	{
-		Location testloc;
+		Location<LocatedEntity> testloc;
 
 		testloc.m_bBox = BBox(Point3D(0, 0, 0), Point3D(1, 1, 1));
 
@@ -437,7 +435,7 @@ int main() {
 
 	// Coverage for addToFoo()
 	{
-		Location testLoc;
+		Location<LocatedEntity> testLoc;
 
 		Atlas::Message::MapType msg;
 		Atlas::Objects::Entity::Anonymous ent;
@@ -463,7 +461,7 @@ int main() {
 		testLoc.addToEntity(ret);
 
 		{
-			Location readLocFromMessage;
+			Location<LocatedEntity> readLocFromMessage;
 
 			readLocFromMessage.readFromMessage(msg);
 
@@ -530,7 +528,7 @@ int main() {
 		}
 
 		{
-			Location readLocFromEntity;
+			Location<LocatedEntity> readLocFromEntity;
 
 			readLocFromEntity.readFromEntity(ent);
 
@@ -593,4 +591,3 @@ int main() {
 
 // stubs
 
-#include "../stubs/common/stublog.h"

@@ -26,21 +26,21 @@
 #include "../PropertyCoverage.h"
 
 #include "rules/simulation/StatusProperty.h"
+#include "common/Property_impl.h"
 
-int main()
-{
-    StatusProperty ap;
+int main() {
+	StatusProperty ap;
 
-    PropertyChecker<StatusProperty> pc(ap);
+	PropertyChecker<StatusProperty> pc(ap);
 
-    pc.testDataAppend(-1);
+	pc.testDataAppend(-1);
 
-    // Coverage is complete, but it wouldn't hurt to add some bad data here.
+	// Coverage is complete, but it wouldn't hurt to add some bad data here.
 
-    pc.basicCoverage();
+	pc.basicCoverage();
 
-    // The is no code in operations.cpp to execute, but we need coverage.
-    return 0;
+	// The is no code in operations.cpp to execute, but we need coverage.
+	return 0;
 }
 
 #include "../TestWorld.h"

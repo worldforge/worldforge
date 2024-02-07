@@ -23,15 +23,16 @@
 #define DEBUG
 #endif
 
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 
-#include "common/Property.h"
+#include "common/Property_impl.h"
 #include "common/PropertyManager.h"
+#include "rules/simulation/LocatedEntity.h"
 
 int main() {
-	TypeNode foo("thing");
+	TypeNode<LocatedEntity> foo("thing");
 
-	TypeNode bar("entity");
+	TypeNode<LocatedEntity> bar("entity");
 
 	assert(foo.isTypeOf(&foo));
 	assert(!foo.isTypeOf(&bar));
@@ -48,6 +49,3 @@ int main() {
 }
 
 // stub functions
-
-#include "../stubs/common/stubPropertyManager.h"
-#include "../stubs/common/stublog.h"

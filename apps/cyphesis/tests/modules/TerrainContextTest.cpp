@@ -24,17 +24,16 @@
 #endif
 
 #include "modules/TerrainContext.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <cassert>
 
 int main() {
 	{
-		TerrainContext* tc = new TerrainContext;
+		auto tc = new TerrainContext<LocatedEntity>;
 		delete tc;
 	}
 	return 0;
 }
 
 // stubs
-
-#include "../stubs/modules/stubWeakEntityRef.h"

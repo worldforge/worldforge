@@ -23,7 +23,8 @@
 #define DEBUG
 #endif
 
-#include "common/Inheritance.h"
+#include "common/custom_impl.h"
+#include "rules/simulation/Inheritance.h"
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Factories.h>
@@ -35,37 +36,8 @@ Atlas::Objects::Factories factories;
 }
 
 int main() {
-	Inheritance inheritance(factories);
+	Inheritance inheritance;
 	installCustomOperations(inheritance);
 	installCustomEntities(inheritance);
 	return 0;
 }
-
-// stubs
-#include "../stubs/common/stubInheritance.h"
-
-Root atlasOpDefinition(const std::string& name, const std::string& parent) {
-	Atlas::Objects::Entity::Anonymous r;
-
-	r->setParent(parent);
-	r->setObjtype("op_definition");
-	r->setId(name);
-
-	return r;
-}
-
-Root atlasClass(const std::string& name, const std::string& parent) {
-	Atlas::Objects::Entity::Anonymous r;
-
-	r->setParent(parent);
-	r->setObjtype("class");
-	r->setId(name);
-
-	return r;
-}
-
-#include "../stubs/common/stubcustom.h"
-
-
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/common/stubProperty.h"

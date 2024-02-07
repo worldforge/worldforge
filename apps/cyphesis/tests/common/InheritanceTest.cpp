@@ -25,11 +25,11 @@
 
 #include "../TestBase.h"
 
-#include "common/Inheritance.h"
-#include "common/Property.h"
+#include "rules/simulation/Inheritance.h"
+#include "common/Property_impl.h"
 #include "common/log.h"
 #include "common/OperationRouter.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 
 #include "common/operations/Setup.h"
 
@@ -364,9 +364,7 @@ int main() {
 }
 
 // stubs
-#include "../stubs/common/stubcustom.h"
 
-#define STUB_TypeNode_TypeNode
 
 TypeNode::TypeNode(std::string name,
 				   const Atlas::Objects::Root& d) : m_name(name),
@@ -376,7 +374,6 @@ TypeNode::TypeNode(std::string name,
 													m_parent(0) {
 }
 
-#define STUB_TypeNode_isTypeOf
 
 bool TypeNode::isTypeOf(const std::string& base_type) const {
 	const TypeNode* node = this;
@@ -400,5 +397,4 @@ bool TypeNode::isTypeOf(const TypeNode* base_type) const {
 	return false;
 }
 
-#include "../stubs/common/stubTypeNode.h"
-#include "../stubs/common/stublog.h"
+#include "common/TypeNode_impl.h"

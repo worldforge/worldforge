@@ -217,11 +217,6 @@ int main() {
 
 // stubs
 
-#include "../stubs/common/stublog.h"
-#include "../stubs/common/stubShaker.h"
-#include "../stubs/common/stubglobals.h"
-
-#define STUB_Database_newId
 
 long Database::newId() {
 	if (test_newid_fail) {
@@ -230,14 +225,9 @@ long Database::newId() {
 	return 1;
 }
 
-
-#define STUB_Database_selectSimpleRowBy
-
 DatabaseResult Database::selectSimpleRowBy(const std::string& name, const std::string& column, const std::string& value) {
 	return DatabaseResult(std::unique_ptr<DatabaseNullResultWorker>(new DatabaseNullResultWorker()));
 }
-
-#include "../stubs/common/stubDatabase.h"
 
 
 void encrypt_password(const std::string& pwd, std::string& hash) {

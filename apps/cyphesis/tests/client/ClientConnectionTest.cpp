@@ -108,10 +108,7 @@ int main() {
 }
 
 // stubs
-#define STUB_AtlasStreamClient_poll
 
 int AtlasStreamClient::poll(const std::chrono::steady_clock::duration& duration) {
 	return -1;
 }
-
-#include "../stubs/common/stubAtlasStreamClient.h"

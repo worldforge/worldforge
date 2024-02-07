@@ -31,12 +31,13 @@
 
 #include "server/Ruleset.h"
 #include "server/EntityBuilder.h"
-#include "server/EntityFactory.h"
+#include "server/EntityFactory_impl.h"
 #include "server/ArchetypeFactory.h"
 
-#include "common/Inheritance.h"
-#include "common/TypeNode.h"
+#include "rules/simulation/Inheritance.h"
+#include "common/TypeNode_impl.h"
 #include "../TestPropertyManager.h"
+#include "common/Monitors.h"
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Operation.h>
@@ -75,7 +76,7 @@ struct Rulesetintegration : public Cyphesis::TestBase {
 
 
 	void setup() {
-		m_inheritance = new Inheritance(factories);
+		m_inheritance = new Inheritance();
 		m_entity = new World();
 		m_test_world = new TestWorld(m_entity);
 		m_entity_builder = new ExposedEntityBuilder();
@@ -92,7 +93,7 @@ struct Rulesetintegration : public Cyphesis::TestBase {
 		assert(!Ruleset::hasInstance());
 
 		boost::asio::io_context io_context;
-		TestPropertyManager propertyManager;
+		TestPropertyManager<LocatedEntity> propertyManager;
 		{
 			Ruleset ruleset(*m_entity_builder, io_context, propertyManager);
 
@@ -109,13 +110,13 @@ struct Rulesetintegration : public Cyphesis::TestBase {
 			// Instance of Ruleset with all protected methods exposed
 			// for testing
 			boost::asio::io_context io_context;
-			TestPropertyManager propertyManager;
+			TestPropertyManager<LocatedEntity> propertyManager;
 			Ruleset test_ruleset(*m_entity_builder, io_context, propertyManager);
 
 
 			{
 				auto decl = composeDeclaration("thing", "game_entity", {});
-				std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+				std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 				test_ruleset.installItem(decl->getId(), decl, changes);
 			}
 
@@ -175,7 +176,7 @@ struct Rulesetintegration : public Cyphesis::TestBase {
 			assert(JClass->second.defaultValue.isString());
 			assert(JClass->second.defaultValue.String() == "test_value");
 
-			TypeNode* custom_type_node = custom_type_factory->m_type;
+			TypeNode<LocatedEntity>* custom_type_node = custom_type_factory->m_type;
 			auto K = custom_type_node->defaults().find("test_custom_type_attr");
 			assert(K != custom_type_node->defaults().end());
 			Atlas::Message::Element custom_type_val;
@@ -612,6 +613,7 @@ struct Rulesetintegration : public Cyphesis::TestBase {
 
 
 int main() {
+	Monitors m;
 	// init_python_api("6525a56d-7139-4016-8c1c-c2e77ab50039");
 
 	Rulesetintegration t;
@@ -624,120 +626,13 @@ int main() {
 // stubs
 
 #include "server/Connection.h"
-#include "rules/simulation/CorePropertyManager.h"
-#include "server/Juncture.h"
-#include "server/Player.h"
-#include "server/ServerAccount.h"
-#include "server/ServerRouting.h"
+
 #include "server/Account.h"
 
-#include "rules/python/PythonScriptFactory.h"
-#include "rules/simulation/Task.h"
+#include "rules/python/PythonScriptFactory_impl.h"
 
-#include "../stubs/server/stubAdmin.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/rules/python/stubScriptsProperty.h"
-#include "../stubs/common/stubMonitors.h"
-#include "../stubs/server/stubConnectableRouter.h"
-#include "../stubs/server/stubConnection.h"
-
-#define STUB_CorePropertyManager_addProperty
-
-std::unique_ptr<PropertyBase> CorePropertyManager::addProperty(const std::string& name) const {
-	return std::unique_ptr<PropertyBase>(new SoftProperty);
-}
-
-#include "../stubs/rules/simulation/stubCorePropertyManager.h"
-
-
-#define STUB_ArchetypeFactory_duplicateFactory
-
-std::unique_ptr<ArchetypeFactory> ArchetypeFactory::duplicateFactory() {
-	ArchetypeFactory* f = new ArchetypeFactory(*this);
-	f->m_parent = this;
-	return std::unique_ptr<ArchetypeFactory>(f);
-}
-
-#define STUB_ArchetypeFactory_newEntity
-
-Ref<Entity> ArchetypeFactory::newEntity(RouterId id, const Atlas::Objects::Entity::RootEntity& attributes) {
-	return new Entity(id);
-}
-
-#include "../stubs/server/stubArchetypeFactory.h"
-#include "../stubs/server/stubAccount.h"
-
-class World;
-
-#include "../stubs/server/stubJuncture.h"
-#include "../stubs/server/stubPlayer.h"
-#include "../stubs/server/stubServerAccount.h"
-
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubLobby.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/rules/simulation/stubWorld.h"
-
-#define STUB_LocatedEntity_getAttr
-
-int LocatedEntity::getAttr(const std::string& name,
-						   Atlas::Message::Element& attr) const {
-	auto I = m_properties.find(name);
-	if (I != m_properties.end()) {
-		return I->second.property->get(attr);
-	}
-	if (m_type != nullptr) {
-		auto I = m_type->defaults().find(name);
-		if (I != m_type->defaults().end()) {
-			return I->second->get(attr);
-		}
-	}
-	return -1;
-}
-
-
-#define STUB_LocatedEntity_setType
-
-void LocatedEntity::setType(const TypeNode* t) {
-	m_type = t;
-}
-
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/pythonbase/stubPythonClass.h"
-
-template<class T>
-PythonScriptFactory<T>::PythonScriptFactory(const std::string& package,
-											const std::string& type) :
-		PythonClass(package,
-					type) {
-}
-
-template<class T>
-int PythonScriptFactory<T>::setup() {
-	return 0;
-}
-
-template<class T>
-const std::string& PythonScriptFactory<T>::package() const {
-	return m_package;
-}
-
-template<class T>
-int PythonScriptFactory<T>::addScript(T& entity) const {
-	return 0;
-}
-
-template<class T>
-int PythonScriptFactory<T>::refreshClass() {
-	return 0;
-}
-
-template
-class PythonScriptFactory<LocatedEntity>;
-
-#include "../stubs/rules/simulation/stubTask.h"
-#include "../stubs/rules/simulation/stubExternalMind.h"
+#include "rules/python/CyPy_Location_impl.h"
+#include "rules/simulation/python/CyPy_LocatedEntity_impl.h"
 
 
 sigc::signal<void()> python_reload_scripts;

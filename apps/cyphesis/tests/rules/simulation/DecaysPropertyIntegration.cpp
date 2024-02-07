@@ -95,8 +95,8 @@ int main() {
 
 // stubs
 
-#include "rules/AtlasProperties.h"
-#include "rules/Domain.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/simulation/Domain.h"
 #include "rules/Script.h"
 
 #include "rules/simulation/BaseWorld.h"
@@ -106,11 +106,7 @@ int main() {
 #include "physics/Vector3D.h"
 
 #include "rules/simulation/DomainProperty.h"
-#include "../../stubs/common/stubcustom.h"
-#include "../../stubs/rules/stubDomain.h"
-#include "../../stubs/rules/simulation/stubDomainProperty.h"
-#include "../../stubs/common/stubVariable.h"
-#include "../../stubs/common/stubMonitors.h"
+
 
 void addToEntity(const Point3D& p, std::vector<double>& vd) {
 	vd.resize(3);
@@ -119,9 +115,6 @@ void addToEntity(const Point3D& p, std::vector<double>& vd) {
 	vd[2] = p[2];
 }
 
-
-#ifndef STUB_BaseWorld_getEntity
-#define STUB_BaseWorld_getEntity
 
 Ref <LocatedEntity> BaseWorld::getEntity(const std::string& id) const {
 	return getEntity(integerId(id));
@@ -137,16 +130,6 @@ Ref <LocatedEntity> BaseWorld::getEntity(long id) const {
 	}
 }
 
-#endif //STUB_BaseWorld_getEntity
-
-#include "../../stubs/rules/simulation/stubBaseWorld.h"
 
 
-#include "../../stubs/rules/stubScript.h"
-#include "../../stubs/rules/stubLocation.h"
-#include "../../stubs/rules/stubAtlasProperties.h"
-#include "../../stubs/common/stubLink.h"
-#include "../../stubs/common/stubRouter.h"
-#include "../../stubs/common/stubPropertyManager.h"
-#include "../../stubs/common/stubid.h"
-#include "../../stubs/common/stublog.h"
+#include "rules/Location_impl.h"

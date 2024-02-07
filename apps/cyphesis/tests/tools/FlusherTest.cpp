@@ -246,4 +246,3 @@ int TICK_NO = 1000;
 }
 }
 
-#include "../stubs/common/stublog.h"

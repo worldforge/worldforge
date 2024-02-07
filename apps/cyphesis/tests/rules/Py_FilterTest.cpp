@@ -14,13 +14,17 @@
 #include "pythonbase/Python_API.h"
 
 #include <cassert>
-#include <rules/entityfilter/python/CyPy_EntityFilter.h>
+#include <rules/entityfilter/python/CyPy_EntityFilter_impl.h>
 #include "pythonbase/PythonMalloc.h"
+#include "rules/simulation/LocatedEntity.h"
+
+template
+struct EntityFilter::parser::query_parser<std::string::const_iterator, LocatedEntity>;
 
 int main() {
 	setupPythonMalloc();
 	{
-		init_python_api({&CyPy_EntityFilter::init});
+		init_python_api({&CyPy_EntityFilter<LocatedEntity>::init});
 
 		run_python_string("import entity_filter");
 

@@ -34,22 +34,22 @@
 #include <cassert>
 #include <client/cyclient/CyPy_CreatorClient.h>
 #include <client/cyclient/ClientConnection.h>
-#include "rules/SimpleTypeStore.h"
 #include <rules/simulation/Entity.h>
 #include <rules/simulation/python/CyPy_Server.h>
 #include <rules/python/CyPy_Atlas.h>
 #include <rules/ai/python/CyPy_Ai.h>
 #include <rules/python/CyPy_Common.h>
 #include <rules/python/CyPy_Physics.h>
-#include <rules/python/CyPy_Rules.h>
-#include <common/Inheritance.h>
+#include <rules/python/CyPy_Rules_impl.h>
+#include <rules/simulation/Inheritance.h>
 #include "pythonbase/PythonMalloc.h"
 #include "pycxx/CXX/Objects.hxx"
 #include "../NullPropertyManager.h"
+#include "client/SimpleTypeStore.h"
+#include "rules/ai/python/CyPy_MemEntity.h"
 
 namespace {
 Atlas::Objects::Factories factories;
-Inheritance inheritance(factories);
 }
 
 static bool stub_make_fail = false;
@@ -59,13 +59,13 @@ static bool stub_lookfor_fail = false;
 int main() {
 	setupPythonMalloc();
 	{
-		NullPropertyManager propertyManager;
+		NullPropertyManager<MemEntity> propertyManager;
 		SimpleTypeStore typeStore(propertyManager);
 
 		boost::asio::io_context io_context;
 
 		init_python_api({&CyPy_Server::init,
-						 &CyPy_Rules::init,
+						 &CyPy_Rules<MemEntity, CyPy_MemEntity>::init,
 						 &CyPy_Atlas::init,
 						 &CyPy_Physics::init,
 						 &CyPy_Common::init,
@@ -74,7 +74,7 @@ int main() {
 
 		ClientConnection conn(io_context, factories);
 		Ref<CreatorClient> client(new CreatorClient(1, "2", conn, typeStore));
-		Ref<MemEntity> entity(new MemEntity(1));
+		Ref<MemEntity> entity(new MemEntity(1, nullptr));
 		OpVector res;
 		client->setOwnEntity(res, entity);
 
@@ -104,7 +104,7 @@ int main() {
 		stub_look_fail = false;
 		expect_python_error("c.look(1)", PyExc_TypeError);
 		run_python_string("e=c.look('1')");
-		run_python_string("assert type(e) == server.Thing");
+		run_python_string("assert type(e) == ai.MemEntity");
 		run_python_string("c.look_for(atlas.Entity('1'))");
 		stub_lookfor_fail = true;
 		run_python_string("c.look_for(atlas.Entity('1'))");
@@ -130,50 +130,25 @@ int main() {
 	return 0;
 }
 
-// stubs
-
-#include "client/cyclient/ObserverClient.h"
-#include "client/cyclient/CreatorClient.h"
-
-#include "rules/simulation/Entity.h"
-
-#include "common/id.h"
-
-#include <Atlas/Objects/Operation.h>
-#include <Atlas/Objects/RootEntity.h>
-
-using Atlas::Objects::Entity::RootEntity;
-
-#define STUB_CharacterClient_look
-
-Ref<LocatedEntity> CharacterClient::look(const std::string& id) {
+Ref<MemEntity> CharacterClient::look(const std::string& id) {
 	if (stub_look_fail) {
 		return nullptr;
 	}
-	return Ref<LocatedEntity>(new Entity(RouterId(id)));
+	return Ref<MemEntity>(new MemEntity(RouterId(id), nullptr));
 }
 
-#define STUB_CharacterClient_lookFor
 
-Ref<LocatedEntity> CharacterClient::lookFor(const RootEntity& entity) {
+Ref<MemEntity> CharacterClient::lookFor(const Atlas::Objects::Entity::RootEntity& entity) {
 	if (stub_lookfor_fail) {
 		return nullptr;
 	}
-	return Ref<LocatedEntity>(new Entity(RouterId(entity->getId())));
+	return Ref<MemEntity>(new MemEntity(RouterId(entity->getId()), nullptr));
 }
 
-#define STUB_CreatorClient_make
 
-Ref<LocatedEntity> CreatorClient::make(const RootEntity& entity) {
+Ref<MemEntity> CreatorClient::make(const Atlas::Objects::Entity::RootEntity& entity) {
 	if (stub_make_fail) {
 		return nullptr;
 	}
-	return Ref<LocatedEntity>(new Entity(RouterId(entity->getId())));
+	return Ref<MemEntity>(new MemEntity(RouterId(entity->getId()), nullptr));
 }
-
-#include "../stubs/client/cyclient/stubCreatorClient.h"
-#include "../stubs/client/cyclient/stubCharacterClient.h"
-#include "../stubs/client/cyclient/stubObserverClient.h"
-#include "../stubs/client/cyclient/stubBaseClient.h"
-#include "../stubs/client/cyclient/stubClientConnection.h"
-

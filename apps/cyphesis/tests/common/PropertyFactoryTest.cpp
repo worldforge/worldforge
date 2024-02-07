@@ -23,58 +23,109 @@
 #define DEBUG
 #endif
 
-#include "../TestBase.h"
+#include "../TestBaseWithContext.h"
 
 #include "common/PropertyFactory_impl.h"
-#include "common/Property.h"
 #include "common/Property_impl.h"
+#include "common/Property_impl.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <cassert>
 
-class PropertyFactorytest : public Cyphesis::TestBase {
-public:
-	PropertyFactorytest();
-
-	void setup();
-
-	void teardown();
-
-	template<class PropertyT>
-	void test_factory();
+struct TestContext {
 };
 
-PropertyFactorytest::PropertyFactorytest() {
-	ADD_TEST(PropertyFactorytest::test_factory<Property<int>>);
-	ADD_TEST(PropertyFactorytest::test_factory<Property<long>>);
-	ADD_TEST(PropertyFactorytest::test_factory<Property<double>>);
-	ADD_TEST(PropertyFactorytest::test_factory<Property<std::string>>);
-}
+//Used to bypass macro shenanigans.
+#define COMMOA ,
 
-void PropertyFactorytest::setup() {
-}
+struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
-void PropertyFactorytest::teardown() {
-}
+	Tested() {
 
-template<class PropertyT>
-void PropertyFactorytest::test_factory() {
-	PropertyFactory<PropertyT> pf;
+		ADD_TEST(test_factory < Property<int COMMOA LocatedEntity> COMMOA LocatedEntity >);
+		ADD_TEST(test_factory < Property<long COMMOA LocatedEntity> COMMOA LocatedEntity >);
+		ADD_TEST(test_factory < Property<double COMMOA LocatedEntity> COMMOA LocatedEntity >);
+		ADD_TEST(test_factory < Property<std::string COMMOA LocatedEntity> COMMOA LocatedEntity >);
+	}
 
-	auto p = pf.newProperty();
+	template<typename PropertyT, typename EntityT>
+	void test_factory(const TestContext& context) {
+		PropertyFactory<PropertyT, EntityT> pf;
 
-	ASSERT_TRUE(p);
-	ASSERT_NOT_NULL(dynamic_cast<PropertyT*>(p.get()));
+		auto p = pf.newProperty();
 
-	auto pk = pf.duplicateFactory();
+		ASSERT_TRUE(p);
+		ASSERT_NOT_NULL(dynamic_cast<PropertyT*>(p.get()));
 
-	ASSERT_NOT_NULL(pk.get());
-	ASSERT_NOT_NULL(dynamic_cast<PropertyFactory<PropertyT>*>(pk.get()));
-}
+		auto pk = pf.duplicateFactory();
+
+		ASSERT_NOT_NULL(pk.get());
+		auto casted = dynamic_cast<PropertyFactory<PropertyT, EntityT>*>(pk.get());
+		ASSERT_NOT_NULL(casted);
+	}
+};
+
 
 int main() {
-	PropertyFactorytest t;
+	Tested t;
 
 	return t.run();
 }
 
-#include "../stubs/common/stublog.h"
+template
+class Property<int, LocatedEntity>;
+
+template
+struct PropertyAtlasBase<long>;
+
+template
+struct PropertyAtlasBase<float>;
+
+template
+struct PropertyAtlasBase<double>;
+
+template
+struct PropertyAtlasBase<std::string>;
+
+template
+struct PropertyAtlasBase<Atlas::Message::ListType>;
+
+template
+struct PropertyAtlasBase<Atlas::Message::MapType>;
+
+
+template<>
+void Property<int, LocatedEntity>::set(const Atlas::Message::Element& e) {
+	if (e.isInt()) {
+		this->m_data = static_cast<int>(e.Int());
+	}
+}
+
+template<>
+void Property<long, LocatedEntity>::set(const Atlas::Message::Element& e) {
+	if (e.isInt()) {
+		this->m_data = e.Int();
+	}
+}
+
+template<>
+void Property<float, LocatedEntity>::set(const Atlas::Message::Element& e) {
+	if (e.isNum()) {
+		this->m_data = static_cast<float>(e.asNum());
+	}
+}
+
+template<>
+void Property<double, LocatedEntity>::set(const Atlas::Message::Element& e) {
+	if (e.isNum()) {
+		this->m_data = e.asNum();
+	}
+}
+
+template<>
+void Property<std::string, LocatedEntity>::set(const Atlas::Message::Element& e) {
+	if (e.isString()) {
+		this->m_data = e.String();
+	}
+}
+

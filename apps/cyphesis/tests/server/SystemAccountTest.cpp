@@ -34,11 +34,7 @@
 #include "rules/simulation/Entity.h"
 
 #include "common/CommSocket.h"
-
-#include <Atlas/Objects/RootEntity.h>
-#include <Atlas/Objects/SmartPtr.h>
-
-#include <cassert>
+#include "common/Monitors.h"
 
 using Atlas::Message::MapType;
 using Atlas::Objects::Root;
@@ -90,10 +86,10 @@ void SystemAccounttest::setup() {
 }
 
 void SystemAccounttest::teardown() {
-	delete m_world;
-	delete m_server;
 	delete m_account;
 	delete m_connection;
+	delete m_server;
+	delete m_world;
 }
 
 void SystemAccounttest::test_getType() {
@@ -107,6 +103,7 @@ void SystemAccounttest::test_store() {
 }
 
 int main() {
+	Monitors m;
 	SystemAccounttest t;
 
 	return t.run();
@@ -114,20 +111,11 @@ int main() {
 
 // stubs
 
-#include "server/Connection.h"
 #include "server/Persistence.h"
 #include "server/PossessionAuthenticator.h"
 
 #include "common/globals.h"
-#include "common/id.h"
-#include "common/log.h"
 
-#include <cstdlib>
-
-#include "../stubs/server/stubAccount.h"
-#include "../stubs/rules/simulation/stubExternalMind.h"
-
-#define STUB_Admin_Admin_DTOR
 
 Admin::~Admin() {
 	if (m_monitorConnection.connected()) {
@@ -136,22 +124,9 @@ Admin::~Admin() {
 
 }
 
-#include "../stubs/server/stubAdmin.h"
-#include "../stubs/server/stubConnection.h"
 
-#include "../stubs/server/stubConnectableRouter.h"
-#include "../stubs/server/stubServerRouting.h"
-#include "../stubs/server/stubLobby.h"
-#include "../stubs/server/stubPossessionAuthenticator.h"
-#include "../stubs/server/stubPersistence.h"
-#include "../stubs/rules/stubLocatedEntity.h"
-#include "../stubs/rules/simulation/stubEntity.h"
-#include "../stubs/rules/simulation/stubThing.h"
-#include "../stubs/common/stubLink.h"
-#include "../stubs/rules/simulation/stubBaseWorld.h"
-#include "../stubs/common/stubRouter.h"
-#include "../stubs/rules/stubLocation.h"
-#include "../stubs/common/stublog.h"
+#include "rules/Location_impl.h"
+
 
 bool database_flag = false;
 

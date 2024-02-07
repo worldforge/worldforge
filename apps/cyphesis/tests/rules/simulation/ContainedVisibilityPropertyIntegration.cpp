@@ -28,7 +28,10 @@
 
 #include "rules/simulation/ContainedVisibilityProperty.h"
 
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
+#include "common/Property_impl.h"
+#include "common/PropertyManager_impl.h"
+
 
 int main() {
 
@@ -74,22 +77,15 @@ int main() {
 
 // stubs
 
-#include "../../stubs/common/stubProperty.h"
 
-#include "rules/AtlasProperties.h"
-#include "rules/Domain.h"
+#include "rules/simulation/AtlasProperties.h"
+#include "rules/simulation/Domain.h"
 #include "rules/Script.h"
 
 #include "common/log.h"
 #include "common/PropertyManager.h"
 
 #include "rules/simulation/DomainProperty.h"
-#include "../../stubs/common/stubcustom.h"
-#include "../../stubs/rules/stubDomain.h"
-#include "../../stubs/rules/simulation/stubDomainProperty.h"
-#include "../../stubs/common/stubVariable.h"
-#include "../../stubs/common/stubMonitors.h"
-#include "../../stubs/common/stubTypeNode.h"
 
 
 void addToEntity(const Point3D& p, std::vector<double>& vd) {
@@ -99,15 +95,6 @@ void addToEntity(const Point3D& p, std::vector<double>& vd) {
 	vd[2] = p[2];
 }
 
-#include "../../stubs/rules/simulation/stubBaseWorld.h"
+#include "rules/Location_impl.h"
+#include "rules/PhysicalProperties_impl.h"
 
-#include "../../stubs/rules/stubScript.h"
-#include "../../stubs/rules/stubLocation.h"
-#include "../../stubs/rules/stubAtlasProperties.h"
-#include "../../stubs/common/stubPropertyManager.h"
-#include "../../stubs/common/stubLink.h"
-#include "../../stubs/common/stubRouter.h"
-#include "../../stubs/common/stubid.h"
-#include "../../stubs/common/stublog.h"
-#include "../../stubs/rules/stubModifier.h"
-#include "../../stubs/rules/stubPhysicalProperties.h"

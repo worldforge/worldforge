@@ -47,5 +47,5 @@ int main()
 
 
 
-#include "rules/Location.h"
+#include "rules/Location_impl.h"
 
