@@ -18,52 +18,46 @@
 
 #include "pythonbase/WrapperBase.h"
 
-std::string verifyString(const Py::Object& object, const std::string& message)
-{
-    if (!object.isString()) {
-        throw Py::TypeError(message + fmt::format(" Got {}.", object.type().as_string()));
-    }
-    return Py::String(object);
+std::string verifyString(const Py::Object& object, const std::string& message) {
+	if (!object.isString()) {
+		throw Py::TypeError(message + fmt::format(" Got {}.", object.type().as_string()));
+	}
+	return Py::String(object);
 }
 
-float verifyNumeric(const Py::Object& object, const std::string& message)
-{
-    if (!object.isNumeric()) {
-        throw Py::TypeError(message + fmt::format(" Got {}.", object.type().as_string()));
-    }
-    return static_cast<float>(Py::Float(object));
+float verifyNumeric(const Py::Object& object, const std::string& message) {
+	if (!object.isNumeric()) {
+		throw Py::TypeError(message + fmt::format(" Got {}.", object.type().as_string()));
+	}
+	return static_cast<float>(Py::Float(object));
 }
 
-long verifyLong(const Py::Object& object, const std::string& message)
-{
-    if (!object.isNumeric()) {
-        throw Py::TypeError(message + fmt::format(" Got {}.", object.type().as_string()));
-    }
-    return Py::Long(object);
+long verifyLong(const Py::Object& object, const std::string& message) {
+	if (!object.isNumeric()) {
+		throw Py::TypeError(message + fmt::format(" Got {}.", object.type().as_string()));
+	}
+	return Py::Long(object);
 
 }
 
-float verifyFloat(const Py::Object& object, const std::string& message)
-{
-    if (!object.isNumeric()) {
-        throw Py::TypeError(message + fmt::format(" Got {}.", object.type().as_string()));
-    }
-    return static_cast<float>(Py::Float(object));
+float verifyFloat(const Py::Object& object, const std::string& message) {
+	if (!object.isNumeric()) {
+		throw Py::TypeError(message + fmt::format(" Got {}.", object.type().as_string()));
+	}
+	return static_cast<float>(Py::Float(object));
 
 }
 
-Py::List verifyList(const Py::Object& object, const std::string& message)
-{
-    if (!object.isList()) {
-        throw Py::TypeError(message + fmt::format(" Got {}.", object.type().as_string()));
-    }
-    return Py::List(object);
+Py::List verifyList(const Py::Object& object, const std::string& message) {
+	if (!object.isList()) {
+		throw Py::TypeError(message + fmt::format(" Got {}.", object.type().as_string()));
+	}
+	return Py::List(object);
 }
 
-Py::Dict verifyDict(const Py::Object& object, const std::string& message)
-{
-    if (!object.isDict()) {
-        throw Py::TypeError(message + fmt::format(" Got {}.", object.type().as_string()));
-    }
-    return Py::Dict(object);
+Py::Dict verifyDict(const Py::Object& object, const std::string& message) {
+	if (!object.isDict()) {
+		throw Py::TypeError(message + fmt::format(" Got {}.", object.type().as_string()));
+	}
+	return Py::Dict(object);
 }

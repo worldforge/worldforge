@@ -19,107 +19,176 @@
 #ifndef CYPHESIS_WRAPPERBASE_H
 #define CYPHESIS_WRAPPERBASE_H
 
-#include <common/log.h>
+#include "common/log.h"
 #include "pycxx/CXX/Extensions.hxx"
+#include <functional>
 
 template<typename TValue, typename TPythonClass, typename TClassInstance=Py::PythonClassInstance>
-class WrapperBase : public Py::PythonClass<TPythonClass, TClassInstance>
-{
-    public:
+class WrapperBase : public Py::PythonClass<TPythonClass, TClassInstance> {
+public:
 
-        typedef TValue value_type;
+	typedef TValue value_type;
 
-        WrapperBase(TClassInstance* self, const Py::Tuple& args, const Py::Dict& kwds);
+	WrapperBase(TClassInstance* self, const Py::Tuple& args, const Py::Dict& kwds);
 
-        static Py::Object wrap(TValue value);
+	static Py::Object wrap(TValue value);
 
-        static TValue& value(const Py::Object& object);
+	static TValue& value(const Py::Object& object);
 
-        TValue m_value;
+	TValue m_value;
 
-        void reinit(Py::Tuple&/*args*/, Py::Dict&/*kwds*/ )
-        {
-            //noop
-        }
-        //Py::Object rich_compare(const Py::Object&, int) override;
+	void reinit(Py::Tuple&/*args*/, Py::Dict&/*kwds*/ ) {
+		//noop
+	}
+	//Py::Object rich_compare(const Py::Object&, int) override;
 
-    protected:
-        WrapperBase(TClassInstance* self, TValue value);
+	template<Py::Object( * func)(TValue&)>
+	static void register_method(const char* methodName, const char* doc = nullptr) {
+		PyCFunction fn = [](PyObject* _self, PyObject* _a) -> PyObject* {
+			try {
+				auto* self_python = reinterpret_cast< Py::PythonClassInstance* >( _self );
+				auto* self = reinterpret_cast< TPythonClass* >( self_python->m_pycxx_object );
+				auto r = std::invoke(func, self->m_value);
+				return Py::new_reference_to(r.ptr());
+			}
+			catch (Py::BaseException&) {
+				return nullptr;
+			}
+		};
 
-        /**
-         * This differs from Py::PythonClass::extension_object_new in that it will create the C++ instance directly.
-         */
-        static PyObject* wrapper_extension_object_new(PyTypeObject* subtype, PyObject* args_, PyObject* kwds_)
-        {
+
+		behaviors().set_methods(Py::PythonClass<TPythonClass, TClassInstance>::methodTable().add_method(methodName, fn, METH_NOARGS, doc));
+	};
+
+	template<Py::Object( * func)(TValue&, const Py::Tuple&)>
+	static void register_method(const char* methodName, const char* doc = nullptr) {
+		PyCFunction fn = [](PyObject* _self, PyObject* _a) -> PyObject* {
+			try {
+				auto* self_python = reinterpret_cast< Py::PythonClassInstance* >( _self );
+				auto* self = reinterpret_cast< TPythonClass* >( self_python->m_pycxx_object );
+				Py::Tuple a(_a);
+				auto r = std::invoke(func, self->m_value, a);
+				return Py::new_reference_to(r.ptr());
+			}
+			catch (Py::BaseException&) {
+				return nullptr;
+			}
+		};
+
+
+		behaviors().set_methods(Py::PythonClass<TPythonClass, TClassInstance>::methodTable().add_method(methodName, fn, METH_VARARGS, doc));
+	};
+
+
+	template<Py::Object( TPythonClass::*func)(const Py::Tuple&)>
+	static void register_method(const char* methodName, const char* doc = nullptr) {
+		PyCFunction fn = [](PyObject* _self, PyObject* _a) -> PyObject* {
+			try {
+				auto* self_python = reinterpret_cast< Py::PythonClassInstance* >( _self );
+				auto* self = reinterpret_cast< TPythonClass* >( self_python->m_pycxx_object );
+				Py::Tuple a(_a);
+				auto r = std::invoke(func, self, a);
+				return Py::new_reference_to(r.ptr());
+			}
+			catch (Py::BaseException&) {
+				return nullptr;
+			}
+		};
+
+
+		behaviors().set_methods(Py::PythonClass<TPythonClass, TClassInstance>::methodTable().add_method(methodName, fn, METH_VARARGS, doc));
+	};
+
+	template<Py::Object( TPythonClass::*func)()>
+	static void register_method(const char* methodName, const char* doc = nullptr) {
+		PyCFunction fn = [](PyObject* _self, PyObject*) -> PyObject* {
+			try {
+				auto* self_python = reinterpret_cast< Py::PythonClassInstance* >( _self );
+				auto* self = reinterpret_cast< TPythonClass* >( self_python->m_pycxx_object );
+				auto r = std::invoke(func, self);
+				return Py::new_reference_to(r.ptr());
+			}
+			catch (Py::BaseException&) {
+				return nullptr;
+			}
+		};
+
+
+		behaviors().set_methods(Py::PythonClass<TPythonClass, TClassInstance>::methodTable().add_method(methodName, fn, METH_NOARGS, doc));
+	};
+
+
+protected:
+	WrapperBase(TClassInstance* self, TValue value);
+
+	/**
+	 * This differs from Py::PythonClass::extension_object_new in that it will create the C++ instance directly.
+	 */
+	static PyObject* wrapper_extension_object_new(PyTypeObject* subtype, PyObject* args_, PyObject* kwds_) {
 #ifdef PYCXX_DEBUG
-            std::cout << "extension_object_new()" << std::endl;
+		std::cout << "extension_object_new()" << std::endl;
 #endif
-            auto* o = reinterpret_cast<TClassInstance*>( subtype->tp_alloc(subtype, 0));
-            if (o == nullptr) {
-                return nullptr;
-            }
+		auto* o = reinterpret_cast<TClassInstance*>( subtype->tp_alloc(subtype, 0));
+		if (o == nullptr) {
+			return nullptr;
+		}
 
-            Py::Tuple args(args_);
-            Py::Dict kwds;
-            if (kwds_ != nullptr) {
-                kwds = kwds_;
-            }
+		Py::Tuple args(args_);
+		Py::Dict kwds;
+		if (kwds_ != nullptr) {
+			kwds = kwds_;
+		}
 
-            //Create the C++ object here already, before __init__ is called. This is to guarantee that there's
-            //an C++ instance even if a subclass forgets to call __init__ on the superclass.
-            try {
-                o->m_pycxx_object = new TPythonClass(o, args, kwds);
-                TClassInstance::_new(o);
-            } catch (const Py::BaseException& e) {
-                spdlog::warn("Error when creating Python class {}.", subtype->tp_name);
-                subtype->tp_free(o);
-                return nullptr;
-            }
+		//Create the C++ object here already, before __init__ is called. This is to guarantee that there's
+		//an C++ instance even if a subclass forgets to call __init__ on the superclass.
+		try {
+			o->m_pycxx_object = new TPythonClass(o, args, kwds);
+			TClassInstance::_new(o);
+		} catch (const Py::BaseException& e) {
+			spdlog::warn("Error when creating Python class {}.", subtype->tp_name);
+			subtype->tp_free(o);
+			return nullptr;
+		}
 
 
-            auto* self = reinterpret_cast<PyObject*>( o );
+		auto* self = reinterpret_cast<PyObject*>( o );
 
 #ifdef PYCXX_DEBUG
-            std::cout << "extension_object_new() => self=0x" << std::hex << reinterpret_cast< unsigned long >( self ) << std::dec << std::endl;
+		std::cout << "extension_object_new() => self=0x" << std::hex << reinterpret_cast< unsigned long >( self ) << std::dec << std::endl;
 #endif
-            return self;
-        }
+		return self;
+	}
 
-        static Py::PythonType& behaviors()
-        {
-            //We need to replace the standard "new" function with our own.
-            auto& type = Py::PythonClass<TPythonClass, TClassInstance>::behaviors();
-            type.set_tp_new(wrapper_extension_object_new);
-            return type;
-        }
+	static Py::PythonType& behaviors() {
+		//We need to replace the standard "new" function with our own.
+		auto& type = Py::PythonClass<TPythonClass, TClassInstance>::behaviors();
+		type.set_tp_new(wrapper_extension_object_new);
+		return type;
+	}
 
 };
 
 
 template<typename TValue, typename TPythonClass, typename TClassInstance>
 WrapperBase<TValue, TPythonClass, TClassInstance>::WrapperBase(TClassInstance* self, const Py::Tuple& args, const Py::Dict& kwds)
-        : Py::PythonClass<TPythonClass, TClassInstance>::PythonClass(self, args, kwds)
-{}
+		: Py::PythonClass<TPythonClass, TClassInstance>::PythonClass(self, args, kwds) {}
 
 template<typename TValue, typename TPythonClass, typename TClassInstance>
 WrapperBase<TValue, TPythonClass, TClassInstance>::WrapperBase(TClassInstance* self, TValue value)
-        : Py::PythonClass<TPythonClass, TClassInstance>::PythonClass(self), m_value(std::move(value))
-{}
+		: Py::PythonClass<TPythonClass, TClassInstance>::PythonClass(self), m_value(std::move(value)) {}
 
 template<typename TValue, typename TPythonClass, typename TClassInstance>
-Py::Object WrapperBase<TValue, TPythonClass, TClassInstance>::wrap(TValue value)
-{
-    //Use the base class extension_object_new since it will only allocate memory and won't create the C++ instance
-    auto obj = Py::PythonClass<TPythonClass, TClassInstance>::extension_object_new(Py::PythonClass<TPythonClass, TClassInstance>::type_object(), nullptr, nullptr);
-    reinterpret_cast<TClassInstance*>(obj)->m_pycxx_object = new TPythonClass(reinterpret_cast<TClassInstance*>(obj), std::move(value));
-    return Py::PythonClassObject<TPythonClass>(obj, true);
+Py::Object WrapperBase<TValue, TPythonClass, TClassInstance>::wrap(TValue value) {
+	//Use the base class extension_object_new since it will only allocate memory and won't create the C++ instance
+	auto obj = Py::PythonClass<TPythonClass, TClassInstance>::extension_object_new(Py::PythonClass<TPythonClass, TClassInstance>::type_object(), nullptr, nullptr);
+	reinterpret_cast<TClassInstance*>(obj)->m_pycxx_object = new TPythonClass(reinterpret_cast<TClassInstance*>(obj), std::move(value));
+	return Py::PythonClassObject<TPythonClass>(obj, true);
 }
 
 
 template<typename TValue, typename TPythonClass, typename TClassInstance>
-TValue& WrapperBase<TValue, TPythonClass, TClassInstance>::value(const Py::Object& object)
-{
-    return Py::PythonClassObject<TPythonClass>::getCxxObject(object)->m_value;
+TValue& WrapperBase<TValue, TPythonClass, TClassInstance>::value(const Py::Object& object) {
+	return Py::PythonClassObject<TPythonClass>::getCxxObject(object)->m_value;
 }
 
 //template<typename TValue, typename TPythonClass>
@@ -152,15 +221,14 @@ Py::List verifyList(const Py::Object& object, const std::string& message = "Must
 Py::Dict verifyDict(const Py::Object& object, const std::string& message = "Must be dict.");
 
 template<typename T>
-typename T::value_type& verifyObject(const Py::Object& object, const std::string& message = "")
-{
-    if (!T::check(object)) {
-        if (message.empty()) {
-            throw Py::TypeError(fmt::format("Must be {}. Instead got {}", T::type_object()->tp_name, object.type().as_string()));
-        }
-        throw Py::TypeError(message);
-    }
-    return T::value(object);
+typename T::value_type& verifyObject(const Py::Object& object, const std::string& message = "") {
+	if (!T::check(object)) {
+		if (message.empty()) {
+			throw Py::TypeError(fmt::format("Must be {}. Instead got {}", T::type_object()->tp_name, object.type().as_string()));
+		}
+		throw Py::TypeError(message);
+	}
+	return T::value(object);
 }
 
 

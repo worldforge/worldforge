@@ -108,22 +108,18 @@ struct LogWriter : public WrapperBase<spdlog::level::level_enum, LogWriter>
         return Py::None();
     }
 
-    PYCXX_VARARGS_METHOD_DECL(LogWriter, write)
-
     Py::Object flush()
     {
         return Py::None();
     }
-
-    PYCXX_NOARGS_METHOD_DECL(LogWriter, flush)
 
     static void init_type()
     {
         behaviors().name("LogWriter");
         behaviors().doc("");
 
-        PYCXX_ADD_NOARGS_METHOD(flush, flush, "");
-        PYCXX_ADD_VARARGS_METHOD(write, write, "");
+		register_method<&LogWriter::flush>("flush", "");
+		register_method<&LogWriter::write>("write", "");
 
         behaviors().readyType();
     }
