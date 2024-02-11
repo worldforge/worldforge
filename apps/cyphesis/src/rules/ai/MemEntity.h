@@ -32,6 +32,7 @@
 #include <chrono>
 #include <any>
 #include <set>
+#include <optional>
 
 
 /// \brief Flag indicating entity has been destroyed
