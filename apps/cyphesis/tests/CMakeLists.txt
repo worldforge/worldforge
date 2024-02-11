@@ -65,6 +65,7 @@ macro(wf_add_test TEST_FILE)
 
     target_compile_definitions(${TEST_NAME} PUBLIC TESTDATADIR=\"${CMAKE_CURRENT_SOURCE_DIR}/data\")
 
+    #We load all symbols and allow for multiple instances. This allows us to override specific symbols in our tests.
     target_link_options(${TEST_NAME} PUBLIC "LINKER:-z,muldefs")
     target_link_libraries(${TEST_NAME} PUBLIC
             cyphesis-rulesai_python
@@ -102,6 +103,8 @@ macro(wf_add_test TEST_FILE)
 
     #If Python has been built statically (as with Conan) we need to enable exports so the dynamic loading works.
     set_property(TARGET ${TEST_NAME} PROPERTY ENABLE_EXPORTS 1)
+    #If we're running with AddressSanitizer we should disable One Definition Rule violations, since the way we do stubs violates this.
+    set_tests_properties(${TEST_NAME} PROPERTIES ENVIRONMENT ASAN_OPTIONS=detect_odr_violation=0)
 endmacro()
 
 macro(wf_add_benchmark TEST_FILE)
