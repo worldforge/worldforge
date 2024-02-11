@@ -5,7 +5,7 @@
             <map name="geometry">
                 <map name="default">
                     <string name="path">dural/plants/mushrooms/model/silkfoot.mesh</string>
-                    <string name="type">box</string>
+                    <string name="type">cylinder-y</string>
                 </map>
             </map>
             <map name="present">
@@ -43,7 +43,7 @@
             <map name="geometry">
                 <map name="default">
                     <string name="path">dural/plants/mushrooms/model/amanita.mesh</string>
-                    <string name="type">box</string>
+                    <string name="type">cylinder-y</string>
                 </map>
             </map>
             <map name="present">
@@ -66,7 +66,7 @@
             <map name="geometry">
                 <map name="default">
                     <string name="path">dural/plants/mushrooms/model/bluemoon.mesh</string>
-                    <string name="type">box</string>
+                    <string name="type">cylinder-y</string>
                 </map>
             </map>
             <map name="present">
@@ -89,7 +89,7 @@
             <map name="geometry">
                 <map name="default">
                     <string name="path">dural/plants/mushrooms/model/galerina.mesh</string>
-                    <string name="type">box</string>
+                    <string name="type">cylinder-y</string>
                 </map>
             </map>
             <map name="present">
