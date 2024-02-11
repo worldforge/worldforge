@@ -18,7 +18,7 @@
 #include "ModeProperty.h"
 #include "rules/simulation/LocatedEntity.h"
 
-#include "rules/QuaternionProperty.h"
+#include "rules/QuaternionProperty_impl.h"
 
 #include "rules/simulation/BaseWorld.h"
 #include "ModeDataProperty.h"
@@ -27,7 +27,7 @@
 #include <Atlas/Objects/Operation.h>
 #include <wfmath/atlasconv.h>
 #include "rules/simulation/AtlasProperties.h"
-#include "rules/PhysicalProperties.h"
+#include "rules/PhysicalProperties_impl.h"
 
 
 ModeProperty::ModeProperty()

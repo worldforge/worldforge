@@ -17,6 +17,7 @@
  */
 
 #include "ModeDataProperty.h"
+#include "common/Property_impl.h"
 #include "BaseWorld.h"
 #include "rules/simulation/LocatedEntity.h"
 

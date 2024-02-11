@@ -18,6 +18,7 @@
 
 #include "TypeUpdateCoordinator.h"
 #include "rules/simulation/LocatedEntity.h"
+#include "common/TypeNode_impl.h"
 #include "Account.h"
 #include "common/debug.h"
 #include <Atlas/Objects/Operation.h>

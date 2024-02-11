@@ -26,6 +26,8 @@
 #include "rules/simulation/EntityProperty.h"
 
 #include "rules/simulation/Inheritance.h"
+#include "rules/EntityLocation_impl.h"
+#include "modules/WeakEntityRef_impl.h"
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Operation.h>

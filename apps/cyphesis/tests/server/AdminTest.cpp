@@ -1301,6 +1301,9 @@ void Link::send(const Operation& op) const {
 	Admintest::set_Link_sent_called();
 }
 
+void Link::disconnect() {
+}
+
 
 Inheritance::Inheritance(Atlas::Objects::Factories& factories)
 		: Singleton(), noClass(0), m_factories(factories) {

@@ -130,7 +130,26 @@ public:
 	virtual void value(Atlas::Message::Element& value, const T& parent_value) const = 0;
 
 	const std::type_info* getType() const override;
+
+	bool isType(const std::type_info& typeInfo) const;
+
+	template<typename TypeT>
+	bool isType() const;
 };
+
+template<typename T>
+bool Consumer<T>::isType(const std::type_info& typeInfo) const {
+	auto type = getType();
+	return type != nullptr && *type == typeInfo;
+}
+
+template<typename T>
+template<typename TypeT>
+bool Consumer<T>::isType() const {
+	auto type = getType();
+	return type != nullptr && *type == typeid(TypeT);
+}
+
 
 template<typename T>
 const std::type_info* Consumer<T>::getType() const {

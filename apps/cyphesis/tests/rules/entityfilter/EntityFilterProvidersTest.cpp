@@ -484,19 +484,28 @@ struct ProvidersTest : public Cyphesis::TestBase {
 
 		//entity.type = types.barrel
 		auto lhs_provider1 = CreateProvider({"entity"});
-		auto rhs_provider1 = CreateProvider({"types", "barrel"});
+		{
+			auto rhs_provider1 = CreateProvider({"types", "barrel"});
 
-		ComparePredicate<LocatedEntity> compPred1(lhs_provider1, rhs_provider1,
-												  ComparePredicate<LocatedEntity>::Comparator::INSTANCE_OF);
-		ASSERT_TRUE(compPred1.isMatch(prepare_context({*m_b1})));
-		ASSERT_TRUE(!compPred1.isMatch(QueryContext<LocatedEntity>{thingEntity}));
+			ComparePredicate<LocatedEntity> compPred(lhs_provider1, rhs_provider1,
+													 ComparePredicate<LocatedEntity>::Comparator::INSTANCE_OF);
+			ASSERT_TRUE(compPred.isMatch(prepare_context({*m_b1})));
+			ASSERT_TRUE(!compPred.isMatch(QueryContext<LocatedEntity>{thingEntity}));
+		}
+		{
+			auto rhs_provider2 = CreateProvider({"types", "thing"});
 
-		auto rhs_provider2 = CreateProvider({"types", "thing"});
-
-		ComparePredicate<LocatedEntity> compPred2(lhs_provider1, rhs_provider2,
-												  ComparePredicate<LocatedEntity>::Comparator::INSTANCE_OF);
-		ASSERT_TRUE(compPred2.isMatch(prepare_context({*m_b1})));
-		ASSERT_TRUE(compPred2.isMatch(prepare_context({thingEntity})));
+			ComparePredicate<LocatedEntity> compPred(lhs_provider1, rhs_provider2,
+													 ComparePredicate<LocatedEntity>::Comparator::INSTANCE_OF);
+			ASSERT_TRUE(compPred.isMatch(prepare_context({*m_b1})));
+			ASSERT_TRUE(compPred.isMatch(prepare_context({thingEntity})));
+		}
+		{
+			auto rhs_provider = CreateProvider({"types", "type_not_known"});
+			ComparePredicate<LocatedEntity> compPred(lhs_provider1, rhs_provider,
+													 ComparePredicate<LocatedEntity>::Comparator::INSTANCE_OF);
+			ASSERT_FALSE(compPred.isMatch(prepare_context({*m_b1})));
+		}
 	}
 
 

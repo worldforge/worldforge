@@ -19,12 +19,13 @@
 #include "ContainerDomain.h"
 #include "rules/simulation/LocatedEntity.h"
 
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 #include "AmountProperty.h"
 #include "StackableDomain.h"
 #include "ModeDataProperty.h"
 #include "ContainersActiveProperty.h"
 #include "BaseWorld.h"
+#include "rules/EntityLocation_impl.h"
 
 #include <Atlas/Objects/Anonymous.h>
 
@@ -32,7 +33,7 @@
 #include <common/operations/Update.h>
 #include <algorithm>
 #include "rules/simulation/AtlasProperties.h"
-#include "rules/PhysicalProperties.h"
+#include "rules/PhysicalProperties_impl.h"
 
 ContainerDomain::ContainerDomain(LocatedEntity& entity) :
 		Domain(entity),

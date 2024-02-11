@@ -19,7 +19,7 @@
 #include "Inheritance.h"
 #include "common/AtlasQuery.h"
 #include "ModifyProperty.h"
-#include "rules/entityfilter/ProviderFactory.h"
+#include "rules/entityfilter/ProviderFactory_impl.h"
 #include "BaseWorld.h"
 #include "ModifiersProperty.h"
 

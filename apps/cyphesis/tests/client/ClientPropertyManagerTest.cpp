@@ -24,6 +24,7 @@
 #endif
 
 #include "client/ClientPropertyManager.h"
+#include "common/PropertyManager_impl.h"
 #include "rules/BBoxProperty_impl.h"
 #include "rules/Vector3Property_impl.h"
 #include "rules/PhysicalProperties_impl.h"

@@ -22,6 +22,7 @@
 #include "common/Monitors.h"
 #include "rules/simulation/Inheritance.h"
 #include "rules/simulation/World.h"
+#include "rules/EntityLocation_impl.h"
 #include "../NullEntityCreator.h"
 #include "../TestWorldRouter.h"
 

@@ -17,19 +17,21 @@
 
 
 #include "common/operations/Tick.h"
-#include <Atlas/Objects/Operation.h>
 #include "TasksProperty.h"
 
 #include "rules/simulation/LocatedEntity.h"
+#include "rules/entityfilter/Filter_impl.h"
 #include "rules/EntityLocation_impl.h"
 #include "Task.h"
 
+#include "common/Property_impl.h"
 #include "common/debug.h"
 #include "common/operations/Update.h"
 #include "BaseWorld.h"
 #include "common/AtlasFactories.h"
 
 #include <wfmath/atlasconv.h>
+#include <Atlas/Objects/Operation.h>
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;

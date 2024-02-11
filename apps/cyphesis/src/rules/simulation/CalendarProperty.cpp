@@ -18,6 +18,7 @@
 
 #include "CalendarProperty.h"
 
+#include "common/Property_impl.h"
 #include "modules/DateTime.h"
 
 #include "common/debug.h"

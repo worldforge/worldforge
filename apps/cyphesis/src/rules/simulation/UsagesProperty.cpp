@@ -19,17 +19,17 @@
 #include "UsagesProperty.h"
 #include "rules/simulation/BaseWorld.h"
 
-#include "rules/entityfilter/ProviderFactory.h"
+#include "rules/entityfilter/ProviderFactory_impl.h"
 
 #include "common/debug.h"
 #include "common/AtlasQuery.h"
+#include "common/Property_impl.h"
 #include "ScriptUtils.h"
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
 
 #include <wfmath/atlasconv.h>
-#include <rules/simulation/python/CyPy_UsageInstance.h>
 #include "pythonbase/Python_API.h"
 #include "common/AtlasFactories.h"
 

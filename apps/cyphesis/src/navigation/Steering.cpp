@@ -20,9 +20,10 @@
 #include "Awareness.h"
 
 #include "rules/ai/MemEntity.h"
-#include "rules/ScaleProperty.h"
-#include "rules/Vector3Property.h"
-#include "rules/PhysicalProperties.h"
+#include "rules/ScaleProperty_impl.h"
+#include "rules/Vector3Property_impl.h"
+#include "rules/PhysicalProperties_impl.h"
+#include "rules/EntityLocation_impl.h"
 
 #include "Remotery.h"
 
@@ -30,7 +31,6 @@
 #include <wfmath/vector.h>
 #include <wfmath/rotbox.h>
 #include <wfmath/segment.h>
-#include "rules/ScaleProperty_impl.h"
 
 
 static const bool debug_flag = true;

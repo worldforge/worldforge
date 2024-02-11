@@ -16,6 +16,7 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include "PropelProperty.h"
+#include "common/Property_impl.h"
 #include "common/log.h"
 
 #include <wfmath/atlasconv.h>

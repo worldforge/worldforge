@@ -22,18 +22,17 @@
 
 #include "rules/simulation/BaseWorld.h"
 #include "common/Link.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 #include "Inheritance.h"
-
-#include <Atlas/Objects/SmartPtr.h>
-#include <Atlas/Objects/Operation.h>
-#include <Atlas/Objects/Anonymous.h>
-#include <modules/Variant.h>
-
+#include "modules/Variant.h"
 
 #include "common/operations/Think.h"
 #include "common/operations/Thought.h"
 #include "common/operations/Relay.h"
+
+#include <Atlas/Objects/SmartPtr.h>
+#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Anonymous.h>
 
 using Atlas::Message::Element;
 using Atlas::Objects::Root;

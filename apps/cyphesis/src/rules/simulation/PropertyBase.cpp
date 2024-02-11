@@ -18,6 +18,7 @@
 
 
 #include "PropertyBase.h"
+#include "common/Property_impl.h"
 
 template
 class PropertyCore<LocatedEntity>;

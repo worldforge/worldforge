@@ -22,16 +22,19 @@
 #include "FilterProperty.h"
 
 #include "rules/simulation/BaseWorld.h"
-#include "rules/BBoxProperty.h"
+#include "rules/BBoxProperty_impl.h"
 #include "rules/simulation/LocatedEntity.h"
-#include "rules/ScaleProperty.h"
+#include "rules/ScaleProperty_impl.h"
 #include "rules/simulation/AtlasProperties.h"
-#include "rules/entityfilter/Providers.h"
+#include "rules/entityfilter/Providers_impl.h"
+#include "rules/entityfilter/Filter_impl.h"
+#include "rules/EntityLocation_impl.h"
 
 #include "Inheritance.h"
 #include "common/Router.h"
 #include "common/debug.h"
 #include "common/custom.h"
+#include "common/Property_impl.h"
 
 #include "common/operations/Tick.h"
 #include "common/operations/Think.h"

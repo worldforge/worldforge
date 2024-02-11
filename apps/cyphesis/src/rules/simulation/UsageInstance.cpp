@@ -17,7 +17,7 @@
  */
 
 #include "Inheritance.h"
-#include "rules/entityfilter/ProviderFactory.h"
+#include "rules/entityfilter/ProviderFactory_impl.h"
 #include "UsageInstance.h"
 #include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/BaseWorld.h"

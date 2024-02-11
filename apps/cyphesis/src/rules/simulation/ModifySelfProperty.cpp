@@ -16,7 +16,8 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <rules/entityfilter/Providers.h>
+#include "rules/entityfilter/Providers_impl.h"
+#include "rules/entityfilter/Filter_impl.h"
 #include "ModifySelfProperty.h"
 #include "rules/simulation/LocatedEntity.h"
 #include "BaseWorld.h"

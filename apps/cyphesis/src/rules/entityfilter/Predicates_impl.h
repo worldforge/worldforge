@@ -45,23 +45,23 @@ ComparePredicate<EntityT>::ComparePredicate(std::shared_ptr<Consumer<QueryContex
 	}
 	if (m_comparator == Comparator::INSTANCE_OF) {
 		//make sure that left hand side returns an entity and right hand side a typenode
-		if (m_lhs->getType() != &typeid(const EntityT*)) {
+		if (!m_lhs->template isType<const EntityT*>()) {
 			throw std::invalid_argument(
 					"When using the 'instanceof' comparator, left statement must return an entity. For example, 'entity instance_of types.world'.");
 		}
-		if (m_rhs->getType() != &typeid(const TypeNode<EntityT>*)) {
+		if (!m_rhs->template isType<const TypeNode<EntityT>*>()) {
 			throw std::invalid_argument(
 					"When using the 'instanceof' comparator, right statement must return a TypeNode. For example, 'entity instance_of types.world'.");
 		}
 	} else if (m_comparator == Comparator::CAN_REACH) {
 		//make sure that both sides return an entity
-		if ((m_lhs->getType() != &typeid(const EntityT*))
-			|| ((m_rhs->getType() != &typeid(const EntityT*)) && (m_rhs->getType() != &typeid(const QueryEntityLocation<EntityT>*)))) {
+		if ((!m_lhs->template isType<const EntityT*>())
+			|| ((!m_rhs->template isType<const EntityT*>()) && (!m_rhs->template isType<const QueryEntityLocation<EntityT>*>()))) {
 			throw std::invalid_argument(
 					"When using the 'can_reach' comparator, both sides must return an entity. For example, 'actor can_reach entity'.");
 		}
 		if (m_with) {
-			if (m_with->getType() != &typeid(const EntityT*)) {
+			if (!m_with->template isType<const EntityT*>()) {
 				throw std::invalid_argument(
 						"When using the 'can_reach ... with' comparator, all three inputs must return an entity. For example, 'actor can_reach entity with tool'.");
 			}
@@ -180,7 +180,7 @@ bool ComparePredicate<EntityT>::isMatch(const QueryContext<EntityT>& context) co
 			m_rhs->value(right, context);
 
 			EntityLocation<EntityT> entityLocation;
-			if (m_rhs->getType() == &typeid(const QueryEntityLocation<EntityT>*)) {
+			if (m_rhs->template isType<const QueryEntityLocation<EntityT>*>()) {
 				auto queryEntityLocation = *static_cast<QueryEntityLocation<EntityT>*>(right.Ptr());
 				entityLocation.m_parent = &queryEntityLocation.entity;
 				if (queryEntityLocation.pos) {

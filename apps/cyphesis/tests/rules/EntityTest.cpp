@@ -46,6 +46,7 @@
 #include <cassert>
 #include "common/Property_impl.h"
 #include "rules/entityfilter/ParserDefinitions_impl.h"
+#include "rules/entityfilter/Filter_impl.h"
 #include "common/Monitors.h"
 
 template

@@ -23,14 +23,25 @@
 #define DEBUG
 #endif
 
-#include "rules/simulation/LocatedEntity.h"
+
 #include "common/Property_impl.h"
+
+//class LocatedEntity;
+//
+//template<>
+//class PropertyCore<LocatedEntity>;
+
+
+#include "rules/simulation/LocatedEntity.h"
+#include "rules/simulation/PropertyBase.h"
+
 #include "../../TestEntity.h"
 
 #include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Objects/Anonymous.h>
 
 #include <cassert>
+
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;

@@ -361,7 +361,7 @@ ContainsRecursiveFunctionProvider<EntityT>::ContainsRecursiveFunctionProvider(st
 		m_condition(std::move(condition)),
 		m_consumer(std::move(container)),
 		m_recursive(recursive) {
-	if (m_consumer->getType() != &typeid(const std::set<Ref<EntityT>>*)) {
+	if (!m_consumer->template isType<const std::set<Ref<EntityT>>*>()) {
 		throw std::invalid_argument(
 				"first argument of contains_recursive must return a valid entity container");
 	}

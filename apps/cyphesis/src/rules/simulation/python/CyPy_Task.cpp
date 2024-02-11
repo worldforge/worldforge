@@ -18,9 +18,9 @@
 
 #include "CyPy_Task.h"
 #include "rules/python/CyPy_Operation.h"
-#include "CyPy_LocatedEntity.h"
+#include "CyPy_LocatedEntity_impl.h"
 #include "CyPy_UsageInstance.h"
-#include "rules/python/CyPy_EntityLocation.h"
+#include "rules/python/CyPy_EntityLocation_impl.h"
 #include "rules/python/CyPy_Element.h"
 
 #include "rules/python/PythonWrapper_impl.h"

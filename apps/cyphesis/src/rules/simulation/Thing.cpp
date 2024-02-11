@@ -24,16 +24,16 @@
 #include "common/debug.h"
 
 #include "common/operations/Update.h"
-#include "common/TypeNode.h"
+#include "common/TypeNode_impl.h"
 #include "EntityProperty.h"
 #include "ModeProperty.h"
 #include "ModeDataProperty.h"
+#include "rules/PhysicalProperties_impl.h"
 
 #include <wfmath/atlasconv.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
-#include "rules/PhysicalProperties.h"
 
 using Atlas::Objects::smart_dynamic_cast;
 
