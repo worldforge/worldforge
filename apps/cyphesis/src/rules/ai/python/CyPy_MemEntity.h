@@ -26,11 +26,11 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_MemEntity : public WrapperBase<Ref<MemEntity>, CyPy_MemEntity, Py::PythonClassInstanceWeak> {
+class CyPy_MemEntity : public WrapperBase<Ref<MemEntity>, CyPy_MemEntity> {
 public:
-	CyPy_MemEntity(Py::PythonClassInstanceWeak* self, Py::Tuple& args, Py::Dict& kwds);
+	CyPy_MemEntity(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-	CyPy_MemEntity(Py::PythonClassInstanceWeak* self, Ref<MemEntity> value);
+	CyPy_MemEntity(Py::PythonClassInstance* self, Ref<MemEntity> value);
 
 	~CyPy_MemEntity() override;
 

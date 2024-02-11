@@ -42,7 +42,7 @@ Py::Object wrapPython(MemEntity* value) {
 }
 
 
-CyPy_MemEntity::CyPy_MemEntity(Py::PythonClassInstanceWeak* self, Py::Tuple& args, Py::Dict& kwds)
+CyPy_MemEntity::CyPy_MemEntity(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds)
 		: WrapperBase(self, args, kwds) {
 	args.verify_length(1);
 
@@ -158,7 +158,7 @@ void CyPy_MemEntity::init_type() {
 
 }
 
-CyPy_MemEntity::CyPy_MemEntity(Py::PythonClassInstanceWeak* self, Ref<MemEntity> value)
+CyPy_MemEntity::CyPy_MemEntity(Py::PythonClassInstance* self, Ref<MemEntity> value)
 		: WrapperBase(self, std::move(value)) {
 
 }
@@ -239,26 +239,16 @@ Py::Object wrapEntity(Ref<MemEntity> le) {
 	if (le->m_scriptEntity.has_value()) {
 		auto wrapper = std::any_cast<Py::Object>(le->m_scriptEntity);
 		if (!wrapper.isNone()) {
-			auto object = PyWeakref_GetObject(wrapper.ptr());
-			if (object) {
-				Py::Object pythonObj(object);
-				if (!pythonObj.isNone()) {
-					return pythonObj;
-				}
-			}
+			return wrapper;
 		}
 	}
-	auto wrapped = WrapperBase<Ref<MemEntity>, CyPy_MemEntity, Py::PythonClassInstanceWeak>::wrap(le);
+	auto wrapped = WrapperBase<Ref<MemEntity>, CyPy_MemEntity>::wrap(le);
 	if (!wrapped.isNone()) {
-
-		auto weakPtr = PyWeakref_NewRef(wrapped.ptr(), nullptr);
-		le->m_scriptEntity = std::any(Py::Object(weakPtr, true));
-
+		le->m_scriptEntity = std::any(wrapped);
 		return wrapped;
 	} else {
 		return Py::None();
 	}
-
 }
 
 Py::Object CyPy_MemEntity::wrap(Ref<MemEntity> value) {
