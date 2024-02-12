@@ -20,10 +20,11 @@
 #include "rules/ScaleProperty.h"
 #include "rules/EntityLocation_impl.h"
 
-#include <utility>
 #include "MemEntity.h"
 #include "common/TypeNode.h"
 #include "common/PropertyManager.h"
+#include <utility>
+#include <sstream>
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
