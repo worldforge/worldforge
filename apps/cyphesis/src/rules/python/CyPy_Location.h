@@ -19,7 +19,7 @@
 #ifndef CYPHESIS_CYPY_LOCATION_H
 #define CYPHESIS_CYPY_LOCATION_H
 
-#include "rules/Location_impl.h"
+#include "rules/Location.h"
 #include "pythonbase/WrapperBase.h"
 
 /**

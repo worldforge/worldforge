@@ -18,6 +18,7 @@
 #pragma once
 
 #include "CyPy_Location.h"
+#include "rules/Location_impl.h"
 #include "CyPy_Point3D.h"
 #include "CyPy_Vector3D.h"
 #include "CyPy_Quaternion.h"
@@ -74,7 +75,7 @@ void CyPy_Location<EntityT, PythonEntityT>::init_type() {
 
 	CyPy_Element::converters.emplace_back([](const Py::Object& o) -> std::optional<Atlas::Message::Element> {
 		if (CyPy_Location<EntityT, PythonEntityT>::check(o)) {
-			MapType map;
+			Atlas::Message::MapType map;
 			CyPy_Location<EntityT, PythonEntityT>::value(o).addToMessage(map);
 			return map;
 		} else {

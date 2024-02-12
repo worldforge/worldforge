@@ -18,6 +18,7 @@
 #pragma once
 
 #include "CyPy_EntityLocation.h"
+#include "rules/EntityLocation_impl.h"
 #include "CyPy_Location_impl.h"
 #include "CyPy_Point3D.h"
 #include "CyPy_Vector3D.h"

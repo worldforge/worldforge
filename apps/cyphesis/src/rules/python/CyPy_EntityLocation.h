@@ -19,7 +19,7 @@
 #ifndef CYPHESIS_CYPY_ENTITYLOCATION_H
 #define CYPHESIS_CYPY_ENTITYLOCATION_H
 
-#include "rules/EntityLocation_impl.h"
+#include "rules/EntityLocation.h"
 #include "pythonbase/WrapperBase.h"
 
 /**

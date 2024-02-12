@@ -97,7 +97,7 @@ ScriptUtils::processScriptResult(const std::string& scriptName, const Py::Object
 	};
 
 	if (ret.isNone()) {
-		cy_debug_print("Returned none")
+		spdlog::trace("Returned none");
 	} else {
 		//Check if it's a tuple and process it.
 		if (ret.isTuple()) {
