@@ -25,6 +25,7 @@
 #include "CyPy_Quaternion.h"
 #include "CyPy_Axisbox.h"
 #include "EntityHelper.h"
+#include "rules/EntityLocation_impl.h"
 
 template<typename EntityT, typename PythonEntityT>
 CyPy_EntityLocation<EntityT, PythonEntityT>::CyPy_EntityLocation(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds)
@@ -46,19 +47,23 @@ CyPy_EntityLocation<EntityT, PythonEntityT>::CyPy_EntityLocation(Py::PythonClass
 
 }
 
+
 template<typename EntityT, typename PythonEntityT>
 void CyPy_EntityLocation<EntityT, PythonEntityT>::init_type() {
 	CyPy_EntityLocation<EntityT, PythonEntityT>::behaviors().name("EntityLocation");
 	CyPy_EntityLocation<EntityT, PythonEntityT>::behaviors().doc("");
 
-	CyPy_EntityLocation<EntityT, PythonEntityT>::template register_method<[](EntityLocation<EntityT>& value) -> Py::Object {
-		return CyPy_EntityLocation<EntityT, PythonEntityT>::wrap(value);
-	}>("copy");
+	CyPy_EntityLocation<EntityT, PythonEntityT>::template register_method<&CyPy_EntityLocation<EntityT, PythonEntityT>::copy>("copy");
 
 	//behaviors().supportNumberType(Py::PythonType::support_number_subtract);
 
 	CyPy_EntityLocation<EntityT, PythonEntityT>::behaviors().readyType();
 
+}
+
+template<typename EntityT, typename PythonEntityT>
+Py::Object CyPy_EntityLocation<EntityT, PythonEntityT>::copy() {
+	return CyPy_EntityLocation<EntityT, PythonEntityT>::wrap(this->m_value);
 }
 
 
@@ -74,7 +79,7 @@ Py::Object CyPy_EntityLocation<EntityT, PythonEntityT>::getattro(const Py::Strin
 	if ("pos" == nameStr) {
 		return CyPy_Point3D::wrap(this->m_value.m_pos);
 	}
-	return this->PythonExtensionBase::getattro(name);
+	return this->Py::PythonExtensionBase::getattro(name);
 }
 
 template<typename EntityT, typename PythonEntityT>

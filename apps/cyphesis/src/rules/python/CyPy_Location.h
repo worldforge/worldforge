@@ -41,6 +41,12 @@ public:
 	Py::Object repr() override;
 
 	Py::Object number_subtract(const Py::Object&) override;
+
+private:
+
+	Py::Object copy();
+	Py::Object add_to_entity(const Py::Tuple& args);
+
 };
 
 

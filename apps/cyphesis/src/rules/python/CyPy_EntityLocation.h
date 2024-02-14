@@ -41,7 +41,9 @@ public:
 //        Py::Object repr() override;
 //
 //        virtual Py::Object number_subtract(const Py::Object&);
+private:
 
+	Py::Object copy();
 
 };
 

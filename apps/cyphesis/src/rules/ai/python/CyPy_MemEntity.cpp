@@ -65,6 +65,77 @@ CyPy_MemEntity::CyPy_MemEntity(Py::PythonClassInstance* self, Py::Tuple& args, P
 
 CyPy_MemEntity::~CyPy_MemEntity() = default;
 
+namespace {
+/**
+ * Older compilers can't handle the lambdas being local in the ::init_type method, so we need to put them here instead.
+ * This might change when all compilers catch up to C++17 and the more lax requirements of letting lambdas be constexpr by default.
+ */
+auto get_child = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	args.verify_length(1);
+	auto child_id = verifyString(args.front());
+	for (auto& child: value->m_contains) {
+		if (child_id == child->getId()) {
+			return CyPy_MemEntity::wrap(child);
+		}
+	}
+	return Py::None();
+};
+auto describe_entity = [](Ref<MemEntity>& value) -> Py::Object {
+	return Py::String(value->describeEntity());
+};
+auto is_type = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	args.verify_length(1);
+
+	auto type = value->getType();
+	if (!type) {
+		return Py::False();
+	}
+	return Py::Boolean(type->isTypeOf(verifyString(args[0])));
+};
+auto get_prop_num_fn = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	return get_prop_num(*value, args);
+};
+auto has_prop_num_fn = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	return has_prop_num(*value, args);
+};
+auto get_prop_float_fn = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	return get_prop_float(*value, args);
+};
+auto has_prop_float_fn = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	return has_prop_float(*value, args);
+};
+auto get_prop_int_fn = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	return get_prop_int(*value, args);
+};
+auto has_prop_int_fn = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	return has_prop_int(*value, args);
+};
+auto get_prop_string_fn = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	return get_prop_string(*value, args);
+};
+auto has_prop_string_fn = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	return has_prop_string(*value, args);
+};
+auto get_prop_bool_fn = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	return get_prop_bool(*value, args);
+};
+auto has_prop_bool_fn = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	return has_prop_bool(*value, args);
+};
+auto get_prop_list_fn = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	return get_prop_list(*value, args);
+};
+auto has_prop_list_fn = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	return has_prop_list(*value, args);
+};
+auto get_prop_map_fn = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	return get_prop_map(*value, args);
+};
+auto has_prop_map_fn = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
+	return has_prop_map(*value, args);
+};
+}
+
 void CyPy_MemEntity::init_type() {
 
 
@@ -75,83 +146,35 @@ void CyPy_MemEntity::init_type() {
 	behaviors().supportStr();
 
 
-	//register_method<&CyPy_MemEntity::get_child>("get_child");
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) {
-		args.verify_length(1);
-		auto child_id = verifyString(args.front());
-		for (auto& child: value->m_contains) {
-			if (child_id == child->getId()) {
-				return CyPy_MemEntity::wrap(child);
-			}
-		}
-		return Py::None();
-	}>("get_child");
+	register_method<get_child>("get_child");
 
 
-	register_method<[](Ref<MemEntity>& value) -> Py::Object {
-		return Py::String(value->describeEntity());
-	}>("describe_entity");
+	register_method<describe_entity>("describe_entity");
 
 
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		args.verify_length(1);
-
-		auto type = value->getType();
-		if (!type) {
-			return Py::False();
-		}
-		return Py::Boolean(type->isTypeOf(verifyString(args[0])));
-	}>("is_type", "Returns true if the current entity is of supplied string type.");
+	register_method<is_type>("is_type", "Returns true if the current entity is of supplied string type.");
 
 
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		return get_prop_num(*value, args);
-	}>("get_prop_num");
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		return has_prop_num(*value, args);
-	}>("has_prop_num");
+	register_method<get_prop_num_fn>("get_prop_num");
+	register_method<has_prop_num_fn>("has_prop_num");
 
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		return get_prop_float(*value, args);
-	}>("get_prop_float");
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		return has_prop_float(*value, args);
-	}>("has_prop_float");
+	register_method<get_prop_float_fn>("get_prop_float");
+	register_method<has_prop_float_fn>("has_prop_float");
 
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		return get_prop_int(*value, args);
-	}>("get_prop_int");
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		return has_prop_int(*value, args);
-	}>("has_prop_int");
+	register_method<get_prop_int_fn>("get_prop_int");
+	register_method<has_prop_int_fn>("has_prop_int");
 
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		return get_prop_string(*value, args);
-	}>("get_prop_string");
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		return has_prop_string(*value, args);
-	}>("has_prop_string");
+	register_method<get_prop_string_fn>("get_prop_string");
+	register_method<has_prop_string_fn>("has_prop_string");
 
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		return get_prop_bool(*value, args);
-	}>("get_prop_bool");
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		return has_prop_bool(*value, args);
-	}>("has_prop_bool");
+	register_method<get_prop_bool_fn>("get_prop_bool");
+	register_method<has_prop_bool_fn>("has_prop_bool");
 
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		return get_prop_list(*value, args);
-	}>("get_prop_list");
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		return has_prop_list(*value, args);
-	}>("has_prop_list");
+	register_method<get_prop_list_fn>("get_prop_list");
+	register_method<has_prop_list_fn>("has_prop_list");
 
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		return get_prop_map(*value, args);
-	}>("get_prop_map");
-	register_method<[](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object {
-		return has_prop_map(*value, args);
-	}>("has_prop_map");
+	register_method<get_prop_map_fn>("get_prop_map");
+	register_method<has_prop_map_fn>("has_prop_map");
 
 
 	behaviors().readyType();

@@ -59,15 +59,8 @@ void CyPy_Location<EntityT, PythonEntityT>::init_type() {
 	CyPy_Location<EntityT, PythonEntityT>::behaviors().name("Location");
 	CyPy_Location<EntityT, PythonEntityT>::behaviors().doc("");
 
-	CyPy_Location<EntityT, PythonEntityT>::template register_method<[](Location<EntityT>& value) -> Py::Object {
-		return CyPy_Location<EntityT, PythonEntityT>::wrap(value);
-	}>("copy");
-	CyPy_Location<EntityT, PythonEntityT>::template register_method<[](Location<EntityT>& value, const Py::Tuple& args) -> Py::Object {
-		args.verify_length(1);
-		auto& rootEntity = verifyObject<CyPy_RootEntity>(args.front());
-		value.addToEntity(rootEntity);
-		return args.front();
-	}>("add_to_entity");
+	CyPy_Location<EntityT, PythonEntityT>::template register_method<&CyPy_Location<EntityT, PythonEntityT>::copy>("copy");
+	CyPy_Location<EntityT, PythonEntityT>::template register_method<&CyPy_Location<EntityT, PythonEntityT>::add_to_entity>("add_to_entity");
 
 	CyPy_Location<EntityT, PythonEntityT>::behaviors().supportNumberType(Py::PythonType::support_number_subtract);
 	CyPy_Location<EntityT, PythonEntityT>::behaviors().supportRepr();
@@ -95,6 +88,19 @@ void CyPy_Location<EntityT, PythonEntityT>::init_type() {
 }
 
 template<typename EntityT, typename PythonEntityT>
+Py::Object CyPy_Location<EntityT, PythonEntityT>::copy() {
+	return CyPy_Location<EntityT, PythonEntityT>::wrap(this->m_value);
+}
+
+template<typename EntityT, typename PythonEntityT>
+Py::Object CyPy_Location<EntityT, PythonEntityT>::add_to_entity(const Py::Tuple& args) {
+	args.verify_length(1);
+	auto& rootEntity = verifyObject<CyPy_RootEntity>(args.front());
+	this->m_value.addToEntity(rootEntity);
+	return args.front();
+}
+
+template<typename EntityT, typename PythonEntityT>
 Py::Object CyPy_Location<EntityT, PythonEntityT>::getattro(const Py::String& name) {
 	auto nameStr = name.as_string();
 	if ("parent" == nameStr) {
@@ -118,7 +124,7 @@ Py::Object CyPy_Location<EntityT, PythonEntityT>::getattro(const Py::String& nam
 	if ("radius" == nameStr) {
 		return Py::Float(this->m_value.radius());
 	}
-	return this->PythonExtensionBase::getattro(name);
+	return this->Py::PythonExtensionBase::getattro(name);
 }
 
 template<typename EntityT, typename PythonEntityT>

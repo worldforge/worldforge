@@ -61,6 +61,7 @@ target_link_libraries(cyphesis-common PUBLIC
         external-bytesize
 )
 
+target_compile_features(cyphesis-common PUBLIC cxx_std_20)
 
 target_compile_definitions(cyphesis-common PUBLIC
         -DBINDIR="${CMAKE_INSTALL_FULL_BINDIR}"
