@@ -3,7 +3,7 @@ include_directories(../src/server ../src/api)
 if (BUILD_METASERVER_SERVER)
 
     find_package(Boost
-            1.83.0
+            1.84.0
             REQUIRED
             COMPONENTS program_options)
 

@@ -61,15 +61,15 @@ if (WIN32)
 endif ()
 
 find_package(Boost
-        1.83.0
+        1.84.0
         REQUIRED
         COMPONENTS system thread)
 
 find_package(SDL2 REQUIRED)
 
-find_package(sigc++-3 3.0 REQUIRED)
+find_package(sigc++-3 3.0.7 REQUIRED)
 
-find_package(OGRE 14.1.0 REQUIRED)
+find_package(OGRE 14.1.2 REQUIRED)
 
 #With Conan there will be a hard coded path to Freetype within the Overlay target. Let's remove that and link to
 # Freetype ourselves.

@@ -18,6 +18,7 @@
 
 #include "OgrePluginLoader.h"
 
+#include "services/config/ConfigService.h"
 
 #include <OgreRoot.h>
 #include <OgreBuildSettings.h>
@@ -79,8 +80,8 @@ OgrePluginLoader::OgrePluginLoader() {
 
 	//If any prefix is set (for example for AppImage builds), check for the plugins in directories relative to the prefix first.
 	if (!configSrv.getPrefix().empty()) {
-		mPluginDirs.push_back(configSrv.getPrefix() + "/lib64/OGRE");
-		mPluginDirs.push_back(configSrv.getPrefix() + "/lib/OGRE");
+		mPluginDirs.push_back(configSrv.getPrefix() / "lib64" / "OGRE");
+		mPluginDirs.push_back(configSrv.getPrefix() / "lib" / "OGRE");
 	}
 
 	mPluginDirs.emplace_back(OGRE_PLUGINDIR);
@@ -140,7 +141,7 @@ void OgrePluginLoader::unloadPlugins() {
 bool OgrePluginLoader::loadDynPlugin(const std::string& pluginName) {
 #ifndef OGRE_STATIC_LIB
 
-	for (const std::string& dir : mPluginDirs) {
+	for (const std::string& dir: mPluginDirs) {
 		std::string pluginPath;
 		pluginPath = dir + "/" + pluginName + mPluginExtension;
 		if (std::ifstream(pluginPath).good()) {

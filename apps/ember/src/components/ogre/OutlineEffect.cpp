@@ -139,7 +139,7 @@ OutlineEffect::OutlineEffect(Scene& scene, EmberEntityRef entity)
 							outlineMaterial->load();
 							outlineMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(texture);
 							outlineSubEntity->setMaterial(outlineMaterial);
-							mOutline.generatedMaterials.push_back(outlineMaterial);
+							mOutline.generatedMaterials.emplace_back(outlineMaterial);
 						}
 					}
 					modelRep->getModel().getNodeProvider()->attachObject(outlineEntity);

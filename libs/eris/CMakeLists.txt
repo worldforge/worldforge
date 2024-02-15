@@ -51,10 +51,10 @@ macro(wf_add_test_linked TEST_FILE)
     target_link_libraries(${TEST_NAME} ${LIBNAME})
 endmacro()
 
-find_package(sigc++-3 3.0 REQUIRED)
+find_package(sigc++-3 3.0.7 REQUIRED)
 
 find_package(Boost
-        1.83.0
+        1.84.0
         REQUIRED
         COMPONENTS headers)
 

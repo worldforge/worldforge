@@ -28,7 +28,10 @@ class OgreConan(ConanFile):
     description = ("Object-Oriented Graphics Rendering Engine (OGRE) "
                    "is a scene-oriented, real-time, 3D rendering engine.")
     short_paths = False
-    requires = ["freetype/2.13.2"]
+    requires = [
+        "freetype/2.13.2",
+        "glslang/11.7.0"
+    ]
     user = "worldforge"
     package_type = "library"
 

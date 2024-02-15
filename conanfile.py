@@ -26,14 +26,9 @@ class Worldforge(ConanFile):
         "with_server": True,
         # Normally you don't want to build the actual metaserver server.
         "without_metaserver_server": True,
-        # Skipped because we had issues building xz_utils, which is used by libunwind
-        'sdl/*:libunwind': False,
-        # We got build errors with X11 on OpenSuSE, so disable for now. Unclear what the X11 support entails.
-        'pulseaudio/*:with_x11': False,
         # Unclear why the pulseaudio client lib needs openssl...
         'pulseaudio/*:with_openssl': False,
-        # We're getting compilation errors on Ubuntu 22.04 with "mpg123" so we'll disable that. Might want to enable
-        # again when we enable better sound support.
+        # We're not using any mpeg stuff so no need to include that
         'libsndfile/*:with_mpeg': False
     }
 
@@ -44,12 +39,12 @@ class Worldforge(ConanFile):
     def requirements(self):
 
         self.requires("libsigcpp/3.0.7")
-        self.requires("libcurl/8.5.0")
-        self.requires("spdlog/1.12.0")
-        self.requires("cli11/2.3.2")
-        self.requires("boost/1.83.0")
+        self.requires("libcurl/8.6.0")
+        self.requires("spdlog/1.13.0")
+        self.requires("cli11/2.4.1")
+        self.requires("boost/1.84.0")
 
-        self.requires("zlib/1.3")
+        self.requires("zlib/1.3.1")
         self.requires("bzip2/1.0.8")
 
         if self.options.with_client or self.options.with_server:
@@ -57,31 +52,29 @@ class Worldforge(ConanFile):
 
         if self.options.with_client:
             self.requires("cegui/0.8.7@worldforge")
-            self.requires("ogre/14.1.0@worldforge")
+            self.requires("ogre/14.1.2@worldforge")
             self.requires("sdl/2.28.5")
             self.requires("lua/5.3.6")
             self.requires("vorbis/1.3.7")
 
             if not is_msvc(self):
-                self.requires("libunwind/1.7.2")
+                self.requires("libunwind/1.8.0")
 
         if self.options.with_server:
             self.requires("worldforge-worlds/0.1.0@worldforge")
             self.requires("libgcrypt/1.8.4")
-            self.requires("sqlite3/3.44.2")
-            self.requires("readline/8.1.2")
-            self.requires("cpython/3.10.0@worldforge")
+            self.requires("sqlite3/3.45.1")
+            self.requires("readline/8.2")
+            self.requires("cpython/3.10.13@worldforge")
             # self.requires("avahi/0.8")
 
         if not is_msvc(self):
             self.requires("libxdg-basedir/1.2.3@worldforge")
 
-        self.requires("libcap/2.69", override=True)
-        self.requires("libxml2/2.11.5", override=True)
-        self.requires("libxcrypt/4.4.36", override=True)
+        self.requires("expat/2.6.0", override=True)
 
         self.test_requires("cppunit/1.15.1")
-        self.test_requires("catch2/3.5.0")
+        self.test_requires("catch2/3.5.2")
 
     def generate(self):
         deps = CMakeDeps(self)

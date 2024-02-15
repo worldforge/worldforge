@@ -1,5 +1,5 @@
 find_package(Boost
-        1.83.0
+        1.84.0
         REQUIRED
         COMPONENTS thread)
 
