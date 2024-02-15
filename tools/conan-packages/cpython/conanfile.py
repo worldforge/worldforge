@@ -48,7 +48,7 @@ class CPythonConan(ConanFile):
         "env_vars": True,
     }
     user = "worldforge"
-    version = "3.10.0"
+    version = "3.10.13"
     package_type = "library"
 
     def layout(self):
@@ -94,14 +94,14 @@ class CPythonConan(ConanFile):
         get(self, **self.conan_data["sources"][self.version], strip_root=True)
 
     def requirements(self):
-        self.requires("zlib/1.3")
+        self.requires("zlib/1.3.1")
         if self._supports_modules:
-            self.requires("expat/2.5.0")
+            self.requires("expat/2.6.0")
             self.requires("libffi/3.4.4")
-            self.requires("mpdecimal/2.5.0")
+            self.requires("mpdecimal/2.5.1")
         if not is_apple_os(self):
             self.requires("libuuid/1.0.3")
-        self.requires("libxcrypt/4.4.25")
+        self.requires("libxcrypt/4.4.36")
 
     def generate(self):
         yes_no = lambda v: "yes" if v else "no"
