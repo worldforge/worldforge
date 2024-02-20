@@ -413,7 +413,6 @@ function AssetsManager:LODRegenerateLods()
 
 		local mesh = self.meshes.current.meshPtr.get()
 		local meshName = mesh:getName()
-		local lodManager = Ember.OgreView.Lod.LodManager.getSingleton()
 		local lodDefManager = Ember.OgreView.Lod.LodDefinitionManager.getSingleton()
 		local lodDefPtr = lodDefManager:getByName(self:getLodDefName(meshName), Ogre.ResourceGroupManager.AUTODETECT_RESOURCE_GROUP_NAME)
 		local lodDef = lodDefPtr
@@ -424,7 +423,7 @@ function AssetsManager:LODRegenerateLods()
 		local combobox = CEGUI.toCombobox(self.widget:getWindow("LODTypeCombobox"))
 		-- user created Lod needs recreating entities.
 		self.meshes.renderer:unloadEntity()
-		lodManager:loadLod(meshPtr, lodDef)
+		Ember.OgreView.Lod.LodManager.loadLod(meshPtr, lodDef)
 		self.meshes.renderer:setAutoShowFull(false)
 		self.meshes.renderer:showEntity(meshName)
 		self.meshes.renderer:setAutoShowFull(true)
