@@ -46,7 +46,7 @@ CursorWorldListener::CursorWorldListener(MainLoopController& mainLoopController,
 		mWorld(world),
 		mHoverEventSent(false),
 		mCursorLingerStart(0),
-		mClickThresholdMilliseconds(200),
+		mClickThresholdMilliseconds(50),
 		mMousePressedTimeFrame(nullptr),
 		mConfigListenerContainer(std::make_unique<ConfigListenerContainer>()),
 		mIsCursorInWorld(false) {
