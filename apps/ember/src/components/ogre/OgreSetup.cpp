@@ -246,7 +246,6 @@ void OgreSetup::configure() {
 		}
 	}, true);
 
-	//Ogre::MeshManager::setBonesUseObjectSpace(false);
 	auto& configService = ConfigService::getSingleton();
 
 	// we start by trying to figure out what kind of resolution the user has selected, and whether full screen should be used or not.
