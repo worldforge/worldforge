@@ -1,9 +1,10 @@
+import fnmatch
 import os
 
 from conan import ConanFile
 from conan.tools.apple import is_apple_os
 from conan.tools.cmake import CMake, cmake_layout, CMakeToolchain
-from conan.tools.files import get
+from conan.tools.files import get, patch
 from conan.tools.microsoft import is_msvc
 from conan.tools.system.package_manager import Apt
 
@@ -34,6 +35,7 @@ class OgreConan(ConanFile):
     ]
     user = "worldforge"
     package_type = "library"
+    exports_sources = ["patches*"]
 
     def layout(self):
         cmake_layout(self)
@@ -102,6 +104,7 @@ class OgreConan(ConanFile):
         tc.generate()
 
     def build(self):
+        self._apply_patches(os.path.join(self.export_sources_folder, 'patches'), self.folders.source_folder)
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
@@ -143,3 +146,11 @@ class OgreConan(ConanFile):
             self.cpp_info.builddirs.append("CMake")
         else:
             self.cpp_info.builddirs.append(os.path.join("lib", "OGRE", "cmake"))
+
+    def _apply_patches(self, source, dest):
+        for root, _dirnames, filenames in os.walk(source):
+            for filename in fnmatch.filter(filenames, '*.patch'):
+                patch_file = os.path.join(root, filename)
+                print("Applying patch {}.".format(patch_file))
+                dest_path = os.path.join(dest, os.path.relpath(root, source))
+                patch(self, base_path=dest_path, patch_file=patch_file)

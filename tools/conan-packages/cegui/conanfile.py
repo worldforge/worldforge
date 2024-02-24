@@ -126,7 +126,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
     def _apply_patches(self, source, dest):
         for root, _dirnames, filenames in os.walk(source):
             for filename in fnmatch.filter(filenames, '*.patch'):
-                print("Applying path {}.".format(filename))
+                print("Applying patch {}.".format(filename))
                 patch_file = os.path.join(root, filename)
                 dest_path = os.path.join(dest, os.path.relpath(root, source))
                 patch(self, base_path=dest_path, patch_file=patch_file)

@@ -1,0 +1,48 @@
+commit 671ba5b2a1881d68fa2a852dc2d37c2854ba5362
+Author: Pavel Rojtberg <rojtberg@gmail.com>
+Date:   Sat Feb 24 00:02:14 2024 +0100
+
+    Main: SubEntity - provide correct bone matrices for binding pose
+    
+    when object space bones are in use
+
+diff --git a/OgreMain/src/OgreSubEntity.cpp b/OgreMain/src/OgreSubEntity.cpp
+index e6e08048c8..e03cd87d50 100644
+--- a/OgreMain/src/OgreSubEntity.cpp
++++ b/OgreMain/src/OgreSubEntity.cpp
+@@ -177,6 +177,11 @@ namespace Ogre {
+                 mSubMesh->parent->sharedBlendIndexToBoneIndexMap : mSubMesh->blendIndexToBoneIndexMap;
+             assert(indexMap.size() <= mParentEntity->mNumBoneMatrices);
+ 
++            if (MeshManager::getBonesUseObjectSpace())
++            {
++                *xform++ = mParentEntity->_getParentNodeFullTransform();
++            }
++
+             if (mParentEntity->_isSkeletonAnimated())
+             {
+                 // Bones, use cached matrices built when Entity::_updateRenderQueue was called
+@@ -184,11 +189,6 @@ namespace Ogre {
+                                                                           : mParentEntity->mBoneWorldMatrices;
+                 assert(boneMatrices);
+ 
+-                if (MeshManager::getBonesUseObjectSpace())
+-                {
+-                    *xform++ = mParentEntity->_getParentNodeFullTransform();
+-                }
+-
+                 for (auto idx : indexMap)
+                 {
+                     *xform++ = boneMatrices[idx];
+@@ -196,8 +196,10 @@ namespace Ogre {
+             }
+             else
+             {
++                auto& value = MeshManager::getBonesUseObjectSpace() ? Affine3::IDENTITY
++                                                                    : mParentEntity->_getParentNodeFullTransform();
+                 // All animations disabled, use parent entity world transform only
+-                std::fill_n(xform, indexMap.size(), mParentEntity->_getParentNodeFullTransform());
++                std::fill_n(xform, indexMap.size(), value);
+             }
+         }
+     }
