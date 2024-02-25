@@ -88,7 +88,7 @@ bool TerrainPageSurfaceCompilationInstance::compileCompositeMap(const Ogre::Mate
 		}
 		return result;
 	} catch (const std::exception& ex) {
-		logger->warn("Error when compiling material '{}'. It's probably in an invalid state and will be reset (with blank terrain pages as a probable result): {}",
+		logger->warn("Error when compiling composite material '{}'. It's probably in an invalid state and will be reset (with blank terrain pages as a probable result): {}",
 					 material->getName(),
 					 ex.what());
 		material->removeAllTechniques();

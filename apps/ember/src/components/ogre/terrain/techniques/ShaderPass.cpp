@@ -92,9 +92,9 @@ Ogre::GpuProgramPtr ShaderPass::fetchOrCreateSplattingFragmentProgram(SplattingF
 
 			int samplerIndex = 0;
 
-			params->setNamedAutoConstant("worldMatrix", Ogre::GpuProgramParameters::ACT_WORLD_MATRIX);
 			params->setNamedAutoConstant("ambientColour", Ogre::GpuProgramParameters::ACT_AMBIENT_LIGHT_COLOUR);
 			if (config.lightning) {
+				params->setNamedAutoConstant("worldMatrix", Ogre::GpuProgramParameters::ACT_WORLD_MATRIX);
 				params->setNamedAutoConstant("numberOfActiveLights", Ogre::GpuProgramParameters::ACT_LIGHT_COUNT);
 				params->setNamedAutoConstant("lightPosition", Ogre::GpuProgramParameters::ACT_LIGHT_POSITION_ARRAY, 3);
 				params->setNamedAutoConstant("lightDiffuse", Ogre::GpuProgramParameters::ACT_LIGHT_DIFFUSE_COLOUR_ARRAY, 3);
