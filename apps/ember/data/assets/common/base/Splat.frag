@@ -39,6 +39,7 @@
 #endif // ifndef NUM_LAYERS
 
 #if NUM_LIGHTS > 0
+uniform vec4 ambientColour;
 uniform mat4 worldMatrix;
 
 // Normals are stored in a texture, not per-vertex, in object space
@@ -135,7 +136,6 @@ uniform sampler2D normalHeightTexture10;
 uniform sampler2D normalHeightTexture11;
 
 
-uniform vec4 ambientColour;
 uniform vec4 fogColour;
 
 
