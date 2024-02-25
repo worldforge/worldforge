@@ -957,35 +957,6 @@ fragment_program Lighting/OffsetMapping/Specular/ShadowFp glsl
 }
 
 
-vertex_program Water/SimpleVp glsl
-{
-	source common/base/Lighting.vert
-	preprocessor_defines FOG_NONE=1,SHADOW=0,NORMAL_MAP=0,PARALLAX_STEPS=0
-	default_params
-	{
-        param_named_auto viewProjMatrix viewproj_matrix
-        param_named_auto worldMatrix world_matrix
-
-		param_named_auto numberOfActiveLights light_count
-	}
-}
-
-fragment_program Water/SimpleFp glsl
-{
-	source common/base/Water.frag
-	preprocessor_defines FOG_EXP2=1,SHADOW=0,NORMAL_MAP=0,PARALLAX_STEPS=0,SPECULAR=0
-	default_params
-	{
-
-		param_named_auto diffuseLight light_diffuse_colour 0
-		param_named_auto ambientColour ambient_light_colour
-		param_named_auto fogColour fog_colour
-		param_named_auto fogParams fog_params
-		param_named_auto time time
-		param_named diffuseMap int 0
-	}
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // Normal texture versions
 

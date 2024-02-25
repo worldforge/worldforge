@@ -2,8 +2,8 @@
 
 // Diffuse texture
 uniform sampler2D diffuseMap;
-uniform float alpha_value;
 uniform vec4 colour;
+uniform float alpha_value;
 
 in vec4 oUv0;
 

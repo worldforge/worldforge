@@ -1,5 +1,3 @@
-
-
 vertex_program OutlineVp glsl
 {
 	source common/base/Outline.vert
@@ -12,7 +10,6 @@ vertex_program OutlineVp glsl
 fragment_program OutlineFp glsl
 {
 	source common/base/Outline.frag
-
 }
 
 material /common/base/outline
