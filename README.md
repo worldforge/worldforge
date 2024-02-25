@@ -64,6 +64,9 @@ convert .png to .dds as well as scaling down textures. If you omit this step Cyp
 Subversion media. Which you might want if you're developing locally.
 This step also requires ImageMagick to be installed.
 
+If you only want to build the server or the client you can supply these options to the "conan install..." command:
+"-o Worldforge/*:with_client=False" or "-o Worldforge/*:with_server=False". 
+
 ### CMake < 3.23
 
 If your CMake tool is an earlier version, < 3.23, you can't use the "presets" system with Conan. Instead you have to
