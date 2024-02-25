@@ -58,15 +58,6 @@ OgrePluginLoader::OgrePluginLoader() {
 #ifdef OGRE_BUILD_RENDERSYSTEM_GL3PLUS
 	mPlugins.emplace("RenderSystem_GL3Plus", OGRE_NEW Ogre::GL3PlusPlugin());
 #endif
-#ifdef OGRE_BUILD_RENDERSYSTEM_GLES
-	mPlugins.emplace("RenderSystem_GLES", OGRE_NEW Ogre::GLESPlugin());
-#endif
-#ifdef OGRE_BUILD_RENDERSYSTEM_GLES2
-	mPlugins.emplace("RenderSystem_GLES2", OGRE_NEW Ogre::GLES2Plugin());
-#endif
-#ifdef OGRE_BUILD_RENDERSYSTEM_D3D9
-	mPlugins.emplace("RenderSystem_Direct3D9", OGRE_NEW Ogre::D3D9Plugin());
-#endif
 #ifdef OGRE_BUILD_PLUGIN_PFX
 	mPlugins.emplace("Plugin_ParticleFX", OGRE_NEW Ogre::ParticleFXPlugin());
 #endif
