@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 #
 # Requires Python 3 or higher
-
 import fileinput
 import fnmatch
 import os
@@ -36,6 +35,7 @@ def collect_licenses(src_assets_path, licenses, assets):
 
 
 def copy_assets(src_assets_path, dest_assets_path, assets, assets_no_conversion, image_max_size=None):
+    destination_assets = set()
     original_size = 0
     destination_size = 0
     copied = 0
@@ -101,12 +101,12 @@ def copy_assets(src_assets_path, dest_assets_path, assets, assets_no_conversion,
 
             original_size = original_size + os.path.getsize(asset_path)
             destination_size = destination_size + os.path.getsize(dest_asset_path)
-
+            destination_assets.add(dest_asset_path)
         else:
             errors = errors + 1
             print("referenced file {0} does not exist".format(asset_path))
 
-    return copied, converted, skipped, errors, original_size, destination_size
+    return copied, converted, skipped, errors, original_size, destination_size, destination_assets
 
 
 def copytree(src, dst):
@@ -180,6 +180,7 @@ OPTIONS
 
     # Put all assets here, as paths relative to the "assets" directory in the media repo.
     assets = set()
+
     assets_no_conversion = set()
 
     # Copy all files found in the "assets" directory. Skip "source" directories.
@@ -197,9 +198,19 @@ OPTIONS
 
     assets.update(licenses)
 
-    copied, converted, skipped, errors, original_size, destination_size = copy_assets(src_assets_dir, dest_assets_dir,
-                                                                                      assets, assets_no_conversion,
-                                                                                      max_size)
+    copied, converted, skipped, errors, original_size, destination_size, destination_assets = copy_assets(
+        src_assets_dir, dest_assets_dir,
+        assets, assets_no_conversion,
+        max_size)
+
+    for root, dirs, files in os.walk(dest_assets_dir):
+        for file in files:
+            if file != "LICENSING.txt" and file != "COPYING.txt":
+                resolved_file = os.path.join(root, file)
+                if resolved_file not in destination_assets:
+                    print("Pruning left over file {}".format(resolved_file))
+                    os.remove(resolved_file)
+
     print(
         "Media conversion completed.\n{0} files copied, {1} images converted, {2} files skipped, {3} with errors".format(
             copied, converted, skipped, errors))
