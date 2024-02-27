@@ -69,7 +69,7 @@ find_package(SDL2 REQUIRED)
 
 find_package(sigc++-3 3.0.7 REQUIRED)
 
-find_package(OGRE 14.1.2 REQUIRED)
+find_package(OGRE 14.2.0 REQUIRED)
 
 #With Conan there will be a hard coded path to Freetype within the Overlay target. Let's remove that and link to
 # Freetype ourselves.
