@@ -218,7 +218,7 @@ bool SubModelPart::createInstancedEntities() {
 			//Check if the material is "instanced", i.e. has the suffix as specified in "subMeshInstanceSuffix".
 			//If not, we'll create a new material by cloning the original and replacing the vertex shader with
 			//one with the correct suffix, if such one is available and supported.
-			if (!boost::algorithm::ends_with(materialName, subMeshInstanceSuffix)) {
+			if (!materialName.ends_with(subMeshInstanceSuffix)) {
 
 				instancedMaterialName += subMeshInstanceSuffix;
 				auto& materialMgr = Ogre::MaterialManager::getSingleton();
@@ -244,7 +244,7 @@ bool SubModelPart::createInstancedEntities() {
 							}
 
 							auto shadowCasterMat = tech->getShadowCasterMaterial();
-							if (shadowCasterMat && !boost::algorithm::ends_with(shadowCasterMat->getName(), subMeshInstanceSuffix)) {
+							if (shadowCasterMat && !shadowCasterMat->getName().ends_with(subMeshInstanceSuffix)) {
 								std::string instancedShadowCasterMatName = shadowCasterMat->getName() + subMeshInstanceSuffix;
 								auto shadowCasterMatInstanced = materialMgr.getByName(instancedShadowCasterMatName, resourceGroup);
 								if (!shadowCasterMatInstanced) {
@@ -278,7 +278,7 @@ bool SubModelPart::createInstancedEntities() {
 			}
 
 			if (sceneManager->hasInstanceManager(instanceName)) {
-				managersAndMaterials.emplace_back(std::make_pair(sceneManager->getInstanceManager(instanceName), instancedMaterialName));
+				managersAndMaterials.emplace_back(sceneManager->getInstanceManager(instanceName), instancedMaterialName);
 			} else {
 				auto bestTech = subEntity->getMaterial()->getBestTechnique();
 				if (!bestTech->getPasses().empty() && bestTech->getPass(0)->hasVertexProgram()) {
@@ -303,7 +303,7 @@ bool SubModelPart::createInstancedEntities() {
 																									 50, Ogre::IM_USEALL, entry.subEntityIndex);
 						instanceManager->setBatchesAsStaticAndUpdate(true);
 
-						managersAndMaterials.emplace_back(std::make_pair(instanceManager, instancedMaterialName));
+						managersAndMaterials.emplace_back(instanceManager, instancedMaterialName);
 					} catch (const std::exception& e) {
 						logger->error("Could not create instanced versions of mesh {} (as {}): {}", meshName, instancedMeshName, e.what());
 						throw;

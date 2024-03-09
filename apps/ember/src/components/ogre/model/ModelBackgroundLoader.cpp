@@ -209,7 +209,8 @@ bool ModelBackgroundLoader::performLoading() {
 	} else if (mState == LS_MATERIAL_PREPARED) {
 		for (auto& materialPtr: mMaterialsToLoad) {
 			if (materialPtr) {
-				for (auto* tech: materialPtr->getSupportedTechniques()) {
+				//We can't call on "getSupportedTechniques()" here since that gets populated first when "load()" is called
+				for (auto* tech: materialPtr->getTechniques()) {
 					for (auto* pass: tech->getPasses()) {
 						for (auto* tus: pass->getTextureUnitStates()) {
 							if (tus->getContentType() == Ogre::TextureUnitState::ContentType::CONTENT_NAMED) {
