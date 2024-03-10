@@ -361,15 +361,15 @@ void Awareness::removeObserver() {
 }
 
 void Awareness::updateEntity(const MemEntity& observer, const MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent) {
-	auto I = mObservedEntities.find(entity.getIntId());
+	auto I = mObservedEntities.find(entity.getIdAsInt());
 	if (I != mObservedEntities.end()) {
-		if (!entity.m_parent || entity.m_parent->getIntId() != mDomainEntityId) {
+		if (!entity.m_parent || entity.m_parent->getIdAsInt() != mDomainEntityId) {
 			removeEntity(observer, entity);
 		} else {
 			processEntityUpdate(*I->second, entity, ent, entity.m_lastUpdated);
 		}
 	} else {
-		if (entity.m_parent && entity.m_parent->getIntId() == mDomainEntityId) {
+		if (entity.m_parent && entity.m_parent->getIdAsInt() == mDomainEntityId) {
 			addEntity(observer, entity, true);
 		}
 	}
@@ -378,10 +378,10 @@ void Awareness::updateEntity(const MemEntity& observer, const MemEntity& entity,
 
 void Awareness::addEntity(const MemEntity& observer, const MemEntity& entity, bool isDynamic) {
 	rmt_ScopedCPUSample(Awareness_addEntity, 0)
-	auto I = mObservedEntities.find(entity.getIntId());
+	auto I = mObservedEntities.find(entity.getIdAsInt());
 	if (I == mObservedEntities.end()) {
 		std::unique_ptr<EntityEntry> entityEntry(new EntityEntry());
-		entityEntry->entityId = entity.getIntId();
+		entityEntry->entityId = entity.getIdAsInt();
 		entityEntry->numberOfObservers = 1;
 		auto bboxProp = entity.getPropertyClassFixed<BBoxProperty<MemEntity>>();
 		entityEntry->isIgnored = !bboxProp || !bboxProp->data().isValid();
@@ -393,19 +393,19 @@ void Awareness::addEntity(const MemEntity& observer, const MemEntity& entity, bo
 		if (isDynamic) {
 			mMovingEntities.insert(entityEntry.get());
 		}
-		I = mObservedEntities.emplace(entity.getIntId(), std::move(entityEntry)).first;
-		cy_debug_print("Creating new entry for " << entity.getId())
+		I = mObservedEntities.emplace(entity.getIdAsInt(), std::move(entityEntry)).first;
+		cy_debug_print("Creating new entry for " << entity.getIdAsString())
 	} else {
 		I->second->numberOfObservers++;
 	}
 
 	//Entity already exists; check if it's the same as the observer and marked it as owned.
-	if (I->first == observer.getIntId()) {
+	if (I->first == observer.getIdAsInt()) {
 		I->second->isActorOwned = true;
 	}
 
 	bool isNotActorAndFirstSeen = !I->second->isActorOwned && I->second->numberOfObservers == 1;
-	bool isOwnEntity = I->first == observer.getIntId();
+	bool isOwnEntity = I->first == observer.getIdAsInt();
 
 	//Only do movement change processing if this is the first observer; otherwise that should already have been done
 	//Or if the entity is the actor`s own entity.
@@ -416,13 +416,13 @@ void Awareness::addEntity(const MemEntity& observer, const MemEntity& entity, bo
 }
 
 void Awareness::removeEntity(const MemEntity& observer, const MemEntity& entity) {
-	auto I = mObservedEntities.find(entity.getIntId());
+	auto I = mObservedEntities.find(entity.getIdAsInt());
 	if (I != mObservedEntities.end()) {
-		cy_debug_print("Removing entity " << entity.getId())
+		cy_debug_print("Removing entity " << entity.getIdAsString())
 		//Decrease the number of observers, and delete entry if there's none left
 		auto& entityEntry = I->second;
 		if (entityEntry->numberOfObservers == 0) {
-			spdlog::warn("Entity entry {} has decreased number of observers to < 0. This indicates an error.", entity.getId());
+			spdlog::warn("Entity entry {} has decreased number of observers to < 0. This indicates an error.", entity.getIdAsString());
 		}
 		entityEntry->numberOfObservers--;
 		if (entityEntry->numberOfObservers == 0) {
@@ -439,7 +439,7 @@ void Awareness::removeEntity(const MemEntity& observer, const MemEntity& entity)
 			mObservedEntities.erase(I);
 		} else {
 			//If the entity and the observer are the same we need to remove the marking of the entry being owned by an actor.
-			if (observer.getIntId() == entity.getIntId()) {
+			if (observer.getIdAsInt() == entity.getIdAsInt()) {
 				entityEntry->isActorOwned = false;
 			}
 		}
@@ -529,7 +529,7 @@ bool Awareness::processEntityUpdate(EntityEntry& entityEntry, const MemEntity& e
 		if (!entityEntry.isIgnored) {
 			//Check if the bbox now is invalid
 			if (!entityEntry.bbox.data.isValid()) {
-				cy_debug_print("Ignoring entity " << entity.getId() << " because it has no valid bbox.")
+				cy_debug_print("Ignoring entity " << entity.getIdAsString() << " because it has no valid bbox.")
 				entityEntry.isIgnored = true;
 
 				//We must now mark those areas that the entities used to touch as dirty, as well as remove the entity areas

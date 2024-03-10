@@ -125,7 +125,7 @@ void PossessionClient::processResponses(const OpVector& incomingRes, OpVector& o
 		}
 		//Any op with both "from" and "to" set should be re-sent.
 		if ((!resOp->isDefaultTo() && !resOp->isDefaultFrom())) {
-			auto mind = m_account->findMindForId(resOp->getTo());
+			auto mind = m_account->findMindForId(RouterId(resOp->getTo()));
 			if (mind) {
 				resolveDispatchTimeForOp(*resOp);
 				m_operationsDispatcher.addOperationToQueue(resOp, std::move(mind));
@@ -161,12 +161,6 @@ void PossessionClient::processOperation(const Operation& op, OpVector& res) {
 std::chrono::steady_clock::duration PossessionClient::getTime() const {
 	return std::chrono::steady_clock::now() - m_startTime;
 }
-
-
-const std::unordered_map<std::string, Ref<BaseMind>>& PossessionClient::getMinds() const {
-	return m_account->getMinds();
-}
-
 
 void PossessionClient::scheduleDispatch() {
 	m_dispatcherTimer.cancel();

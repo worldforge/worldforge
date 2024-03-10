@@ -169,7 +169,7 @@ void OperationsDispatcher<T>::addOperationToQueue(Operation op, Ref<T> ent) {
 	if (!m_operationQueue.empty()) {
 		topSequenceNr = m_operationQueue.top().sequence;
 	}
-	op->setFrom(ent->getId());
+	op->setFrom(ent->getIdAsString());
 	if (opdispatcher_debug_flag) {
 		std::cout << "OperationsDispatcher::addOperationToQueue {" << std::endl;
 		debug_dump(op, std::cout);

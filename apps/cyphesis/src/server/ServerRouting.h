@@ -46,7 +46,7 @@ private:
 	Shaker m_shaker;
 	/// A mapping of ID to object of all the OOG objects in the server.
 	/// These are all owned by this instance.
-	std::map<long, std::unique_ptr<ConnectableRouter>> m_routers;
+	std::map<RouterId, std::unique_ptr<ConnectableRouter>> m_routers;
 	/// A mapping of ID to object of all the accounts in the server.
 	/// All of the accounts are aliases for ConnectableRouter base instances that exists in m_objects.
 	std::map<std::string, Account*> m_accounts;
@@ -101,7 +101,7 @@ public:
 	Shaker& getShaker() { return m_shaker; }
 
 	/// Accessor for OOG objects map.
-	const std::map<long, std::unique_ptr<ConnectableRouter>>& getObjects() const {
+	const std::map<RouterId, std::unique_ptr<ConnectableRouter>>& getObjects() const {
 		return m_routers;
 	}
 
@@ -123,7 +123,7 @@ public:
 
 	void addAccount(std::unique_ptr<Account> a);
 
-	ConnectableRouter* getObject(const std::string& id) const;
+	ConnectableRouter* getObject(RouterId id) const;
 
 	Account* getAccountByName(const std::string& username);
 

@@ -108,7 +108,7 @@ std::unique_ptr<ExternalMind> Account::createMind(const Ref<LocatedEntity>& enti
 /// \brief chr The character to connect to this account
 /// \return Returns 0 on success and -1 on failure.
 int Account::connectCharacter(const Ref<LocatedEntity>& entity, OpVector& res) {
-	if (m_minds.find(entity->getIntId()) != m_minds.end()) {
+	if (m_minds.find(entity->getIdAsInt()) != m_minds.end()) {
 		spdlog::warn("Entity {} is already connected to mind of account {}.", entity->describeEntity(), m_username);
 		return 1;
 	} else {
@@ -117,7 +117,7 @@ int Account::connectCharacter(const Ref<LocatedEntity>& entity, OpVector& res) {
 		auto mindPtr = mind.get();
 		auto destroyedConnection = entity->destroyed.connect([this, mindPtr]() {
 			removeMindFromEntity(mindPtr);
-			m_minds.erase(mindPtr->getEntity()->getIntId());
+			m_minds.erase(mindPtr->getEntity()->getIdAsInt());
 		});
 		mind->linkUp(m_connection);
 		m_connection->addRouter(mind->m_id, mind.get());
@@ -134,7 +134,7 @@ int Account::connectCharacter(const Ref<LocatedEntity>& entity, OpVector& res) {
 		mindsProp.addMind(mind.get());
 		entity->applyProperty(mindsProp);
 
-		m_minds.emplace(entity->getIntId(), MindEntry{std::move(mind), AutoCloseConnection(destroyedConnection)});
+		m_minds.emplace(entity->getIdAsInt(), MindEntry{std::move(mind), AutoCloseConnection(destroyedConnection)});
 		return 0;
 	}
 
@@ -160,14 +160,14 @@ int Account::connectCharacter(const Ref<LocatedEntity>& entity, OpVector& res) {
 ///
 /// @param chr Character object to be added
 void Account::addCharacter(const Ref<LocatedEntity>& chr) {
-	m_charactersDict[chr->getIntId()] = chr;
-	chr->destroyed.connect(sigc::bind(sigc::mem_fun(*this, &Account::characterDestroyed), chr->getIntId()));
+	m_charactersDict[chr->getIdAsInt()] = chr;
+	chr->destroyed.connect(sigc::bind(sigc::mem_fun(*this, &Account::characterDestroyed), chr->getIdAsInt()));
 }
 
 void Account::sendUpdateToClient() {
 	if (m_connection) {
 		Sight s;
-		s->setTo(getId());
+		s->setTo(getIdAsString());
 		Anonymous sight_arg;
 		addToEntity(sight_arg);
 		s->setArgs1(sight_arg);
@@ -179,7 +179,7 @@ void Account::sendUpdateToClient() {
 void Account::removeMindFromEntity(ExternalMind* mind) {
 	//Delete any mind attached to this character
 	if (m_connection) {
-		m_connection->removeRouter(mind->getIntId());
+		m_connection->removeRouter(mind->getIdAsInt());
 	} else {
 		spdlog::warn("Account still had minds even after connection had been shut down.");
 	}
@@ -197,7 +197,7 @@ void Account::removeMindFromEntity(ExternalMind* mind) {
 void Account::LogoutOperation(const Operation& op, OpVector& res) {
 	if (m_connection == nullptr) {
 		error(op, fmt::format("Account::LogoutOperation on account {} ({}) that doesn't seem to "
-							  "be connected.", getId(), m_username), res, getId());
+							  "be connected.", getIdAsString(), m_username), res, getIdAsString());
 		return;
 	}
 
@@ -205,30 +205,30 @@ void Account::LogoutOperation(const Operation& op, OpVector& res) {
 		//If there are args it means that we should only log out one specific mind.
 		auto arg = op->getArgs().front();
 		if (!arg->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-			error(op, "No id given on logout op", res, getId());
+			error(op, "No id given on logout op", res, getIdAsString());
 			return;
 		}
 		auto id = arg->getId();
 		for (auto& entry: m_minds) {
 			auto& mind = entry.second.mind;
-			if (mind->getId() == id) {
+			if (mind->getIdAsString() == id) {
 				removeMindFromEntity(mind.get());
-				m_minds.erase(mind->getEntity()->getIntId());
+				m_minds.erase(mind->getEntity()->getIdAsInt());
 
 				Info info;
 				info->setArgs1(op);
 				if (!op->isDefaultSerialno()) {
 					info->setRefno(op->getSerialno());
 				}
-				info->setFrom(getId());
-				info->setTo(getId());
+				info->setFrom(getIdAsString());
+				info->setTo(getIdAsString());
 				info->setStamp(BaseWorld::instance().getTimeAsMilliseconds().count());
 				m_connection->send(info);
 
 				return;
 			}
 		}
-		error(op, "Logout failed", res, getId());
+		error(op, "Logout failed", res, getIdAsString());
 	} else {
 
 		Info info;
@@ -236,8 +236,8 @@ void Account::LogoutOperation(const Operation& op, OpVector& res) {
 		if (!op->isDefaultSerialno()) {
 			info->setRefno(op->getSerialno());
 		}
-		info->setFrom(getId());
-		info->setTo(getId());
+		info->setFrom(getIdAsString());
+		info->setTo(getIdAsString());
 		info->setStamp(BaseWorld::instance().getTimeAsMilliseconds().count());
 		m_connection->send(info);
 		m_connection->disconnect();
@@ -276,7 +276,7 @@ void Account::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
 				if (spawnProp) {
 					Element elem;
 					spawnProp->get(elem);
-					elem.Map()["id"] = spawnEntity->getId();
+					elem.Map()["id"] = spawnEntity->getIdAsString();
 					spawn_list.emplace_back(elem);
 				}
 			}
@@ -289,11 +289,11 @@ void Account::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
 	auto I = m_charactersDict.begin();
 	auto Iend = m_charactersDict.end();
 	for (; I != Iend; ++I) {
-		char_list.emplace_back(I->second->getId());
+		char_list.emplace_back(I->second->getIdAsString());
 	}
 	ent->setAttr("characters", char_list);
 	ent->setObjtype("obj");
-	ent->setId(getId());
+	ent->setId(getIdAsString());
 }
 
 void Account::externalOperation(const Operation& op, Link& link) {
@@ -362,31 +362,31 @@ void Account::operation(const Operation& op, OpVector& res) {
 void Account::CreateOperation(const Operation& op, OpVector& res) {
 	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
-		error(op, "No arguments.", res, getId());
+		error(op, "No arguments.", res, getIdAsString());
 		return;
 	}
 
 	auto& arg = args.front();
 	if (arg->isDefaultId()) {
-		error(op, "No id in first argument.", res, getId());
+		error(op, "No id in first argument.", res, getIdAsString());
 		return;
 	}
 	BaseWorld& world = m_connection->m_server.m_world;
 	//Check that the destination is registered as a "spawn entity". Only those entities are allowed to receive Create ops from an Account.
 	if (world.getSpawnEntities().find(arg->getId()) == world.getSpawnEntities().end()) {
-		error(op, "Could not find spawn entity.", res, getId());
+		error(op, "Could not find spawn entity.", res, getIdAsString());
 		return;
 	}
 	auto spawnEntity = world.getEntity(arg->getId());
 	if (!spawnEntity) {
-		error(op, "Could not find spawn entity.", res, getId());
+		error(op, "Could not find spawn entity.", res, getIdAsString());
 		return;
 	}
 
 	//"__account" property is important, since when installed it will call back into this account, informing it of the new entity.
 	arg->setAttr(AccountProperty::property_name, m_username);
 	Create create;
-	create->setTo(spawnEntity->getId());
+	create->setTo(spawnEntity->getIdAsString());
 	create->setArgs1(arg);
 	spawnEntity->sendWorld(create);
 }
@@ -406,7 +406,7 @@ void Account::ImaginaryOperation(const Operation& op, OpVector& res) {
 
 	Sight s;
 	s->setArgs1(op);
-	s->setFrom(getId());
+	s->setFrom(getIdAsString());
 	// FIXME Remove this - broadcasting
 	if (!op->isDefaultSerialno()) {
 		s->setRefno(op->getSerialno());
@@ -414,7 +414,7 @@ void Account::ImaginaryOperation(const Operation& op, OpVector& res) {
 	auto arg = smart_dynamic_cast<RootEntity>(args.front());
 
 	if (!arg.isValid()) {
-		error(op, "Imaginary arg is malformed", res, getId());
+		error(op, "Imaginary arg is malformed", res, getIdAsString());
 		return;
 	}
 
@@ -431,20 +431,20 @@ void Account::ImaginaryOperation(const Operation& op, OpVector& res) {
 void Account::TalkOperation(const Operation& op, OpVector& res) {
 	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
-		error(op, "Talk has no args", res, getId());
+		error(op, "Talk has no args", res, getIdAsString());
 		return;
 	}
 
 	auto arg = smart_dynamic_cast<RootEntity>(args.front());
 
 	if (!arg.isValid()) {
-		error(op, "Talk arg is malformed", res, getId());
+		error(op, "Talk arg is malformed", res, getIdAsString());
 		return;
 	}
 
 	Sound s;
 	s->setArgs1(op);
-	s->setFrom(getId());
+	s->setFrom(getIdAsString());
 	// FIXME Remove this - broadcasting
 	if (!op->isDefaultSerialno()) {
 		s->setRefno(op->getSerialno());
@@ -466,14 +466,14 @@ void Account::PossessOperation(const Operation& op, OpVector& res) {
 	}
 	auto& args = op->getArgs();
 	if (args.empty()) {
-		clientError(op, "Empty args in possess op.", res, getId());
+		clientError(op, "Empty args in possess op.", res, getIdAsString());
 		return;
 	}
 	auto& arg = args.front();
 
 	// FIXME In the possess case this ID isn't really required
 	if (!arg->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-		error(op, "No target for look", res, getId());
+		error(op, "No target for look", res, getIdAsString());
 		return;
 	}
 	const std::string& to = arg->getId();
@@ -498,9 +498,9 @@ void Account::PossessOperation(const Operation& op, OpVector& res) {
 				logEvent(POSSESS_CHAR,
 						 fmt::format("{} {} {} Claimed character ({}) "
 									 "by account {}",
-									 m_connection->getId(),
-									 getId(),
-									 character->getId(),
+									 m_connection->getIdAsString(),
+									 getIdAsString(),
+									 character->getIdAsString(),
 									 character->getType()->name(),
 									 m_username));
 			}
@@ -511,7 +511,7 @@ void Account::PossessOperation(const Operation& op, OpVector& res) {
 			connectCharacter(J->second, res);
 			return;
 		}
-		clientError(op, fmt::format("Could not find character '{}' to possess.", to), res, getId());
+		clientError(op, fmt::format("Could not find character '{}' to possess.", to), res, getIdAsString());
 	}
 
 }
@@ -524,7 +524,7 @@ void Account::LookOperation(const Operation& op, OpVector& res) {
 	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
 		Sight s;
-		s->setTo(getId());
+		s->setTo(getIdAsString());
 		Anonymous sight_arg;
 		m_connection->m_server.getLobby().addToEntity(sight_arg);
 		s->setArgs1(sight_arg);
@@ -533,7 +533,7 @@ void Account::LookOperation(const Operation& op, OpVector& res) {
 	}
 	const Root& arg = args.front();
 	if (!arg->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-		error(op, "No target for look", res, getId());
+		error(op, "No target for look", res, getIdAsString());
 		return;
 	}
 	const std::string& to = arg->getId();
@@ -543,7 +543,7 @@ void Account::LookOperation(const Operation& op, OpVector& res) {
 	auto J = m_charactersDict.find(intId);
 	if (J != m_charactersDict.end()) {
 		Sight s;
-		s->setTo(getId());
+		s->setTo(getIdAsString());
 		Anonymous sight_arg;
 		J->second->addToEntity(sight_arg);
 		s->setArgs1(sight_arg);
@@ -554,14 +554,14 @@ void Account::LookOperation(const Operation& op, OpVector& res) {
 	auto K = accounts.find(to);
 	if (K != accounts.end()) {
 		Sight s;
-		s->setTo(getId());
+		s->setTo(getIdAsString());
 		Anonymous sight_arg;
 		K->second->addToEntity(sight_arg);
 		s->setArgs1(sight_arg);
 		res.push_back(s);
 		return;
 	}
-	error(op, fmt::format("Unknown look target '{}'.", to), res, getId());
+	error(op, fmt::format("Unknown look target '{}'.", to), res, getIdAsString());
 }
 
 void Account::GetOperation(const Operation& op, OpVector& res) {
@@ -569,7 +569,7 @@ void Account::GetOperation(const Operation& op, OpVector& res) {
 
 void Account::OtherOperation(const Operation& op, OpVector& res) {
 	std::string parent = op->getParent().empty() ? "-" : op->getParent();
-	error(op, fmt::format("Unknown operation {} in Account {} ({})", parent, getId(), m_username), res);
+	error(op, fmt::format("Unknown operation {} in Account {} ({})", parent, getIdAsString(), m_username), res);
 }
 
 Account::~Account() = default;

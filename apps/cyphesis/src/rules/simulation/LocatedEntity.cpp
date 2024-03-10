@@ -54,14 +54,14 @@ const std::set<std::string>& LocatedEntity::immutables() {
 
 /// \brief LocatedEntity constructor
 LocatedEntity::LocatedEntity(RouterId id) :
-		Router(std::move(id)),
+		Router(id),
 		m_seq(0),
 		m_type(nullptr),
 		m_flags(0),
 		m_parent(nullptr),
 		m_contains(nullptr) {
 	m_properties[LocationProperty::property_name].property = std::make_unique<LocationProperty>(*this);
-	m_properties[IdProperty::property_name].property = std::make_unique<IdProperty>(getId());
+	m_properties[IdProperty::property_name].property = std::make_unique<IdProperty>(m_id);
 }
 
 LocatedEntity::~LocatedEntity() {
@@ -243,7 +243,7 @@ void LocatedEntity::addModifier(const std::string& propertyName, Modifier* modif
 		return;
 	}
 
-	m_activeModifiers[affectingEntity].emplace(propertyName, modifier);
+	m_activeModifiers[affectingEntity->m_id].emplace(propertyName, modifier);
 
 	auto I = m_properties.find(propertyName);
 	if (I != m_properties.end()) {
@@ -473,13 +473,13 @@ void LocatedEntity::broadcast(const Atlas::Objects::Operation::RootOperation& op
 		} else if (visibility == Visibility::PROTECTED) {
 			//Protected ops also goes to the entity itself
 			if (!entity->hasFlags(entity_admin) &&
-				entity->getIntId() != getIntId()) {
+					entity->getIdAsInt() != getIdAsInt()) {
 				continue;
 			}
 		}
 		auto newOp = op.copy();
-		newOp->setTo(entity->getId());
-		newOp->setFrom(getId());
+		newOp->setTo(entity->getIdAsString());
+		newOp->setFrom(getIdAsString());
 		res.push_back(newOp);
 	}
 }
@@ -535,10 +535,10 @@ void LocatedEntity::processAppearDisappear(std::set<const LocatedEntity*> previo
 		if (numberErased == 0) {
 			Atlas::Objects::Operation::Appearance appear;
 			Atlas::Objects::Entity::Anonymous that_ent;
-			that_ent->setId(getId());
+			that_ent->setId(getIdAsString());
 			that_ent->setStamp(getSeq());
 			appear->setArgs1(that_ent);
-			appear->setTo(entity->getId());
+			appear->setTo(entity->getIdAsString());
 			res.push_back(appear);
 		}
 	}
@@ -546,10 +546,10 @@ void LocatedEntity::processAppearDisappear(std::set<const LocatedEntity*> previo
 	for (auto entity: previousObserving) {
 		Atlas::Objects::Operation::Disappearance disappear;
 		Atlas::Objects::Entity::Anonymous that_ent;
-		that_ent->setId(getId());
+		that_ent->setId(getIdAsString());
 		that_ent->setStamp(getSeq());
 		disappear->setArgs1(that_ent);
-		disappear->setTo(entity->getId());
+		disappear->setTo(entity->getIdAsString());
 		res.push_back(disappear);
 	}
 }
@@ -810,7 +810,7 @@ std::string LocatedEntity::describeEntity() const {
 void LocatedEntity::enqueueUpdateOp(OpVector& res) {
 	if (!hasFlags(entity_update_broadcast_queued)) {
 		Update update;
-		update->setTo(getId());
+		update->setTo(getIdAsString());
 		res.push_back(std::move(update));
 
 		addFlags(entity_update_broadcast_queued);
@@ -820,7 +820,7 @@ void LocatedEntity::enqueueUpdateOp(OpVector& res) {
 void LocatedEntity::enqueueUpdateOp() {
 	if (!hasFlags(entity_update_broadcast_queued)) {
 		Update update;
-		update->setTo(getId());
+		update->setTo(getIdAsString());
 		sendWorld(std::move(update));
 
 		addFlags(entity_update_broadcast_queued);
@@ -830,7 +830,7 @@ void LocatedEntity::enqueueUpdateOp() {
 
 std::ostream& operator<<(std::ostream& s, const LocatedEntity& d) {
 	auto name = d.getAttrType("name", Element::TYPE_STRING);
-	s << d.getId();
+	s << d.getIdAsString();
 	if (d.m_type) {
 		s << "(" << d.m_type->name();
 		if (name) {

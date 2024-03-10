@@ -29,8 +29,6 @@
 
 #include "common/operations/Possess.h"
 #include "common/custom.h"
-#include "common/TypeNode.h"
-#include "common/ScriptKit.h"
 #include "common/debug.h"
 
 #include <Atlas/Objects/Operation.h>
@@ -55,7 +53,7 @@ long PossessionAccount::mind_count = 0;
 
 
 PossessionAccount::PossessionAccount(RouterId id, const MindKit& mindFactory, PossessionClient& client) :
-		Router(std::move(id)),
+		Router(id),
 		m_client(client),
 		m_mindFactory(mindFactory) {
 	assert(m_mindFactory.m_scriptFactory);
@@ -79,11 +77,11 @@ PossessionAccount::~PossessionAccount() {
 void PossessionAccount::enablePossession(OpVector& res) {
 
 	Atlas::Objects::Operation::Set set;
-	set->setTo(getId());
-	set->setFrom(getId());
+	set->setTo(getIdAsString());
+	set->setFrom(getIdAsString());
 
 	Atlas::Objects::Entity::Anonymous args;
-	args->setId(getId());
+	args->setId(getIdAsString());
 	args->setAttr("possessive", 1);
 	args->setObjtype("object");
 
@@ -93,14 +91,14 @@ void PossessionAccount::enablePossession(OpVector& res) {
 }
 
 void PossessionAccount::operation(const Operation& op, OpVector& res) {
-	if (!op->isDefaultTo() && op->getTo() != getId()) {
-		auto I = m_minds.find(op->getTo());
+	if (!op->isDefaultTo() && op->getTo() != getIdAsString()) {
+		auto I = m_minds.find(RouterId(op->getTo()));
 		if (I != m_minds.end()) {
 			I->second->operation(op, res);
 
 			if (I->second->isDestroyed()) {
 				spdlog::debug("Deleting mind {}.", I->second->describeEntity());
-				m_entitiesWithMinds.erase(I->second->getEntity()->getId());
+				m_entitiesWithMinds.erase(RouterId(I->second->getEntity()->getIdAsString()));
 				m_minds.erase(I);
 				mind_count--;
 			}
@@ -108,12 +106,12 @@ void PossessionAccount::operation(const Operation& op, OpVector& res) {
 			return;
 		}
 
-		I = m_entitiesWithMinds.find(op->getTo());
+		I = m_entitiesWithMinds.find(RouterId(op->getTo()));
 		if (I != m_entitiesWithMinds.end()) {
 			I->second->operation(op, res);
 			if (I->second->isDestroyed()) {
 				spdlog::debug("Deleting mind {}.", I->second->describeEntity());
-				m_minds.erase(I->second->getId());
+				m_minds.erase(RouterId(I->second->getIdAsString()));
 				mind_count--;
 				m_entitiesWithMinds.erase(I);
 			}
@@ -121,7 +119,7 @@ void PossessionAccount::operation(const Operation& op, OpVector& res) {
 			return;
 		}
 
-		spdlog::warn("Received operation {} directed at {} which isn't anything recognized by the account {}.", op->getParent(), op->getTo(), getId());
+		spdlog::warn("Received operation {} directed at {} which isn't anything recognized by the account {}.", op->getParent(), op->getTo(), getIdAsString());
 
 	} else {
 
@@ -140,12 +138,12 @@ void PossessionAccount::operation(const Operation& op, OpVector& res) {
 				entry.second->operation(op, res);
 			}
 		} else {
-			spdlog::debug("Unknown operation {} in PossessionAccount {}", op->getParent(), getId());
+			spdlog::debug("Unknown operation {} in PossessionAccount {}", op->getParent(), getIdAsString());
 		}
 	}
 }
 
-Ref<BaseMind> PossessionAccount::findMindForId(const std::string& id) {
+Ref<BaseMind> PossessionAccount::findMindForId(const RouterId& id) {
 
 	auto I = m_minds.find(id);
 	if (I != m_minds.end()) {
@@ -180,7 +178,7 @@ void PossessionAccount::PossessOperation(const Operation& op, OpVector& res) {
 	}
 }
 
-void PossessionAccount::takePossession(OpVector& res, const std::string& possessEntityId, const std::string& possessKey) {
+void PossessionAccount::takePossession(OpVector&, const std::string& possessEntityId, const std::string& possessKey) {
 	spdlog::info("Taking possession of entity with id {}.", possessEntityId);
 
 	Anonymous what;
@@ -188,7 +186,7 @@ void PossessionAccount::takePossession(OpVector& res, const std::string& possess
 	what->setAttr("possess_key", possessKey);
 
 	Possess possess;
-	possess->setFrom(getId());
+	possess->setFrom(getIdAsString());
 	possess->setArgs1(what);
 	m_client.sendWithCallback(possess, [this](const Operation& op, OpVector& resInner) {
 
@@ -237,11 +235,11 @@ void PossessionAccount::takePossession(OpVector& res, const std::string& possess
 }
 
 void PossessionAccount::createMindInstance(OpVector& res, RouterId mindId, const std::string& entityId) {
-	spdlog::info("Creating mind instance for entity id {} with mind id {}, number of minds: {}.", entityId, mindId.m_id, m_minds.size() + 1);
+	spdlog::info("Creating mind instance for entity id {} with mind id {}, number of minds: {}.", entityId, mindId.asString(), m_minds.size() + 1);
 	Ref<BaseMind> mind = m_mindFactory.newMind(mindId, entityId);
-	m_minds.emplace(mindId.m_id, mind);
+	m_minds.emplace(mindId, mind);
 	mind_count++;
-	m_entitiesWithMinds.emplace(entityId, mind);
+	m_entitiesWithMinds.emplace(RouterId(entityId), mind);
 
 	mind->m_scriptFactory = m_mindFactory.m_scriptFactory.get();
 	OpVector mindRes;

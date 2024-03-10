@@ -38,10 +38,10 @@ void AmountProperty::apply(LocatedEntity& entity) {
 
 	if (data() <= 0) {
 		Atlas::Objects::Operation::Delete del;
-		del->setTo(entity.getId());
-		del->setFrom(entity.getId());
+		del->setTo(entity.getIdAsString());
+		del->setFrom(entity.getIdAsString());
 		Atlas::Objects::Entity::Anonymous ent;
-		ent->setId(entity.getId());
+		ent->setId(entity.getIdAsString());
 		del->setArgs1(ent);
 		//Apply the delete op immediately to avoid an interim time where there's too many entities.
 		OpVector res;

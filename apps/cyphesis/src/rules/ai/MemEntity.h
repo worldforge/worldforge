@@ -230,7 +230,7 @@ public:
 							 "reinstalled with new class."
 							 "This might cause instability. Make sure that all "
 							 "properties are properly installed in "
-							 "CorePropertyManager.", name, getId());
+							 "CorePropertyManager.", name, getIdAsString());
 				Atlas::Message::Element val;
 				if (p->get(val)) {
 					sp->set(val);

@@ -35,7 +35,7 @@ SuspendedProperty* SuspendedProperty::copy() const {
 
 void SuspendedProperty::apply(LocatedEntity& ent) {
 	//If this property is applied to the world entity, it's a special case.
-	if (ent.getIntId() == 0) {
+	if (ent.getIdAsInt() == 0) {
 		BaseWorld::instance().setIsSuspended(isTrue());
 	} else {
 		if (!isTrue()) {
@@ -50,14 +50,14 @@ void SuspendedProperty::apply(LocatedEntity& ent) {
 
 void SuspendedProperty::install(LocatedEntity& owner, const std::string& name) {
 	//Regard the world as a special case.
-	if (owner.getIntId() != 0) {
+	if (owner.getIdAsInt() != 0) {
 		owner.installDelegate(Atlas::Objects::Operation::TICK_NO, name);
 	}
 }
 
 void SuspendedProperty::remove(LocatedEntity& owner, const std::string& name) {
 	//Regard the world as a special case.
-	if (owner.getIntId() != 0) {
+	if (owner.getIdAsInt() != 0) {
 		owner.removeDelegate(Atlas::Objects::Operation::TICK_NO, name);
 	} else {
 		if (!owner.isDestroyed()) {

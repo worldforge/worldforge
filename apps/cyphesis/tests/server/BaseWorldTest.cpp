@@ -43,11 +43,11 @@ static void test_function(Atlas::Objects::Operation::RootOperation) {
 class MyTestWorld : public TestWorld {
 public:
 	explicit MyTestWorld(Ref<LocatedEntity> gw) : TestWorld(gw) {
-		m_eobjects[gw->getIntId()] = gw;
+		m_eobjects[gw->getIdAsInt()] = gw;
 	}
 
 	void addEntity(const Ref<LocatedEntity>& ent, const Ref<LocatedEntity>& parent) override {
-		m_eobjects[ent->getIntId()] = ent;
+		m_eobjects[ent->getIdAsInt()] = ent;
 	}
 };
 

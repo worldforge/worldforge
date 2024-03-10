@@ -117,7 +117,7 @@ void BaseMindMapEntityintegration::test_MemMapdel_top() {
 	ASSERT_EQUAL(m_mind->m_map.m_entities.size(), 4u);
 
 	// Remove tlve from the map
-	m_mind->m_map.del(tlve->getId());
+	m_mind->m_map.del(tlve->getIdAsString());
 
 	ASSERT_EQUAL(m_mind->m_map.m_entities.size(), 3u);
 	ASSERT_FALSE(e2->m_parent);
@@ -148,7 +148,7 @@ void BaseMindMapEntityintegration::test_MemMapdel_mid() {
 	// Set a reference, so we can check e2 once it is removed
 	e2->incRef();
 	// Remove e2 from the map
-	m_mind->m_map.del(e2->getId());
+	m_mind->m_map.del(e2->getIdAsString());
 
 	ASSERT_EQUAL(m_mind->m_map.m_entities.size(), 3u);
 	ASSERT_TRUE(tlve->m_contains.find(e3) != tlve->m_contains.end());
@@ -182,7 +182,7 @@ void BaseMindMapEntityintegration::test_MemMapdel_edge() {
 	// Set a reference, so we can check e3 once it is removed
 	e3->incRef();
 	// Remove e3 from the map
-	m_mind->m_map.del(e3->getId());
+	m_mind->m_map.del(e3->getIdAsString());
 
 	ASSERT_EQUAL(m_mind->m_map.m_entities.size(), 3u);
 	ASSERT_TRUE(tlve->m_contains.find(e2) != tlve->m_contains.end());
@@ -210,7 +210,7 @@ void BaseMindMapEntityintegration::test_MemMapreadEntity_noloc() {
 	ASSERT_FALSE(e3->m_parent);
 
 	Anonymous data;
-	data->setLoc(tlve->getId());
+	data->setLoc(tlve->getIdAsString());
 
 	OpVector res;
 	// Read in entity data the sets the LOC of e3 to tlve
@@ -241,7 +241,7 @@ void BaseMindMapEntityintegration::test_MemMapreadEntity_changeloc() {
 	ASSERT_EQUAL(m_mind->m_map.m_entities.size(), 3u);
 
 	Anonymous data;
-	data->setLoc(tlve->getId());
+	data->setLoc(tlve->getIdAsString());
 
 	// Read in entity data that changes the LOC of e3 from e2 to TLVE
 	m_mind->m_map.readEntity(e3, data, std::chrono::milliseconds{0}, res);
@@ -264,7 +264,7 @@ void BaseMindMapEntityintegration::test_MemMap_updateAdd_location_properties_hav
 	}
 
 	auto ent = m_mind->m_map.get("1");
-	ASSERT_EQUAL("1", ent->getId());
+	ASSERT_EQUAL("1", ent->getIdAsString());
 	ASSERT_TRUE(!ent->getPropertyClass<BoolProperty<MemEntity>>("solid"));
 
 

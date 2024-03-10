@@ -74,11 +74,11 @@ void ModeProperty::apply(LocatedEntity& entity) {
 				activeRotationProp.removeFlags(prop_flag_persistence_clean);
 
 				Atlas::Objects::Entity::Anonymous move_arg;
-				move_arg->setId(entity.getId());
+				move_arg->setId(entity.getIdAsString());
 				move_arg->setAttr("orientation", currentOrientation.toAtlas());
 
 				Atlas::Objects::Operation::Move moveOp;
-				moveOp->setTo(entity.getId());
+				moveOp->setTo(entity.getIdAsString());
 				moveOp->setStamp(BaseWorld::instance().getTimeAsMilliseconds().count());
 				moveOp->setArgs1(move_arg);
 				entity.sendWorld(moveOp);
@@ -101,11 +101,11 @@ void ModeProperty::apply(LocatedEntity& entity) {
 			activeRotationProp->addFlags(prop_flag_unsent);
 
 			Atlas::Objects::Entity::Anonymous move_arg;
-			move_arg->setId(entity.getId());
+			move_arg->setId(entity.getIdAsString());
 			move_arg->setAttr("orientation", currentOrientation.toAtlas());
 
 			Atlas::Objects::Operation::Move moveOp;
-			moveOp->setTo(entity.getId());
+			moveOp->setTo(entity.getIdAsString());
 			moveOp->setStamp(BaseWorld::instance().getTimeAsMilliseconds().count());
 			moveOp->setArgs1(move_arg);
 			entity.sendWorld(moveOp);

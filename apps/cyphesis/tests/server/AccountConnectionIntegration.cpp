@@ -71,7 +71,7 @@ public:
 	void addEntity(const Ref<LocatedEntity>& ent, const Ref<LocatedEntity>& parent) override {
 		ent->m_parent = parent.get();
 		ent->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(0, 0, 0);
-		m_eobjects[ent->getIntId()] = ent;
+		m_eobjects[ent->getIdAsInt()] = ent;
 	}
 
 	Ref<LocatedEntity> addNewEntity(const std::string& t,
@@ -198,7 +198,7 @@ void AccountConnectionintegration::test_account_creation() {
 		ASSERT_TRUE(!account_id.empty());
 
 		// Check the account has been registered in the server object
-		Router* account_router_ptr = m_server->getObject(account_id);
+		Router* account_router_ptr = m_server->getObject(RouterId(account_id));
 		ASSERT_NOT_NULL(account_router_ptr);
 
 		// Check the account has been logged into the lobby
@@ -270,13 +270,6 @@ std::string instance(CYPHESIS);
 int CommSocket::flush() {
 	return 0;
 }
-
-
-const std::string& ExternalMind::connectionId() {
-	assert(m_link != 0);
-	return m_link->getId();
-}
-
 
 void ExternalMind::linkUp(Link* c) {
 	m_link = c;

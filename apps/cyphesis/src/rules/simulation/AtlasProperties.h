@@ -20,7 +20,7 @@
 #define RULESETS_ATLAS_PROPERTIES_H
 
 #include "PropertyBase.h"
-
+#include "common/RouterId.h"
 #include "modules/Ref.h"
 
 #include <set>
@@ -29,12 +29,12 @@
 /// \ingroup PropertyClasses
 class IdProperty : public PropertyBase {
 protected:
-	const std::string& m_data;
+	const RouterId& m_data;
 public:
 	static constexpr const char* property_name = "id";
 	static constexpr const char* property_atlastype = "string";
 
-	explicit IdProperty(const std::string& data);
+	explicit IdProperty(const RouterId& data);
 
 	int get(Atlas::Message::Element& val) const override;
 
@@ -66,7 +66,7 @@ public:
 
 	LocationProperty* copy() const override;
 
-	const std::string& data() const;
+	std::string data() const;
 };
 
 /// \brief Class to handle Entity name property

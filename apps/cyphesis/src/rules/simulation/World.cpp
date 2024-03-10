@@ -141,15 +141,15 @@ void World::clearWorld(OpVector&) {
 			if (entity->isPerceptive()) {
 				//Send a sight of a "delete" op to the entity so that it knows it has been deleted.
 				Delete delOp;
-				delOp->setTo(entity->getId());
+				delOp->setTo(entity->getIdAsString());
 
 				Anonymous delArg;
-				delArg->setId(entity->getId());
+				delArg->setId(entity->getIdAsString());
 				delOp->setArgs1(delArg);
 
 				Sight sToEntity;
 				sToEntity->setArgs1(delOp);
-				sToEntity->setTo(entity->getId());
+				sToEntity->setTo(entity->getIdAsString());
 				entity->operation(sToEntity, ignoredRes);
 			}
 			baseWorld.delEntity(entity.get());
@@ -181,7 +181,7 @@ void World::RelayOperation(const Operation& op, OpVector& res) {
 	//our registered relays in m_relays. This is a feature to allow for a timeout; if
 	//no Relay has been received from the destination Entity after a certain period
 	//we'll shut down the relay link.
-	if (op->getTo() == getId() && op->getFrom() == getId() && !op->isDefaultRefno()) {
+	if (op->getTo() == getIdAsString() && op->getFrom() == getIdAsString() && !op->isDefaultRefno()) {
 		auto I = m_relays.find(op->getRefno());
 		if (I != m_relays.end()) {
 
@@ -234,15 +234,15 @@ void World::RelayOperation(const Operation& op, OpVector& res) {
 
 void World::sendRelayToEntity(const LocatedEntity& to, const Operation& op, sigc::slot<void(const Operation&, const std::string&)> callback) {
 	//Make the op appear to come from the destination entity.
-	op->setFrom(to.getId());
+	op->setFrom(to.getIdAsString());
 
 	long int serialNo = ++m_serialNumber;
 	Atlas::Objects::Operation::Relay relayOp;
-	relayOp->setTo(to.getId());
+	relayOp->setTo(to.getIdAsString());
 	relayOp->setSerialno(serialNo);
 	relayOp->setArgs1(op);
 	Relay relay;
-	relay.entityId = to.getId();
+	relay.entityId = to.getIdAsString();
 	relay.callback = std::move(callback);
 	m_relays.emplace(serialNo, relay);
 
@@ -251,8 +251,8 @@ void World::sendRelayToEntity(const LocatedEntity& to, const Operation& op, sigc
 	//Also send a future Relay op to ourselves to make sure that the registered relay in m_relays
 	//is removed in the case that we don't get any response.
 	Atlas::Objects::Operation::Relay pruneOp;
-	pruneOp->setTo(getId());
-	pruneOp->setFrom(getId());
+	pruneOp->setTo(getIdAsString());
+	pruneOp->setFrom(getIdAsString());
 	pruneOp->setRefno(serialNo);
 	pruneOp->setFutureMilliseconds(5'000);
 	sendWorld(pruneOp);

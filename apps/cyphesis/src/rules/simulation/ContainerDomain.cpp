@@ -153,13 +153,13 @@ std::vector<Domain::CollisionEntry> ContainerDomain::queryCollision(const WFMath
 
 std::optional<std::function<void()>> ContainerDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
 	if (m_entity.m_contains && hasObserverRegistered(reacher)) {
-		auto observerI = m_reachingEntities.find(reacher.getId());
+		auto observerI = m_reachingEntities.find(reacher.getIdAsString());
 		if (observerI != m_reachingEntities.end()) {
 			auto I = std::find_if(m_entity.m_contains->begin(), m_entity.m_contains->end(), [&target](const Ref<LocatedEntity>& child) { return child.get() == &target; });
 			if (I != m_entity.m_contains->end()) {
 				auto observerEntry = observerI->second;
 
-				auto obs = new ClosenessObserverEntry{reacher.getId(), target, callback};
+				auto obs = new ClosenessObserverEntry{reacher.getIdAsString(), target, callback};
 				observerI->second.closenessObservations.insert(obs);
 //                targetEntry->closenessObservations.insert(obs);
 				m_closenessObservations.emplace(obs, std::unique_ptr<ClosenessObserverEntry>(obs));
@@ -323,7 +323,7 @@ void ContainerDomain::addObserver(std::string& entityId) {
 
 		//If we get here we have successfully created closeness observers for all domains between the observer and the container.
 		auto& containersActiveProperty = observer->requirePropertyClassFixed<ContainersActiveProperty>();
-		containersActiveProperty.getActiveContainers().insert(m_entity.getId());
+		containersActiveProperty.getActiveContainers().insert(m_entity.getIdAsString());
 		observer->applyProperty(containersActiveProperty);
 
 		observer->enqueueUpdateOp();
@@ -337,13 +337,13 @@ void ContainerDomain::addObserver(std::string& entityId) {
 			std::vector<Atlas::Objects::Root> args;
 			for (auto& child: entry.observedEntities) {
 				Atlas::Objects::Entity::Anonymous anon;
-				anon->setId(child->getId());
+				anon->setId(child->getIdAsString());
 				args.push_back(std::move(anon));
 			}
 
 			Atlas::Objects::Operation::Appearance appearance;
 			appearance->setArgs(std::move(args));
-			appearance->setTo(observer->getId());
+			appearance->setTo(observer->getIdAsString());
 			m_entity.sendWorld(std::move(appearance));
 		}
 
@@ -366,7 +366,7 @@ void ContainerDomain::removeObserver(const std::basic_string<char>& entityId) {
 		auto& observer = entry.observer;
 
 		auto& containersActiveProperty = observer->requirePropertyClassFixed<ContainersActiveProperty>();
-		containersActiveProperty.getActiveContainers().erase(m_entity.getId());
+		containersActiveProperty.getActiveContainers().erase(m_entity.getIdAsString());
 		observer->applyProperty(containersActiveProperty);
 
 		//Send an update to handle the ContainersActiveProperty being changed.
@@ -375,13 +375,13 @@ void ContainerDomain::removeObserver(const std::basic_string<char>& entityId) {
 		std::vector<Atlas::Objects::Root> args;
 		for (auto& child: entry.observedEntities) {
 			Atlas::Objects::Entity::Anonymous anon;
-			anon->setId(child->getId());
+			anon->setId(child->getIdAsString());
 			args.push_back(std::move(anon));
 		}
 
 		Atlas::Objects::Operation::Disappearance disappearance;
 		disappearance->setArgs(std::move(args));
-		disappearance->setTo(entry.observer->getId());
+		disappearance->setTo(entry.observer->getIdAsString());
 		m_entity.sendWorld(std::move(disappearance));
 
 		for (auto closenessEntry: entry.closenessObservations) {
@@ -397,7 +397,7 @@ void ContainerDomain::removeObserver(const std::basic_string<char>& entityId) {
 }
 
 bool ContainerDomain::hasObserverRegistered(const LocatedEntity& entity) const {
-	return m_reachingEntities.find(entity.getId()) != m_reachingEntities.end();
+	return m_reachingEntities.find(entity.getIdAsString()) != m_reachingEntities.end();
 }
 
 void ContainerDomain::removed() {

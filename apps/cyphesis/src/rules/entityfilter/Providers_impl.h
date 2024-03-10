@@ -99,7 +99,7 @@ MemoryProvider<EntityT>::MemoryProvider(std::shared_ptr<Consumer<Atlas::Message:
 template<typename EntityT>
 void MemoryProvider<EntityT>::value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const {
 	if (context.memory_lookup_fn) {
-		const Atlas::Message::MapType& memory = context.memory_lookup_fn(context.entityLoc.entity.getId());
+		const Atlas::Message::MapType& memory = context.memory_lookup_fn(context.entityLoc.entity.getIdAsString());
 
 		if (this->m_consumer) {
 			this->m_consumer->value(value, memory);
@@ -255,7 +255,7 @@ const std::type_info* EntityTypeProvider<EntityT>::getType() const {
 template<typename EntityT>
 void EntityIdProvider<EntityT>::value(Atlas::Message::Element& value,
 									  const EntityT& entity) const {
-	value = Atlas::Message::Element(entity.getIntId());
+	value = Atlas::Message::Element(entity.getIdAsInt());
 }
 
 template<typename EntityT>

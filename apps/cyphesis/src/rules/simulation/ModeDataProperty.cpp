@@ -72,7 +72,7 @@ int ModeDataProperty::get(Atlas::Message::Element& val) const {
 		case ModeProperty::Mode::Projectile: {
 			auto& projectileData = boost::get<ProjectileData>(mData);
 			if (projectileData.entity) {
-				map["$eid"] = projectileData.entity->getId();
+				map["$eid"] = projectileData.entity->getIdAsString();
 			}
 			map["extra"] = projectileData.extra;
 			map["mode"] = "projectile";

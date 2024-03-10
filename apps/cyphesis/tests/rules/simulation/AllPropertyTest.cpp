@@ -87,13 +87,7 @@ int main() {
 	}
 
 	{
-		std::string test_string_val;
-		IdProperty test_property(test_string_val);
-		assert(exerciser.exerciseProperty(test_property, TYPE_STRING) == 0);
-	}
-
-	{
-		std::string test_string_val("1");
+		RouterId test_string_val(1);
 		IdProperty test_property(test_string_val);
 		assert(exerciser.exerciseProperty(test_property, TYPE_STRING) == 0);
 	}

@@ -142,11 +142,11 @@ struct ProvidersTest : public Cyphesis::TestBase {
 		//The m_cloth entity is attached to the gloves by the "thumb" attachment
 		{
 			auto attachedProp = new SoftProperty<LocatedEntity>();
-			attachedProp->data() = Atlas::Message::MapType{{"$eid", m_cloth->getId()}};
+			attachedProp->data() = Atlas::Message::MapType{{"$eid", m_cloth->getIdAsString()}};
 			m_glovesEntity->setProperty("attached_thumb", std::unique_ptr<PropertyBase>(attachedProp));
 
 			auto modeDataProp = new ModeDataProperty();
-			modeDataProp->setPlantedData({m_glovesEntity->getIntId()});
+			modeDataProp->setPlantedData({m_glovesEntity->getIdAsInt()});
 			m_cloth->setProperty(ModeDataProperty::property_name, std::unique_ptr<PropertyBase>(modeDataProp));
 		}
 
@@ -160,11 +160,11 @@ struct ProvidersTest : public Cyphesis::TestBase {
 		//The m_glovesEntity entity is attached to the m_ch1 by the "hand_primary" attachment
 		{
 			auto attachedHandPrimaryProp = new SoftProperty<LocatedEntity>();
-			attachedHandPrimaryProp->data() = Atlas::Message::MapType{{"$eid", m_glovesEntity->getId()}};
+			attachedHandPrimaryProp->data() = Atlas::Message::MapType{{"$eid", m_glovesEntity->getIdAsString()}};
 			m_ch1->setProperty("attached_hand_primary", std::unique_ptr<PropertyBase>(attachedHandPrimaryProp));
 
 			auto modeDataProp = new ModeDataProperty();
-			modeDataProp->setPlantedData({m_ch1->getIntId()});
+			modeDataProp->setPlantedData({m_ch1->getIdAsInt()});
 			m_glovesEntity->setProperty(ModeDataProperty::property_name, std::unique_ptr<PropertyBase>(modeDataProp));
 		}
 
@@ -528,7 +528,7 @@ struct ProvidersTest : public Cyphesis::TestBase {
 	}
 
 	void add_entity(Ref<LocatedEntity> entity) {
-		m_entities.emplace(entity->getId(), entity);
+		m_entities.emplace(entity->getIdAsString(), entity);
 	}
 
 	QueryContext<LocatedEntity> prepare_context(QueryContext<LocatedEntity> context) {

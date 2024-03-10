@@ -90,7 +90,7 @@ public:
 	}
 
 	void addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const override {
-		ent->setId(m_id.m_id);
+		ent->setId(m_id.asString());
 	}
 
 };
@@ -482,7 +482,7 @@ void Admintest::test_LogoutOperation_self() {
 	OpVector res;
 
 	Anonymous arg;
-	arg->setId(m_account->getId());
+	arg->setId(m_account->getIdAsString());
 	op->setArgs1(arg);
 
 	m_account->LogoutOperation(op, res);
@@ -512,7 +512,7 @@ void Admintest::test_LogoutOperation_known() {
 	Account_LogoutOperation_called = nullptr;
 
 	long cid = m_id_counter++;
-	std::string cid_str = std::to_string(cid);
+	RouterId cid_str(cid);
 	Account* ac2 = new Admin(nullptr,
 							 "f3332c00-5d2b-45c1-8cf4-3429bdf2845f",
 							 "c0e095f0-575c-477c-bafd-2055d6958d4d",
@@ -526,7 +526,7 @@ void Admintest::test_LogoutOperation_known() {
 	OpVector res;
 
 	Anonymous arg;
-	arg->setId(cid_str);
+	arg->setId(cid_str.asString());
 	op->setArgs1(arg);
 
 	m_account->LogoutOperation(op, res);
@@ -541,7 +541,7 @@ void Admintest::test_LogoutOperation_other_but_unconnected() {
 	m_account->m_connection = nullptr;
 
 	long cid = m_id_counter++;
-	std::string cid_str = std::to_string(cid);
+	RouterId cid_str(cid);
 	Account* ac2 = new Admin(nullptr,
 							 "f3332c00-5d2b-45c1-8cf4-3429bdf2845f",
 							 "c0e095f0-575c-477c-bafd-2055d6958d4d",
@@ -555,7 +555,7 @@ void Admintest::test_LogoutOperation_other_but_unconnected() {
 	OpVector res;
 
 	Anonymous arg;
-	arg->setId(cid_str);
+	arg->setId(cid_str.asString());
 	op->setArgs1(arg);
 
 	m_account->LogoutOperation(op, res);
@@ -665,7 +665,7 @@ void Admintest::test_GetOperation_obj_OOG() {
 	const Root& reply_arg = reply->getArgs().front();
 
 	ASSERT_TRUE(!reply_arg->isDefaultId());
-	ASSERT_EQUAL(reply_arg->getId(), to->getId());
+	ASSERT_EQUAL(reply_arg->getId(), to->getIdAsString());
 
 
 }
@@ -698,7 +698,7 @@ void Admintest::test_GetOperation_obj_IG() {
 	const Root& reply_arg = reply->getArgs().front();
 
 	ASSERT_TRUE(!reply_arg->isDefaultId());
-	ASSERT_EQUAL(reply_arg->getId(), to->getId());
+	ASSERT_EQUAL(reply_arg->getId(), to->getIdAsString());
 
 }
 
@@ -828,7 +828,7 @@ void Admintest::test_SetOperation_obj_IG() {
 
 	Anonymous arg;
 	arg->setObjtype("obj");
-	arg->setId(c->getId());
+	arg->setId(c->getIdAsString());
 	op->setArgs1(arg);
 
 	m_account->SetOperation(op, res);
@@ -1282,8 +1282,8 @@ int Ruleset::installRule(const std::string& class_name,
 }
 
 
-ConnectableRouter* ServerRouting::getObject(const std::string& id) const {
-	auto I = m_routers.find(integerId(id));
+ConnectableRouter* ServerRouting::getObject(RouterId id) const {
+	auto I = m_routers.find(id);
 	if (I == m_routers.end()) {
 		return 0;
 	} else {
@@ -1293,7 +1293,7 @@ ConnectableRouter* ServerRouting::getObject(const std::string& id) const {
 
 
 void Entity::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
-	ent->setId(getId());
+	ent->setId(getIdAsString());
 }
 
 

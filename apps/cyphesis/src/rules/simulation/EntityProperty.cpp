@@ -34,7 +34,7 @@ static const bool debug_flag = false;
 int EntityProperty::get(Atlas::Message::Element& val) const {
 	if (m_data.get() != nullptr) {
 		Atlas::Message::MapType refMap;
-		refMap["$eid"] = m_data->getId();
+		refMap["$eid"] = m_data->getIdAsString();
 		val = refMap;
 		return 0;
 	} else {
@@ -46,7 +46,7 @@ void EntityProperty::set(const Atlas::Message::Element& val) {
 	// INT id?
 	if (val.isString()) {
 		const std::string& id = val.String();
-		if (m_data.get() == nullptr || m_data->getId() != id) {
+		if (m_data.get() == nullptr || m_data->getIdAsString() != id) {
 			cy_debug_print("Assigning " << id)
 			if (id.empty()) {
 				m_data = WeakEntityRef<LocatedEntity>(nullptr);
@@ -77,10 +77,10 @@ void EntityProperty::add(const std::string& s,
 	if (m_data.get() != nullptr) {
 		//The "id" attribute is special.
 		if (s == "id") {
-			map[s] = m_data->getId();
+			map[s] = m_data->getIdAsString();
 		} else {
 			Atlas::Message::MapType refMap;
-			refMap["$eid"] = m_data->getId();
+			refMap["$eid"] = m_data->getIdAsString();
 			map[s] = refMap;
 		}
 	} else {
@@ -93,10 +93,10 @@ void EntityProperty::add(const std::string& s,
 	if (m_data.get() != nullptr) {
 		//The "id" attribute is special.
 		if (s == "id") {
-			ent->setAttr(s, m_data->getId());
+			ent->setAttr(s, m_data->getIdAsString());
 		} else {
 			Atlas::Message::MapType refMap;
-			refMap["$eid"] = m_data->getId();
+			refMap["$eid"] = m_data->getIdAsString();
 			ent->setAttr(s, refMap);
 		}
 	} else {

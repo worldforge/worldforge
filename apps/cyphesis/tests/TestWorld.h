@@ -48,7 +48,7 @@ struct TestWorld : public BaseWorld {
 	explicit TestWorld(Ref<LocatedEntity> gw)
 			: BaseWorld([]() { return std::chrono::steady_clock::now().time_since_epoch(); }),
 			  m_gw(std::move(gw)) {
-		m_eobjects[m_gw->getIntId()] = m_gw;
+		m_eobjects[m_gw->getIdAsInt()] = m_gw;
 	}
 
 	~TestWorld() override {
@@ -61,7 +61,7 @@ struct TestWorld : public BaseWorld {
 	}
 
 	void addEntity(const Ref<LocatedEntity>& ent, const Ref<LocatedEntity>& parent) override {
-		m_eobjects[ent->getIntId()] = ent;
+		m_eobjects[ent->getIdAsInt()] = ent;
 		if (parent) {
 			parent->addChild(*ent);
 		}

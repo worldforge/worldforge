@@ -126,11 +126,6 @@ int CommSocket::flush() {
 	return 0;
 }
 
-const std::string& ExternalMind::connectionId() {
-	assert(m_link != 0);
-	return m_link->getId();
-}
-
 void ExternalMind::linkUp(Link* c) {
 	m_link = c;
 }

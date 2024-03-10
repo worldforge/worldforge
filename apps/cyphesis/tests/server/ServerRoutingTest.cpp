@@ -87,10 +87,6 @@ int main() {
 	std::string server_name = "test_svr";
 	auto lobbyId = newId();
 
-	if (!lobbyId.isValid()) {
-		std::cerr << "Unable to get server IDs newid";
-		return 1;
-	}
 
 	{
 		DatabaseNull database;
@@ -104,7 +100,6 @@ int main() {
 		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
 		auto id = newId();
-		assert(id.isValid());
 
 		server.addRouter(std::make_unique<TestRouter>(id));
 		assert(server.getObjects().size() == 1);
@@ -116,7 +111,6 @@ int main() {
 		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
 		auto id = newId();
-		assert(id.isValid());
 
 		auto r = new TestRouter(id);
 		server.addRouter(std::unique_ptr<TestRouter>(r));
@@ -129,7 +123,6 @@ int main() {
 		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
 		auto id = newId();
-		assert(id.isValid());
 
 		auto id2 = newId();
 
@@ -137,10 +130,10 @@ int main() {
 		server.addRouter(std::unique_ptr<ConnectableRouter>(r));
 		assert(server.getObjects().size() == 1);
 
-		ConnectableRouter* r2 = server.getObject(id.m_id);
+		ConnectableRouter* r2 = server.getObject(id);
 		assert(r == r2);
 
-		r2 = server.getObject(id2.m_id);
+		r2 = server.getObject(id2);
 		assert(nullptr == r2);
 	}
 
@@ -150,7 +143,6 @@ int main() {
 		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
 		auto id = newId();
-		assert(id.isValid());
 
 		server.addAccount(std::make_unique<TestAccount>(nullptr, "bob", "", id));
 		assert(server.getObjects().size() == 1);
@@ -162,7 +154,6 @@ int main() {
 		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
 		auto id = newId();
-		assert(id.isValid());
 
 		Account* ac = new TestAccount(0, "bob", "", id);
 		server.addAccount(std::unique_ptr<Account>(ac));
@@ -178,7 +169,6 @@ int main() {
 		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
 		auto id = newId();
-		assert(id.isValid());
 
 		Account* ac = new TestAccount(0, "bob", "", id);
 		server.addAccount(std::unique_ptr<Account>(ac));
@@ -193,7 +183,6 @@ int main() {
 		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
 		auto id = newId();
-		assert(id.isValid());
 
 		Account* rac = server.getAccountByName("alice");
 		assert(rac == 0);
@@ -206,7 +195,6 @@ int main() {
 		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
 		auto id = newId();
-		assert(id.isValid());
 
 		Account* rac = server.getAccountByName("alice");
 		assert(rac != 0);
@@ -259,7 +247,6 @@ std::unique_ptr<Account> Persistence::getAccount(const std::string& name) {
 	}
 
 	auto id = newId();
-	assert(id.isValid());
 
 	return std::make_unique<TestAccount>(nullptr, name, "", id);
 }

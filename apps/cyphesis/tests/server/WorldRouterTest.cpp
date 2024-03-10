@@ -93,7 +93,6 @@ WorldRoutertest::WorldRoutertest() {
 	ADD_TEST(WorldRoutertest::test_addNewEntity_thing);
 	ADD_TEST(WorldRoutertest::test_constructor);
 	ADD_TEST(WorldRoutertest::test_addNewEntity_unknown);
-	ADD_TEST(WorldRoutertest::test_addNewEntity_idfail);
 	ADD_TEST(WorldRoutertest::test_addEntity);
 	ADD_TEST(WorldRoutertest::test_addEntity_tick);
 	ADD_TEST(WorldRoutertest::test_addEntity_tick_get);
@@ -132,18 +131,6 @@ void WorldRoutertest::test_addNewEntity_thing() {
 	assert(ent1.get() != 0);
 }
 
-
-void WorldRoutertest::test_addNewEntity_idfail() {
-	stub_deny_newid = true;
-
-	Anonymous ent;
-	ent->setLoc("0");
-	auto ent1 = test_world->addNewEntity("thing", ent);
-	assert(ent1.get() == 0);
-
-	stub_deny_newid = false;
-}
-
 void WorldRoutertest::test_addEntity() {
 	auto id = newId();
 
@@ -164,7 +151,7 @@ void WorldRoutertest::test_addEntity_tick() {
 
 	Tick tick;
 	tick->setFutureMilliseconds(0);
-	tick->setTo(ent2->getId());
+	tick->setTo(ent2->getIdAsString());
 	test_world->message(tick, *ent2);
 }
 
@@ -179,7 +166,7 @@ void WorldRoutertest::test_addEntity_tick_get() {
 
 	Tick tick;
 	tick->setFutureMilliseconds(0);
-	tick->setTo(ent2->getId());
+	tick->setTo(ent2->getIdAsString());
 	test_world->message(tick, *ent2);
 
 }

@@ -57,7 +57,7 @@ Py::Object CyPy_Rules<EntityT, PythonEntityT>::extract_location(const Py::Tuple&
 	auto& rootEntity = verifyObject<CyPy_RootEntity>(args[1]);
 
 	if (entity->m_parent != nullptr) {
-		rootEntity->setLoc(entity->m_parent->getId());
+		rootEntity->setLoc(entity->m_parent->getIdAsString());
 	}
 	if (auto prop = entity->template getPropertyClassFixed<PositionProperty<EntityT>>()) {
 		::addToEntity(prop->data(), rootEntity->modifyPos());

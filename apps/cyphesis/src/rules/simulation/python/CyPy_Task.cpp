@@ -116,7 +116,7 @@ Py::Object CyPy_Task::irrelevant(const Py::Tuple& args) {
 			Atlas::Objects::Entity::Anonymous arg;
 			arg->setAttr("message", verifyString(args.front()));
 			e->modifyArgs().push_back(arg);
-			e->setTo(m_value->m_usageInstance.actor->getId());
+			e->setTo(m_value->m_usageInstance.actor->getIdAsString());
 			return CyPy_Operation::wrap(e);
 		}
 	}

@@ -60,7 +60,7 @@ AwareMind::~AwareMind() {
 				mAwareness->removeEntity(*m_ownEntity, *entry.second);
 			}
 		}
-		mAwareness->removeAwarenessArea(getId());
+		mAwareness->removeAwarenessArea(getIdAsString());
 		mAwareness->removeObserver();
 	}
 }
@@ -89,7 +89,7 @@ void AwareMind::processMove(OpVector& res) {
 		if (result.direction.isValid()) {
 			Atlas::Objects::Operation::Set set;
 			Atlas::Objects::Entity::Anonymous what;
-			what->setId(m_ownEntity->getId());
+			what->setId(m_ownEntity->getIdAsString());
 			what->setAttr("_propel", result.direction.toAtlas());
 			//spdlog::info("Moving in direction {}, {} with velocity {}", result.direction.x(), result.direction.y(), result.direction.mag());
 			if (result.direction != WFMath::Vector<3>::ZERO()) {
@@ -111,7 +111,7 @@ void AwareMind::processMove(OpVector& res) {
 				}
 			}
 
-			set->setFrom(getId());
+			set->setFrom(getIdAsString());
 			set->setArgs1(what);
 
 //            if (debug_flag) {
@@ -149,7 +149,7 @@ void AwareMind::entityAdded(MemEntity& entity) {
 			}
 		} else {
 			//Check if we've received the current domain entity.
-			if (m_ownEntity->m_parent && entity.getIntId() == m_ownEntity->m_parent->getIntId()) {
+			if (m_ownEntity->m_parent && entity.getIdAsInt() == m_ownEntity->m_parent->getIdAsInt()) {
 				//spdlog::info("Creating awareness.");
 				requestAwareness(entity);
 
@@ -171,7 +171,7 @@ void AwareMind::requestAwareness(const MemEntity& entity) {
 	auto& entities = m_map.getEntities();
 	//Add all existing known entities that have the same parent entity as ourselves.
 	for (const auto& entry: entities) {
-		if (entry.first != getIntId()) {
+		if (entry.first != getIdAsInt()) {
 			if (entry.second->m_parent == m_ownEntity->m_parent) {
 				mAwareness->addEntity(*m_ownEntity, *entry.second, false);
 			}
@@ -189,13 +189,13 @@ void AwareMind::entityUpdated(MemEntity& entity, const Atlas::Objects::Entity::R
 			|| ent->hasAttr("orientation")) {
 
 			//If it was ourselves that moved we should notify steering that it shouldn't wait any more for a movement op.
-			if (entity.getIntId() == m_ownEntity->getIntId()) {
+			if (entity.getIdAsInt() == m_ownEntity->getIdAsInt()) {
 				mSteering->setIsExpectingServerMovement(false);
 			}
 		}
 	} else {
 		if (m_ownEntity) {
-			if (m_ownEntity->m_parent && entity.getIntId() == m_ownEntity->m_parent->getIntId()) {
+			if (m_ownEntity->m_parent && entity.getIdAsInt() == m_ownEntity->m_parent->getIdAsInt()) {
 				if (ent->hasAttr("terrain")) {
 
 					Atlas::Message::Element terrainElement;

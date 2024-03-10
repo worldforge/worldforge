@@ -30,12 +30,13 @@ using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 using Atlas::Objects::Entity::RootEntity;
 
-IdProperty::IdProperty(const std::string& data) : PropertyBase(prop_flag_persistence_ephem),
-												  m_data(data) {
+IdProperty::IdProperty(const RouterId& data)
+		: PropertyBase(prop_flag_persistence_ephem),
+		  m_data(data) {
 }
 
 int IdProperty::get(Atlas::Message::Element& e) const {
-	e = m_data;
+	e = m_data.asString();
 	return 0;
 }
 
@@ -44,11 +45,11 @@ void IdProperty::set(const Atlas::Message::Element& e) {
 
 void IdProperty::add(const std::string& key,
 					 Atlas::Message::MapType& ent) const {
-	ent[key] = m_data;
+	ent[key] = m_data.asString();
 }
 
 void IdProperty::add(const std::string& key, const RootEntity& ent) const {
-	ent->setId(m_data);
+	ent->setId(m_data.asString());
 }
 
 IdProperty* IdProperty::copy() const {
@@ -62,7 +63,7 @@ LocationProperty::LocationProperty(const LocatedEntity& entity)
 
 int LocationProperty::get(Atlas::Message::Element& val) const {
 	if (m_data.m_parent) {
-		val = m_data.m_parent->getId();
+		val = m_data.m_parent->getIdAsString();
 	}
 	return 0;
 }
@@ -73,13 +74,13 @@ void LocationProperty::set(const Atlas::Message::Element& val) {
 
 void LocationProperty::add(const std::string& key, Atlas::Message::MapType& map) const {
 	if (m_data.m_parent) {
-		map[key] = m_data.m_parent->getId();
+		map[key] = m_data.m_parent->getIdAsString();
 	}
 }
 
 void LocationProperty::add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const {
 	if (m_data.m_parent) {
-		ent->setAttr(key, m_data.m_parent->getId());
+		ent->setAttr(key, m_data.m_parent->getIdAsString());
 	}
 }
 
@@ -88,9 +89,8 @@ LocationProperty* LocationProperty::copy() const {
 	return new LocationProperty(m_data);
 }
 
-const std::string& LocationProperty::data() const {
-	static std::string empty;
-	return m_data.m_parent ? m_data.m_parent->getId() : empty;
+std::string LocationProperty::data() const {
+	return m_data.m_parent ? m_data.m_parent->getIdAsString() : "";
 }
 
 
@@ -111,7 +111,7 @@ int ContainsProperty::get(Element& e) const {
 	e = ListType();
 	auto& contlist = e.List();
 	for (auto& entry: m_data) {
-		contlist.push_back(entry->getId());
+		contlist.push_back(entry->getIdAsString());
 	}
 	return 0;
 }
@@ -126,7 +126,7 @@ void ContainsProperty::add(const std::string& s, const RootEntity& ent) const {
 		auto& contains = ent->modifyContains();
 		contains.clear();
 		for (auto& entry: m_data) {
-			contains.push_back(entry->getId());
+			contains.push_back(entry->getIdAsString());
 		}
 	}
 }

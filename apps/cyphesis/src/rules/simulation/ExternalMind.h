@@ -92,7 +92,7 @@ public:
 
 	const Ref<LocatedEntity>& getEntity() const;
 
-	const std::string& connectionId();
+	RouterId connectionId() const;
 
 	void linkUp(Link* c);
 

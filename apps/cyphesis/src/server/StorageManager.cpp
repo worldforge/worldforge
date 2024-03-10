@@ -120,7 +120,7 @@ void StorageManager::entityInserted(LocatedEntity& ent) {
 /// \brief Called when an Entity is modified
 void StorageManager::entityUpdated(LocatedEntity& ent) {
 	if (ent.isDestroyed()) {
-		m_destroyedEntities.push_back(ent.getIntId());
+		m_destroyedEntities.push_back(ent.getIdAsInt());
 		return;
 	}
 	// Is it already in the dirty Entities queue?
@@ -147,7 +147,7 @@ void StorageManager::encodeElement(const Atlas::Message::Element& element, std::
 }
 
 void StorageManager::restorePropertiesRecursively(LocatedEntity& ent) {
-	DatabaseResult res = m_db.selectProperties(ent.getId());
+	DatabaseResult res = m_db.selectProperties(ent.getIdAsString());
 
 	//Keep track of those properties that have been set on the instance, so we'll know what
 	//type properties we should ignore.
@@ -252,8 +252,8 @@ void StorageManager::insertEntity(LocatedEntity& ent) {
 	Atlas::Message::MapType map;
 	m_db.encodeObject(map, location);
 
-	m_db.insertEntity(ent.getId(),
-					  ent.m_parent->getId(),
+	m_db.insertEntity(ent.getIdAsString(),
+					  ent.m_parent ? ent.m_parent->getIdAsString() : "",
 					  ent.getType()->name(),
 					  ent.getSeq(),
 					  location);
@@ -277,7 +277,7 @@ void StorageManager::insertEntity(LocatedEntity& ent) {
 		prop->addFlags(prop_flag_persistence_clean | prop_flag_persistence_seen);
 	}
 	if (!property_tuples.empty()) {
-		m_db.insertProperties(ent.getId(), property_tuples);
+		m_db.insertProperties(ent.getIdAsString(), property_tuples);
 		++m_insertPropertyCount;
 	}
 	ent.removeFlags(entity_queued);
@@ -293,12 +293,12 @@ void StorageManager::updateEntity(LocatedEntity& ent) {
 
 	//Under normal circumstances only the top world won't have a location.
 	if (ent.m_parent) {
-		m_db.updateEntity(ent.getId(),
+		m_db.updateEntity(ent.getIdAsString(),
 						  ent.getSeq(),
 						  location,
-						  ent.m_parent->getId());
+						  ent.m_parent->getIdAsString());
 	} else {
-		m_db.updateEntityWithoutLoc(ent.getId(),
+		m_db.updateEntityWithoutLoc(ent.getIdAsString(),
 									ent.getSeq(),
 									location);
 	}
@@ -348,11 +348,11 @@ void StorageManager::updateEntity(LocatedEntity& ent) {
 		prop->addFlags(prop_flag_persistence_clean | prop_flag_persistence_seen);
 	}
 	if (!new_property_tuples.empty()) {
-		m_db.insertProperties(ent.getId(),
+		m_db.insertProperties(ent.getIdAsString(),
 							  new_property_tuples);
 	}
 	if (!upd_property_tuples.empty()) {
-		m_db.updateProperties(ent.getId(),
+		m_db.updateProperties(ent.getIdAsString(),
 							  upd_property_tuples);
 	}
 	ent.addFlags(entity_clean_mask);
@@ -360,7 +360,7 @@ void StorageManager::updateEntity(LocatedEntity& ent) {
 
 size_t StorageManager::restoreChildren(LocatedEntity& parent) {
 	size_t childCount = 0;
-	DatabaseResult res = m_db.selectEntities(parent.getId());
+	DatabaseResult res = m_db.selectEntities(parent.getIdAsString());
 
 	// Iterate over res creating entities. Restore children, but don't restore any properties yet.
 	auto I = res.begin();
@@ -375,7 +375,7 @@ size_t StorageManager::restoreChildren(LocatedEntity& parent) {
 			throw std::runtime_error(
 					fmt::format("Could not restore entity with id {} of type '{}'"
 								", most likely caused by this type missing.",
-								id.m_id, type));
+								id.asString(), type));
 		}
 		childCount++;
 
@@ -401,7 +401,7 @@ void StorageManager::tick() {
 	while (!m_unstoredEntities.empty()) {
 		auto& ent = m_unstoredEntities.front();
 		if (ent && !ent->isDestroyed()) {
-			cy_debug_print("storing " << ent->getId())
+			cy_debug_print("storing " << ent->getIdAsString())
 			insertEntity(*ent);
 			++inserts;
 		} else {
@@ -418,12 +418,12 @@ void StorageManager::tick() {
 		auto& ent = m_dirtyEntities.front();
 		if (ent) {
 			if ((ent->flags().m_flags & entity_clean_mask) != entity_clean_mask) {
-				cy_debug_print("updating " << ent->getId())
+				cy_debug_print("updating " << ent->getIdAsString())
 				updateEntity(*ent);
 				++updates;
 			}
 			if (ent->hasFlags(entity_dirty_thoughts)) {
-				cy_debug_print("updating thoughts " << ent->getId())
+				cy_debug_print("updating thoughts " << ent->getIdAsString())
 				++updates;
 			}
 			ent->removeFlags(entity_queued);

@@ -46,7 +46,7 @@
 
 IGEntityExerciser::IGEntityExerciser(const Ref<Entity>& e) :
 		EntityExerciser(e), m_ent(e) {
-	if (e->getIntId() == 0) {
+	if (e->getIdAsInt() == 0) {
 		m_testWorld = std::make_unique<TestWorld>(e);
 	} else {
 		assert(e->m_parent != nullptr);
@@ -183,7 +183,7 @@ void IGEntityExerciser::runOperations() {
 		}
 		this->flushOperations(ov);
 
-		move_arg->setLoc(this->m_ent->getId());
+		move_arg->setLoc(this->m_ent->getIdAsString());
 		this->m_ent->MoveOperation(op, ov);
 		if (!ov.empty()) {
 			assert(ov.front()->getClassNo() == Atlas::Objects::Operation::ERROR_NO);
@@ -191,7 +191,7 @@ void IGEntityExerciser::runOperations() {
 		this->flushOperations(ov);
 
 		if (this->m_ent->m_parent != nullptr) {
-			move_arg->setLoc(this->m_ent->m_parent->getId());
+			move_arg->setLoc(this->m_ent->m_parent->getIdAsString());
 			this->m_ent->MoveOperation(op, ov);
 			if (!ov.empty()) {
 				assert(ov.front()->getClassNo() == Atlas::Objects::Operation::ERROR_NO);
@@ -199,7 +199,7 @@ void IGEntityExerciser::runOperations() {
 			this->flushOperations(ov);
 		}
 
-		move_arg->setLoc(this->m_ent->getId());
+		move_arg->setLoc(this->m_ent->getIdAsString());
 		addToEntity(this->m_ent->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data(), move_arg->modifyPos());
 		this->m_ent->MoveOperation(op, ov);
 		if (!ov.empty()) {
@@ -208,7 +208,7 @@ void IGEntityExerciser::runOperations() {
 		this->flushOperations(ov);
 
 		if (this->m_ent->m_parent != nullptr) {
-			move_arg->setLoc(this->m_ent->m_parent->getId());
+			move_arg->setLoc(this->m_ent->m_parent->getIdAsString());
 		}
 		std::vector<double> pos(3, 0);
 		move_arg->setPos(pos);
@@ -344,7 +344,7 @@ void IGEntityExerciser::runOperations() {
 	}
 	{
 		Atlas::Objects::Operation::Look op;
-		op->setFrom(this->m_ent->getId());
+		op->setFrom(this->m_ent->getIdAsString());
 		this->dispatchOp(op);
 		OpVector ov;
 		this->m_ent->LookOperation(op, ov);

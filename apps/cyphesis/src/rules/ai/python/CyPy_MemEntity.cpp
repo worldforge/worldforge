@@ -74,7 +74,7 @@ auto get_child = [](Ref<MemEntity>& value, const Py::Tuple& args) -> Py::Object 
 	args.verify_length(1);
 	auto child_id = verifyString(args.front());
 	for (auto& child: value->m_contains) {
-		if (child_id == child->getId()) {
+		if (child_id == child->getIdAsString()) {
 			return CyPy_MemEntity::wrap(child);
 		}
 	}
@@ -189,7 +189,7 @@ CyPy_MemEntity::CyPy_MemEntity(Py::PythonClassInstance* self, Ref<MemEntity> val
 Py::Object CyPy_MemEntity::getattro(const Py::String& name) {
 	auto nameStr = name.as_string();
 	if (nameStr == "id") {
-		return Py::String(this->m_value->getId());
+		return Py::String(this->m_value->getIdAsString());
 	}
 
 	if (nameStr == "parent") {

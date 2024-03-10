@@ -117,17 +117,17 @@ HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
 
 		auto actor = BaseWorld::instance().getEntity(op->getFrom());
 		if (!actor) {
-			e.error(op, "Could not find 'from' entity.", res, e.getId());
+			e.error(op, "Could not find 'from' entity.", res, e.getIdAsString());
 			return OPERATION_IGNORED;
 		}
 
 		if (op->isDefaultFrom()) {
-			actor->error(op, "Top op has no 'from' attribute.", res, actor->getId());
+			actor->error(op, "Top op has no 'from' attribute.", res, actor->getIdAsString());
 			return OPERATION_IGNORED;
 		}
 
 		if (!argOp->hasAttrFlag(Atlas::Objects::PARENT_FLAG)) {
-			actor->error(op, "Use arg op has malformed parent", res, actor->getId());
+			actor->error(op, "Use arg op has malformed parent", res, actor->getIdAsString());
 			return OPERATION_IGNORED;
 		}
 		auto op_type = argOp->getParent();
@@ -146,12 +146,12 @@ HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
 						  "\"{}\" but it is not an operation type. ", op_type);
 			return OPERATION_IGNORED;
 		}
-		rop->setFrom(actor->getId());
-		rop->setTo(e.getId());
+		rop->setFrom(actor->getIdAsString());
+		rop->setTo(e.getIdAsString());
 		rop->setStamp(op->getStamp());
 
 		if (argOp->getArgs().empty()) {
-			actor->error(op, "Use arg op has no arguments; one expected.", res, actor->getId());
+			actor->error(op, "Use arg op has no arguments; one expected.", res, actor->getIdAsString());
 			return OPERATION_IGNORED;
 		}
 
@@ -168,7 +168,7 @@ HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
 			for (auto& param: usage.params) {
 				Atlas::Message::Element element;
 				if (arguments->copyAttr(param.first, element) != 0 || !element.isList()) {
-					actor->clientError(op, fmt::format("Could not find required list argument '{}'.", param.first), res, actor->getId());
+					actor->clientError(op, fmt::format("Could not find required list argument '{}'.", param.first), res, actor->getIdAsString());
 					return OPERATION_IGNORED;
 				}
 
@@ -179,19 +179,19 @@ HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
 						case UsageParameter::Type::ENTITY:
 						case UsageParameter::Type::ENTITYLOCATION: {
 							if (!argElement.isMap()) {
-								actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' was not a map.", param.first), res, actor->getId());
+								actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' was not a map.", param.first), res, actor->getIdAsString());
 								return OPERATION_IGNORED;
 							}
 							//The arg is for an RootEntity, expressed as a message. Extract id and pos.
 							auto idI = argElement.Map().find("id");
 							if (idI == argElement.Map().end() || !idI->second.isString()) {
-								actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' had no id string.", param.first), res, actor->getId());
+								actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' had no id string.", param.first), res, actor->getIdAsString());
 								return OPERATION_IGNORED;
 							}
 
 							auto involved = BaseWorld::instance().getEntity(idI->second.String());
 							if (!involved) {
-								actor->error(op, "Involved entity does not exist", res, actor->getId());
+								actor->error(op, "Involved entity does not exist", res, actor->getIdAsString());
 								return OPERATION_IGNORED;
 							}
 
@@ -220,7 +220,7 @@ HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
 			//Check that the usage is valid before continuing
 			auto validRes = usageInstance.isValid();
 			if (!validRes.first) {
-				actor->clientError(op, validRes.second, res, actor->getId());
+				actor->clientError(op, validRes.second, res, actor->getIdAsString());
 			} else {
 				auto lastSeparatorPos = usage.handler.find_last_of('.');
 				if (lastSeparatorPos != std::string::npos) {
@@ -231,7 +231,7 @@ HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
 					//PyImport_ReloadModule(module.ptr());
 					auto functionObject = module.getDict()[functionName];
 					if (!functionObject.isCallable()) {
-						actor->error(op, fmt::format("Could not find Python function {}", usage.handler), res, actor->getId());
+						actor->error(op, fmt::format("Could not find Python function {}", usage.handler), res, actor->getIdAsString());
 						return OPERATION_IGNORED;
 					}
 
@@ -241,7 +241,7 @@ HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
 							return fmt::format("Usage '{}', entity {}: ", functionName, actor->describeEntity());
 						});
 						auto ret = Py::Callable(functionObject).apply(Py::TupleN(UsageInstance::scriptCreator(std::move(usageInstance))));
-						return ScriptUtils::processScriptResult(usage.handler, ret, res, e.getId(), [&e]() { return e.describeEntity(); });
+						return ScriptUtils::processScriptResult(usage.handler, ret, res, e.getIdAsString(), [&e]() { return e.describeEntity(); });
 					} catch (const Py::BaseException& py_ex) {
 						spdlog::error("Python error calling \"{}\" for entity {}", usage.handler, e.describeEntity());
 						if (PyErr_Occurred()) {

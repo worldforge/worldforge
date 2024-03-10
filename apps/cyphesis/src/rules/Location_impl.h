@@ -106,7 +106,7 @@ Location<EntityT>::Location(EntityT* rf,
 template<typename EntityT>
 void Location<EntityT>::addToMessage(MapType& omap) const {
 	if (this->m_parent != nullptr) {
-		omap["loc"] = this->m_parent->getId();
+		omap["loc"] = this->m_parent->getIdAsString();
 	}
 	if (this->pos().isValid()) {
 		omap["pos"] = this->pos().toAtlas();
@@ -125,7 +125,7 @@ void Location<EntityT>::addToMessage(MapType& omap) const {
 template<typename EntityT>
 void Location<EntityT>::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
 	if (this->m_parent != nullptr) {
-		ent->setLoc(this->m_parent->getId());
+		ent->setLoc(this->m_parent->getIdAsString());
 	}
 	if (this->pos().isValid()) {
 		::addToEntity(this->pos(), ent->modifyPos());
@@ -348,7 +348,7 @@ template<typename EntityT>
 std::ostream& operator<<(std::ostream& s, Location<EntityT>& v) {
 	s << "{";
 	if (v.m_parent != nullptr) {
-		s << v.m_parent->getId();
+		s << v.m_parent->getIdAsString();
 	} else {
 		s << "null";
 	}

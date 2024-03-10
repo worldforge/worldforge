@@ -53,7 +53,7 @@ HandlerResult TeleportProperty::teleport_handler(LocatedEntity& e,
         spdlog::error("Unable to access ServerRouting object");
         return OPERATION_IGNORED;
     }
-    Router* obj = svr->getObject(data());
+    Router* obj = svr->getObject(RouterId(data()));
     if (obj == nullptr) {
         spdlog::error("Unknown peer ID specified");
         return OPERATION_IGNORED;

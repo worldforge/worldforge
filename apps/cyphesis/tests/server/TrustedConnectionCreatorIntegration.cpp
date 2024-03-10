@@ -189,7 +189,7 @@ void TrustedConnectionCreatorintegration::test_external_op() {
 	mind.linkUp(m_connection);
 
 	Atlas::Objects::Operation::Talk op;
-	op->setFrom(mind.getId());
+	op->setFrom(mind.getIdAsString());
 
 	m_connection->externalOperation(op, *m_connection);
 	m_connection->dispatch(1);
@@ -200,7 +200,7 @@ void TrustedConnectionCreatorintegration::test_external_op() {
 	ASSERT_EQUAL(m_BaseWorld_message_called->getClassNo(),
 				 Atlas::Objects::Operation::TALK_NO);
 	ASSERT_TRUE(!m_BaseWorld_message_called->isDefaultTo());
-	ASSERT_EQUAL(m_BaseWorld_message_called->getTo(), m_creator->getId());
+	ASSERT_EQUAL(m_BaseWorld_message_called->getTo(), m_creator->getIdAsString());
 	ASSERT_TRUE(m_BaseWorld_message_called_from);
 	ASSERT_EQUAL(m_BaseWorld_message_called_from.get(), m_creator.get());
 }
@@ -216,8 +216,8 @@ void TrustedConnectionCreatorintegration::test_external_op_override() {
 	mind.linkUp(m_connection);
 
 	Atlas::Objects::Operation::Talk op;
-	op->setFrom(mind.getId());
-	op->setTo(m_creator->getId());
+	op->setFrom(mind.getIdAsString());
+	op->setTo(m_creator->getIdAsString());
 
 	m_connection->externalOperation(op, *m_connection);
 	m_connection->dispatch(1);
@@ -228,7 +228,7 @@ void TrustedConnectionCreatorintegration::test_external_op_override() {
 	ASSERT_EQUAL(m_BaseWorld_message_called->getClassNo(),
 				 Atlas::Objects::Operation::TALK_NO);
 	ASSERT_TRUE(!m_BaseWorld_message_called->isDefaultTo());
-	ASSERT_EQUAL(m_BaseWorld_message_called->getTo(), m_creator->getId());
+	ASSERT_EQUAL(m_BaseWorld_message_called->getTo(), m_creator->getIdAsString());
 }
 
 void TrustedConnectionCreatorintegration::test_external_op_puppet() {
@@ -246,8 +246,8 @@ void TrustedConnectionCreatorintegration::test_external_op_puppet() {
 	m_server->m_world.addEntity(other, m_gw);
 
 	Atlas::Objects::Operation::Talk op;
-	op->setFrom(mind.getId());
-	op->setTo(other->getId());
+	op->setFrom(mind.getIdAsString());
+	op->setTo(other->getIdAsString());
 
 	m_connection->externalOperation(op, *m_connection);
 	m_connection->dispatch(1);
@@ -258,7 +258,7 @@ void TrustedConnectionCreatorintegration::test_external_op_puppet() {
 	ASSERT_EQUAL(m_BaseWorld_message_called->getClassNo(),
 				 Atlas::Objects::Operation::TALK_NO);
 	ASSERT_TRUE(!m_BaseWorld_message_called->isDefaultTo());
-	ASSERT_EQUAL(m_BaseWorld_message_called->getTo(), other->getId());
+	ASSERT_EQUAL(m_BaseWorld_message_called->getTo(), other->getIdAsString());
 	ASSERT_TRUE(m_BaseWorld_message_called_from);
 	ASSERT_EQUAL(m_BaseWorld_message_called_from.get(), m_creator.get());
 }
@@ -278,7 +278,7 @@ void TrustedConnectionCreatorintegration::test_external_op_puppet_nonexistant() 
 	m_server->m_world.addEntity(other, m_gw);
 
 	Atlas::Objects::Operation::Talk op;
-	op->setFrom(mind.getId());
+	op->setFrom(mind.getIdAsString());
 	op->setTo(std::to_string(m_id_counter++));
 
 	TestDecoder decoder{factories};
@@ -293,7 +293,7 @@ void TrustedConnectionCreatorintegration::test_external_op_puppet_nonexistant() 
 	ASSERT_TRUE(decoder.m_obj.isValid());
 	ASSERT_EQUAL(decoder.m_obj->getParent(), "unseen");
 	ASSERT_TRUE(!Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Operation::RootOperation>(decoder.m_obj)->isDefaultTo());
-	ASSERT_EQUAL(Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Operation::RootOperation>(decoder.m_obj)->getTo(), mind.getId());
+	ASSERT_EQUAL(Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Operation::RootOperation>(decoder.m_obj)->getTo(), mind.getIdAsString());
 }
 
 int main() {

@@ -48,36 +48,36 @@ Lobby::Lobby(ServerRouting& s, RouterId id) :
 Lobby::~Lobby() = default;
 
 void Lobby::addAccount(ConnectableRouter* ac) {
-	cy_debug_print("Lobby::addAccount(" << ac->getId() << ")");
+	cy_debug_print("Lobby::addAccount(" << ac->getIdAsString() << ")");
 
 	Appearance a;
 	Anonymous us;
-	us->setId(ac->getId());
-	us->setLoc(getId());
+	us->setId(ac->getIdAsString());
+	us->setLoc(getIdAsString());
 	a->setArgs1(us);
-	a->setFrom(ac->getId());
-	a->setTo(getId());
+	a->setFrom(ac->getIdAsString());
+	a->setTo(getIdAsString());
 
 	OpVector res;
 	operation(a, res);
 	assert(res.empty());
 
-	m_accounts[ac->getId()] = ac;
+	m_accounts[ac->getIdAsString()] = ac;
 }
 
 void Lobby::removeAccount(ConnectableRouter* ac) {
-	cy_debug_print("Lobby::delAccount(" << ac->getId() << ")");
+	cy_debug_print("Lobby::delAccount(" << ac->getIdAsString() << ")");
 
 
-	auto result = m_accounts.erase(ac->getId());
+	auto result = m_accounts.erase(ac->getIdAsString());
 	if (result) {
 		Disappearance d;
 		Anonymous us;
-		us->setId(ac->getId());
-		us->setLoc(getId());
+		us->setId(ac->getIdAsString());
+		us->setLoc(getIdAsString());
 		d->setArgs1(us);
-		d->setFrom(ac->getId());
-		d->setTo(getId());
+		d->setFrom(ac->getIdAsString());
+		d->setTo(getIdAsString());
 
 		OpVector res;
 		operation(d, res);
@@ -88,7 +88,7 @@ void Lobby::removeAccount(ConnectableRouter* ac) {
 void Lobby::operation(const Operation& op, OpVector& res) {
 	cy_debug_print("Lobby::operation(" << op->getParent());
 	const std::string& to = op->getTo();
-	if (to.empty() || to == getId()) {
+	if (to.empty() || to == getIdAsString()) {
 		Operation newop(op.copy());
 		for (auto& entry: m_accounts) {
 			auto c = entry.second->getConnection();
@@ -124,5 +124,5 @@ void Lobby::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
 	ent->setAttr("people", player_list);
 	ent->setAttr("rooms", ListType());
 	ent->setObjtype("obj");
-	ent->setId(getId());
+	ent->setId(getIdAsString());
 }

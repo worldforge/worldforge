@@ -136,7 +136,7 @@ HandlerResult StackableDomain::MoveOperation(LocatedEntity& owner, const Operati
 	if (!ent.isValid() || ent->isDefaultId()) {
 		return OPERATION_IGNORED;
 	}
-	if (owner.getId() != ent->getId()) {
+	if (owner.getIdAsString() != ent->getId()) {
 		return OPERATION_IGNORED;
 	}
 
@@ -193,8 +193,8 @@ HandlerResult StackableDomain::MoveOperation(LocatedEntity& owner, const Operati
 	// Since the move op has the same amount as the entity, this handler will ignore it.
 
 	auto newMoveOp = op.copy();
-	newMoveOp->setTo(obj->getId());
-	newMoveOp->getArgs().front()->setId(obj->getId());
+	newMoveOp->setTo(obj->getIdAsString());
+	newMoveOp->getArgs().front()->setId(obj->getIdAsString());
 	newMoveOp->getArgs().front()->setAttr("amount", amount);
 	//Send the move op directly.
 	OpVector new_res;

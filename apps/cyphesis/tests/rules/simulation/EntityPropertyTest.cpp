@@ -79,7 +79,7 @@ int main() {
 		pb->set(Atlas::Message::Element(&ent));
 		assert(pb->get(val) == 0);
 		assert(val.isMap());
-		assert(val.asMap().find("$eid")->second == ent.getId());
+		assert(val.asMap().find("$eid")->second == ent.getIdAsString());
 		delete pb;
 	}
 
@@ -162,7 +162,7 @@ int main() {
 		I = map.find(key);
 		assert(I != map.end());
 		assert(I->second.isMap());
-		assert(I->second.asMap().find("$eid")->second == ent.getId());
+		assert(I->second.asMap().find("$eid")->second == ent.getIdAsString());
 		delete pb;
 	}
 
@@ -184,7 +184,7 @@ int main() {
 		assert(arg->hasAttr(key));
 		assert(arg->copyAttr(key, val) == 0);
 		assert(val.isMap());
-		assert(val.asMap().find("$eid")->second == ent.getId());
+		assert(val.asMap().find("$eid")->second == ent.getIdAsString());
 		delete pb;
 	}
 
@@ -203,14 +203,14 @@ int main() {
 		// copying it gives us the default
 		assert(arg->copyAttr(key, val) == 0);
 		assert(val.isString());
-		assert(val.String() != ent.getId());
+		assert(val.String() != ent.getIdAsString());
 
 		pb->add(key, arg);
 
 		assert(arg->hasAttr(key));
 		assert(arg->copyAttr(key, val) == 0);
 		assert(val.isString());
-		assert(val.String() == ent.getId());
+		assert(val.String() == ent.getIdAsString());
 		delete pb;
 	}
 

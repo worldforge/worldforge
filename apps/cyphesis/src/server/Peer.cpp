@@ -31,7 +31,6 @@
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
 
-#include <chrono>
 #include <rules/simulation/MindsProperty.h>
 
 using Atlas::Message::Element;
@@ -53,12 +52,12 @@ Peer::Peer(CommSocket& client,
 		   const std::string& addr,
 		   int port,
 		   RouterId id) :
-		Link(client, std::move(id)),
+		Link(client, id),
 		m_host(addr),
 		m_port(port),
 		m_state(PEER_INIT),
 		m_server(svr) {
-	logEvent(CONNECT, fmt::format("{} - - Connect to {}", id.m_id, addr));
+	logEvent(CONNECT, fmt::format("{} - - Connect to {}", id.asString(), addr));
 }
 
 Peer::~Peer() {
@@ -137,7 +136,7 @@ int Peer::teleportEntity(const LocatedEntity* ent) {
 		return -1;
 	}
 
-	long iid = ent->getIntId();
+	long iid = ent->getIdAsInt();
 	if (m_teleports.find(iid) != m_teleports.end()) {
 		spdlog::info("Transfer of this entity already in progress");
 		return -1;
@@ -198,7 +197,7 @@ int Peer::teleportEntity(const LocatedEntity* ent) {
 ///
 /// @param op The Info op sent back as reply to a teleport request
 /// @param res The result set of replies
-void Peer::peerTeleportResponse(const Operation& op, OpVector& res) {
+void Peer::peerTeleportResponse(const Operation& op, OpVector&) {
 	spdlog::info("Got a peer teleport response");
 	// Response to a Create op
 	const std::vector<Root>& args = op->getArgs();
@@ -247,7 +246,7 @@ void Peer::peerTeleportResponse(const Operation& op, OpVector& res) {
 		std::vector<Root> logout_args;
 
 		Anonymous op_arg;
-		op_arg->setId(entity->getId());
+		op_arg->setId(entity->getIdAsString());
 		logout_args.push_back(op_arg);
 
 		Anonymous ip_arg;
@@ -259,7 +258,7 @@ void Peer::peerTeleportResponse(const Operation& op, OpVector& res) {
 
 		Logout logoutOp;
 		logoutOp->setArgs(logout_args);
-		logoutOp->setTo(entity->getId());
+		logoutOp->setTo(entity->getIdAsString());
 		OpVector temp;
 
 		mindsProperty->sendToMinds(logoutOp, temp);
@@ -271,13 +270,13 @@ void Peer::peerTeleportResponse(const Operation& op, OpVector& res) {
 	// Delete the entity from the current world
 	Delete delOp;
 	Anonymous del_arg;
-	del_arg->setId(entity->getId());
+	del_arg->setId(entity->getIdAsString());
 	delOp->setArgs1(del_arg);
-	delOp->setTo(entity->getId());
+	delOp->setTo(entity->getIdAsString());
 	entity->sendWorld(delOp);
 	spdlog::info("Deleted entity from current server");
 	logEvent(EXPORT_ENT, fmt::format("{} - {} Exported entity",
-									 getId(), entity->getId()));
+									 getIdAsString(), entity->getIdAsString()));
 
 	// Clean up the teleport state object
 	m_teleports.erase(I);

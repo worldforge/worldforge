@@ -270,17 +270,17 @@ HandlerResult TasksProperty::UseOperation(LocatedEntity& e,
 
 		auto actor = BaseWorld::instance().getEntity(op->getFrom());
 		if (!actor) {
-			e.error(op, "Could not find 'from' entity.", res, e.getId());
+			e.error(op, "Could not find 'from' entity.", res, e.getIdAsString());
 			return OPERATION_BLOCKED;
 		}
 
 		if (op->isDefaultFrom()) {
-			actor->error(op, "Top op has no 'from' attribute.", res, actor->getId());
+			actor->error(op, "Top op has no 'from' attribute.", res, actor->getIdAsString());
 			return OPERATION_BLOCKED;
 		}
 
 		if (arg->isDefaultId()) {
-			actor->error(op, "Use arg for task has no id", res, actor->getId());
+			actor->error(op, "Use arg for task has no id", res, actor->getIdAsString());
 			return OPERATION_BLOCKED;
 		}
 		auto taskId = arg->getId();
@@ -294,27 +294,27 @@ HandlerResult TasksProperty::UseOperation(LocatedEntity& e,
 		auto task = taskI->second.task;
 
 		if (!arg->hasAttr("args")) {
-			actor->error(op, "Use arg for task has no args", res, actor->getId());
+			actor->error(op, "Use arg for task has no args", res, actor->getIdAsString());
 			return OPERATION_BLOCKED;
 		}
 
 		auto argsElem = arg->getAttr("args");
 		if (!argsElem.isList()) {
-			actor->error(op, "Use arg for task has invalid args", res, actor->getId());
+			actor->error(op, "Use arg for task has invalid args", res, actor->getIdAsString());
 			return OPERATION_BLOCKED;
 		}
 
 		auto innerArgs = AtlasFactories::factories.parseListOfObjects(argsElem.asList());
 
 		if (innerArgs.empty()) {
-			actor->error(op, "Use arg for task has empty args", res, actor->getId());
+			actor->error(op, "Use arg for task has empty args", res, actor->getIdAsString());
 			return OPERATION_BLOCKED;
 		}
 
 		auto innerArg = innerArgs.front();
 
 		if (innerArg->isDefaultId()) {
-			actor->error(op, "Use arg for task has arg without id", res, actor->getId());
+			actor->error(op, "Use arg for task has arg without id", res, actor->getIdAsString());
 			return OPERATION_BLOCKED;
 		}
 
@@ -322,7 +322,7 @@ HandlerResult TasksProperty::UseOperation(LocatedEntity& e,
 
 		auto usageI = std::find_if(task->usages().begin(), task->usages().end(), [&](const TaskUsage& it) -> bool { return it.name == usageId; });
 		if (usageI == task->usages().end()) {
-			actor->error(op, fmt::format("Usage does {} not exist in task {}.", usageId, taskId), res, actor->getId());
+			actor->error(op, fmt::format("Usage does {} not exist in task {}.", usageId, taskId), res, actor->getIdAsString());
 			return OPERATION_BLOCKED;
 		}
 
@@ -335,7 +335,7 @@ HandlerResult TasksProperty::UseOperation(LocatedEntity& e,
 			auto result = innerArg->copyAttr(param.first, argumentElement);
 
 			if (result != 0 || !argumentElement.isList()) {
-				actor->clientError(op, fmt::format("Could not find required list argument '{}'.", param.first), res, actor->getId());
+				actor->clientError(op, fmt::format("Could not find required list argument '{}'.", param.first), res, actor->getIdAsString());
 				return OPERATION_IGNORED;
 			}
 
@@ -346,19 +346,19 @@ HandlerResult TasksProperty::UseOperation(LocatedEntity& e,
 					case UsageParameter::Type::ENTITY:
 					case UsageParameter::Type::ENTITYLOCATION: {
 						if (!argElement.isMap()) {
-							actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' was not a map.", param.first), res, actor->getId());
+							actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' was not a map.", param.first), res, actor->getIdAsString());
 							return OPERATION_IGNORED;
 						}
 						//The arg is for an RootEntity, expressed as a message. Extract id and pos.
 						auto idI = argElement.Map().find("id");
 						if (idI == argElement.Map().end() || !idI->second.isString()) {
-							actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' had no id string.", param.first), res, actor->getId());
+							actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' had no id string.", param.first), res, actor->getIdAsString());
 							return OPERATION_IGNORED;
 						}
 
 						auto involved = BaseWorld::instance().getEntity(idI->second.String());
 						if (!involved) {
-							actor->error(op, "Involved entity does not exist", res, actor->getId());
+							actor->error(op, "Involved entity does not exist", res, actor->getIdAsString());
 							return OPERATION_IGNORED;
 						}
 

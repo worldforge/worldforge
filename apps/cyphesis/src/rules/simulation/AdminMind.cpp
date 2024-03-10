@@ -57,7 +57,7 @@ void AdminMind::externalOperation(const Operation& op, Link& link) {
 	if (op->isDefaultTo()) {
 		cy_debug_print("AdminMind handling op normally");
 		ExternalMind::externalOperation(op, link);
-	} else if (op->getTo() == getId() && op->isDefaultFutureMilliseconds()) {
+	} else if (op->getTo() == getIdAsString() && op->isDefaultFutureMilliseconds()) {
 		//Send directly to the entity, bypassing any normal Thought filtering
 		cy_debug_print("Creator handling op ");
 		OpVector lres;
@@ -70,7 +70,7 @@ void AdminMind::externalOperation(const Operation& op, Link& link) {
 			// so the receiving entity knows where to return it.
 			if (op->getClassNo() == Atlas::Objects::Operation::RELAY_NO) {
 				//Make sure that "from_id" is set to this mind, so the Relay can find its way back.
-				op->setAttr("from_id", getId());
+				op->setAttr("from_id", getIdAsString());
 				m_entity->sendWorld(op);
 			} else {
 				m_entity->sendWorld(op);
@@ -99,7 +99,7 @@ void AdminMind::externalOperation(const Operation& op, Link& link) {
 
 			Unseen unseen;
 			unseen->setArgs1(unseen_arg);
-			unseen->setTo(getId());
+			unseen->setTo(getIdAsString());
 			if (!op->isDefaultSerialno()) {
 				unseen->setRefno(op->getSerialno());
 			}

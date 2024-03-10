@@ -63,7 +63,7 @@ struct TestMemMap : public MemMap {
 	}
 
 	void injectEntity(const Ref<MemEntity>& entity) {
-		m_entities[entity->getIntId()] = entity;
+		m_entities[entity->getIdAsInt()] = entity;
 	}
 };
 
@@ -221,13 +221,13 @@ void MemMaptest::test_del() {
 void MemMaptest::test_addEntity() {
 	TestMemMap tested(*m_typeResolver);
 	RouterId new_id(3);
-	ASSERT_FALSE(tested.get(new_id.m_id));
+	ASSERT_FALSE(tested.get(new_id.asString()));
 
 	Ref<MemEntity> ent = new MemEntity(new_id, nullptr);
 	ent->setType(m_sampleType);
 	tested.addEntity(ent);
 
-	ASSERT_TRUE(tested.get(new_id.m_id));
+	ASSERT_TRUE(tested.get(new_id.asString()));
 	ASSERT_NULL(m_Script_hook_called_with);
 }
 

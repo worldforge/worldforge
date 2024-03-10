@@ -106,7 +106,7 @@ void PythonWrapper<EntityT>::attachPropertyCallbacks(EntityT& entity, std::funct
 						//Ignore Handler result; it does nothing in this context. But process any ops.
 						processScriptResult(fieldName, ret, res);
 						for (auto& resOp: res) {
-							if (resOp->getClassNo() == Atlas::Objects::Operation::SET_NO && !resOp->isDefaultTo() && resOp->getTo() == entity.getId()) {
+							if (resOp->getClassNo() == Atlas::Objects::Operation::SET_NO && !resOp->isDefaultTo() && resOp->getTo() == entity.getIdAsString()) {
 								//Handle any Set ops to the own entity directly here, so Set ops that affect multiple properties become atomic.
 								//TODO: how to make sure there's no endless loops here when different properties affect each others?
 								if (!resOp->getArgs().empty()) {

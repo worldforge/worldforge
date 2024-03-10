@@ -36,7 +36,7 @@ ModifySelfProperty::ModifySelfProperty(const ModifySelfProperty& rhs)
 void ModifySelfProperty::apply(LocatedEntity& entity) {
 	//Whenever a the value is changed and the property is applied we need to clear out all applied modifiers.
 	auto& activeModifiers = entity.getActiveModifiers();
-	auto I = activeModifiers.find(&entity);
+	auto I = activeModifiers.find(entity.m_id);
 	if (I != activeModifiers.end()) {
 		auto modifiers = I->second;
 		for (auto& entry: modifiers) {
@@ -118,7 +118,7 @@ void ModifySelfProperty::checkIfActive(LocatedEntity& entity) {
 	}
 
 	auto& activeModifiers = entity.getActiveModifiers();
-	auto I = activeModifiers.find(&entity);
+	auto I = activeModifiers.find(entity.m_id);
 	if (I != activeModifiers.end()) {
 		//There were already modifiers active. Check the difference and add or remove.
 

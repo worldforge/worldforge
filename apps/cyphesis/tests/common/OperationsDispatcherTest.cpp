@@ -43,7 +43,7 @@ struct TestEntity : ReferenceCounted {
 		return "";
 	}
 
-	std::string getId() const {
+	std::string getIdAsString() const {
 		return "1";
 	}
 };

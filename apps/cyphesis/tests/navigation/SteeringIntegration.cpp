@@ -141,7 +141,7 @@ struct SteeringIntegration : public Cyphesis::TestBase {
 			}
 
 		} heightProvider;
-		Awareness awareness(worldEntity->getIntId(), 1, 2, 0.5, heightProvider, extent, tileSize);
+		Awareness awareness(worldEntity->getIdAsInt(), 1, 2, 0.5, heightProvider, extent, tileSize);
 		awareness.addEntity(*avatarEntity, *avatarEntity, true);
 		awareness.addEntity(*avatarEntity, *otherEntity, false);
 		steering.setAwareness(&awareness);
@@ -212,7 +212,7 @@ struct SteeringIntegration : public Cyphesis::TestBase {
 
 		} heightProvider;
 
-		Awareness awareness(worldEntity->getIntId(), avatarHorizontalRadius, 2, 0.5, heightProvider, extent, tileSize);
+		Awareness awareness(worldEntity->getIdAsInt(), avatarHorizontalRadius, 2, 0.5, heightProvider, extent, tileSize);
 		awareness.addEntity(*avatarEntity, *avatarEntity, true);
 		steering.setAwareness(&awareness);
 		auto rebuildAllTilesFn = [&]() {
@@ -294,7 +294,7 @@ struct SteeringIntegration : public Cyphesis::TestBase {
 
 		} heightProvider;
 
-		Awareness awareness(worldEntity->getIntId(), avatarHorizontalRadius, 2, 0.5, heightProvider, extent, tileSize);
+		Awareness awareness(worldEntity->getIdAsInt(), avatarHorizontalRadius, 2, 0.5, heightProvider, extent, tileSize);
 		awareness.addEntity(*avatarEntity, *worldEntity, true);
 		awareness.addEntity(*avatarEntity, *avatarEntity, true);
 		awareness.addEntity(*avatarEntity, *otherEntity, true);
@@ -375,7 +375,7 @@ struct SteeringIntegration : public Cyphesis::TestBase {
 		struct : IHeightProvider {
 			void blitHeights(int xMin, int xMax, int yMin, int yMax, std::vector<float>& heights) const {}
 		} heightProvider;
-		Awareness awareness(worldEntity->getIntId(), 1, 0, 0, heightProvider, {});
+		Awareness awareness(worldEntity->getIdAsInt(), 1, 0, 0, heightProvider, {});
 		awareness.addEntity(*avatarEntity, *avatarEntity, true);
 		awareness.addEntity(*avatarEntity, *otherEntity, false);
 		steering.setAwareness(&awareness);
@@ -518,7 +518,7 @@ struct SteeringIntegration : public Cyphesis::TestBase {
 
 		} heightProvider;
 
-		Awareness awareness(worldEntity->getIntId(), avatarHorizontalRadius, 2, 0.5, heightProvider, extent, tileSize);
+		Awareness awareness(worldEntity->getIdAsInt(), avatarHorizontalRadius, 2, 0.5, heightProvider, extent, tileSize);
 		steering.setAwareness(&awareness);
 		auto rebuildAllTilesFn = [&]() {
 			while (true) {

@@ -48,7 +48,7 @@ static const bool debug_flag = false;
 
 
 BaseMind::BaseMind(RouterId mindId, std::string entityId, TypeStore<MemEntity>& typeStore) :
-		Router(std::move(mindId)),
+		Router(mindId),
 		m_entityId(std::move(entityId)),
 		m_flags(0),
 		m_typeStore(typeStore),
@@ -60,7 +60,7 @@ BaseMind::BaseMind(RouterId mindId, std::string entityId, TypeStore<MemEntity>& 
 	m_tickControl.navmesh.interval = std::chrono::milliseconds(600);
 	m_tickControl.move.interval = std::chrono::milliseconds(20);
 	m_tickControl.think.interval = std::chrono::milliseconds(500);
-	m_typeResolver->m_typeProviderId = mindId.m_id;
+	m_typeResolver->m_typeProviderId = m_id;
 	m_map.setListener(this);
 }
 
@@ -78,7 +78,7 @@ void BaseMind::init(OpVector& res) {
 	Root lookArg;
 	lookArg->setId(m_entityId);
 	look->setArgs1(std::move(lookArg));
-	look->setFrom(getId());
+	look->setFrom(getIdAsString());
 	res.emplace_back(std::move(look));
 }
 
@@ -230,7 +230,7 @@ void BaseMind::AppearanceOperation(const Operation& op, OpVector& res) {
 void BaseMind::removeEntity(const std::string& id, OpVector& res) {
 	m_map.del(id);
 	m_pendingEntitiesOperations.erase(id);
-	if (m_ownEntity && m_ownEntity->getId() == id) {
+	if (m_ownEntity && m_ownEntity->getIdAsString() == id) {
 		destroy();
 	}
 }
@@ -307,14 +307,14 @@ void BaseMind::setOwnEntity(OpVector& res, Ref<MemEntity> ownEntity) {
 	Atlas::Objects::Operation::Setup s;
 	Anonymous setup_arg;
 	setup_arg->setName("mind");
-	s->setTo(getId());
-	s->setFrom(getId());
+	s->setTo(getIdAsString());
+	s->setFrom(getIdAsString());
 	s->setArgs1(setup_arg);
 	operation(s, res);
 
 	//Start by sending an unspecified "Look". This tells the server to send us a bootstrapped view.
 	Look l;
-	l->setFrom(getId());
+	l->setFrom(getIdAsString());
 	res.push_back(l);
 }
 
@@ -331,15 +331,15 @@ void BaseMind::InfoOperation(const Operation& op, OpVector& res) {
 
 				//spdlog::debug("Mind {}: Resolved entity {}.", getId(), entity->getId());
 
-				auto J = m_pendingEntitiesOperations.find(entity->getId());
+				auto J = m_pendingEntitiesOperations.find(entity->getIdAsString());
 				if (J != m_pendingEntitiesOperations.end()) {
 					res.insert(std::end(res), std::begin(J->second), std::end(J->second));
 					m_pendingEntitiesOperations.erase(J);
 				}
 
 				//If we have resolved our own entity we should do some house keeping
-				if (entity->getId() == m_entityId) {
-					spdlog::debug("{}: Resolved own entity for {}.", getId(), entity->describeEntity());
+				if (entity->getIdAsString() == m_entityId) {
+					spdlog::debug("{}: Resolved own entity for {}.", getIdAsString(), entity->describeEntity());
 					setOwnEntity(res, entity);
 				}
 			}
@@ -354,15 +354,15 @@ void BaseMind::ErrorOperation(const Operation& op, OpVector& res) {
 		Atlas::Message::Element message;
 		if (arg->copyAttr("message", message) == 0 && message.isString()) {
 			if (getEntity()) {
-				spdlog::warn("BaseMind {}, entity {}, error from server: {}", getId(), getEntity()->describeEntity(), message.String());
+				spdlog::warn("BaseMind {}, entity {}, error from server: {}", getIdAsString(), getEntity()->describeEntity(), message.String());
 			} else {
-				spdlog::warn("BaseMind {}, error from server: {}", getId(), message.String());
+				spdlog::warn("BaseMind {}, error from server: {}", getIdAsString(), message.String());
 			}
 		} else {
 			if (getEntity()) {
-				spdlog::warn("BaseMind {}, entity {}, unspecified error from server", getId(), getEntity()->describeEntity());
+				spdlog::warn("BaseMind {}, entity {}, unspecified error from server", getIdAsString(), getEntity()->describeEntity());
 			} else {
-				spdlog::warn("BaseMind {}, unspecified error from server.", getId());
+				spdlog::warn("BaseMind {}, unspecified error from server.", getIdAsString());
 			}
 		}
 	}
@@ -429,7 +429,7 @@ void BaseMind::operation(const Operation& op, OpVector& res) {
 		bool isPending = false;
 		//Unless it's an Unseen op, we should add the entity the op was from.
 		//Note that we might get an op from the account itself, so we need to check for that.
-		if (op_no != Atlas::Objects::Operation::UNSEEN_NO && !op->isDefaultFrom() && op->getFrom() != getId()) {
+		if (op_no != Atlas::Objects::Operation::UNSEEN_NO && !op->isDefaultFrom() && op->getFrom() != getIdAsString()) {
 			auto entity = m_map.getAdd(op->getFrom());
 			if (!entity) {
 				m_pendingEntitiesOperations[op->getFrom()].push_back(op);
@@ -473,7 +473,7 @@ void BaseMind::operation(const Operation& op, OpVector& res) {
 
 	for (auto& resOp: res) {
 		if (resOp->isDefaultFrom()) {
-			resOp->setFrom(getId());
+			resOp->setFrom(getIdAsString());
 		}
 	}
 
@@ -492,8 +492,8 @@ void BaseMind::processTick(OpVector& res) {
 	Atlas::Objects::Operation::Tick tick;
 	//Do one tick every 10ms. (to be revisited)
 	tick->setFutureMilliseconds(10);
-	tick->setTo(getId());
-	tick->setFrom(getId());
+	tick->setTo(getIdAsString());
+	tick->setFrom(getIdAsString());
 	res.emplace_back(std::move(tick));
 
 	//Do some housekeeping first.
@@ -549,8 +549,8 @@ void BaseMind::callSightOperation(const Operation& op,
 	m_map.getAdd(op->getFrom());
 	auto op_no = op->getClassNo();
 	if (debug_flag) {
-		cy_debug_print(getId() << " could not deliver sight of "
-							   << op->getParent());
+		cy_debug_print(getIdAsString() << " could not deliver sight of "
+									   << op->getParent());
 	}
 	if (op_no == Atlas::Objects::Operation::SET_NO) {
 		sightSetOperation(op, res);
@@ -610,8 +610,8 @@ std::string BaseMind::describeEntity() const {
 void BaseMind::entityAdded(MemEntity& entity) {
 	if (!m_ownEntity) {
 		//If we have resolved our own entity we should do some house keeping
-		if (entity.getId() == m_entityId) {
-			spdlog::debug("{}: Added own entity for {}.", getId(), entity.describeEntity());
+		if (entity.getIdAsString() == m_entityId) {
+			spdlog::debug("{}: Added own entity for {}.", getIdAsString(), entity.describeEntity());
 			OpVector res;
 			setOwnEntity(res, Ref<MemEntity>(&entity));
 			for (auto& resOp: res) {
@@ -651,9 +651,9 @@ void BaseMind::entityDeleted(MemEntity& entity) {
 
 std::ostream& operator<<(std::ostream& s, const BaseMind& d) {
 	if (d.m_ownEntity) {
-		s << d.getId() << ", entity: " << *d.m_ownEntity;
+		s << d.getIdAsString() << ", entity: " << *d.m_ownEntity;
 	} else {
-		s << d.getId() << ", entity id: " << d.m_entityId;
+		s << d.getIdAsString() << ", entity id: " << d.m_entityId;
 	}
 	return s;
 }

@@ -258,7 +258,7 @@ const PropertyCore<MemEntity>* MemEntity::getProperty(const std::string& name) c
 
 std::ostream& operator<<(std::ostream& s, const MemEntity& d) {
 	auto name = d.getAttrType("name", Element::TYPE_STRING);
-	s << d.getId();
+	s << d.getIdAsString();
 	if (d.m_type) {
 		s << "(" << d.m_type->name();
 		if (name) {

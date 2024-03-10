@@ -35,7 +35,6 @@
 
 #include <utility>
 #include <ranges>
-#include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
 #include <spdlog/spdlog.h>
 
@@ -57,7 +56,7 @@ ServerRouting::ServerRouting(BaseWorld& wrld,
 							 RouterId lobbyId) :
 		m_svrRuleset(std::move(ruleset)),
 		m_svrName(std::move(name)),
-		m_lobby(new Lobby(*this, std::move(lobbyId))),
+		m_lobby(new Lobby(*this, lobbyId)),
 		m_numClients(0),
 		m_processOpsTotal(0),
 		m_world(wrld),
@@ -98,10 +97,10 @@ void ServerRouting::deregisterConnection(Connection* connection) {
 
 /// Add an OOG object to the server.
 void ServerRouting::addRouter(std::unique_ptr<ConnectableRouter> obj) {
-	assert(!obj->getId().empty());
-	assert(integerId(obj->getId()) == obj->getIntId());
-	assert(obj->getIntId() > 0);
-	m_routers[obj->getIntId()] = std::move(obj);
+	assert(!obj->getIdAsString().empty());
+	assert(integerId(obj->getIdAsString()) == obj->getIdAsInt());
+	assert(obj->getIdAsInt() > 0);
+	m_routers[obj->getIdAsInt()] = std::move(obj);
 }
 
 /// Add an Account object to the server.
@@ -116,8 +115,8 @@ void ServerRouting::addAccount(std::unique_ptr<Account> a) {
 ///
 /// @return a pointer to the object with the given id, or
 /// zero if no object with this id is present.
-ConnectableRouter* ServerRouting::getObject(const std::string& id) const {
-	auto I = m_routers.find(integerId(id));
+ConnectableRouter* ServerRouting::getObject(RouterId id) const {
+	auto I = m_routers.find(id);
 	if (I == m_routers.end()) {
 		return nullptr;
 	} else {

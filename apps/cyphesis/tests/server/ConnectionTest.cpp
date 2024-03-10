@@ -194,7 +194,7 @@ void Connectiontest::test_addNewAccount() {
 	Account* ac = m_connection->addNewAccount("player", "bob", "foo");
 
 	ASSERT_NOT_NULL(ac);
-	auto I = m_connection->m_connectableRouters.find(ac->getIntId());
+	auto I = m_connection->m_connectableRouters.find(ac->getIdAsInt());
 	ASSERT_TRUE(I != m_connection->m_connectableRouters.end());
 
 	m_connection->disconnectObject(I->second,
@@ -384,15 +384,15 @@ void Connectiontest::test_disconnectObject_empty() {
 			  4);
 
 	ac.setConnection(m_connection);
-	m_connection->m_routers[ac.getIntId()].router = &ac;
-	m_connection->m_connectableRouters[ac.getIntId()] = &ac;
+	m_connection->m_routers[ac.getIdAsInt()].router = &ac;
+	m_connection->m_connectableRouters[ac.getIdAsInt()] = &ac;
 
-	auto I = m_connection->m_connectableRouters.find(ac.getIntId());
+	auto I = m_connection->m_connectableRouters.find(ac.getIdAsInt());
 	assert(I != m_connection->m_connectableRouters.end());
 
 	m_connection->disconnectObject(I->second, "test_disconnect_account");
 
-	ASSERT_TRUE(m_connection->m_routers.find(ac.getIntId()) ==
+	ASSERT_TRUE(m_connection->m_routers.find(ac.getIdAsInt()) ==
 				m_connection->m_routers.end());
 }
 
@@ -404,19 +404,19 @@ void Connectiontest::test_disconnectObject_unused_Entity() {
 			  4);
 
 	ac.setConnection(m_connection);
-	m_connection->m_routers[ac.getIntId()].router = &ac;
-	m_connection->m_connectableRouters[ac.getIntId()] = &ac;
+	m_connection->m_routers[ac.getIdAsInt()].router = &ac;
+	m_connection->m_connectableRouters[ac.getIdAsInt()] = &ac;
 
-	auto I = m_connection->m_connectableRouters.find(ac.getIntId());
+	auto I = m_connection->m_connectableRouters.find(ac.getIdAsInt());
 	assert(I != m_connection->m_connectableRouters.end());
 
 	Ref<Entity> avatar(new Entity(5));
-	m_connection->m_routers[avatar->getIntId()].router = avatar.get();
+	m_connection->m_routers[avatar->getIdAsInt()].router = avatar.get();
 	ac.addCharacter(avatar);
 
 	m_connection->disconnectObject(I->second, "test_disconnect_account");
 
-	ASSERT_TRUE(m_connection->m_routers.find(ac.getIntId()) ==
+	ASSERT_TRUE(m_connection->m_routers.find(ac.getIdAsInt()) ==
 				m_connection->m_routers.end());
 
 	//TODO: Needs to be an integration test.
@@ -432,26 +432,26 @@ void Connectiontest::test_disconnectObject_used_Entity() {
 			  4);
 
 	ac.setConnection(m_connection);
-	m_connection->m_routers[ac.getIntId()].router = &ac;
-	m_connection->m_connectableRouters[ac.getIntId()] = &ac;
+	m_connection->m_routers[ac.getIdAsInt()].router = &ac;
+	m_connection->m_connectableRouters[ac.getIdAsInt()] = &ac;
 
-	auto I = m_connection->m_connectableRouters.find(ac.getIntId());
+	auto I = m_connection->m_connectableRouters.find(ac.getIdAsInt());
 	assert(I != m_connection->m_connectableRouters.end());
 
 	Ref<Entity> avatar(new Entity(5));
 	ExternalMind mind(6, avatar);
 	avatar->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
 	mind.linkUp(m_connection);
-	m_connection->m_routers[avatar->getIntId()].router = avatar.get();
+	m_connection->m_routers[avatar->getIdAsInt()].router = avatar.get();
 	ac.addCharacter(avatar);
 
 	m_connection->disconnectObject(I->second, "test_disconnect_account");
 
-	ASSERT_TRUE(m_connection->m_routers.find(ac.getIntId()) ==
+	ASSERT_TRUE(m_connection->m_routers.find(ac.getIdAsInt()) ==
 				m_connection->m_routers.end());
 
 	// The Entity was in use, so it stays connected
-	ASSERT_TRUE(m_connection->m_routers.find(avatar->getIntId()) !=
+	ASSERT_TRUE(m_connection->m_routers.find(avatar->getIdAsInt()) !=
 				m_connection->m_routers.end());
 }
 
@@ -463,10 +463,10 @@ void Connectiontest::test_disconnectObject_others_used_Entity() {
 			  4);
 
 	ac.setConnection(m_connection);
-	m_connection->m_routers[ac.getIntId()].router = &ac;
-	m_connection->m_connectableRouters[ac.getIntId()] = &ac;
+	m_connection->m_routers[ac.getIdAsInt()].router = &ac;
+	m_connection->m_connectableRouters[ac.getIdAsInt()] = &ac;
 
-	auto I = m_connection->m_connectableRouters.find(ac.getIntId());
+	auto I = m_connection->m_connectableRouters.find(ac.getIdAsInt());
 	assert(I != m_connection->m_connectableRouters.end());
 
 	TestCommSocket otcc{};
@@ -476,12 +476,12 @@ void Connectiontest::test_disconnectObject_others_used_Entity() {
 	ExternalMind mind(6, avatar);
 	avatar->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
 	mind.linkUp(m_connection);
-	m_connection->m_routers[avatar->getIntId()].router = avatar.get();
+	m_connection->m_routers[avatar->getIdAsInt()].router = avatar.get();
 	ac.addCharacter(avatar);
 
 	m_connection->disconnectObject(I->second, "test_disconnect_account");
 
-	ASSERT_TRUE(m_connection->m_routers.find(ac.getIntId()) ==
+	ASSERT_TRUE(m_connection->m_routers.find(ac.getIdAsInt()) ==
 				m_connection->m_routers.end());
 
 	// The Entity was in use by another connection, so it is removed
@@ -500,21 +500,21 @@ void Connectiontest::test_disconnectObject_unlinked_Entity() {
 			  4);
 
 	ac.setConnection(m_connection);
-	m_connection->m_routers[ac.getIntId()].router = &ac;
-	m_connection->m_connectableRouters[ac.getIntId()] = &ac;
+	m_connection->m_routers[ac.getIdAsInt()].router = &ac;
+	m_connection->m_connectableRouters[ac.getIdAsInt()] = &ac;
 
-	auto I = m_connection->m_connectableRouters.find(ac.getIntId());
+	auto I = m_connection->m_connectableRouters.find(ac.getIdAsInt());
 	assert(I != m_connection->m_connectableRouters.end());
 
 	Ref<Entity> avatar(new Entity(5));
 	ExternalMind mind(6, avatar);
 	avatar->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
-	m_connection->m_routers[avatar->getIntId()].router = avatar.get();
+	m_connection->m_routers[avatar->getIdAsInt()].router = avatar.get();
 	ac.addCharacter(avatar);
 
 	m_connection->disconnectObject(I->second, "test_disconnect_account");
 
-	ASSERT_TRUE(m_connection->m_routers.find(ac.getIntId()) ==
+	ASSERT_TRUE(m_connection->m_routers.find(ac.getIdAsInt()) ==
 				m_connection->m_routers.end());
 
 	//TODO: Needs to be an integration test.
@@ -531,19 +531,19 @@ void Connectiontest::test_disconnectObject_non_Entity() {
 			  4);
 
 	ac.setConnection(m_connection);
-	m_connection->m_routers[ac.getIntId()].router = &ac;
-	m_connection->m_connectableRouters[ac.getIntId()] = &ac;
+	m_connection->m_routers[ac.getIdAsInt()].router = &ac;
+	m_connection->m_connectableRouters[ac.getIdAsInt()] = &ac;
 
-	auto I = m_connection->m_connectableRouters.find(ac.getIntId());
+	auto I = m_connection->m_connectableRouters.find(ac.getIdAsInt());
 	assert(I != m_connection->m_connectableRouters.end());
 
 	Ref<Entity> avatar(new Entity(5));
-	m_connection->m_routers[avatar->getIntId()].router = avatar.get();
+	m_connection->m_routers[avatar->getIdAsInt()].router = avatar.get();
 	ac.addCharacter(avatar.get());
 
 	m_connection->disconnectObject(I->second, "test_disconnect_account");
 
-	ASSERT_TRUE(m_connection->m_routers.find(ac.getIntId()) ==
+	ASSERT_TRUE(m_connection->m_routers.find(ac.getIdAsInt()) ==
 				m_connection->m_routers.end());
 
 	//TODO: Needs to be an integration test.
@@ -580,15 +580,8 @@ int CommSocket::flush() {
 // Simplified stub version to allow us to test Connection::disconnectObject
 void Account::addCharacter(const Ref<LocatedEntity>& chr) {
 
-	m_charactersDict[chr->getIntId()] = chr;
+	m_charactersDict[chr->getIdAsInt()] = chr;
 }
-
-
-const std::string& ExternalMind::connectionId() {
-	assert(m_link != 0);
-	return m_link->getId();
-}
-
 
 void ExternalMind::linkUp(Link* c) {
 	m_link = c;

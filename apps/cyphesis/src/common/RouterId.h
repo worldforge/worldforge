@@ -36,36 +36,39 @@ struct RouterId {
 
 	explicit RouterId(std::string id);
 
-	explicit RouterId(std::string id, long intId);
+	RouterId(RouterId&&) noexcept = default;
 
-	RouterId(RouterId&&) = default;
+	RouterId(const RouterId&) noexcept = default;
 
-	RouterId(const RouterId&) = default;
+	RouterId& operator=(const RouterId&) = default;
 
-	/// \brief String identifier
-	const std::string m_id;
+	RouterId& operator=(RouterId&&) = default;
+
+	auto operator<=>(const RouterId&) const = default;
+
 	/// \brief Integer identifier
-	const long m_intId;
+	long m_intId;
 
 	/**
 	 * Checks if the router id is valid, i.e. it's 0 or more.
 	 * @return
 	 */
-	bool isValid() const {
-		return m_intId >= 0;
+//	bool isValid() const {
+//		return m_intId >= 0;
+//	}
+
+	std::string asString() const noexcept {
+		return std::to_string(m_intId);
 	}
 };
 
 inline RouterId::RouterId(long intId)
-		: m_id(std::to_string(intId)), m_intId(intId) {
+		: m_intId(intId) {
 }
 
 inline RouterId::RouterId(std::string id)
-		: m_id(std::move(id)), m_intId(std::stol(m_id)) {
+		: m_intId(std::stol(id)) {
 }
 
-inline RouterId::RouterId(std::string id, long intId)
-		: m_id(std::move(id)), m_intId(intId) {
-}
 
 #endif  // CYPHESIS_ROUTERID_H

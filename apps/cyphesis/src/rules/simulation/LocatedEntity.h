@@ -165,6 +165,16 @@ static const std::uint32_t entity_visibility_private = 1u << 17u;
  */
 static const std::uint32_t entity_update_broadcast_queued = 1u << 18u;
 
+struct EntityState {
+	/// Map of properties
+	std::map<std::string, ModifiableProperty> m_properties;
+
+	std::map<RouterId, std::set<std::pair<std::string, Modifier*>>> m_activeModifiers;
+
+	/// Class of which this is an instance
+	const TypeNode<LocatedEntity>* m_type;
+};
+
 /// \brief This is the base class from which in-game and in-memory objects
 /// inherit.
 ///
@@ -185,7 +195,7 @@ protected:
 	/// Map of properties
 	std::map<std::string, ModifiableProperty> m_properties;
 
-	std::map<LocatedEntity*, std::set<std::pair<std::string, Modifier*>>> m_activeModifiers;
+	std::map<RouterId, std::set<std::pair<std::string, Modifier*>>> m_activeModifiers;
 
 	/// Sequence number
 	int m_seq;
@@ -274,7 +284,7 @@ public:
 	/// \brief Accessor for properties
 	const std::map<std::string, ModifiableProperty>& getProperties() const { return m_properties; }
 
-	const std::map<LocatedEntity*, std::set<std::pair<std::string, Modifier*>>>& getActiveModifiers() const {
+	const std::map<RouterId, std::set<std::pair<std::string, Modifier*>>>& getActiveModifiers() const {
 		return m_activeModifiers;
 	}
 
@@ -548,7 +558,7 @@ public:
 							 "reinstalled with new class."
 							 "This might cause instability. Make sure that all "
 							 "properties are properly installed in "
-							 "CorePropertyManager.", name, getId());
+							 "CorePropertyManager.", name, getIdAsString());
 				Atlas::Message::Element val;
 				if (p->get(val)) {
 					sp->set(val);

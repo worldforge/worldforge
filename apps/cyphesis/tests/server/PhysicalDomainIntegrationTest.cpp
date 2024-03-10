@@ -231,7 +231,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 							   {1,  2, 1}};
 		bBoxProperty.apply(plantedEntity);
 
-		domain->test_childEntityPropertyApplied("bbox", bBoxProperty, plantedEntity.getIntId());
+		domain->test_childEntityPropertyApplied("bbox", bBoxProperty, plantedEntity.getIdAsInt());
 
 		domain->tick(1000ms, res);
 
@@ -289,7 +289,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->tick(0ms, res);
 
-		ASSERT_EQUAL(rootEntity.getIntId(), *planted1.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
+		ASSERT_EQUAL(rootEntity.getIdAsInt(), *planted1.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 
 		Entity planted2(context.newId());
 		planted2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 2, 1};
@@ -302,7 +302,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->tick(0ms, res);
 
-		ASSERT_EQUAL(planted1.getIntId(), *planted2.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
+		ASSERT_EQUAL(planted1.getIdAsInt(), *planted2.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 		ASSERT_FUZZY_EQUAL(1.0f, planted2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), 0.1f);
 
 		Entity planted3(context.newId());
@@ -316,7 +316,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->tick(0ms, res);
 
-		ASSERT_EQUAL(planted2.getIntId(), *planted3.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
+		ASSERT_EQUAL(planted2.getIdAsInt(), *planted3.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 		ASSERT_FUZZY_EQUAL(2.0f, planted3.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), 0.1f);
 
 		Entity planted4(context.newId());
@@ -330,7 +330,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->tick(0ms, res);
 
-		ASSERT_EQUAL(planted3.getIntId(), *planted4.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
+		ASSERT_EQUAL(planted3.getIdAsInt(), *planted4.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 		ASSERT_FUZZY_EQUAL(3.0f, planted4.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), 0.1f);
 
 		//Now delete planted3, which should place planted4 on top of planted2
@@ -338,15 +338,15 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->removeEntity(planted3);
 		domain->tick(0ms, res);
 
-		ASSERT_EQUAL(planted2.getIntId(), *planted4.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
+		ASSERT_EQUAL(planted2.getIdAsInt(), *planted4.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 		ASSERT_FUZZY_EQUAL(2.0f, planted4.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), 0.1f);
 
 		domain->removeEntity(planted1);
 		domain->tick(0ms, res);
 
-		ASSERT_EQUAL(rootEntity.getIntId(), *planted2.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
+		ASSERT_EQUAL(rootEntity.getIdAsInt(), *planted2.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 		ASSERT_FUZZY_EQUAL(0.0f, planted2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), 0.1f);
-		ASSERT_EQUAL(planted2.getIntId(), *planted4.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
+		ASSERT_EQUAL(planted2.getIdAsInt(), *planted4.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 		ASSERT_FUZZY_EQUAL(1.0f, planted4.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), 0.1f);
 	}
 
@@ -589,10 +589,10 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 				ASSERT_TRUE(planted1.getPropertyClassFixed<ModeDataProperty>())
 				ASSERT_TRUE(planted1.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
-				ASSERT_EQUAL(rootEntity.getIntId(), *planted1.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
+				ASSERT_EQUAL(rootEntity.getIdAsInt(), *planted1.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 				ASSERT_FUZZY_EQUAL(10, planted1.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), 0.1);
 				{
-					auto* planted1RigidBody = domain.test_getRigidBody(planted1.getIntId());
+					auto* planted1RigidBody = domain.test_getRigidBody(planted1.getIdAsInt());
 					btVector3 aabbMin, aabbMax;
 					planted1RigidBody->getAabb(aabbMin, aabbMax);
 					ASSERT_FUZZY_EQUAL_FN(aabbMin.y(), 9, 0.1, [&]() { this->addFailure(fmt::format("Using shape '{}'.", plantedShape)); });
@@ -620,10 +620,10 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 				ASSERT_TRUE(planted2.getPropertyClassFixed<ModeDataProperty>());
 				ASSERT_TRUE(planted2.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId);
-				ASSERT_EQUAL(planted1.getIntId(), *planted2.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId);
+				ASSERT_EQUAL(planted1.getIdAsInt(), *planted2.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId);
 				ASSERT_FUZZY_EQUAL(11, planted2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), 0.1);
 				{
-					auto* planted2RigidBody = domain.test_getRigidBody(planted2.getIntId());
+					auto* planted2RigidBody = domain.test_getRigidBody(planted2.getIdAsInt());
 					btVector3 aabbMin, aabbMax;
 					planted2RigidBody->getAabb(aabbMin, aabbMax);
 					ASSERT_FUZZY_EQUAL_FN(aabbMin.y(), 10, 0.1, [&]() { this->addFailure(fmt::format("Using shape '{}'.", plantedShape)); });
@@ -642,7 +642,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 				plantedOn.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
 																			  {1,  1, 1}};
 				ModeDataProperty modeDataProperty{};
-				modeDataProperty.setPlantedData({planted1.getIntId()});
+				modeDataProperty.setPlantedData({planted1.getIdAsInt()});
 				plantedOn.setProperty(ModeDataProperty::property_name, std::unique_ptr<PropertyBase>(modeDataProperty.copy()));
 
 				GeometryProperty geometryProperty{};
@@ -654,11 +654,11 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 				ASSERT_TRUE(plantedOn.getPropertyClassFixed<ModeDataProperty>());
 				ASSERT_TRUE(plantedOn.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId);
-				ASSERT_EQUAL(planted1.getIntId(), *plantedOn.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId);
+				ASSERT_EQUAL(planted1.getIdAsInt(), *plantedOn.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId);
 				ASSERT_FUZZY_EQUAL_FN(plantedOn.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), 11, 0.1,
 									  [&]() { this->addFailure(fmt::format("Using shape '{}' on top of '{}'.", plantedOnTopShape, plantedShape)); });
 				{
-					auto* plantedOnRigidBody = domain.test_getRigidBody(plantedOn.getIntId());
+					auto* plantedOnRigidBody = domain.test_getRigidBody(plantedOn.getIdAsInt());
 					btVector3 aabbMin, aabbMax;
 					plantedOnRigidBody->getAabb(aabbMin, aabbMax);
 					ASSERT_FUZZY_EQUAL_FN(aabbMin.y(), 11, 0.1, [&]() { this->addFailure(fmt::format("Using shape '{}' on top of '{}'.", plantedOnTopShape, plantedShape)); });
@@ -725,7 +725,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 
 		ASSERT_FUZZY_EQUAL(terrain.get(10, 10), 10.0f, 0.1f);
-		ASSERT_TRUE(terrain.hasMod(terrainModEntity.getIntId()));
+		ASSERT_TRUE(terrain.hasMod(terrainModEntity.getIdAsInt()));
 		ASSERT_FUZZY_EQUAL(terrain.get(32, 32), 5.0f, 0.1f);
 
 
@@ -742,7 +742,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->tick(0ms, res);
 
 		ASSERT_FUZZY_EQUAL(terrain.get(10, 10), 5.0f, 0.1f);
-		ASSERT_TRUE(terrain.hasMod(terrainModEntity.getIntId()));
+		ASSERT_TRUE(terrain.hasMod(terrainModEntity.getIdAsInt()));
 		ASSERT_FUZZY_EQUAL(terrain.get(32, 32), 10.0f, 0.1f);
 
 
@@ -764,7 +764,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->tick(0ms, res);
 
 		ASSERT_FUZZY_EQUAL(terrain.get(10, 10), 10.0f, 0.1f);
-		ASSERT_FALSE(terrain.hasMod(terrainModEntity.getIntId()));
+		ASSERT_FALSE(terrain.hasMod(terrainModEntity.getIdAsInt()));
 		ASSERT_FUZZY_EQUAL(terrain.get(32, 32), 10.0f, 0.1f);
 
 		//And back to "planted" which should bring it back
@@ -775,7 +775,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->tick(0ms, res);
 
 		ASSERT_FUZZY_EQUAL(terrain.get(10, 10), 5.0f, 0.1f);
-		ASSERT_TRUE(terrain.hasMod(terrainModEntity.getIntId()));
+		ASSERT_TRUE(terrain.hasMod(terrainModEntity.getIdAsInt()));
 		ASSERT_FUZZY_EQUAL(terrain.get(32, 32), 10.0f, 0.1f);
 	}
 
@@ -827,7 +827,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->addEntity(lake);
 
 		//Should be in water
-		Entity freeEntity(RouterId("freeEntity", context.newId()));
+		Entity freeEntity(RouterId(context.newId()));
 		freeEntity.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity.setType(&rockType);
 		freeEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(-1, 1, 9);
@@ -835,7 +835,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->addEntity(freeEntity);
 
 		//Should not be in water
-		Entity freeEntity2(RouterId("freeEntity2", context.newId()));
+		Entity freeEntity2(RouterId(context.newId()));
 		freeEntity2.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity2.setType(&rockType);
 		freeEntity2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(9, 1, 1);
@@ -845,8 +845,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		ModeProperty plantedProp{};
 		plantedProp.set("planted");
 		ModeDataProperty modeDataProp{};
-		modeDataProp.setPlantedData({lake.getIntId()});
-		Entity floatingEntity(RouterId("floatingEntity", context.newId()));
+		modeDataProp.setPlantedData({lake.getIdAsInt()});
+		Entity floatingEntity(RouterId(context.newId()));
 		floatingEntity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(plantedProp.copy()));
 		floatingEntity.setProperty(ModeDataProperty::property_name, std::unique_ptr<PropertyBase>(modeDataProp.copy()));
 
@@ -1105,7 +1105,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		// btDiscreteDynamicsWorld* bulletWorld = domain->test_getBulletWorld();
 
 		auto verifyBboxes = [&](Entity& entity) {
-			btRigidBody* rigidBody = domain->test_getRigidBody(entity.getIntId());
+			btRigidBody* rigidBody = domain->test_getRigidBody(entity.getIdAsInt());
 			btVector3 aabbMin, aabbMax;
 			rigidBody->getAabb(aabbMin, aabbMax);
 
@@ -1510,7 +1510,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		Property<double, LocatedEntity> massProp{};
 		massProp.data() = 100;
 
-		Entity freeEntity1(RouterId("free1", context.newId()));
+		Entity freeEntity1(RouterId(context.newId()));
 		freeEntity1.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity1.setType(&rockType);
 		freeEntity1.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(10, 30, 10);
@@ -1646,7 +1646,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		TestWorld testWorld(&rootEntity);
 
 
-		Entity plantedEntity(RouterId("planted", context.newId()));
+		Entity plantedEntity(RouterId(context.newId()));
 		plantedEntity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 		plantedEntity.setType(&rockType);
 		plantedEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(30, 10, 30);
@@ -1687,7 +1687,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		TestWorld testWorld(&rootEntity);
 
 
-		Entity plantedEntity(RouterId("planted", context.newId()));
+		Entity plantedEntity(RouterId(context.newId()));
 		plantedEntity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 		plantedEntity.setType(&rockType);
 		plantedEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(30, 10, 30);
@@ -1722,14 +1722,14 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		TestWorld testWorld(&rootEntity);
 
-		Entity smallEntity1(RouterId("small1", context.newId()));
+		Entity smallEntity1(RouterId(context.newId()));
 		smallEntity1.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 		smallEntity1.setType(&rockType);
 		smallEntity1.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(30, 0, 30);
 		smallEntity1.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-0.2f, 0, -0.2f), WFMath::Point<3>(0.2, 0.4, 0.2));
 		domain->addEntity(smallEntity1);
 
-		Entity smallEntity2(RouterId("small2", context.newId()));
+		Entity smallEntity2(RouterId(context.newId()));
 		smallEntity2.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 		smallEntity2.setType(&rockType);
 		smallEntity2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(-31, 0, -31);
@@ -1737,7 +1737,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->addEntity(smallEntity2);
 
 		//This entity should always be seen, as "visibility" is specified.
-		Entity smallVisibleEntity(RouterId("smallVisible", context.newId()));
+		Entity smallVisibleEntity(RouterId(context.newId()));
 		smallVisibleEntity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 		smallVisibleEntity.setType(&rockType);
 		smallVisibleEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(-63, 0, -63);
@@ -1745,14 +1745,14 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		smallVisibleEntity.setProperty(VisibilityDistanceProperty::property_name, std::unique_ptr<PropertyBase>(visibilityProperty.copy()));
 		domain->addEntity(smallVisibleEntity);
 
-		Entity largeEntity1(RouterId("large1", context.newId()));
+		Entity largeEntity1(RouterId(context.newId()));
 		largeEntity1.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 		largeEntity1.setType(&rockType);
 		largeEntity1.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(0, 0, 0);
 		largeEntity1.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-10.f, 0, -10.f), WFMath::Point<3>(10, 20, 10));
 		domain->addEntity(largeEntity1);
 
-		Entity observerEntity(RouterId("observer", context.newId()));
+		Entity observerEntity(RouterId(context.newId()));
 		observerEntity.setType(&humanType);
 		observerEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(-30, 0, -30);
 		observerEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-0.2f, 0, -0.2f), WFMath::Point<3>(0.2, 2, 0.2));
@@ -1775,10 +1775,10 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 			domain->getVisibleEntitiesFor(observerEntity, observedList);
 
 			ASSERT_EQUAL(5u, observedList.size());
-			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [](const LocatedEntity* entity) { return entity->getId() == "small2"; }) != observedList.end());
-			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [](const LocatedEntity* entity) { return entity->getId() == "smallVisible"; }) != observedList.end());
-			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [](const LocatedEntity* entity) { return entity->getId() == "large1"; }) != observedList.end());
-			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [](const LocatedEntity* entity) { return entity->getId() == "observer"; }) != observedList.end());
+			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [&smallEntity2](const LocatedEntity* entity) { return entity->getIdAsString() == smallEntity2.getIdAsString(); }) != observedList.end());
+			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [&smallVisibleEntity](const LocatedEntity* entity) { return entity->getIdAsString() == smallVisibleEntity.getIdAsString(); }) != observedList.end());
+			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [&largeEntity1](const LocatedEntity* entity) { return entity->getIdAsString() == largeEntity1.getIdAsString(); }) != observedList.end());
+			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [&observerEntity](const LocatedEntity* entity) { return entity->getIdAsString() == observerEntity.getIdAsString(); }) != observedList.end());
 
 		}
 		//Now move the observer to "small1"
@@ -1796,10 +1796,10 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 			domain->getVisibleEntitiesFor(observerEntity, observedList);
 
 			ASSERT_EQUAL(5u, observedList.size());
-			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [](const LocatedEntity* entity) { return entity->getId() == "small1"; }) != observedList.end());
-			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [](const LocatedEntity* entity) { return entity->getId() == "smallVisible"; }) != observedList.end());
-			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [](const LocatedEntity* entity) { return entity->getId() == "large1"; }) != observedList.end());
-			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [](const LocatedEntity* entity) { return entity->getId() == "observer"; }) != observedList.end());
+			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [&smallEntity1](const LocatedEntity* entity) { return entity->getIdAsString() == smallEntity1.getIdAsString(); }) != observedList.end());
+			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [&smallVisibleEntity](const LocatedEntity* entity) { return entity->getIdAsString() == smallVisibleEntity.getIdAsString(); }) != observedList.end());
+			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [&largeEntity1](const LocatedEntity* entity) { return entity->getIdAsString() == largeEntity1.getIdAsString(); }) != observedList.end());
+			ASSERT_TRUE(std::find_if(observedList.begin(), observedList.end(), [&observerEntity](const LocatedEntity* entity) { return entity->getIdAsString() == observerEntity.getIdAsString(); }) != observedList.end());
 
 		}
 	}
@@ -1857,7 +1857,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		//First with an entity which doesn't step; it should collide and be kept in place
 		{
-			Ref<Entity> human = new Entity(RouterId{"human", context.newId()});
+			Ref<Entity> human = new Entity(RouterId{context.newId()});
 			human->setProperty(AngularFactorProperty::property_name, std::unique_ptr<PropertyBase>(angularZeroFactorProperty.copy()));
 			human->setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 			human->setProperty(PropelProperty::property_name, std::unique_ptr<PropertyBase>(propelProperty.copy()));
@@ -1876,7 +1876,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		//Then with an entity with a capsule geometry, it should step
 		{
-			Ref<Entity> human = new Entity(RouterId{"human", context.newId()});
+			Ref<Entity> human = new Entity(RouterId{context.newId()});
 			//human->setProperty("step_factor", stepFactorProp));
 			human->setProperty(AngularFactorProperty::property_name, std::unique_ptr<PropertyBase>(angularZeroFactorProperty.copy()));
 			human->setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
@@ -1898,7 +1898,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		//The human entity shouldn't step up on the tilted entity
 		{
 
-			Ref<Entity> stepElement = new Entity(RouterId{"tilted", context.newId()});
+			Ref<Entity> stepElement = new Entity(RouterId{context.newId()});
 			stepElement->setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 			WFMath::Point<3> pos(20, 0, 0);
 			WFMath::AxisBox<3> bbox(WFMath::Point<3>(-0.4f, 0.f, 0), WFMath::Point<3>(0.4f, 1, 0.4f));
@@ -1910,7 +1910,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 			domain->addEntity(*stepElement);
 
-			Ref<Entity> human = new Entity(RouterId{"human", context.newId()});
+			Ref<Entity> human = new Entity(RouterId{context.newId()});
 			//human->setProperty("step_factor", stepFactorProp));
 			human->setProperty(AngularFactorProperty::property_name, std::unique_ptr<PropertyBase>(angularZeroFactorProperty.copy()));
 			human->setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));

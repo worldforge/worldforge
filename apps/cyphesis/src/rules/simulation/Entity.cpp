@@ -164,10 +164,10 @@ void Entity::destroy() {
 			if (entity) {
 				Atlas::Objects::Operation::Move moveOp;
 				RootEntity ent;
-				ent->setId(entity->getId());
+				ent->setId(entity->getIdAsString());
 				ent->setAttr(ModeDataProperty::property_name, {});
 				if (m_parent) {
-					ent->setLoc(m_parent->getId());
+					ent->setLoc(m_parent->getIdAsString());
 				}
 				auto posProp = getPropertyClassFixed<PositionProperty<LocatedEntity>>();
 				if (posProp && posProp->data().isValid()) {
@@ -275,7 +275,7 @@ void Entity::removeListener(OperationsListener<LocatedEntity>* listener) {
 void Entity::externalOperation(const Operation& op, Link& link) {
 	if (op->getClassNo() != Atlas::Objects::Operation::THOUGHT_NO) {
 		OpVector res;
-		clientError(op, "An entity can only be externally controlled by Thoughts.", res, getId());
+		clientError(op, "An entity can only be externally controlled by Thoughts.", res, getIdAsString());
 		for (auto& resOp: res) {
 			link.send(resOp);
 		}
@@ -412,7 +412,7 @@ Ref<LocatedEntity> Entity::createNewEntity(const Operation& op, OpVector& res) {
 	try {
 		RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
 		if (!ent.isValid()) {
-			error(op, "Entity to be created is malformed", res, getId());
+			error(op, "Entity to be created is malformed", res, getIdAsString());
 			return {};
 		}
 		auto obj = createNewEntity(ent);
@@ -444,7 +444,7 @@ Ref<LocatedEntity> Entity::createNewEntity(const Operation& op, OpVector& res) {
 	}
 	catch (const std::runtime_error& e) {
 		spdlog::error("Error when trying to create entity: {}", e.what());
-		error(op, fmt::format("Error when trying to create entity: {}", e.what()), res, getId());
+		error(op, fmt::format("Error when trying to create entity: {}", e.what()), res, getIdAsString());
 		return {};
 	}
 }
@@ -457,9 +457,9 @@ Ref<LocatedEntity> Entity::createNewEntity(const RootEntity& ent) {
 
 	//If there's no location set we'll use the same one as the current entity.
 	if (!ent->hasAttrFlag(Atlas::Objects::Entity::LOC_FLAG) && (m_parent)) {
-		ent->setLoc(m_parent->getId());
+		ent->setLoc(m_parent->getIdAsString());
 	}
-	cy_debug_print(getId() << " creating " << type)
+	cy_debug_print(getIdAsString() << " creating " << type)
 
 	return BaseWorld::instance().addNewEntity(type, ent);
 

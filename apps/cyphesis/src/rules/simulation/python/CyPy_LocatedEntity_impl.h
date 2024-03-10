@@ -54,7 +54,7 @@ template<typename TValue, typename TPythonClass>
 Py::Object CyPy_LocatedEntityBase<TValue, TPythonClass>::getattro(const Py::String& name) {
 	auto nameStr = name.as_string();
 	if (nameStr == "id") {
-		return Py::String(this->m_value->getId());
+		return Py::String(this->m_value->getIdAsString());
 	}
 
 	if (nameStr == "parent") {
@@ -171,7 +171,7 @@ Py::Object CyPy_LocatedEntityBase<TValue, TPythonClass>::get_child(const Py::Tup
 	auto child_id = verifyString(args.front());
 	if (this->m_value->m_contains) {
 		for (auto& child: *this->m_value->m_contains) {
-			if (child_id == child->getId()) {
+			if (child_id == child->getIdAsString()) {
 				return CyPy_LocatedEntity::wrap(child);
 			}
 		}
@@ -210,7 +210,7 @@ Py::Object CyPy_LocatedEntityBase<TValue, TPythonClass>::client_error(const Py::
 	args.verify_length(2);
 
 	OpVector res;
-	this->m_value->clientError(verifyObject<CyPy_Operation>(args[0]), verifyString(args[1]), res, this->m_value->getId());
+	this->m_value->clientError(verifyObject<CyPy_Operation>(args[0]), verifyString(args[1]), res, this->m_value->getIdAsString());
 	if (!res.empty()) {
 		return CyPy_Operation::wrap(res.front());
 	}

@@ -60,7 +60,7 @@ int ExternalMindsManager::addConnection(
     //As we now have a new connection we'll see if there are any minds in waiting
 
     for (auto character : m_unpossessedEntities) {
-        requestPossessionFromRegisteredClients(character->getId());
+        requestPossessionFromRegisteredClients(character->getIdAsString());
     }
 
     return 0;
@@ -85,14 +85,14 @@ int ExternalMindsManager::removeConnection(const std::string& routerId)
 
 void ExternalMindsManager::addPossessionEntryForCharacter(LocatedEntity& entity)
 {
-    std::string key = entity.getId() + "_";
+    std::string key = entity.getIdAsString() + "_";
     WFMath::MTRand generator;
     for (int i = 0; i < 32; i++) {
         char ch = (char) ((int) 'a' + generator.rand(25));
         key += ch;
     }
 
-    m_possessionAuthenticator.addPossession(entity.getId(), key);
+    m_possessionAuthenticator.addPossession(entity.getIdAsString(), key);
 }
 
 int ExternalMindsManager::requestPossession(LocatedEntity& entity)
@@ -112,7 +112,7 @@ int ExternalMindsManager::requestPossession(LocatedEntity& entity)
 
     auto mindsProperty = entity.getPropertyClassFixed<MindsProperty>();
     if (!mindsProperty || mindsProperty->getMinds().empty()) {
-        requestPossessionFromRegisteredClients(entity.getId());
+        requestPossessionFromRegisteredClients(entity.getIdAsString());
     }
     return 0;
 }
@@ -144,7 +144,7 @@ int ExternalMindsManager::requestPossessionFromRegisteredClients(const std::stri
 
             cy_debug_print(fmt::format(
                     "Requesting possession of mind for entity {} from link with id {} and router with id {}.",
-                    entity_id, connection.getLink()->getId(),
+                    entity_id, connection.getLink()->getIdAsString(),
                     connection.getRouterId()));
 
             connection.getLink()->send(possessOp);
@@ -173,7 +173,7 @@ void ExternalMindsManager::entity_mindsChanged(LocatedEntity& entity, const Mind
         addPossessionEntryForCharacter(entity);
 
         //We'll now check for any registered possessive clients and ask them for possession of the newly unpossessed character.
-        requestPossessionFromRegisteredClients(entity.getId());
+        requestPossessionFromRegisteredClients(entity.getIdAsString());
     } else {
         //Mark that the entity now is possessed (although it might not be by us).
         m_unpossessedEntities.erase(&entity);

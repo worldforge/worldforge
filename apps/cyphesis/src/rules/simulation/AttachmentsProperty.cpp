@@ -68,7 +68,7 @@ HandlerResult AttachmentsProperty::operation(LocatedEntity& entity, const Operat
 
 				//If we're attaching an entity which is already attached at the same attachment just bail now.
 				if (existing_entity) {
-					if (entity_id == existing_entity->getId()) {
+					if (entity_id == existing_entity->getIdAsString()) {
 						//Entity is already attached, do nothing
 						return OPERATION_BLOCKED;
 					}
@@ -110,9 +110,9 @@ HandlerResult AttachmentsProperty::operation(LocatedEntity& entity, const Operat
 							queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
 							if (!attachment.filter->match(queryContext)) {
 								if (errors.empty()) {
-									entity.clientError(op, fmt::format("Attached entity failed the constraint '{}'.", attachment.contraint), res, entity.getId());
+									entity.clientError(op, fmt::format("Attached entity failed the constraint '{}'.", attachment.contraint), res, entity.getIdAsString());
 								} else {
-									entity.clientError(op, errors.front(), res, entity.getId());
+									entity.clientError(op, errors.front(), res, entity.getIdAsString());
 								}
 								return OPERATION_BLOCKED;
 							}
@@ -123,7 +123,7 @@ HandlerResult AttachmentsProperty::operation(LocatedEntity& entity, const Operat
 							auto& plantedOnData = modeDataProp.getPlantedOnData();
 							//Check if the entity is attached to ourselves; if so we can just detach it from ourselves.
 							//Otherwise we need to abort, since we don't allow ourselves to detach it from another entity.
-							if (plantedOnData.entityId && plantedOnData.entityId == entity.getIntId()) {
+							if (plantedOnData.entityId && plantedOnData.entityId == entity.getIdAsInt()) {
 								if (plantedOnData.attachment) {
 									//We need to reset the old attached value for the attached entity
 									auto old_attached_prop_name = std::string("attached_") + *plantedOnData.attachment;
@@ -134,17 +134,17 @@ HandlerResult AttachmentsProperty::operation(LocatedEntity& entity, const Operat
 									}
 								}
 							} else {
-								entity.clientError(op, "The entity is already attached to another entity.", res, entity.getId());
+								entity.clientError(op, "The entity is already attached to another entity.", res, entity.getIdAsString());
 								return OPERATION_BLOCKED;
 							}
 						}
 
-						modeDataProp.setPlantedData(ModeDataProperty::PlantedOnData{entity.getIntId(), attachment_name.String()});
+						modeDataProp.setPlantedData(ModeDataProperty::PlantedOnData{entity.getIdAsInt(), attachment_name.String()});
 
 						new_entity->applyProperty(modeDataProp);
 						new_entity->enqueueUpdateOp();
 
-						entity.setAttrValue(attached_prop_name, Atlas::Message::MapType{{"$eid", new_entity->getId()}});
+						entity.setAttrValue(attached_prop_name, Atlas::Message::MapType{{"$eid", new_entity->getIdAsString()}});
 
 						//Check if there was another entity attached to the attachment, and if so reset it's attachment.
 						resetExistingEntityPlantedOn();
@@ -152,7 +152,7 @@ HandlerResult AttachmentsProperty::operation(LocatedEntity& entity, const Operat
 						entity.enqueueUpdateOp();
 
 					} else {
-						entity.clientError(op, "Could not find wielded entity.", res, entity.getId());
+						entity.clientError(op, "Could not find wielded entity.", res, entity.getIdAsString());
 					}
 				}
 				return OPERATION_BLOCKED;

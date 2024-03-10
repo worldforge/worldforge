@@ -72,7 +72,7 @@ void InventoryDomain::addEntity(LocatedEntity& entity) {
 		if (prop->getMode() == ModeProperty::Mode::Planted) {
 			auto& plantedOnData = prop->getPlantedOnData();
 			//Check that we've moved from another entity.
-			if (plantedOnData.entityId && (plantedOnData.entityId != m_entity.getIntId())) {
+			if (plantedOnData.entityId && (plantedOnData.entityId != m_entity.getIdAsInt())) {
 				entity.setAttrValue(ModeDataProperty::property_name, Atlas::Message::Element());
 				entity.enqueueUpdateOp();
 			}
@@ -101,7 +101,7 @@ void InventoryDomain::removeClosenessObservation(const std::string& entityId) {
 
 
 void InventoryDomain::removeEntity(LocatedEntity& entity) {
-	removeClosenessObservation(entity.getId());
+	removeClosenessObservation(entity.getIdAsString());
 }
 
 bool InventoryDomain::isEntityVisibleFor(const LocatedEntity& observingEntity, const LocatedEntity& observedEntity) const {
@@ -122,7 +122,7 @@ bool InventoryDomain::isEntityVisibleFor(const LocatedEntity& observingEntity, c
 	auto modeDataProp = observedEntity.getPropertyClassFixed<ModeDataProperty>();
 	return modeDataProp && modeDataProp->getMode() == ModeProperty::Mode::Planted
 		   && modeDataProp->getPlantedOnData().entityId
-		   && *modeDataProp->getPlantedOnData().entityId == m_entity.getIntId();
+		   && *modeDataProp->getPlantedOnData().entityId == m_entity.getIdAsInt();
 
 }
 
@@ -161,9 +161,9 @@ std::vector<Domain::CollisionEntry> InventoryDomain::queryCollision(const WFMath
 std::optional<std::function<void()>> InventoryDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
 	if (&reacher == &m_entity) {
 		auto obs = new ClosenessObserverEntry{target, callback};
-		m_closenessObservations[target.getId()].emplace(obs, std::unique_ptr<ClosenessObserverEntry>(obs));
+		m_closenessObservations[target.getIdAsString()].emplace(obs, std::unique_ptr<ClosenessObserverEntry>(obs));
 		return std::optional<std::function<void()>>([this, &target, obs]() {
-			auto I = m_closenessObservations.find(target.getId());
+			auto I = m_closenessObservations.find(target.getIdAsString());
 			if (I != m_closenessObservations.end()) {
 				auto J = I->second.find(obs);
 				if (J != I->second.end()) {

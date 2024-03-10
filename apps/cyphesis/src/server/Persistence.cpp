@@ -25,12 +25,9 @@
 #include "rules/simulation/LocatedEntity.h"
 
 #include "common/id.h"
-#include "common/debug.h"
 #include "common/globals.h"
 #include "common/Database.h"
-#include "common/Shaker.h"
 
-#include <iostream>
 
 using Atlas::Message::MapType;
 using Atlas::Objects::Root;
@@ -77,10 +74,6 @@ std::unique_ptr<Account> Persistence::getAccount(const std::string& name) {
 		return nullptr;
 	}
 	RouterId id(c);
-	if (!id.isValid()) {
-		spdlog::error(R"(Invalid ID "{}" for account "{}" from database.)", id.m_id, name);
-		return nullptr;
-	}
 	c = first.column("password");
 	if (c == nullptr) {
 		spdlog::error("Unable to find password field in accounts database.");
@@ -111,7 +104,7 @@ void Persistence::putAccount(const Account& ac) {
 	values += "', '";
 	values += ac.password();
 	values += "'";
-	m_db.createSimpleRow("accounts", ac.getId(), columns, values);
+	m_db.createSimpleRow("accounts", ac.getIdAsString(), columns, values);
 }
 
 

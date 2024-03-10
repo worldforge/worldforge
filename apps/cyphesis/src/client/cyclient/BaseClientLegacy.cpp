@@ -221,10 +221,6 @@ Ref<CreatorClient> BaseClientLegacy::createCharacter(const std::string& type) {
 
 	auto mind_id = idFromString(arg->getId());
 
-	if (!mind_id.isValid()) {
-		spdlog::error("Invalid character ID \"{}\" from server.", mind_id.m_id);
-	}
-
 	Ref<CreatorClient> obj(new CreatorClient(mind_id, entityId, m_connection, m_typeStore));
 
 	Ref<MemEntity> ownEntity = new MemEntity(mind_id, m_typeStore.getType(type));

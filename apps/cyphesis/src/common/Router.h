@@ -35,18 +35,18 @@ class Link;
  */
 struct RouterIdentifiable {
 	inline explicit RouterIdentifiable(RouterId id)
-			: m_id(std::move(id)) {
+			: m_id(id) {
 	}
 
 	const RouterId m_id;
 
 	/// \brief Read only accessor for string identity
-	const std::string& getId() const {
-		return m_id.m_id;
+	std::string getIdAsString() const {
+		return m_id.asString();
 	}
 
 	/// \brief Read only accessor for Integer identity
-	long getIntId() const {
+	long getIdAsInt() const {
 		return m_id.m_intId;
 	}
 };

@@ -20,7 +20,6 @@
 #include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
-#include <common/log.h>
 
 
 const TypeStore<MemEntity>& TypeResolver::getTypeStore() const {
@@ -80,7 +79,7 @@ const TypeNode<MemEntity>* TypeResolver::requestType(const std::string& id, OpVe
 		Atlas::Objects::Operation::Get get;
 		get->setArgs1(what);
 		if (m_typeProviderId) {
-			get->setFrom(*m_typeProviderId);
+			get->setFrom(m_typeProviderId->asString());
 		}
 
 		res.emplace_back(std::move(get));

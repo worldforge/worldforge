@@ -96,8 +96,8 @@ void ActionsProperty::enqueueTickOp(const LocatedEntity& entity, OpVector& res) 
 		Atlas::Objects::Entity::Anonymous anon;
 		anon->setName("actions");
 		tick->setArgs1(std::move(anon));
-		tick->setTo(entity.getId());
-		tick->setFrom(entity.getId());
+		tick->setTo(entity.getIdAsString());
+		tick->setFrom(entity.getIdAsString());
 		tick->setStamp(nearestExpiry->count());
 		res.emplace_back(std::move(tick));
 

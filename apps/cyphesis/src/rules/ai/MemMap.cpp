@@ -47,14 +47,14 @@ using Atlas::Objects::Entity::Anonymous;
 
 void MemMap::addEntity(const Ref<MemEntity>& entity) {
 	assert(entity != nullptr);
-	assert(!entity->getId().empty());
+	assert(!entity->getIdAsString().empty());
 
-	cy_debug_print("MemMap::addEntity " << entity->describeEntity() << " " << entity->getId())
+	cy_debug_print("MemMap::addEntity " << entity->describeEntity() << " " << entity->getIdAsString())
 	long next = -1;
 	if (m_checkIterator != m_entities.end()) {
 		next = m_checkIterator->first;
 	}
-	m_entities[entity->getIntId()] = entity;
+	m_entities[entity->getIdAsInt()] = entity;
 	m_checkIterator = m_entities.find(next);
 }
 
@@ -71,11 +71,11 @@ void MemMap::readEntity(const Ref<MemEntity>& entity,
 	if (ent->hasAttrFlag(Atlas::Objects::Entity::LOC_FLAG)) {
 		auto old_loc = entity->m_parent;
 		const std::string& new_loc_id = ent->getLoc();
-		if (new_loc_id == entity->getId()) {
+		if (new_loc_id == entity->getIdAsString()) {
 			spdlog::warn("Entity had itself set as parent.", entity->describeEntity());
 		} else {
 			// Has LOC been changed?
-			if (!old_loc || new_loc_id != old_loc->getId()) {
+			if (!old_loc || new_loc_id != old_loc->getIdAsString()) {
 				entity->m_parent = getAdd(new_loc_id).get();
 				assert(entity->m_parent);
 				assert(old_loc != entity->m_parent);
@@ -190,12 +190,12 @@ MemMap::~MemMap() {
 void MemMap::sendLook(OpVector& res) {
 	cy_debug_print("MemMap::sendLooks")
 	if (!m_additionsById.empty()) {
-		auto id = std::move(m_additionsById.front());
+		auto id = m_additionsById.front();
 		m_additionsById.pop_front();
 		//TODO: look at multiple entities with one op, up to some limit set by the server.
 		Look l;
 		Anonymous look_arg;
-		look_arg->setId(id);
+		look_arg->setId(id.asString());
 		l->setArgs1(std::move(look_arg));
 		res.emplace_back(std::move(l));
 	}
@@ -204,11 +204,10 @@ void MemMap::sendLook(OpVector& res) {
 Ref<MemEntity> MemMap::addId(const RouterId& id)
 // Queue the ID of an entity we are interested in
 {
-	assert(!id.m_id.empty());
 	assert(m_entities.find(id.m_intId) == m_entities.end());
 
 	cy_debug_print("MemMap::add_id")
-	m_additionsById.emplace_back(id.m_id);
+	m_additionsById.emplace_back(id);
 	//TODO: Should we perhaps wait with creating new entities until we've actually gotten the entity data?
 	Ref<MemEntity> entity(new MemEntity(id, nullptr));
 	addEntity(entity);
@@ -412,7 +411,7 @@ EntityVector MemMap::findByLocation(const EntityLocation<MemEntity>& loc,
 	EntityVector res;
 	auto place = loc.m_parent;
 #ifndef NDEBUG
-	auto place_by_id = get(place->getId());
+	auto place_by_id = get(place->getIdAsString());
 	if (place != place_by_id) {
 		spdlog::error("MemMap consistency check failure: find location "
 					  "has LOC {} which is different in dict ({})",

@@ -81,7 +81,7 @@ void MindsProperty::set(const Atlas::Message::Element& val) {
 int MindsProperty::get(Atlas::Message::Element& val) const {
 	Atlas::Message::ListType list;
 	for (auto& mind: m_data) {
-		list.push_back(mind->getId());
+		list.push_back(mind->getIdAsString());
 	}
 	val = list;
 	return 0;
@@ -90,7 +90,7 @@ int MindsProperty::get(Atlas::Message::Element& val) const {
 void MindsProperty::add(const std::string& val, Atlas::Message::MapType& map) const {
 	Atlas::Message::ListType list;
 	for (auto& mind: m_data) {
-		list.push_back(mind->getId());
+		list.push_back(mind->getIdAsString());
 	}
 	map[val] = list;
 }
@@ -98,7 +98,7 @@ void MindsProperty::add(const std::string& val, Atlas::Message::MapType& map) co
 void MindsProperty::add(const std::string& val, const Atlas::Objects::Entity::RootEntity& ent) const {
 	Atlas::Message::ListType list;
 	for (auto& mind: m_data) {
-		list.push_back(mind->getId());
+		list.push_back(mind->getIdAsString());
 	}
 	ent->setAttr(val, list);
 }
@@ -131,7 +131,7 @@ HandlerResult MindsProperty::operation(LocatedEntity& ent, const Operation& op, 
 				//Wrap any returning ops in thoughts and send them to our entity
 				Atlas::Objects::Operation::Thought thought;
 				thought->setArgs1(resOp);
-				thought->setTo(ent.getId());
+				thought->setTo(ent.getIdAsString());
 				ent.sendWorld(thought);
 			}
 		}
@@ -149,15 +149,15 @@ void MindsProperty::sendToMinds(const Operation& op, OpVector& res) const {
 
 HandlerResult MindsProperty::RelayOperation(LocatedEntity& ent, const Operation& op, OpVector& res) {
 	if (op->isDefaultTo()) {
-		ent.error(op, "A relay op must have a 'to'.", res, ent.getId());
+		ent.error(op, "A relay op must have a 'to'.", res, ent.getIdAsString());
 		return OPERATION_BLOCKED;
 	}
 	if (op->isDefaultFrom()) {
-		ent.error(op, "A relay op must have a 'from'.", res, ent.getId());
+		ent.error(op, "A relay op must have a 'from'.", res, ent.getIdAsString());
 		return OPERATION_BLOCKED;
 	}
 	if (op->isDefaultId()) {
-		ent.error(op, "A relay op must have an 'id'.", res, ent.getId());
+		ent.error(op, "A relay op must have an 'id'.", res, ent.getIdAsString());
 		return OPERATION_BLOCKED;
 	}
 
@@ -165,14 +165,14 @@ HandlerResult MindsProperty::RelayOperation(LocatedEntity& ent, const Operation&
 	auto mindId = op->getId();
 
 	for (auto& mind: m_data) {
-		if (mind->getId() == mindId) {
+		if (mind->getIdAsString() == mindId) {
 			OpVector mres;
 			mind->operation(op, res);
 			for (auto& resOp: mres) {
 				//Wrap any returning ops in thoughts and send them to our entity
 				Atlas::Objects::Operation::Thought thought;
 				thought->setArgs1(resOp);
-				thought->setTo(ent.getId());
+				thought->setTo(ent.getIdAsString());
 				res.push_back(std::move(resOp));
 			}
 			return OPERATION_BLOCKED;
@@ -199,7 +199,7 @@ HandlerResult MindsProperty::ThoughtOperation(LocatedEntity& ent, const Operatio
 			}
 
 			for (auto& resOp: mres) {
-				resOp->setFrom(ent.getId());
+				resOp->setFrom(ent.getIdAsString());
 				res.push_back(std::move(resOp));
 			}
 		}
@@ -224,7 +224,7 @@ void MindsProperty::mindUseOperation(LocatedEntity& ent, const Operation& op, Op
 	}
 
 	Atlas::Objects::Operation::Use useOp;
-	useOp->setFrom(ent.getId());
+	useOp->setFrom(ent.getIdAsString());
 	auto firstArg = args.front();
 	if (firstArg->getObjtype() == "op") {
 		//TODO: should we perhaps check that this only can be Action ops?
@@ -253,7 +253,7 @@ void MindsProperty::mindUseOperation(LocatedEntity& ent, const Operation& op, Op
 		useOp->setTo(toolEnt->getId());
 		useOp->setArgs1(innerOp);
 	} else if (firstArg->getObjtype() == "task") {
-		useOp->setTo(ent.getId());
+		useOp->setTo(ent.getIdAsString());
 		useOp->setArgs(op->getArgs());
 	}
 
@@ -266,7 +266,7 @@ void MindsProperty::mindUseOperation(LocatedEntity& ent, const Operation& op, Op
 /// @param res The filtered result is returned here.
 void MindsProperty::mindWieldOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	cy_debug_print("Got Wield op from mind")
-	op->setTo(ent.getId());
+	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
 
@@ -291,10 +291,10 @@ void MindsProperty::mindMoveOperation(LocatedEntity& ent, const Operation& op, O
 		return;
 	}
 	const std::string& other_id = arg->getId();
-	if (other_id != ent.getId()) {
+	if (other_id != ent.getIdAsString()) {
 		moveOtherEntity(ent, op, res, arg, other_id);
 	} else {
-		ent.clientError(op, "You can't move yourself.", res, ent.getId());
+		ent.clientError(op, "You can't move yourself.", res, ent.getIdAsString());
 	}
 }
 
@@ -309,7 +309,7 @@ void MindsProperty::moveOtherEntity(LocatedEntity& ent, const Operation& op, OpV
 		unseen_arg->setId(other_id);
 		u->setArgs1(unseen_arg);
 
-		u->setTo(ent.getId());
+		u->setTo(ent.getIdAsString());
 		res.push_back(u);
 		return;
 	}
@@ -323,7 +323,7 @@ void MindsProperty::moveOtherEntity(LocatedEntity& ent, const Operation& op, OpV
 		queryContext.report_error_fn = [&errorMessages](const std::string& message) { errorMessages.emplace_back(message); };
 		if (!moverConstraint->getData()->match(queryContext)) {
 			auto message = errorMessages.empty() ? "You can't move this entity." : errorMessages.front();
-			ent.clientError(op, message, res, ent.getId());
+			ent.clientError(op, message, res, ent.getIdAsString());
 			return;
 		}
 	}
@@ -337,7 +337,7 @@ void MindsProperty::moveOtherEntity(LocatedEntity& ent, const Operation& op, OpV
 		queryContext.report_error_fn = [&errorMessages](const std::string& message) { errorMessages.emplace_back(message); };
 		if (!moveConstraint->getData()->match(queryContext)) {
 			auto message = errorMessages.empty() ? "You can't move this entity." : errorMessages.front();
-			ent.clientError(op, message, res, ent.getId());
+			ent.clientError(op, message, res, ent.getIdAsString());
 			return;
 		}
 	}
@@ -352,7 +352,7 @@ void MindsProperty::moveOtherEntity(LocatedEntity& ent, const Operation& op, OpV
 			queryContext.report_error_fn = [&errorMessages](const std::string& message) { errorMessages.emplace_back(message); };
 			if (!containConstraint->getData()->match(queryContext)) {
 				auto message = errorMessages.empty() ? "You can't move this entity." : errorMessages.front();
-				ent.clientError(op, message, res, ent.getId());
+				ent.clientError(op, message, res, ent.getIdAsString());
 				return;
 			}
 		}
@@ -387,7 +387,7 @@ void MindsProperty::moveOtherEntity(LocatedEntity& ent, const Operation& op, OpV
 			queryContext.report_error_fn = [&errorMessages](const std::string& message) { errorMessages.emplace_back(message); };
 			if (!destinationConstraint->getData()->match(queryContext)) {
 				auto message = errorMessages.empty() ? "You can't move this entity." : errorMessages.front();
-				ent.clientError(op, message, res, ent.getId());
+				ent.clientError(op, message, res, ent.getIdAsString());
 				return;
 			}
 		}
@@ -413,9 +413,9 @@ void MindsProperty::moveOtherEntity(LocatedEntity& ent, const Operation& op, OpV
 		}
 		//Replace first arg with our sanitized arg.
 		op->setArgs1(std::move(newArgs1));
-		op->setFrom(ent.getId());
+		op->setFrom(ent.getIdAsString());
 		//Send the op to the current location of the entity being moved
-		op->setTo(other->m_parent->getId());
+		op->setTo(other->m_parent->getIdAsString());
 
 		res.push_back(op);
 
@@ -441,13 +441,13 @@ void MindsProperty::mindSetOperation(LocatedEntity& ent, const Operation& op, Op
 	const Root& arg = args.front();
 	//Clean op
 	Set setOp;
-	setOp->setTo(ent.getId());
-	setOp->setFrom(ent.getId());
+	setOp->setTo(ent.getIdAsString());
+	setOp->setFrom(ent.getIdAsString());
 	if (!op->isDefaultSerialno()) {
 		setOp->setSerialno(op->getSerialno());
 	}
 	Anonymous cleanedArg;
-	cleanedArg->setId(ent.getId());
+	cleanedArg->setId(ent.getIdAsString());
 	auto attrs = arg->asMessage();
 	for (auto entry: attrs) {
 		if (entry.first == "_propel") {
@@ -488,7 +488,7 @@ void MindsProperty::mindSetOperation(LocatedEntity& ent, const Operation& op, Op
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
 void MindsProperty::mindCreateOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
-	op->setTo(ent.getId());
+	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
 
@@ -497,7 +497,7 @@ void MindsProperty::mindCreateOperation(LocatedEntity& ent, const Operation& op,
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
 void MindsProperty::mindDeleteOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
-	op->setTo(ent.getId());
+	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
 
@@ -506,7 +506,7 @@ void MindsProperty::mindDeleteOperation(LocatedEntity& ent, const Operation& op,
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
 void MindsProperty::mindImaginaryOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
-	op->setTo(ent.getId());
+	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
 
@@ -516,7 +516,7 @@ void MindsProperty::mindImaginaryOperation(LocatedEntity& ent, const Operation& 
 /// @param res The filtered result is returned here.
 void MindsProperty::mindTalkOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	cy_debug_print("MindsProperty::mindTalkOperation")
-	op->setTo(ent.getId());
+	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
 
@@ -531,7 +531,7 @@ void MindsProperty::mindLookOperation(LocatedEntity& ent, const Operation& op, O
 	if (args.empty()) {
 		//If nothing is specified, send to parent, if available.
 		if (ent.m_parent) {
-			op->setTo(ent.m_parent->getId());
+			op->setTo(ent.m_parent->getIdAsString());
 		} else {
 			return;
 		}
@@ -553,7 +553,7 @@ void MindsProperty::mindLookOperation(LocatedEntity& ent, const Operation& op, O
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
 void MindsProperty::mindGoalInfoOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
-	op->setTo(ent.getId());
+	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
 
@@ -603,7 +603,7 @@ void MindsProperty::mindTouchOperation(LocatedEntity& ent, const Operation& op, 
 /// @param res The filtered result is returned here.
 void MindsProperty::mindOtherOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	spdlog::warn("Passing '{}' op from mind through to world. {}", op->getParent(), ent.describeEntity());
-	op->setTo(ent.getId());
+	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
 
@@ -612,7 +612,7 @@ void MindsProperty::mindOtherOperation(LocatedEntity& ent, const Operation& op, 
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
 void MindsProperty::mindThoughtOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
-	op->setTo(ent.getId());
+	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
 
@@ -621,7 +621,7 @@ void MindsProperty::mindThoughtOperation(LocatedEntity& ent, const Operation& op
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
 void MindsProperty::mindThinkOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
-	op->setTo(ent.getId());
+	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
 
@@ -717,12 +717,12 @@ void MindsProperty::removeMind(Router* mind, LocatedEntity& entity) {
 	if (m_data.empty()) {
 		// Send a move op stopping the current movement
 		Atlas::Objects::Entity::Anonymous move_arg;
-		move_arg->setId(entity.getId());
+		move_arg->setId(entity.getIdAsString());
 		move_arg->setAttr("_propel", Vector3D::ZERO().toAtlas());
 
 		Atlas::Objects::Operation::Set setOp;
-		setOp->setFrom(entity.getId());
-		setOp->setTo(entity.getId());
+		setOp->setFrom(entity.getIdAsString());
+		setOp->setTo(entity.getIdAsString());
 		setOp->setArgs1(std::move(move_arg));
 		entity.sendWorld(std::move(setOp));
 	}

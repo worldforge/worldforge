@@ -47,7 +47,7 @@ CharacterClient::CharacterClient(RouterId id,
 ///
 /// @param op Operation to be sent
 void CharacterClient::send(const Operation& op) {
-	op->setFrom(getId());
+	op->setFrom(getIdAsString());
 	m_connection.send(op);
 }
 
@@ -58,14 +58,14 @@ Ref<MemEntity> CharacterClient::look(const std::string& id) {
 		ent->setId(id);
 		op->setArgs1(ent);
 	}
-	op->setFrom(getId());
+	op->setFrom(getIdAsString());
 	return sendLook(op);
 }
 
 Ref<MemEntity> CharacterClient::lookFor(const RootEntity& ent) {
 	Look op;
 	op->setArgs1(ent);
-	op->setFrom(getId());
+	op->setFrom(getIdAsString());
 	return sendLook(op);
 }
 
@@ -76,7 +76,7 @@ Ref<MemEntity> CharacterClient::lookFor(const RootEntity& ent) {
 /// @param op Operation to be sent
 /// @param res Result with correct refno is returned here
 int CharacterClient::sendAndWaitReply(const Operation& op, OpVector& res) {
-	op->setFrom(getId());
+	op->setFrom(getIdAsString());
 	return m_connection.sendAndWaitReply(op, res);
 }
 

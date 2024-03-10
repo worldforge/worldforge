@@ -103,7 +103,7 @@ struct WorldRouterintegration : public Cyphesis::TestBase {
 			ASSERT_EQUAL(2, test_world.m_entityCount);
 
 			Anonymous ent2_arg{};
-			ent2_arg->setLoc(ent1->getId());
+			ent2_arg->setLoc(ent1->getIdAsString());
 			auto ent2 = test_world.addNewEntity("thing", ent2_arg);
 
 			ASSERT_EQUAL(3, test_world.m_entityCount);
@@ -206,7 +206,7 @@ void WorldRouterintegration::test_sequence() {
 
 	Tick tick;
 	tick->setFutureMilliseconds(0);
-	tick->setTo(ent2->getId());
+	tick->setTo(ent2->getIdAsString());
 	test_world.message(tick, *ent2);
 
 

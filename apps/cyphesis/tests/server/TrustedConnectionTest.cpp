@@ -103,7 +103,7 @@ public:
 	}
 
 	void removeObject(Router* obj) {
-		auto I = m_routers.find(obj->getIntId());
+		auto I = m_routers.find(obj->getIdAsInt());
 		if (I != m_routers.end()) {
 			m_routers.erase(I);
 		}
@@ -182,12 +182,6 @@ int UPDATE_NO = -1;
 
 int CommSocket::flush() {
 	return 0;
-}
-
-
-const std::string& ExternalMind::connectionId() {
-	assert(m_link != 0);
-	return m_link->getId();
 }
 
 void ExternalMind::linkUp(Link* c) {

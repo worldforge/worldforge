@@ -609,7 +609,7 @@ PhysicalDomain::PhysicalDomain(LocatedEntity& entity) :
 
 	mContainingEntityEntry.mode = ModeProperty::Mode::Fixed;
 
-	m_entries.emplace(entity.getIntId(), std::unique_ptr<BulletEntry>(&mContainingEntityEntry));
+	m_entries.emplace(entity.getIdAsInt(), std::unique_ptr<BulletEntry>(&mContainingEntityEntry));
 
 	buildTerrainPages();
 
@@ -628,8 +628,8 @@ PhysicalDomain::~PhysicalDomain() {
 	m_terrainSegments.clear();
 
 	//Remove our own entry first, since we own the memory
-	m_entries[m_entity.getIntId()].release();
-	m_entries.erase(m_entity.getIntId());
+	m_entries[m_entity.getIdAsInt()].release();
+	m_entries.erase(m_entity.getIdAsInt());
 
 	for (auto& entry: m_entries) {
 		if (entry.second->collisionObject) {
@@ -654,7 +654,7 @@ Atlas::Objects::Operation::RootOperation PhysicalDomain::scheduleTick(LocatedEnt
 	Atlas::Objects::Entity::Anonymous tick_arg;
 	tick_arg->setName("domain");
 	Atlas::Objects::Operation::Tick tickOp;
-	tickOp->setTo(entity.getId());
+	tickOp->setTo(entity.getIdAsString());
 	tickOp->setArgs1(tick_arg);
 
 	return tickOp;
@@ -840,11 +840,11 @@ bool PhysicalDomain::isEntityVisibleFor(const LocatedEntity& observingEntity, co
 		return true;
 	}
 
-	auto observingI = m_entries.find(observingEntity.getIntId());
+	auto observingI = m_entries.find(observingEntity.getIdAsInt());
 	if (observingI == m_entries.end()) {
 		return false;
 	}
-	auto observedI = m_entries.find(observedEntity.getIntId());
+	auto observedI = m_entries.find(observedEntity.getIdAsInt());
 	if (observedI == m_entries.end()) {
 		return false;
 	}
@@ -855,7 +855,7 @@ bool PhysicalDomain::isEntityVisibleFor(const LocatedEntity& observingEntity, co
 }
 
 void PhysicalDomain::getVisibleEntitiesFor(const LocatedEntity& observingEntity, std::list<LocatedEntity*>& entityList) const {
-	auto observingI = m_entries.find(observingEntity.getIntId());
+	auto observingI = m_entries.find(observingEntity.getIdAsInt());
 	if (observingI != m_entries.end()) {
 		const auto& bulletEntry = observingI->second;
 		for (const auto& observedEntry: bulletEntry->observedByThis) {
@@ -867,7 +867,7 @@ void PhysicalDomain::getVisibleEntitiesFor(const LocatedEntity& observingEntity,
 std::vector<LocatedEntity*> PhysicalDomain::getObservingEntitiesFor(const LocatedEntity& observedEntity) const {
 	std::vector<LocatedEntity*> entityList;
 
-	auto observedI = m_entries.find(observedEntity.getIntId());
+	auto observedI = m_entries.find(observedEntity.getIdAsInt());
 	if (observedI != m_entries.end()) {
 		auto& bulletEntry = observedI->second;
 		for (const auto& observingEntry: bulletEntry->observingThis) {
@@ -892,7 +892,7 @@ void PhysicalDomain::updateObserverEntry(BulletEntry& bulletEntry, OpVector& res
 
 		auto disappearFn = [&](BulletEntry* disappearedEntry) {
 			Anonymous that_ent;
-			that_ent->setId(disappearedEntry->entity.getId());
+			that_ent->setId(disappearedEntry->entity.getIdAsString());
 			that_ent->setStamp(disappearedEntry->entity.getSeq());
 
 			disappearArgs.push_back(std::move(that_ent));
@@ -904,7 +904,7 @@ void PhysicalDomain::updateObserverEntry(BulletEntry& bulletEntry, OpVector& res
 			//Send Appear
 			// cy_debug_print(" appear: " << viewedEntry->entity.describeEntity() << " for " << bulletEntry.entity.describeEntity());
 			Anonymous that_ent;
-			that_ent->setId(appearedEntry->entity.getId());
+			that_ent->setId(appearedEntry->entity.getIdAsString());
 			that_ent->setStamp(appearedEntry->entity.getSeq());
 			appearArgs.push_back(std::move(that_ent));
 
@@ -923,13 +923,13 @@ void PhysicalDomain::updateObserverEntry(BulletEntry& bulletEntry, OpVector& res
 
 		if (!appearArgs.empty()) {
 			Appearance appear;
-			appear->setTo(bulletEntry.entity.getId());
+			appear->setTo(bulletEntry.entity.getIdAsString());
 			appear->setArgs(std::move(appearArgs));
 			res.push_back(std::move(appear));
 		}
 		if (!disappearArgs.empty()) {
 			Disappearance disappear;
-			disappear->setTo(bulletEntry.entity.getId());
+			disappear->setTo(bulletEntry.entity.getIdAsString());
 			disappear->setArgs(std::move(disappearArgs));
 			res.push_back(std::move(disappear));
 		}
@@ -955,10 +955,10 @@ void PhysicalDomain::updateObservedEntry(BulletEntry& bulletEntry, OpVector& res
 				// cy_debug_print(" disappear: " << bulletEntry.entity.describeEntity() << " for " << noLongerObservingEntry->entity.describeEntity());
 				Disappearance disappear;
 				Anonymous that_ent;
-				that_ent->setId(bulletEntry.entity.getId());
+				that_ent->setId(bulletEntry.entity.getIdAsString());
 				that_ent->setStamp(bulletEntry.entity.getSeq());
 				disappear->setArgs1(std::move(that_ent));
-				disappear->setTo(existingObserverEntry->entity.getId());
+				disappear->setTo(existingObserverEntry->entity.getIdAsString());
 				res.push_back(std::move(disappear));
 			}
 
@@ -971,10 +971,10 @@ void PhysicalDomain::updateObservedEntry(BulletEntry& bulletEntry, OpVector& res
 				// cy_debug_print(" appear: " << bulletEntry.entity.describeEntity() << " for " << viewingEntry->entity.describeEntity());
 				Appearance appear;
 				Anonymous that_ent;
-				that_ent->setId(bulletEntry.entity.getId());
+				that_ent->setId(bulletEntry.entity.getIdAsString());
 				that_ent->setStamp(bulletEntry.entity.getSeq());
 				appear->setArgs1(std::move(that_ent));
-				appear->setTo(newObserverEntry->entity.getId());
+				appear->setTo(newObserverEntry->entity.getIdAsString());
 				res.push_back(std::move(appear));
 			}
 
@@ -1039,7 +1039,7 @@ std::shared_ptr<btCollisionShape> PhysicalDomain::createCollisionShapeForEntry(L
 
 //TODO: send along placement data (position, orientation etc.)
 void PhysicalDomain::addEntity(LocatedEntity& entity) {
-	assert(m_entries.find(entity.getIntId()) == m_entries.end());
+	assert(m_entries.find(entity.getIdAsInt()) == m_entries.end());
 
 	auto existingPosProp = entity.modPropertyClassFixed<PositionProperty<LocatedEntity>>();
 	if (!existingPosProp || !existingPosProp->data().isValid()) {
@@ -1058,7 +1058,7 @@ void PhysicalDomain::addEntity(LocatedEntity& entity) {
 	WFMath::AxisBox<3> bbox = ScaleProperty<LocatedEntity>::scaledBbox(entity);
 	btVector3 angularFactor(1, 1, 1);
 
-	auto result = m_entries.emplace(entity.getIntId(), std::unique_ptr<BulletEntry>(new BulletEntry{entity, posProp, velocityProp, angularProp, orientationProp, bbox}));
+	auto result = m_entries.emplace(entity.getIdAsInt(), std::unique_ptr<BulletEntry>(new BulletEntry{entity, posProp, velocityProp, angularProp, orientationProp, bbox}));
 	auto& entry = *result.first->second;
 
 	auto angularFactorProp = entity.getPropertyClassFixed<AngularFactorProperty>();
@@ -1279,7 +1279,7 @@ void PhysicalDomain::addEntity(LocatedEntity& entity) {
 }
 
 void PhysicalDomain::toggleChildPerception(LocatedEntity& entity) {
-	auto I = m_entries.find(entity.getIntId());
+	auto I = m_entries.find(entity.getIdAsInt());
 	if (I == m_entries.end()) {
 		//This could happen if the entity didn't have any position, for example.
 		return;
@@ -1321,16 +1321,16 @@ void PhysicalDomain::toggleChildPerception(LocatedEntity& entity) {
 
 void PhysicalDomain::removeEntity(LocatedEntity& entity) {
 	cy_debug_print("PhysicalDomain::removeEntity " << entity.describeEntity())
-	auto I = m_entries.find(entity.getIntId());
+	auto I = m_entries.find(entity.getIdAsInt());
 	if (I == m_entries.end()) {
 		//This could happen if the entity didn't have any position, for example.
 		return;
 	}
 	auto& entry = I->second;
 
-	auto modI = m_terrainMods.find(entity.getIntId());
+	auto modI = m_terrainMods.find(entity.getIdAsInt());
 	if (modI != m_terrainMods.end()) {
-		m_terrain->updateMod(entity.getIntId(), nullptr);
+		m_terrain->updateMod(entity.getIdAsInt(), nullptr);
 		m_terrainMods.erase(modI);
 	}
 
@@ -1406,7 +1406,7 @@ void PhysicalDomain::removeEntity(LocatedEntity& entity) {
 
 	m_entries.erase(I);
 
-	m_propellingEntries.erase(entity.getIntId());
+	m_propellingEntries.erase(entity.getIdAsInt());
 
 	std::set<LocatedEntity*> transformedEntities;
 	for (auto* attachedEntry: attachedEntities) {
@@ -1766,7 +1766,7 @@ void PhysicalDomain::updateTerrainMod(const BulletEntry& entry, bool forceUpdate
 
 					modPos.y() = height;
 
-					auto I = m_terrainMods.find(entry.entity.getIntId());
+					auto I = m_terrainMods.find(entry.entity.getIdAsInt());
 					if (I != m_terrainMods.end()) {
 						auto& oldPos = I->second.modPos;
 						auto& oldOrient = I->second.modOrientation;
@@ -1789,11 +1789,11 @@ void PhysicalDomain::updateTerrainMod(const BulletEntry& entry, bool forceUpdate
 						if (modifier) {
 							auto bbox = modifier->bbox();
 							terrainAreas.push_back(bbox);
-							m_terrainMods[entry.entity.getIntId()] = TerrainModEntry{modPos, entry.orientationProperty.data(), bbox};
+							m_terrainMods[entry.entity.getIdAsInt()] = TerrainModEntry{modPos, entry.orientationProperty.data(), bbox};
 						} else {
-							m_terrainMods.erase(entry.entity.getIntId());
+							m_terrainMods.erase(entry.entity.getIdAsInt());
 						}
-						auto oldAreas = m_terrain->updateMod(entry.entity.getIntId(), std::move(modifier));
+						auto oldAreas = m_terrain->updateMod(entry.entity.getIdAsInt(), std::move(modifier));
 						if (oldAreas.isValid()) {
 							terrainAreas.emplace_back(oldAreas);
 						}
@@ -1803,11 +1803,11 @@ void PhysicalDomain::updateTerrainMod(const BulletEntry& entry, bool forceUpdate
 			}
 		} else {
 			//Make sure the terrain mod is removed if the entity isn't planted
-			auto I = m_terrainMods.find(entry.entity.getIntId());
+			auto I = m_terrainMods.find(entry.entity.getIdAsInt());
 			if (I != m_terrainMods.end()) {
 				std::vector<WFMath::AxisBox<2>> terrainAreas;
 				terrainAreas.emplace_back(I->second.area);
-				m_terrain->updateMod(entry.entity.getIntId(), nullptr);
+				m_terrain->updateMod(entry.entity.getIdAsInt(), nullptr);
 				m_terrainMods.erase(I);
 				refreshTerrain(terrainAreas);
 			}
@@ -1965,12 +1965,12 @@ void PhysicalDomain::calculatePositionForEntity(ModeProperty::Mode mode, Physica
 					if (modeDataProp && modeDataProp->getMode() == ModeProperty::Mode::Planted) {
 						if (modeDataProp->getPlantedOnData().entityId) {
 							auto plantedOnId = *modeDataProp->getPlantedOnData().entityId;
-							if (plantedOnId == entity.getIntId()) {
+							if (plantedOnId == entity.getIdAsInt()) {
 								spdlog::warn("Entity {} was marked to be planted on itself.", entity.describeEntity());
 							} else {
 								//If it's desired that the entity should be planted on the ground then make it so.
 								//Since the ground is everywhere.
-								if (plantedOnId == m_entity.getIntId()) {
+								if (plantedOnId == m_entity.getIdAsInt()) {
 									plantOnEntity(entry, &mContainingEntityEntry);
 
 									pos.y() = h;
@@ -2070,7 +2070,7 @@ void PhysicalDomain::calculatePositionForEntity(ModeProperty::Mode mode, Physica
 								if (callback.highestObject) {
 									auto plantedOnEntry = static_cast<BulletEntry*>(callback.highestObject->getUserPointer());
 									if (plantedOnEntry) {
-										assert(plantedOnEntry->entity.getId() != entity.getId());
+										assert(plantedOnEntry->entity.getIdAsString() != entity.getIdAsString());
 										pos.y() = std::max(callback.highestPoint.y(), (btScalar) h);
 										plantedOn = true;
 
@@ -2295,13 +2295,13 @@ void PhysicalDomain::applyPropel(BulletEntry& entry, btVector3 propel) {
 				}
 				propel.m_floats[1] = 0; //Don't allow vertical velocity to be set for the continuous velocity.
 
-				auto K = m_propellingEntries.find(entity.getIntId());
+				auto K = m_propellingEntries.find(entity.getIdAsInt());
 				if (K == m_propellingEntries.end()) {
 					if (entry.step_factor > 0) {
 						auto height = entry.bbox.upperBound(1) - entry.bbox.lowerBound(1);
-						m_propellingEntries.emplace(entity.getIntId(), PropelEntry{rigidBody, &entry, propel, (float) (height * entry.step_factor)});
+						m_propellingEntries.emplace(entity.getIdAsInt(), PropelEntry{rigidBody, &entry, propel, (float) (height * entry.step_factor)});
 					} else {
-						m_propellingEntries.emplace(entity.getIntId(), PropelEntry{rigidBody, &entry, propel, 0});
+						m_propellingEntries.emplace(entity.getIdAsInt(), PropelEntry{rigidBody, &entry, propel, 0});
 					}
 				} else {
 					K->second.velocity = propel;
@@ -2323,7 +2323,7 @@ void PhysicalDomain::applyPropel(BulletEntry& entry, btVector3 propel) {
 				}
 				rigidBody->setFriction(static_cast<btScalar>(friction));
 
-				m_propellingEntries.erase(entity.getIntId());
+				m_propellingEntries.erase(entity.getIdAsInt());
 
 			}
 		}
@@ -2333,7 +2333,7 @@ void PhysicalDomain::applyPropel(BulletEntry& entry, btVector3 propel) {
 void PhysicalDomain::applyTransform(LocatedEntity& entity, const TransformData& transformData,
 									std::set<LocatedEntity*>& transformedEntities) {
 	//First handle any changes to the "mode_data" property, to see if entities are planted.
-	auto I = m_entries.find(entity.getIntId());
+	auto I = m_entries.find(entity.getIdAsInt());
 	auto& entry = I->second;
 	BulletEntry* entryPlantedOn = nullptr;
 
@@ -2341,7 +2341,7 @@ void PhysicalDomain::applyTransform(LocatedEntity& entity, const TransformData& 
 		if (transformData.plantedOnEntity == &entity) {
 			spdlog::warn("Tried to plant entity {} on itself.", entity.describeEntity());
 		} else {
-			auto plantedOnI = m_entries.find(transformData.plantedOnEntity->getIntId());
+			auto plantedOnI = m_entries.find(transformData.plantedOnEntity->getIdAsInt());
 			if (plantedOnI != m_entries.end()) {
 				entryPlantedOn = plantedOnI->second.get();
 			}
@@ -2550,13 +2550,13 @@ void PhysicalDomain::processDirtyTerrainAreas() {
 		for (BulletEntry* entry: callback.m_entries) {
 			cy_debug_print("Adjusting " << entry->entity.describeEntity())
 			Anonymous anon;
-			anon->setId(entry->entity.getId());
+			anon->setId(entry->entity.getIdAsString());
 			std::vector<double> posList;
 			addToEntity(entry->positionProperty.data(), posList);
 			anon->setPos(posList);
 			Move move;
-			move->setTo(entry->entity.getId());
-			move->setFrom(entry->entity.getId());
+			move->setTo(entry->entity.getIdAsString());
+			move->setFrom(entry->entity.getIdAsString());
 			move->setArgs1(anon);
 			entry->entity.sendWorld(move);
 		}
@@ -2603,7 +2603,7 @@ void PhysicalDomain::sendMoveSight(BulletEntry& entry, bool posChange, bool velo
 
 		if (shouldSendOp) {
 			Set setOp;
-			move_arg->setId(entity.getId());
+			move_arg->setId(entity.getIdAsString());
 			if (debug_flag) {
 				cy_debug_print("Sending set op for movement.")
 				if (entry.velocityProperty.data().isValid()) {
@@ -2614,16 +2614,16 @@ void PhysicalDomain::sendMoveSight(BulletEntry& entry, bool posChange, bool velo
 			//entity.m_location.addToEntity(move_arg);
 
 			setOp->setArgs1(move_arg);
-			setOp->setFrom(entity.getId());
-			setOp->setTo(entity.getId());
+			setOp->setFrom(entity.getIdAsString());
+			setOp->setTo(entity.getIdAsString());
 			auto now = BaseWorld::instance().getTimeAsMilliseconds();
 			setOp->setStamp(now.count());
 
 			for (BulletEntry* observer: entry.observingThis) {
 				Sight s;
 				s->setArgs1(setOp);
-				s->setTo(observer->entity.getId());
-				s->setFrom(entity.getId());
+				s->setTo(observer->entity.getIdAsString());
+				s->setFrom(entity.getIdAsString());
 				s->setStamp(now.count());
 
 				entity.sendWorld(s);
@@ -2867,14 +2867,14 @@ void PhysicalDomain::tick(std::chrono::milliseconds tickSize, OpVector& res) {
 		//If the projectile data contained information on which entity caused the projectile to fly away, copy that.
 		//This is needed for game rules to determine which entity hit another.
 		if (modeDataProperty && modeDataProperty->getProjectileData().entity) {
-			ent->setId(modeDataProperty->getProjectileData().entity->getId());
+			ent->setId(modeDataProperty->getProjectileData().entity->getIdAsString());
 		} else {
-			ent->setId(collisionEntry.bulletEntry->entity.getId());
+			ent->setId(collisionEntry.bulletEntry->entity.getIdAsString());
 		}
 		std::vector<double> posList;
 		addToEntity(Convert::toWF<WFMath::Point<3>>(collisionEntry.pos), posList);
 		ent->setPos(std::move(posList));
-		ent->setLoc(m_entity.getId());
+		ent->setLoc(m_entity.getIdAsString());
 		if (modeDataProperty && modeDataProperty->getMode() == ModeProperty::Mode::Projectile) {
 			auto& projectileData = modeDataProperty->getProjectileData();
 			//Copy any data found in "mode_data".
@@ -2884,12 +2884,12 @@ void PhysicalDomain::tick(std::chrono::milliseconds tickSize, OpVector& res) {
 		}
 		Atlas::Objects::Operation::Hit hit;
 		hit->setArgs1(std::move(ent));
-		hit->setTo(projectileEntry->entity.getId());
-		hit->setFrom(collisionEntry.bulletEntry->entity.getId());
+		hit->setTo(projectileEntry->entity.getIdAsString());
+		hit->setFrom(collisionEntry.bulletEntry->entity.getIdAsString());
 
 		auto hitCopy = hit.copy();
-		hitCopy->setTo(collisionEntry.bulletEntry->entity.getId());
-		hitCopy->setFrom(projectileEntry->entity.getId());
+		hitCopy->setTo(collisionEntry.bulletEntry->entity.getIdAsString());
+		hitCopy->setFrom(projectileEntry->entity.getIdAsString());
 
 		//We need to make sure that Hit ops gets their correct "from".
 		collisionEntry.bulletEntry->entity.sendWorld(std::move(hit));
@@ -3148,7 +3148,7 @@ void PhysicalDomain::plantOnEntity(PhysicalDomain::BulletEntry& plantedEntry, Ph
 		auto& plantedOnData = existingModeDataProp->getPlantedOnData();
 		//Check if we're already planted, and perhaps should be detached.
 		if (plantedOnData.entityId) {
-			if (entryPlantedOn && *plantedOnData.entityId == entryPlantedOn->entity.getIntId()) {
+			if (entryPlantedOn && *plantedOnData.entityId == entryPlantedOn->entity.getIdAsInt()) {
 				//Already planted on entity, nothing to do
 				return;
 			}
@@ -3174,7 +3174,7 @@ void PhysicalDomain::plantOnEntity(PhysicalDomain::BulletEntry& plantedEntry, Ph
 	auto& newModeDataProp = plantedEntry.entity.requirePropertyClassFixed<ModeDataProperty>();
 
 	if (entryPlantedOn) {
-		newModeDataProp.setPlantedData({entryPlantedOn->entity.getIntId()});
+		newModeDataProp.setPlantedData({entryPlantedOn->entity.getIdAsInt()});
 		entryPlantedOn->attachedEntities.insert(&plantedEntry);
 	} else {
 		newModeDataProp.clearData();
@@ -3194,7 +3194,7 @@ bool PhysicalDomain::isEntityReachable(const LocatedEntity& reachingEntity, floa
 		return false;
 	}
 
-	auto reachingEntryI = m_entries.find(reachingEntity.getIntId());
+	auto reachingEntryI = m_entries.find(reachingEntity.getIdAsInt());
 	if (reachingEntryI != m_entries.end()) {
 		auto& reachingEntityEntry = reachingEntryI->second;
 		auto& positionOfReachingEntity = reachingEntityEntry->positionProperty.data();
@@ -3218,7 +3218,7 @@ bool PhysicalDomain::isEntityReachable(const LocatedEntity& reachingEntity, floa
 
 		} else {
 			//Both the reaching entity and the queried entity must be contained in the domain.
-			auto queriedBulletEntryI = m_entries.find(queriedEntity.getIntId());
+			auto queriedBulletEntryI = m_entries.find(queriedEntity.getIdAsInt());
 			if (queriedBulletEntryI != m_entries.end()) {
 				auto& queriedBulletEntry = queriedBulletEntryI->second;
 				//Bail out if the entity being reached for hasn't a valid position.
@@ -3322,8 +3322,8 @@ std::vector<Domain::CollisionEntry> PhysicalDomain::queryCollision(const WFMath:
 }
 
 std::optional<std::function<void()>> PhysicalDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
-	auto reacherEntryI = m_entries.find(reacher.getIntId());
-	auto targetEntryI = m_entries.find(target.getIntId());
+	auto reacherEntryI = m_entries.find(reacher.getIdAsInt());
+	auto targetEntryI = m_entries.find(target.getIdAsInt());
 	if (reacherEntryI != m_entries.end() && targetEntryI != m_entries.end()) {
 		auto* reacherEntry = reacherEntryI->second.get();
 		auto* targetEntry = targetEntryI->second.get();

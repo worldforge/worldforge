@@ -59,7 +59,7 @@ WorldRouter::WorldRouter(Ref<LocatedEntity> baseEntity,
 		m_entityCount(1),
 		m_baseEntity(std::move(baseEntity)),
 		m_entityCreator(entityCreator) {
-	m_eobjects[m_baseEntity->getIntId()] = m_baseEntity;
+	m_eobjects[m_baseEntity->getIdAsInt()] = m_baseEntity;
 	Monitors::instance().watch("entities", std::make_unique<Variable<int>>(m_entityCount));
 
 
@@ -93,9 +93,9 @@ void WorldRouter::shutdown() {
 /// class. Send a Setup op to the entity.
 void WorldRouter::addEntity(const Ref<LocatedEntity>& ent, const Ref<LocatedEntity>& parent) {
 	cy_debug_print("WorldRouter::addEntity(" << ent->describeEntity() << ")")
-	assert(ent->getIntId() != 0);
-	assert(m_eobjects.find(ent->getIntId()) == m_eobjects.end());
-	m_eobjects[ent->getIntId()] = ent;
+	assert(ent->getIdAsInt() != 0);
+	assert(m_eobjects.find(ent->getIdAsInt()) == m_eobjects.end());
+	m_eobjects[ent->getIdAsInt()] = ent;
 	++m_entityCount;
 
 	ent->changeContainer(parent);
@@ -113,7 +113,7 @@ void WorldRouter::addEntity(const Ref<LocatedEntity>& ent, const Ref<LocatedEnti
 	//Broadcast an Appearance and rely on the system sending it to any observers.
 	Anonymous arg;
 	Appearance app;
-	arg->setId(ent->getId());
+	arg->setId(ent->getIdAsString());
 	arg->setStamp(ent->getSeq());
 	app->setArgs1(arg);
 	message(app, *ent);
@@ -130,11 +130,6 @@ Ref<LocatedEntity> WorldRouter::addNewEntity(const std::string& typestr,
 											 const RootEntity& attrs) {
 	cy_debug_print("WorldRouter::addNewEntity(\"" << typestr << "\", attrs)")
 	auto id = newId();
-
-	if (!id.isValid()) {
-		spdlog::error("Unable to get ID for new Entity");
-		return nullptr;
-	}
 
 	auto ent = m_entityCreator.newEntity(id, typestr, attrs);
 	if (!ent) {
@@ -172,10 +167,10 @@ void WorldRouter::delEntity(LocatedEntity* ent) {
 		spdlog::warn("Attempt to delete game world");
 		return;
 	}
-	assert(ent->getIntId() != 0);
+	assert(ent->getIdAsInt() != 0);
 	ent->destroy();
 	ent->updated.emit();
-	m_eobjects.erase(ent->getIntId());
+	m_eobjects.erase(ent->getIdAsInt());
 	--m_entityCount;
 }
 
@@ -276,7 +271,7 @@ void WorldRouter::deliverTo(const Operation& op, Ref<LocatedEntity> ent) {
 			}
 		}
 		//If nothing is specified, resulting ops are sent from the active entity.
-		if (resOp->isDefaultFrom() || resOp->getFrom() == ent->getId()) {
+		if (resOp->isDefaultFrom() || resOp->getFrom() == ent->getIdAsString()) {
 			message(resOp, *ent);
 		} else {
 			auto fromEntity = getEntity(resOp->getFrom());
@@ -308,7 +303,7 @@ void WorldRouter::operation(const Operation& op, Ref<LocatedEntity> from) {
 		cy_debug_print("WorldRouter::operation {"
 							   << op->getParent() << ":"
 							   << op->getFrom() << ":" << op->getTo() << "}")
-		assert(op->getFrom() == from->getId());
+		assert(op->getFrom() == from->getIdAsString());
 		assert(!op->getParent().empty());
 
 		Dispatching.emit(op);
@@ -321,7 +316,7 @@ void WorldRouter::operation(const Operation& op, Ref<LocatedEntity> from) {
 			}
 			Ref<LocatedEntity> to_entity;
 
-			if (to == from->getId()) {
+			if (to == from->getIdAsString()) {
 				if (from->isDestroyed()) {
 					// Entity no longer exists, don't send anything
 					return;
@@ -339,7 +334,7 @@ void WorldRouter::operation(const Operation& op, Ref<LocatedEntity> from) {
 						ent->setId(to);
 						ent->setAttr("destroyed", 1); //Add attribute clarifying that this entity is destroyed.
 						unseen->setArgs1(ent);
-						unseen->setTo(from->getId());
+						unseen->setTo(from->getIdAsString());
 						if (!op->isDefaultSerialno()) {
 							unseen->setRefno(op->getSerialno());
 						}
@@ -354,7 +349,7 @@ void WorldRouter::operation(const Operation& op, Ref<LocatedEntity> from) {
 		} else {
 			//This will send an op to all entities in the system. Perhaps we should add some more checks for when we want to allow for this?
 			for (auto& entry: m_eobjects) {
-				op->setTo(entry.second->getId());
+				op->setTo(entry.second->getIdAsString());
 				deliverTo(op, entry.second);
 			}
 		}

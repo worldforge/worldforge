@@ -52,16 +52,16 @@ Connection::Connection(CommSocket& socket,
 					   ServerRouting& svr,
 					   const std::string& addr,
 					   RouterId id) :
-		Link(socket, std::move(id)), m_server(svr) {
+		Link(socket, id), m_server(svr) {
 	m_server.registerConnection(this);
-	logEvent(CONNECT, fmt::format("{} - - Connect from {}", id.m_id, addr));
+	logEvent(CONNECT, fmt::format("{} - - Connect from {}", id.asString(), addr));
 }
 
 Connection::~Connection() {
 	cy_debug_print("destroy called")
 	m_server.deregisterConnection(this);
 
-	logEvent(DISCONNECT, fmt::format("{} - - Disconnect", getId()));
+	logEvent(DISCONNECT, fmt::format("{} - - Disconnect", getIdAsString()));
 
 	//It's important that we disconnect ourselves as a possession router before we disconnect our objects,
 	//else there's a risk that the external minds manager will just issue new possession request to this connection.
@@ -118,8 +118,8 @@ void Connection::disconnectObject(ConnectableRouter* router,
 								  const std::string& event) {
 	m_server.getLobby().removeAccount(router);
 	router->setConnection(nullptr);
-	m_connectableRouters.erase(router->getIntId());
-	removeRouter(router->getIntId());
+	m_connectableRouters.erase(router->getIdAsInt());
+	removeRouter(router->getIdAsInt());
 }
 
 void Connection::setPossessionEnabled(bool enabled, const std::string& routerId) {
@@ -145,7 +145,7 @@ void Connection::addRouter(const RouterId& id, ExternalRouter* router) {
 void Connection::addConnectableRouter(ConnectableRouter* router) {
 	router->setConnection(this);
 	addRouter(router->m_id, router);
-	m_connectableRouters[router->getIntId()] = router;
+	m_connectableRouters[router->getIdAsInt()] = router;
 }
 
 
@@ -243,7 +243,7 @@ void Connection::externalOperation(const Operation& op, Link& link) {
 		m_operationsQueue.emplace_back(op);
 		if (m_operationsQueue.size() > 1000) {
 			spdlog::warn("Operations queue for connection {} is alarmingly high, currently at {}. New op of type '{}'.",
-						 getId(), m_operationsQueue.size(), op->getParent());
+						 getIdAsString(), m_operationsQueue.size(), op->getParent());
 		}
 	} else {
 		auto& from = op->getFrom();
@@ -340,7 +340,7 @@ void Connection::LoginOperation(const Operation& op, OpVector& res) {
 	res.emplace_back(std::move(info));
 
 	logEvent(LOGIN, fmt::format("{} {} - Login account {} ({})",
-								getId(), account->getId(), username,
+								getIdAsString(), account->getIdAsString(), username,
 								account->getType()));
 }
 
@@ -401,8 +401,8 @@ void Connection::CreateOperation(const Operation& op, OpVector& res) {
 	res.push_back(info);
 
 	logEvent(LOGIN, fmt::format("{} {} - Create account {} ({})",
-								getId(),
-								account->getId(),
+								getIdAsString(),
+								account->getIdAsString(),
 								username,
 								account->getType()));
 }

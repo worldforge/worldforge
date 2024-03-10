@@ -57,7 +57,7 @@ void LocatedEntityTest::operation(const Operation&, OpVector&) {
 
 
 EntityExerciser::EntityExerciser(Ref<LocatedEntity> e) : m_ent(e) {
-	if (e->getIntId() == 0) {
+	if (e->getIdAsInt() == 0) {
 		e->makeContainer();
 		assert(e->m_contains != 0);
 	} else {
@@ -217,7 +217,7 @@ void EntityExerciser::runOperations() {
 	}
 	{
 		Atlas::Objects::Operation::Look op;
-		op->setFrom(m_ent->getId());
+		op->setFrom(m_ent->getIdAsString());
 		dispatchOp(op);
 	}
 	{

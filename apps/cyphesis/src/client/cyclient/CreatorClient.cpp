@@ -75,8 +75,8 @@ MemEntity* CreatorClient::handleMakeResponse(const RootOperation& op,
 Ref<MemEntity> CreatorClient::make(const RootEntity& entity) {
 	Create op;
 	op->setArgs1(entity);
-	op->setFrom(getId());
-	op->setTo(getId());
+	op->setFrom(getIdAsString());
+	op->setTo(getIdAsString());
 	OpVector result;
 	if (sendAndWaitReply(op, result) != 0) {
 		std::cerr << "No reply to make" << std::endl;
@@ -120,7 +120,7 @@ void CreatorClient::sendSet(const std::string& id,
 							const RootEntity& entity) {
 	Set op;
 	op->setArgs1(entity);
-	op->setFrom(getId());
+	op->setFrom(getIdAsString());
 	op->setTo(id);
 	send(op);
 }
@@ -130,7 +130,7 @@ void CreatorClient::del(const std::string& id) {
 	Anonymous ent;
 	ent->setId(id);
 	op->setArgs1(ent);
-	op->setFrom(getId());
+	op->setFrom(getIdAsString());
 	op->setTo(id);
 	return send(op);
 }

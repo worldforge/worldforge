@@ -31,7 +31,7 @@
 int main()
 {
     {
-        std::string id;
+        RouterId id(1);
         IdProperty ip(id);
 
         PropertyChecker<IdProperty> pc(ip);

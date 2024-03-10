@@ -29,9 +29,9 @@ SpawnProperty* SpawnProperty::copy() const {
 }
 
 void SpawnProperty::apply(LocatedEntity& ent) {
-	BaseWorld::instance().registerSpawner(ent.getId());
+	BaseWorld::instance().registerSpawner(ent.getIdAsString());
 }
 
 void SpawnProperty::remove(LocatedEntity& ent, const std::string&) {
-	BaseWorld::instance().unregisterSpawner(ent.getId());
+	BaseWorld::instance().unregisterSpawner(ent.getIdAsString());
 }

@@ -188,14 +188,14 @@ void Steering::setAwarenessArea(std::chrono::milliseconds currentServerTimestamp
 			area.orientation() = WFMath::RotMatrix<2>().identity();
 			area.rotatePoint(rm, entityPosition2d);
 
-			mAwareness->setAwarenessArea(mAvatar.getId(), area, WFMath::Segment<2>(entityPosition2d, destination2d));
+			mAwareness->setAwarenessArea(mAvatar.getIdAsString(), area, WFMath::Segment<2>(entityPosition2d, destination2d));
 		}
 	}
 }
 
 size_t Steering::unawareAreaCount() const {
 	if (mAwareness) {
-		return mAwareness->unawareTilesInArea(mAvatar.getId());
+		return mAwareness->unawareTilesInArea(mAvatar.getIdAsString());
 	}
 	return 0;
 }
@@ -242,7 +242,7 @@ int Steering::updatePath(std::chrono::milliseconds currentTimestamp) {
 	if (!mAwareness) {
 		return -1;
 	}
-	auto currentEntityPos = mAwareness->projectPosition(mAvatar.getIntId(), currentTimestamp);
+	auto currentEntityPos = mAwareness->projectPosition(mAvatar.getIdAsInt(), currentTimestamp);
 
 	return updatePath(currentTimestamp, currentEntityPos);
 }
@@ -285,7 +285,7 @@ size_t Steering::getCurrentPathIndex() const {
 }
 
 WFMath::Point<3> Steering::getCurrentAvatarPosition(std::chrono::milliseconds currentTimestamp) const {
-	return mAwareness ? mAwareness->projectPosition(mAvatar.getIntId(), currentTimestamp) : WFMath::Point<3>{};
+	return mAwareness ? mAwareness->projectPosition(mAvatar.getIdAsInt(), currentTimestamp) : WFMath::Point<3>{};
 }
 
 WFMath::Vector<3> Steering::directionTo(std::chrono::milliseconds currentTimestamp, const EntityLocation<MemEntity>& location) const {
@@ -350,14 +350,14 @@ Steering::ResolvedPosition Steering::resolvePosition(std::chrono::milliseconds c
 	}
 
 	double distance = 0;
-	auto I = mAwareness->getObservedEntities().find(entity->getIntId());
+	auto I = mAwareness->getObservedEntities().find(entity->getIdAsInt());
 	if (I != mAwareness->getObservedEntities().end()) {
 		if (I->second->scaledBbox.isValid()) {
 			distance = std::sqrt(boxSquareHorizontalBoundingRadius(I->second->scaledBbox));
 		}
 	}
 
-	return {mAwareness->projectPosition(entity->getIntId(), currentTimestamp), distance};
+	return {mAwareness->projectPosition(entity->getIdAsInt(), currentTimestamp), distance};
 }
 
 bool Steering::isAtDestination(std::chrono::milliseconds currentTimestamp, const SteeringDestination& destination) const {
@@ -424,7 +424,7 @@ SteeringResult Steering::update(std::chrono::milliseconds currentTimestamp) {
 				//Check if we need to divert in order to avoid colliding.
 				WFMath::Vector<2> newVelocity; //The new velocity after avoiding, not normalized.
 				bool shouldSend = false;
-				bool avoiding = mAwareness->avoidObstacles(mAvatar.getIntId(), entityPosition, velocityNorm * mMaxSpeed, newVelocity, currentTimestamp, &nextWaypoint);
+				bool avoiding = mAwareness->avoidObstacles(mAvatar.getIdAsInt(), entityPosition, velocityNorm * mMaxSpeed, newVelocity, currentTimestamp, &nextWaypoint);
 				if (avoiding) {
 					//spdlog::info("Avoiding.");
 					velocityNorm = newVelocity / mMaxSpeed;

@@ -54,7 +54,7 @@ struct ThingExt : public Thing
     explicit ThingExt(RouterId id)
             : Thing::Thing(id)
     {
-        m_type = new TypeNode<LocatedEntity>(id.m_id);
+        m_type = new TypeNode<LocatedEntity>(id.asString());
         addFlags(entity_perceptive);
         things.emplace_back(Ref<ThingExt>(this));
     }
@@ -248,7 +248,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t7->addFlags(entity_visibility_protected);
             {
                 auto modeDataProp = std::make_unique<ModeDataProperty>();
-                modeDataProp->setPlantedData({t6->getIntId()});
+                modeDataProp->setPlantedData({t6->getIdAsInt()});
                 t7->setProperty(ModeDataProperty::property_name, std::move(modeDataProp));
             }
             Ref<ThingExt> t8(new ThingExt(8));
@@ -257,7 +257,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t8->addFlags(entity_visibility_private);
             {
                 auto modeDataProp = std::make_unique<ModeDataProperty>();
-                modeDataProp->setPlantedData({t6->getIntId()});
+                modeDataProp->setPlantedData({t6->getIdAsInt()});
                 t8->setProperty(ModeDataProperty::property_name, std::move(modeDataProp));
             }
             Ref<ThingExt> t9(new ThingExt(9));
@@ -265,7 +265,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t9->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             {
                 auto modeDataProp = std::make_unique<ModeDataProperty>();
-                modeDataProp->setPlantedData({t6->getIntId()});
+                modeDataProp->setPlantedData({t6->getIdAsInt()});
                 t9->setProperty(ModeDataProperty::property_name, std::move(modeDataProp));
             }
 
@@ -317,9 +317,9 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             thing->broadcast(s, res, Visibility::PUBLIC);
 
             for (auto expectedThing : expectedThings) {
-                auto I = std::find_if(std::begin(res), std::end(res), [&](Operation entry) { return entry->getTo() == expectedThing->getId(); });
+                auto I = std::find_if(std::begin(res), std::end(res), [&](Operation entry) { return entry->getTo() == expectedThing->getIdAsString(); });
                 if (I == std::end(res)) {
-                    addFailure(fmt::format("Could not find entity id '{}' in list of broadcasts.", expectedThing->getId()));
+                    addFailure(fmt::format("Could not find entity id '{}' in list of broadcasts.", expectedThing->getIdAsString()));
                     return false;
                 } else {
                     res.erase(I);
@@ -548,7 +548,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t2->addFlags(entity_domain);
 
             auto modeDataProp = std::make_unique<ModeDataProperty>();
-            modeDataProp->setPlantedData({t2->getIntId()});
+            modeDataProp->setPlantedData({t2->getIdAsInt()});
             t3->setProperty(ModeDataProperty::property_name, std::move(modeDataProp));
 
             Operation sightOp;
@@ -621,7 +621,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t3->addChild(*t6);
 
             auto modeDataProp = std::make_unique<ModeDataProperty>();
-            modeDataProp->setPlantedData({t3->getIntId()});
+            modeDataProp->setPlantedData({t3->getIdAsInt()});
             t4->setProperty(ModeDataProperty::property_name, std::move(modeDataProp));
 
             Operation sightOp;
@@ -672,7 +672,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             Ref<ThingExt> t2(new ThingExt(2));
             t2->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t2->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
-            Ref<ThingExt> creator(new ThingExt(RouterId("creator", 10)));
+            Ref<ThingExt> creator(new ThingExt(RouterId(10)));
             creator->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             creator->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             creator->addFlags(entity_admin);
@@ -696,7 +696,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t2->addChild(*t5);
 
             auto modeDataProp = std::make_unique<ModeDataProperty>();
-            modeDataProp->setPlantedData({t2->getIntId()});
+            modeDataProp->setPlantedData({t2->getIdAsInt()});
             t4->setProperty(ModeDataProperty::property_name, std::move(modeDataProp));
 
             Operation sightOp;
@@ -1018,7 +1018,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             Ref<ThingExt> t2(new ThingExt(2));
             t2->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t2->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
-            Ref<ThingExt> creator(new ThingExt(RouterId("creator", 10)));
+            Ref<ThingExt> creator(new ThingExt(RouterId(10)));
             creator->addFlags(entity_admin);
             creator->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             creator->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;

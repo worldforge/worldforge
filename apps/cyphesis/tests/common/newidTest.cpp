@@ -39,8 +39,7 @@ int main() {
 
 	auto id = newId();
 
-	assert(id.isValid());
-	assert(!id.m_id.empty());
+	assert(!id.asString().empty());
 	assert(id.m_intId > 0);
 
 	return 0;

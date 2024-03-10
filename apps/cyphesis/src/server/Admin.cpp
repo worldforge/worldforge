@@ -34,7 +34,6 @@
 
 #include "common/operations/Monitor.h"
 
-#include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
 
 using Atlas::Message::Element;
@@ -54,7 +53,7 @@ Admin::Admin(Connection* conn,
 			 const std::string& username,
 			 const std::string& passwd,
 			 RouterId id) :
-		Account(conn, username, passwd, std::move(id)) {
+		Account(conn, username, passwd, id) {
 }
 
 Admin::~Admin() {
@@ -95,18 +94,18 @@ void Admin::LogoutOperation(const Operation& op, OpVector& res) {
 	if (!args.empty()) {
 		const Root& arg = args.front();
 		if (arg->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-			const std::string& account_id = arg->getId();
+			RouterId account_id(arg->getId());
 
-			if (account_id != getId() && m_connection != nullptr) {
+			if (account_id != m_id && m_connection != nullptr) {
 				Router* account = m_connection->m_server.getObject(account_id);
 				if (account) {
-					spdlog::info("Admin account {} is forcefully logging out account {}.", getId(), account_id);
+					spdlog::info("Admin account {} is forcefully logging out account {}.", getIdAsString(), account_id.asString());
 					account->operation(op, res);
 					return;
 				}
 			}
 		} else {
-			error(op, "No id given on logout op", res, getId());
+			error(op, "No id given on logout op", res, getIdAsString());
 			return;
 		}
 	}
@@ -117,22 +116,22 @@ void Admin::LogoutOperation(const Operation& op, OpVector& res) {
 void Admin::GetOperation(const Operation& op, OpVector& res) {
 	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
-		error(op, "Get has no args.", res, getId());
+		error(op, "Get has no args.", res, getIdAsString());
 		return;
 	}
 	const Root& arg = args.front();
 	if (!arg->hasAttrFlag(Atlas::Objects::OBJTYPE_FLAG)) {
-		error(op, "Get arg has no objtype.", res, getId());
+		error(op, "Get arg has no objtype.", res, getIdAsString());
 		return;
 	}
 	const std::string& objtype = arg->getObjtype();
 	if (!arg->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-		error(op, "Get arg has no id.", res, getId());
+		error(op, "Get arg has no id.", res, getIdAsString());
 		return;
 	}
 	const std::string& id = arg->getId();
 	if (id.empty()) {
-		error(op, "Get arg id empty", res, getId());
+		error(op, "Get arg id empty", res, getIdAsString());
 		return;
 	}
 	Info info;
@@ -185,7 +184,7 @@ void Admin::GetOperation(const Operation& op, OpVector& res) {
 			info->setArgs1(info_arg);
 		} else {
 			clientError(op, fmt::format("Unknown object id \"{}\" requested", id),
-						res, getId());
+						res, getIdAsString());
 			return;
 		}
 	} else if (objtype == "class" ||
@@ -200,7 +199,7 @@ void Admin::GetOperation(const Operation& op, OpVector& res) {
 		info->setArgs1(o);
 	} else {
 		error(op, fmt::format(R"(Unknown object type "{}" requested for "{}")",
-							  objtype, id), res, getId());
+							  objtype, id), res, getIdAsString());
 		return;
 	}
 	res.push_back(info);
@@ -209,17 +208,17 @@ void Admin::GetOperation(const Operation& op, OpVector& res) {
 void Admin::SetOperation(const Operation& op, OpVector& res) {
 	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
-		error(op, "Set has no args.", res, getId());
+		error(op, "Set has no args.", res, getIdAsString());
 		return;
 	}
 	const Root& arg = args.front();
 	if (!arg->hasAttrFlag(Atlas::Objects::OBJTYPE_FLAG)) {
-		error(op, "Set arg has no objtype.", res, getId());
+		error(op, "Set arg has no objtype.", res, getIdAsString());
 		return;
 	}
 	const std::string& objtype = arg->getObjtype();
 	if (!arg->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-		error(op, "Set arg has no id.", res, getId());
+		error(op, "Set arg has no id.", res, getIdAsString());
 		return;
 	}
 	const std::string& id = arg->getId();
@@ -228,7 +227,7 @@ void Admin::SetOperation(const Operation& op, OpVector& res) {
 
 		long intId = integerId(id);
 
-		if (intId == getIntId()) {
+		if (intId == getIdAsInt()) {
 			setAttribute(arg);
 		} else {
 
@@ -243,19 +242,19 @@ void Admin::SetOperation(const Operation& op, OpVector& res) {
 		if (Inheritance::instance().hasClass(id)) {
 			if (Ruleset::instance().modifyRule(id, arg) == 0) {
 				Info info;
-				info->setTo(getId());
+				info->setTo(getIdAsString());
 				info->setArgs1(arg);
 				res.push_back(info);
 			} else {
-				error(op, "Updating type failed", res, getId());
+				error(op, "Updating type failed", res, getIdAsString());
 			}
 			return;
 		}
 		error(op, "Client attempting to use obsolete Set to install new type",
-			  res, getId());
+			  res, getIdAsString());
 		return;
 	} else {
-		error(op, "Unknown object type set", res, getId());
+		error(op, "Unknown object type set", res, getIdAsString());
 		return;
 	}
 }
@@ -273,34 +272,34 @@ void Admin::CreateOperation(const Operation& op, OpVector& res) {
 	if (objtype == "class" || objtype == "op_definition") {
 		// New entity type
 		if (!arg->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-			error(op, "Set arg has no id.", res, getId());
+			error(op, "Set arg has no id.", res, getIdAsString());
 			return;
 		}
 		const std::string& id = arg->getId();
 
 		if (Inheritance::instance().hasClass(id)) {
 			error(op, "Attempt to install type that already exists", res,
-				  getId());
+				  getIdAsString());
 			return;
 		}
 		const Root& o = Inheritance::instance().getClass(type_str, Visibility::PRIVATE);
 		if (!o.isValid()) {
 			error(op, fmt::format("Attempt to install type with non-existent "
-								  "parent \"{}\"", type_str), res, getId());
+								  "parent \"{}\"", type_str), res, getIdAsString());
 			return;
 		}
 		if (Ruleset::instance().installRule(id, "unknown", arg) == 0) {
 			Info info;
-			info->setTo(getId());
+			info->setTo(getIdAsString());
 			info->setArgs1(arg);
 			res.push_back(info);
 		} else {
-			error(op, "Installing new type failed", res, getId());
+			error(op, "Installing new type failed", res, getIdAsString());
 		}
 	} else if (type_str == "juncture") {
 		auto junc_id = newId();
 		if (junc_id.m_intId < 0) {
-			error(op, "Juncture failed as no ID available", res, getId());
+			error(op, "Juncture failed as no ID available", res, getIdAsString());
 			return;
 		}
 
@@ -314,7 +313,7 @@ void Admin::CreateOperation(const Operation& op, OpVector& res) {
 
 
 		Info info;
-		info->setTo(getId());
+		info->setTo(getIdAsString());
 		info->setArgs1(info_arg);
 		if (!op->isDefaultSerialno()) {
 			info->setRefno(op->getSerialno());
@@ -337,7 +336,7 @@ void Admin::setAttribute(const Root& args) {
 	//account acts as an external minds connection.
 	if (args->hasAttr("possessive")) {
 		const Element possessiveElement = args->getAttr("possessive");
-		m_connection->setPossessionEnabled(possessiveElement.isInt() && possessiveElement.asInt() != 0, getId());
+		m_connection->setPossessionEnabled(possessiveElement.isInt() && possessiveElement.asInt() != 0, getIdAsString());
 	}
 }
 
@@ -346,7 +345,7 @@ void Admin::setAttribute(const Root& args) {
 ///
 /// @param op The operation to be processed.
 /// @param res The result of the operation is returned here.
-void Admin::customMonitorOperation(const Operation& op, OpVector& res) {
+void Admin::customMonitorOperation(const Operation& op, OpVector&) {
 	if (!op->getArgs().empty()) {
 		if (m_connection != nullptr) {
 			if (!m_monitorConnection.connected()) {
@@ -362,7 +361,7 @@ void Admin::customMonitorOperation(const Operation& op, OpVector& res) {
 
 void Admin::processExternalOperation(const Operation& op, OpVector& res) {
 	//Allow admin accounts to send operations directly to other entities.
-	if (!op->isDefaultTo() && op->getTo() != getId()) {
+	if (!op->isDefaultTo() && op->getTo() != getIdAsString()) {
 		auto entity = m_connection->m_server.getWorld().getEntity(op->getTo());
 		if (entity) {
 			entity->operation(op, res);

@@ -82,7 +82,7 @@ void ModifyProperty::apply(LocatedEntity& entity) {
 	//Whenever the value is changed and the property is applied we need to clear out all applied modifiers.
 	if (state->parentEntity) {
 		auto& activeModifiers = state->parentEntity->getActiveModifiers();
-		auto I = activeModifiers.find(&entity);
+		auto I = activeModifiers.find(entity.m_id);
 		if (I != activeModifiers.end()) {
 			auto modifiers = I->second;
 			//Important that we copy the modifiers since we'll be modifying them.
@@ -160,7 +160,7 @@ void ModifyProperty::install(LocatedEntity& owner, const std::string& name) {
 void ModifyProperty::newLocation(State& state, LocatedEntity& entity, LocatedEntity* parent) {
 	if (state.parentEntity) {
 		auto& activeModifiers = state.parentEntity->getActiveModifiers();
-		auto I = activeModifiers.find(&entity);
+		auto I = activeModifiers.find(entity.m_id);
 		if (I != activeModifiers.end() && !I->second.empty()) {
 			//Important that we copy the modifiers, since we'll be altering the map.
 			auto modifiers = I->second;
@@ -197,9 +197,9 @@ void ModifyProperty::checkIfActive(State& state, LocatedEntity& entity) {
 				EntityFilter::QueryContext<LocatedEntity> queryContext{entity, state.parentEntity};
 				queryContext.entity_lookup_fn = [&entity, &state](const std::string& id) {
 					// This might be applied before the entity or its parent has been added to the world.
-					if (id == entity.getId()) {
+					if (id == entity.getIdAsString()) {
 						return Ref<LocatedEntity>(&entity);
-					} else if (id == state.parentEntity->getId()) {
+					} else if (id == state.parentEntity->getIdAsString()) {
 						return Ref<LocatedEntity>(state.parentEntity);
 					} else {
 						return BaseWorld::instance().getEntity(id);
@@ -236,7 +236,7 @@ void ModifyProperty::checkIfActive(State& state, LocatedEntity& entity) {
 		}
 
 		auto& activeModifiers = state.parentEntity->getActiveModifiers();
-		auto I = activeModifiers.find(&entity);
+		auto I = activeModifiers.find(entity.m_id);
 		if (I != activeModifiers.end()) {
 			//There were already modifiers active. Check the difference and add or remove.
 

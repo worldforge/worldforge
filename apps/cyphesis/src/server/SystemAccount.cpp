@@ -43,7 +43,7 @@ bool SystemAccount::isPersisted() const {
 
 void SystemAccount::processExternalOperation(const Operation& op, OpVector& res) {
 	//Allow system accounts to send operations directly to other entities.
-	if (!op->isDefaultTo() && op->getTo() != getId()) {
+	if (!op->isDefaultTo() && op->getTo() != getIdAsString()) {
 		auto entity = m_connection->m_server.getWorld().getEntity(op->getTo());
 		if (entity) {
 			entity->operation(op, res);

@@ -114,7 +114,7 @@ void LocatedEntity::changeContainer(const Ref<LocatedEntity>& new_loc) {
 
 void LocatedEntity::broadcast(const Atlas::Objects::Operation::RootOperation& op, OpVector& res, Visibility visibility) const {
 	auto copy = op.copy();
-	copy->setTo(getId());
+	copy->setTo(getIdAsString());
 	res.push_back(copy);
 }
 

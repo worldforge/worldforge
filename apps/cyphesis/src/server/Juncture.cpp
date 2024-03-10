@@ -59,7 +59,7 @@ void Juncture::onSocketConnected() {
 	m_peer->destroyed.connect(sigc::mem_fun(*this, &Juncture::onPeerLost));
 	m_peer->replied.connect(sigc::mem_fun(*this, &Juncture::onPeerReplied));
 
-	spdlog::info("Juncture onPeerC succeeded {}", getId());
+	spdlog::info("Juncture onPeerC succeeded {}", getIdAsString());
 	if (m_connection != nullptr) {
 		Anonymous info_arg;
 		addToEntity(info_arg);
@@ -120,7 +120,7 @@ int Juncture::attemptConnect(const std::string& hostname, int port) {
 	m_host = hostname;
 	m_port = port;
 
-	spdlog::info("Connection in progress {}", getId());
+	spdlog::info("Connection in progress {}", getIdAsString());
 	peer->connected.connect(sigc::mem_fun(*this,
 										  &Juncture::onSocketConnected));
 	peer->failed.connect(sigc::mem_fun(*this,
@@ -174,7 +174,7 @@ void Juncture::operation(const Operation& op, OpVector& res) {
 
 void Juncture::addToEntity(const RootEntity& ent) const {
 	ent->setObjtype("obj");
-	ent->setId(getId());
+	ent->setId(getIdAsString());
 	ent->setParent("juncture");
 }
 
@@ -183,33 +183,33 @@ void Juncture::LoginOperation(const Operation& op, OpVector& res) {
 
 	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
-		error(op, "No argument to connect op", res, getId());
+		error(op, "No argument to connect op", res, getIdAsString());
 		return;
 	}
 	const Root& arg = args.front();
 
 	Element username_attr;
 	if (arg->copyAttr("username", username_attr) != 0 || !username_attr.isString()) {
-		error(op, "Argument to connect op has no username", res, getId());
+		error(op, "Argument to connect op has no username", res, getIdAsString());
 		return;
 	}
 	const std::string& username = username_attr.String();
 
 	Element password_attr;
 	if (arg->copyAttr("password", password_attr) != 0 || !password_attr.isString()) {
-		error(op, "Argument to connect op has no password", res, getId());
+		error(op, "Argument to connect op has no password", res, getIdAsString());
 		return;
 	}
 	const std::string& password = password_attr.String();
 
 	if (m_peer == nullptr) {
-		error(op, "Juncture not connected", res, getId());
+		error(op, "Juncture not connected", res, getIdAsString());
 		return;
 	}
 	assert(m_socket.expired());
 
 	if (m_peer->getAuthState() != PEER_INIT) {
-		error(op, "Juncture not ready", res, getId());
+		error(op, "Juncture not ready", res, getIdAsString());
 		return;
 	}
 
@@ -238,28 +238,28 @@ void Juncture::customConnectOperation(const Operation& op, OpVector& res) {
 	spdlog::info("Juncture got connect");
 
 	if (m_peer != nullptr) {
-		error(op, "Juncture already connected", res, getId());
+		error(op, "Juncture already connected", res, getIdAsString());
 		return;
 	}
 	assert(m_socket.expired());
 
 	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
-		error(op, "No argument to connect op", res, getId());
+		error(op, "No argument to connect op", res, getIdAsString());
 		return;
 	}
 	const Root& arg = args.front();
 	Element hostname_attr;
 	if (arg->copyAttr("hostname", hostname_attr) != 0 ||
 		!hostname_attr.isString()) {
-		error(op, "Argument to connect op has no hostname", res, getId());
+		error(op, "Argument to connect op has no hostname", res, getIdAsString());
 		return;
 	}
 	const std::string& hostname = hostname_attr.String();
 
 	Element port_attr;
 	if (arg->copyAttr("port", port_attr) != 0 || !port_attr.isInt()) {
-		error(op, "Argument to connect op has no port", res, getId());
+		error(op, "Argument to connect op has no port", res, getIdAsString());
 		return;
 	}
 	auto port = port_attr.Int();
@@ -273,14 +273,14 @@ void Juncture::customConnectOperation(const Operation& op, OpVector& res) {
 	try {
 		m_address.i = resolver.resolve(query);
 	} catch (const std::exception& e) {
-		error(op, "Could not connect to peer host.", res, getId());
+		error(op, "Could not connect to peer host.", res, getIdAsString());
 		return;
 	}
 
 	m_connectRef = op->getSerialno();
 
 	if (attemptConnect(hostname, static_cast<int>(port)) != 0) {
-		error(op, "Connection failed", res, getId());
+		error(op, "Connection failed", res, getIdAsString());
 	}
 }
 

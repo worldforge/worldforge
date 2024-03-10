@@ -565,7 +565,7 @@ void Accounttest::test_store() {
 void Accounttest::test_addToEntity() {
 	long cid = m_id_counter++;
 	Ref<Entity> c = new Entity(RouterId{cid});
-	m_account->m_charactersDict.emplace(c->getIntId(), c);
+	m_account->m_charactersDict.emplace(c->getIdAsInt(), c);
 
 	Anonymous data;
 
@@ -580,12 +580,12 @@ void Accounttest::test_addToEntity() {
 	ASSERT_EQUAL(data->getAttr("password"), m_account->m_password);
 	ASSERT_TRUE(!data->isDefaultParent());
 	ASSERT_EQUAL(data->getParent(), "account");
-	ASSERT_EQUAL(data->getAttr("characters"), ListType(1, c->getId()));
+	ASSERT_EQUAL(data->getAttr("characters"), ListType(1, c->getIdAsString()));
 	ASSERT_TRUE(!data->isDefaultParent());
 	ASSERT_EQUAL(data->getObjtype(), "obj");
-	ASSERT_EQUAL(data->getAttr("id"), m_account->getId());
+	ASSERT_EQUAL(data->getAttr("id"), m_account->getIdAsString());
 
-	m_account->m_charactersDict.erase(c->getIntId());
+	m_account->m_charactersDict.erase(c->getIdAsInt());
 
 }
 
@@ -797,7 +797,7 @@ void Accounttest::test_LookOperation_no_args() {
 
 	ASSERT_TRUE(!result_arg->isDefaultId());
 	ASSERT_EQUAL(result_arg->getId(),
-				 m_server->getLobby().getId());
+				 m_server->getLobby().getIdAsString());
 }
 
 void Accounttest::test_LookOperation_unconnected() {
@@ -832,13 +832,13 @@ void Accounttest::test_LookOperation_no_id() {
 void Accounttest::test_LookOperation_known_character() {
 	long cid = m_id_counter++;
 	Ref<Entity> c = new Entity(RouterId{cid});
-	m_account->m_charactersDict.emplace(c->getIntId(), c);
+	m_account->m_charactersDict.emplace(c->getIdAsInt(), c);
 
 	Atlas::Objects::Operation::Look op;
 	OpVector res;
 
 	Anonymous arg;
-	arg->setId(c->getId());
+	arg->setId(c->getIdAsString());
 	op->setArgs1(arg);
 
 	m_account->LookOperation(op, res);
@@ -856,9 +856,9 @@ void Accounttest::test_LookOperation_known_character() {
 
 	ASSERT_TRUE(!result_arg->isDefaultId());
 	ASSERT_EQUAL(result_arg->getId(),
-				 c->getId());
+				 c->getIdAsString());
 
-	m_account->m_charactersDict.erase(c->getIntId());
+	m_account->m_charactersDict.erase(c->getIdAsInt());
 
 }
 
@@ -871,7 +871,7 @@ void Accounttest::test_LookOperation_known_account() {
 	OpVector res;
 
 	Anonymous arg;
-	arg->setId(ac->getId());
+	arg->setId(ac->getIdAsString());
 	op->setArgs1(arg);
 
 	m_account->LookOperation(op, res);
@@ -889,7 +889,7 @@ void Accounttest::test_LookOperation_known_account() {
 
 	ASSERT_TRUE(!result_arg->isDefaultId());
 	ASSERT_EQUAL(result_arg->getId(),
-				 ac->getId());
+				 ac->getIdAsString());
 
 	m_server->getLobby().removeAccount(ac);
 	delete ac;
@@ -944,7 +944,7 @@ void Accounttest::test_LookOperation_possess_Entity() {
 	OpVector res;
 
 	Anonymous arg;
-	arg->setId(c->getId());
+	arg->setId(c->getIdAsString());
 	arg->setAttr("possess_key", "3efc5e84-6fc6-4c66-bd68-1eec24ba09b6");
 	op->setArgs1(arg);
 
@@ -957,7 +957,7 @@ void Accounttest::test_LookOperation_possess_Entity() {
 	ASSERT_EQUAL(result->getClassNo(),
 				 Atlas::Objects::Operation::ERROR_NO);
 
-	m_account->m_charactersDict.erase(c->getIntId());
+	m_account->m_charactersDict.erase(c->getIdAsInt());
 
 }
 
@@ -1045,13 +1045,13 @@ void Accounttest::test_SetOperation_empty() {
 	long cid = m_id_counter++;
 
 	Ref<Entity> c = new Entity(RouterId{cid});
-	m_account->m_charactersDict.emplace(c->getIntId(), c);
+	m_account->m_charactersDict.emplace(c->getIdAsInt(), c);
 
 	Atlas::Objects::Operation::Set op;
 	OpVector res;
 
 	Anonymous arg;
-	arg->setId(c->getId());
+	arg->setId(c->getIdAsString());
 	op->setArgs1(arg);
 
 	m_account->SetOperation(op, res);
@@ -1218,15 +1218,15 @@ Lobby::~Lobby() {
 }
 
 void Lobby::removeAccount(ConnectableRouter* ac) {
-	m_accounts.erase(ac->getId());
+	m_accounts.erase(ac->getIdAsString());
 }
 
 void Lobby::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
-	ent->setId(getId());
+	ent->setId(getIdAsString());
 }
 
 void Lobby::addAccount(ConnectableRouter* ac) {
-	m_accounts[ac->getId()] = ac;
+	m_accounts[ac->getIdAsString()] = ac;
 }
 
 
@@ -1236,7 +1236,7 @@ void Lobby::operation(const Operation& op, OpVector& res) {
 
 
 void Entity::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
-	ent->setId(getId());
+	ent->setId(getIdAsString());
 }
 
 

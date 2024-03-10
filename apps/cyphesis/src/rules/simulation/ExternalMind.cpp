@@ -72,7 +72,7 @@ void ExternalMind::purgeEntity(const LocatedEntity& ent, bool forceDelete) {
 			purgeEntity(*child);
 		}
 	}
-	deleteEntity(ent.getId(), forceDelete);
+	deleteEntity(ent.getIdAsString(), forceDelete);
 }
 
 ExternalMind::ExternalMind(RouterId id, Ref<LocatedEntity> entity)
@@ -88,10 +88,10 @@ const Ref<LocatedEntity>& ExternalMind::getEntity() const {
 
 void ExternalMind::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
 	ent->setObjtype("obj");
-	ent->setId(getId());
+	ent->setId(getIdAsString());
 
 	Anonymous entityAttr;
-	entityAttr->setId(m_entity->getId());
+	entityAttr->setId(m_entity->getIdAsString());
 	ent->setAttr("entity", entityAttr->asMessage());
 }
 
@@ -104,7 +104,7 @@ void ExternalMind::externalOperation(const Operation& op, Link& link) {
 			OpVector res;
 			GetOperation(op, res);
 			for (auto& resOp: res) {
-				resOp->setTo(getId());
+				resOp->setTo(getIdAsString());
 				link.send(resOp);
 			}
 		} else {
@@ -112,7 +112,7 @@ void ExternalMind::externalOperation(const Operation& op, Link& link) {
 
 			//Any ops coming from the mind must be Thought ops.
 			Atlas::Objects::Operation::Thought thought{};
-			thought->setTo(m_entity->getId());
+			thought->setTo(m_entity->getIdAsString());
 			thought->setArgs1(op);
 
 			m_entity->operation(thought, res);
@@ -141,7 +141,7 @@ void ExternalMind::RelayOperation(const Operation& op, OpVector& res) {
 	//our registered relays in m_relays. This is a feature to allow for a timeout; if
 	//no Relay has been received from the destination Entity after a certain period
 	//we'll shut down the relay link.
-	if (op->getTo() == m_entity->getId() && op->getFrom() == m_entity->getId() && !op->isDefaultRefno()) {
+	if (op->getTo() == m_entity->getIdAsString() && op->getFrom() == m_entity->getIdAsString() && !op->isDefaultRefno()) {
 		auto I = m_relays.find(op->getRefno());
 		if (I != m_relays.end()) {
 			auto& relay = I->second;
@@ -154,7 +154,7 @@ void ExternalMind::RelayOperation(const Operation& op, OpVector& res) {
 				if (!relay.op->isDefaultFrom()) {
 					noop->setTo(relay.op->getFrom());
 				}
-				noop->setFrom(m_entity->getId());
+				noop->setFrom(m_entity->getIdAsString());
 				noop->setId(relay.from_id);
 				m_entity->sendWorld(noop);
 			}
@@ -216,13 +216,13 @@ void ExternalMind::RelayOperation(const Operation& op, OpVector& res) {
 			//Also send a future Relay op to ourselves to make sure that the registered relay in m_relays
 			//is removed in the case that we don't get any response.
 			Atlas::Objects::Operation::Relay pruneOp;
-			pruneOp->setTo(m_entity->getId());
-			pruneOp->setFrom(m_entity->getId());
+			pruneOp->setTo(m_entity->getIdAsString());
+			pruneOp->setFrom(m_entity->getIdAsString());
 			pruneOp->setRefno(serialNo);
 			//5 seconds should be more than enough.
 			pruneOp->setFutureMilliseconds(5'000);
 			//Set id to direct it to this mind
-			pruneOp->setId(getId());
+			pruneOp->setId(getIdAsString());
 
 			res.push_back(pruneOp);
 		}
@@ -249,9 +249,9 @@ void ExternalMind::externalRelayedOperation(const Operation& op) {
 
 }
 
-const std::string& ExternalMind::connectionId() {
+RouterId ExternalMind::connectionId() const {
 	assert(m_link != nullptr);
-	return m_link->getId();
+	return m_link->m_id;
 }
 
 void ExternalMind::linkUp(Link* c) {

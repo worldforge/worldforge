@@ -44,7 +44,7 @@ int ModifiersProperty::get(Atlas::Message::Element& val) const {
 			if (!entry.second.modifiers.empty()) {
 				for (auto& modifierEntry: entry.second.modifiers) {
 					Atlas::Message::MapType map;
-					map["$eid"] = modifierEntry.second->getId();
+					map["$eid"] = modifierEntry.second->getIdAsString();
 					//map["property"] = entry.first;
 
 					Atlas::Message::MapType modifierMap;

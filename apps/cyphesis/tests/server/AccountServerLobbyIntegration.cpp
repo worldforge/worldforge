@@ -133,7 +133,7 @@ void AccountServerLobbyintegration::test_talk() {
 
 	Talk op;
 	op->setArgs1(talk_arg);
-	op->setFrom(m_account->getId());
+	op->setFrom(m_account->getIdAsString());
 
 	OpVector res;
 	m_account->test_processExternalOperation(op, res);
@@ -151,7 +151,7 @@ void AccountServerLobbyintegration::test_emote() {
 
 	Imaginary op;
 	op->setArgs1(emote_arg);
-	op->setFrom(m_account->getId());
+	op->setFrom(m_account->getIdAsString());
 
 	OpVector res;
 	m_account->test_processExternalOperation(op, res);
@@ -165,7 +165,7 @@ void AccountServerLobbyintegration::test_lobby_look() {
 	test_send_count = 0;
 
 	Look op;
-	op->setFrom(m_account->getId());
+	op->setFrom(m_account->getIdAsString());
 
 	OpVector res;
 	m_account->test_processExternalOperation(op, res);

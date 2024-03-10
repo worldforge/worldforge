@@ -327,7 +327,7 @@ void ArchetypeFactory::resolveEntityReference(std::map<std::string, EntityCreati
 			auto resolvedI = entities.find(id);
 			if (resolvedI != entities.end()) {
 				if (resolvedI->second.createdEntity != nullptr) {
-					id = resolvedI->second.createdEntity->getId();
+					id = resolvedI->second.createdEntity->getIdAsString();
 					return;
 				} else {
 					spdlog::warn("Attribute '{}' refers to an entity which wasn't created.", id);
@@ -350,7 +350,7 @@ void ArchetypeFactory::resolveEntityReference(std::map<std::string, EntityCreati
 
 void ArchetypeFactory::sendInitialSight(LocatedEntity& entity) {
 	Atlas::Objects::Operation::Sight sight;
-	sight->setTo(entity.getId());
+	sight->setTo(entity.getIdAsString());
 	Atlas::Objects::Entity::Anonymous args;
 	entity.addToEntity(args);
 	sight->setArgs1(args);
@@ -368,8 +368,8 @@ void ArchetypeFactory::sendThoughts(LocatedEntity& entity, std::vector<Atlas::Me
 		setOp->setArgsAsList(thoughts, &AtlasFactories::factories);
 		Atlas::Objects::Operation::Think thoughtOp;
 		//Make the thought come from the entity itself
-		thoughtOp->setTo(entity.getId());
-		thoughtOp->setFrom(entity.getId());
+		thoughtOp->setTo(entity.getIdAsString());
+		thoughtOp->setFrom(entity.getIdAsString());
 		thoughtOp->setArgs1(setOp);
 		entity.sendWorld(thoughtOp);
 	}

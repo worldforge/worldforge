@@ -71,7 +71,7 @@ protected:
 	MemEntityDict m_entities;
 
 	MemEntityDict::iterator m_checkIterator;
-	std::list<std::string> m_additionsById;
+	std::list<RouterId> m_additionsById;
 
 	MapListener* m_listener;
 

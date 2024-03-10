@@ -143,7 +143,7 @@ Py::Object CyPy_BaseMind::getattro(const Py::String& name) {
 		return Py::None();
 	}
 	if (nameStr == "id") {
-		return Py::String(m_value->getId());
+		return Py::String(m_value->getIdAsString());
 	}
 	if (nameStr == "map") {
 		return CyPy_MemMap::wrap(m_value->getMap());
@@ -200,9 +200,9 @@ Py::Object CyPy_BaseMind::addPropertyCallback(const Py::Tuple& args) {
 
 Py::Object CyPy_BaseMind::str() {
 	if (m_value->getEntity()) {
-		return Py::String(fmt::format("BaseMind {}, entity {}", m_value->getId(), m_value->getEntity()->describeEntity()));
+		return Py::String(fmt::format("BaseMind {}, entity {}", m_value->getIdAsString(), m_value->getEntity()->describeEntity()));
 	}
-	return Py::String(fmt::format("BaseMind {}", m_value->getId()));
+	return Py::String(fmt::format("BaseMind {}", m_value->getIdAsString()));
 }
 
 

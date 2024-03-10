@@ -35,7 +35,7 @@ public:
 
 	explicit TypeResolver(TypeStore<MemEntity>& typeStore);
 
-	std::optional<std::string> m_typeProviderId;
+	std::optional<RouterId> m_typeProviderId;
 
 	std::set<const TypeNode<MemEntity>*> InfoOperation(const Operation& op, OpVector& res);
 

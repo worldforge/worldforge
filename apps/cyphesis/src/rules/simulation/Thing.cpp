@@ -77,17 +77,17 @@ void Thing::DeleteOperation(const Operation& op, OpVector& res) {
 		//of the Delete op, which will leave any external clients hanging.
 		Sight sToEntity;
 		sToEntity->setArgs1(op);
-		sToEntity->setTo(getId());
-		sToEntity->setFrom(getId());
+		sToEntity->setTo(getIdAsString());
+		sToEntity->setFrom(getIdAsString());
 		operation(sToEntity, res);
 
 		Disappearance disappearanceOp;
 		Anonymous anonymous;
-		anonymous->setId(getId());
+		anonymous->setId(getIdAsString());
 		anonymous->setAttr("destroyed", 1); //Add attribute clarifying that this entity is destroyed.
 		disappearanceOp->setArgs1(std::move(anonymous));
-		disappearanceOp->setTo(getId());
-		disappearanceOp->setFrom(getId());
+		disappearanceOp->setTo(getIdAsString());
+		disappearanceOp->setFrom(getIdAsString());
 		operation(disappearanceOp, res);
 
 	}
@@ -98,7 +98,7 @@ void Thing::DeleteOperation(const Operation& op, OpVector& res) {
 
 	Disappearance disappearanceOp;
 	Anonymous anonymous;
-	anonymous->setId(getId());
+	anonymous->setId(getIdAsString());
 	anonymous->setAttr("destroyed", 1); //Add attribute clarifying that this entity is destroyed.
 	disappearanceOp->setArgs1(std::move(anonymous));
 	broadcast(disappearanceOp, res, Visibility::PUBLIC);
@@ -123,15 +123,15 @@ void Thing::MoveOperation(const Operation& op, OpVector& res) {
 	// Check the validity of the operation.
 	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
-		error(op, "Move has no argument", res, getId());
+		error(op, "Move has no argument", res, getIdAsString());
 		return;
 	}
 	auto ent = smart_dynamic_cast<RootEntity>(args.front());
 	if (!ent.isValid() || ent->isDefaultId()) {
-		error(op, "Move op arg is malformed", res, getId());
+		error(op, "Move op arg is malformed", res, getIdAsString());
 		return;
 	}
-	if (getId() == ent->getId()) {
+	if (getIdAsString() == ent->getId()) {
 		moveOurselves(op, ent, res);
 	} else {
 		moveOtherEntity(op, ent, res);
@@ -246,14 +246,14 @@ void Thing::moveToNewLocation(Ref<LocatedEntity>& new_loc,
 		std::vector<Atlas::Objects::Root> disappearArgs;
 		for (auto& notObservedAnyMoreEntity: previousObserved) {
 			Anonymous that_ent;
-			that_ent->setId(notObservedAnyMoreEntity->getId());
+			that_ent->setId(notObservedAnyMoreEntity->getIdAsString());
 			that_ent->setStamp(notObservedAnyMoreEntity->getSeq());
 			disappearArgs.push_back(that_ent);
 
 		}
 		if (!disappearArgs.empty()) {
 			Disappearance disappear;
-			disappear->setTo(getId());
+			disappear->setTo(getIdAsString());
 			disappear->setArgs(disappearArgs);
 			res.emplace_back(std::move(disappear));
 		}
@@ -272,7 +272,7 @@ void Thing::moveToNewLocation(Ref<LocatedEntity>& new_loc,
 void Thing::SetOperation(const Operation& op, OpVector& res) {
 	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
-		error(op, "Set has no argument", res, getId());
+		error(op, "Set has no argument", res, getIdAsString());
 		return;
 	}
 	const Root& ent = args.front();
@@ -349,11 +349,11 @@ void Thing::updateProperties(const Operation& op, OpVector& res) {
 
 	if (hadPublicChanges) {
 
-		set_arg->setId(getId());
+		set_arg->setId(getIdAsString());
 
 		Set set;
-		set->setTo(getId());
-		set->setFrom(getId());
+		set->setTo(getIdAsString());
+		set->setFrom(getIdAsString());
 		set->setStamp(op->getStamp());
 		set->setArgs1(set_arg);
 
@@ -363,11 +363,11 @@ void Thing::updateProperties(const Operation& op, OpVector& res) {
 	}
 
 	if (hadProtectedChanges) {
-		set_arg_protected->setId(getId());
+		set_arg_protected->setId(getIdAsString());
 
 		Set set;
-		set->setTo(getId());
-		set->setFrom(getId());
+		set->setTo(getIdAsString());
+		set->setFrom(getIdAsString());
 		set->setStamp(op->getStamp());
 		set->setArgs1(set_arg_protected);
 
@@ -377,11 +377,11 @@ void Thing::updateProperties(const Operation& op, OpVector& res) {
 	}
 
 	if (hadPrivateChanges) {
-		set_arg_private->setId(getId());
+		set_arg_private->setId(getIdAsString());
 
 		Set set;
-		set->setTo(getId());
-		set->setFrom(getId());
+		set->setTo(getIdAsString());
+		set->setFrom(getIdAsString());
 		set->setStamp(op->getStamp());
 		set->setArgs1(set_arg_private);
 
@@ -442,7 +442,7 @@ void Thing::generateSightOp(const LocatedEntity& observingEntity, const Operatio
 			observedEntityDomain->getVisibleEntitiesFor(observingEntity, entityList);
 			for (auto& entity: entityList) {
 				if (entity->m_parent == this) {
-					contlist.push_back(entity->getId());
+					contlist.push_back(entity->getIdAsString());
 				}
 			}
 		} else {
@@ -458,7 +458,7 @@ void Thing::generateSightOp(const LocatedEntity& observingEntity, const Operatio
 			}
 			entry.second.property->add(entry.first, sarg);
 		}
-	} else if (observingEntity.getIntId() == getIntId()) {
+	} else if (observingEntity.getIdAsInt() == getIdAsInt()) {
 		//Our own entity can see both public and protected, but not private properties.
 		for (auto& entry: m_properties) {
 			if (!entry.second.property->hasFlags(prop_flag_visibility_private)) {
@@ -548,19 +548,19 @@ void Thing::moveOurselves(const Operation& op, const RootEntity& ent, OpVector& 
 	Ref<LocatedEntity> new_loc = nullptr;
 	if (!ent->isDefaultLoc()) {
 		const std::string& new_loc_id = ent->getLoc();
-		if (new_loc_id != m_parent->getId()) {
+		if (new_loc_id != m_parent->getIdAsString()) {
 			// If the LOC has not changed, we don't need to look it up, or do
 			// any of the following checks.
 			new_loc = BaseWorld::instance().getEntity(new_loc_id);
 			if (new_loc == nullptr) {
-				error(op, "Move op loc does not exist", res, getId());
+				error(op, "Move op loc does not exist", res, getIdAsString());
 				return;
 			}
 			cy_debug_print("LOC: " << new_loc_id)
 			auto test_loc = new_loc;
 			for (; test_loc != nullptr; test_loc = test_loc->m_parent) {
 				if (test_loc == this) {
-					error(op, "Attempt to move into itself", res, getId());
+					error(op, "Attempt to move into itself", res, getIdAsString());
 					return;
 				}
 			}
@@ -760,7 +760,7 @@ void Thing::moveOtherEntity(const Operation& op, const RootEntity& ent, OpVector
 		} else {
 			//Entity is either being moved into or out of us (or within us, with "loc" being set even though it's already a child).
 			auto& newLoc = ent->getLoc();
-			if (newLoc == getId()) {
+			if (newLoc == getIdAsString()) {
 				//Entity is either being moved within ourselves, or being moved to us.
 				if (isChildOfUs) {
 					//Entity already belongs to us, just send the op on.

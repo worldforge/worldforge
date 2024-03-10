@@ -168,7 +168,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             {
                 Move move;
                 Anonymous ent;
-                ent->setId(t2->getId());
+                ent->setId(t2->getIdAsString());
                 ent->setPosAsList({10, 0, 10});
                 move->setArgs1(ent);
                 t2->MoveOperation(move, res);
@@ -179,7 +179,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             {
                 Move move;
                 Anonymous ent;
-                ent->setId(t2->getId());
+                ent->setId(t2->getIdAsString());
                 ent->setPosAsList({20, 0, 20});
                 ent->setAttr("orientation", WFMath::Quaternion(1, WFMath::numeric_constants<double>::pi() / 2.0).toAtlas());
                 move->setArgs1(ent);
@@ -192,7 +192,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             {
                 Move move;
                 Anonymous ent;
-                ent->setId(t2->getId());
+                ent->setId(t2->getIdAsString());
                 ent->setPosAsList({30, 0, 30});
                 move->setArgs1(ent);
                 t3->MoveOperation(move, res);
@@ -203,8 +203,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             {
                 Move move;
                 Anonymous ent;
-                ent->setId(t2->getId());
-                ent->setLoc(t3->getId());
+                ent->setId(t2->getIdAsString());
+                ent->setLoc(t3->getIdAsString());
                 move->setArgs1(ent);
                 t2->MoveOperation(move, res);
             }
@@ -214,8 +214,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             {
                 Move move;
                 Anonymous ent;
-                ent->setId(t2->getId());
-                ent->setLoc(t1->getId());
+                ent->setId(t2->getIdAsString());
+                ent->setLoc(t1->getIdAsString());
                 move->setArgs1(ent);
                 t2->MoveOperation(move, res);
             }
@@ -272,8 +272,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             {
                 Move move;
                 Anonymous ent;
-                ent->setId(t4->getId());
-                ent->setLoc(t3->getId());
+                ent->setId(t4->getIdAsString());
+                ent->setLoc(t3->getIdAsString());
                 move->setArgs1(ent);
                 t4->MoveOperation(move, res);
             }
@@ -283,8 +283,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             {
                 Move move;
                 Anonymous ent;
-                ent->setId(t4->getId());
-                ent->setLoc(t2->getId());
+                ent->setId(t4->getIdAsString());
+                ent->setLoc(t2->getIdAsString());
                 move->setArgs1(ent);
                 t3->MoveOperation(move, res);
             }
@@ -294,8 +294,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             {
                 Move move;
                 Anonymous ent;
-                ent->setId(t4->getId());
-                ent->setLoc(t3->getId());
+                ent->setId(t4->getIdAsString());
+                ent->setLoc(t3->getIdAsString());
                 move->setArgs1(ent);
                 t3->MoveOperation(move, res);
             }
@@ -306,8 +306,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             {
                 Move move;
                 Anonymous ent;
-                ent->setId(t4->getId());
-                ent->setLoc(t2->getId());
+                ent->setId(t4->getIdAsString());
+                ent->setLoc(t2->getIdAsString());
                 move->setArgs1(ent);
                 t1->MoveOperation(move, res);
             }
@@ -373,7 +373,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             {
 
                 Anonymous ent;
-                ent->setId(t2->getId());
+                ent->setId(t2->getIdAsString());
                 ent->setPosAsList({1, 0, 0});
                 thinkMoveFn(t6, ent);
             }
@@ -382,8 +382,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t2 to t6 should work
             {
                 Anonymous ent;
-                ent->setId(t2->getId());
-                ent->setLoc(t6->getId());
+                ent->setId(t2->getIdAsString());
+                ent->setLoc(t6->getIdAsString());
                 thinkMoveFn(t6, ent);
             }
             ASSERT_EQUAL(t2->m_parent, t6.get())
@@ -405,8 +405,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t3 to t6 should not work if there's a blocker on t1 (the parent of t3)
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
-                ent->setLoc(t6->getId());
+                ent->setId(t3->getIdAsString());
+                ent->setLoc(t6->getIdAsString());
                 thinkMoveFn(t6, ent);
             }
             ASSERT_EQUAL(t3->m_parent, t1.get())
@@ -417,8 +417,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t3 to t6 should not work if there's a blocker on t6
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
-                ent->setLoc(t6->getId());
+                ent->setId(t3->getIdAsString());
+                ent->setLoc(t6->getIdAsString());
                 thinkMoveFn(t6, ent);
             }
             ASSERT_EQUAL(t3->m_parent, t1.get())
@@ -429,8 +429,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t3 to t6 should not work if there's a blocker on t3
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
-                ent->setLoc(t6->getId());
+                ent->setId(t3->getIdAsString());
+                ent->setLoc(t6->getIdAsString());
                 thinkMoveFn(t6, ent);
             }
             ASSERT_EQUAL(t3->m_parent, t1.get())
@@ -440,8 +440,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t3 to t6 should work if there no blockers
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
-                ent->setLoc(t6->getId());
+                ent->setId(t3->getIdAsString());
+                ent->setLoc(t6->getIdAsString());
                 thinkMoveFn(t6, ent);
             }
             ASSERT_EQUAL(t3->m_parent, t6.get())
@@ -449,8 +449,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t3 to t1 should be blocked if the destination is too far away.
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
-                ent->setLoc(t1->getId());
+                ent->setId(t3->getIdAsString());
+                ent->setLoc(t1->getIdAsString());
                 ent->setPosAsList({100.0, 0.0, 100.0});
                 thinkMoveFn(t6, ent);
             }
@@ -459,8 +459,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t3 to t1 should be allowed if the destination is close.
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
-                ent->setLoc(t1->getId());
+                ent->setId(t3->getIdAsString());
+                ent->setLoc(t1->getIdAsString());
                 ent->setPosAsList({1.0, 0.0, 1.0});
                 thinkMoveFn(t6, ent);
             }
@@ -473,19 +473,19 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t3 to t6 should not be allowed by the "mover_constraint"
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
-                ent->setLoc(t6->getId());
+                ent->setId(t3->getIdAsString());
+                ent->setLoc(t6->getIdAsString());
                 thinkMoveFn(t6, ent);
             }
             ASSERT_EQUAL(t3->m_parent, t1.get())
 
-            t6->setAttrValue("mover_constraint", std::string("entity.id = ") + t3->getId());
+            t6->setAttrValue("mover_constraint", std::string("entity.id = ") + t3->getIdAsString());
 
             //A Thought about a Move for moving t3 to t6 should be allowed if the "mover_constraint" matches.
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
-                ent->setLoc(t6->getId());
+                ent->setId(t3->getIdAsString());
+                ent->setLoc(t6->getIdAsString());
                 thinkMoveFn(t6, ent);
             }
             ASSERT_EQUAL(t3->m_parent, t6.get())
@@ -497,20 +497,20 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t3 to t1 should not be allowed by the "move_constraint"
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
+                ent->setId(t3->getIdAsString());
                 ent->setPosAsList({1.0, 0, 1.0});
-                ent->setLoc(t1->getId());
+                ent->setLoc(t1->getIdAsString());
                 thinkMoveFn(t6, ent);
             }
             ASSERT_EQUAL(t3->m_parent, t6.get())
 
-            t3->setAttrValue("move_constraint", std::string("entity.id = ") + t3->getId());
+            t3->setAttrValue("move_constraint", std::string("entity.id = ") + t3->getIdAsString());
             //A Thought about a Move for moving t3 to t1 should be allowed if "move_constraint" matches
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
+                ent->setId(t3->getIdAsString());
                 ent->setPosAsList({1.0, 0, 1.0});
-                ent->setLoc(t1->getId());
+                ent->setLoc(t1->getIdAsString());
                 thinkMoveFn(t6, ent);
             }
             ASSERT_EQUAL(t3->m_parent, t1.get())
@@ -522,8 +522,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t3 to t6 should not be allowed by the "contains_constraint" on t1
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
-                ent->setLoc(t6->getId());
+                ent->setId(t3->getIdAsString());
+                ent->setLoc(t6->getIdAsString());
                 thinkMoveFn(t6, ent);
             }
             ASSERT_EQUAL(t3->m_parent, t1.get())
@@ -532,8 +532,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t3 to t6 should not be allowed by the "contains_constraint" on t1
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
-                ent->setLoc(t6->getId());
+                ent->setId(t3->getIdAsString());
+                ent->setLoc(t6->getIdAsString());
                 thinkMoveFn(t6, ent);
             }
             ASSERT_EQUAL(t3->m_parent, t6.get())
@@ -545,8 +545,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t3 to t1 should not be allowed by the "destination_constraint" on t1
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
-                ent->setLoc(t1->getId());
+                ent->setId(t3->getIdAsString());
+                ent->setLoc(t1->getIdAsString());
                 thinkMoveFn(t6, ent);
             }
             ASSERT_EQUAL(t3->m_parent, t6.get())
@@ -555,9 +555,9 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t3 to t1 should be allowed is the "destination_constraint" matches
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
+                ent->setId(t3->getIdAsString());
                 ent->setPosAsList({1.0, 0, 1.0});
-                ent->setLoc(t1->getId());
+                ent->setLoc(t1->getIdAsString());
                 thinkMoveFn(t6, ent);
             }
             ASSERT_EQUAL(t3->m_parent, t1.get())
@@ -603,7 +603,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t3 within t1 should work
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
+                ent->setId(t3->getIdAsString());
                 ent->setPosAsList({1, 0, 0});
                 thinkMoveFn(t2, ent);
             }
@@ -614,7 +614,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             //A Thought about a Move for moving t3 within t1 should fail as t3 is too heavy
             {
                 Anonymous ent;
-                ent->setId(t3->getId());
+                ent->setId(t3->getIdAsString());
                 ent->setPosAsList({-1, 0, 0});
                 thinkMoveFn(t2, ent);
             }
@@ -672,13 +672,13 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             OpVector res;
             t2->DeleteOperation({}, res);
             ASSERT_TRUE(t2->isDestroyed())
-            ASSERT_EQUAL(t1->getId(), t4->m_parent->getId())
+            ASSERT_EQUAL(t1->getIdAsString(), t4->m_parent->getIdAsString())
             ASSERT_EQUAL(t4->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data(), WFMath::Point<3>(10, 0, 20))
             ASSERT_EQUAL(t4->requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data(), WFMath::Quaternion(1, 2.0))
 
             t3->DeleteOperation({}, res);
             ASSERT_TRUE(t3->isDestroyed())
-            ASSERT_EQUAL(t1->getId(), t5->m_parent->getId())
+            ASSERT_EQUAL(t1->getIdAsString(), t5->m_parent->getIdAsString())
             ASSERT_EQUAL(t5->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data(), WFMath::Point<3>(20, 0, 20))
 
         }
@@ -816,7 +816,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             Wield wield;
             Anonymous arg1;
             arg1->setAttr("attachment", "hand_primary");
-            arg1->setId(entityChild->getId());
+            arg1->setId(entityChild->getIdAsString());
             wield->setArgs1(arg1);
             entity->operation(wield, resIgnored);
         }

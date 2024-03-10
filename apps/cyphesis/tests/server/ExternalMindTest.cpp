@@ -144,8 +144,8 @@ int main() {
 						*(ServerRouting*) 0,
 						"addr", 4);
 		em.linkUp(&conn);
-		const std::string& id = em.connectionId();
-		assert(id == "4");
+		auto id = em.connectionId();
+		assert(id.asString() == "4");
 	}
 
 	// Send a random operation

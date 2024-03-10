@@ -43,8 +43,6 @@ public:
 
 	~PossessionClient() override;
 
-	const std::unordered_map<std::string, Ref<BaseMind>>& getMinds() const;
-
 	void processResponses(const OpVector& incomingRes, OpVector& outgoingRes);
 
 	static size_t operations_in;
