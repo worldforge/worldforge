@@ -62,19 +62,23 @@ class Worldforge(ConanFile):
 
         if self.options.with_server:
             self.requires("worldforge-worlds/0.1.0@worldforge")
-            self.requires("libgcrypt/1.8.4")
-            self.requires("sqlite3/3.45.1")
+            self.requires("libgcrypt/1.10.3")
+            self.requires("sqlite3/3.45.2", force=True)
             self.requires("readline/8.2")
             self.requires("cpython/3.10.13@worldforge")
-            # self.requires("avahi/0.8")
+            #It would be nice if we could use the Conan provided package, but so far we're running into issues.
+            #self.requires("cpython/3.10.0")
+            self.requires("xz_utils/5.6.1", override=True)
+
+        # self.requires("avahi/0.8")
 
         if not is_msvc(self):
             self.requires("libxdg-basedir/1.2.3@worldforge")
 
-        self.requires("expat/2.6.0", override=True)
+        self.requires("expat/2.6.2", override=True)
 
         self.test_requires("cppunit/1.15.1")
-        self.test_requires("catch2/3.5.2")
+        self.test_requires("catch2/3.5.3")
 
     def generate(self):
         deps = CMakeDeps(self)

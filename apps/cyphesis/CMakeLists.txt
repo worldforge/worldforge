@@ -29,11 +29,11 @@ find_package(Threads REQUIRED)
 link_libraries(Threads::Threads)
 
 #If we're using Conan this won't set the Python3_EXECUTABLE environment variables as expected, which is why we do that in conanfile.py
-find_package(Python3 3.10.13 COMPONENTS Development Interpreter REQUIRED)
+find_package(Python3 3.10.13 EXACT COMPONENTS Development Interpreter REQUIRED)
 
-find_package(sigc++-3 3.0.7 REQUIRED)
-find_package(libgcrypt 1.8.4 REQUIRED)
-find_package(Bullet 2.89 REQUIRED)
+find_package(sigc++-3 3.0.7 EXACT REQUIRED)
+find_package(libgcrypt 1.10.3 EXACT REQUIRED)
+find_package(Bullet 2.89 EXACT REQUIRED)
 
 find_package(Avahi)
 if (AVAHI_FOUND)
@@ -52,13 +52,14 @@ else ()
 endif ()
 
 
-find_package(SQLite3 REQUIRED)
+find_package(SQLite3 3.45.2 EXACT REQUIRED)
 
 find_package(libxdg-basedir REQUIRED)
 
 find_package(readline REQUIRED)
 find_package(Boost
         1.84.0
+        EXACT
         REQUIRED
         COMPONENTS system)
 
