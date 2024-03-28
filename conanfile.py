@@ -52,7 +52,7 @@ class Worldforge(ConanFile):
 
         if self.options.with_client:
             self.requires("cegui/0.8.7@worldforge")
-            self.requires("ogre/14.2.0@worldforge")
+            self.requires("ogre/14.2.3@worldforge")
             self.requires("sdl/2.28.5")
             self.requires("lua/5.3.6")
             self.requires("vorbis/1.3.7")
