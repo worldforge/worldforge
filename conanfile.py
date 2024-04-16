@@ -52,8 +52,8 @@ class Worldforge(ConanFile):
 
         if self.options.with_client:
             self.requires("cegui/0.8.7@worldforge")
-            self.requires("ogre/14.2.3@worldforge")
-            self.requires("sdl/2.30.1")
+            self.requires("ogre/14.2.4@worldforge")
+            self.requires("sdl/2.30.2")
             self.requires("lua/5.3.6")
             self.requires("vorbis/1.3.7")
 
@@ -68,7 +68,6 @@ class Worldforge(ConanFile):
             self.requires("cpython/3.10.13@worldforge")
             #It would be nice if we could use the Conan provided package, but so far we're running into issues.
             #self.requires("cpython/3.10.0")
-            self.requires("xz_utils/5.6.1", override=True)
 
         # self.requires("avahi/0.8")
 
@@ -78,7 +77,7 @@ class Worldforge(ConanFile):
         self.requires("expat/2.6.2", override=True)
 
         self.test_requires("cppunit/1.15.1")
-        self.test_requires("catch2/3.5.3")
+        self.test_requires("catch2/3.5.4")
 
     def generate(self):
         deps = CMakeDeps(self)
