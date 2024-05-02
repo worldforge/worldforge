@@ -16,8 +16,8 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef WORLDFORGE_LOG_H
-#define WORLDFORGE_LOG_H
+#ifndef SQUALL_LOG_H
+#define SQUALL_LOG_H
 
 #include <spdlog/logger.h>
 
@@ -26,4 +26,4 @@ extern std::shared_ptr<spdlog::logger> logger;
 }
 
 
-#endif //WORLDFORGE_LOG_H
+#endif //SQUALL_LOG_H
