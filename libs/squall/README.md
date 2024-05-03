@@ -97,6 +97,35 @@ which can be communicated to the client. In that way fulfilling requirement #2.
 And since we only need to expose data attached to hashes it's easy to serve data using a standard file server. Thus
 fulfilling requirement #3.
 
+## CLI
+
+We also provide a CLI tool. It's installed by default. To see available commands run ```squall --help```.
+All squall commands require the "--repository" flag which points to a directory in which a Squall repository is stored.
+
+For example, to generate a digest from an existing file structure:
+
+```bash
+squall --repository /path/to/repo generate --source /path/to/assets 
+```
+
+To add a new root from a generated digest:
+
+```bash
+squall --repository /path/to/repo root add --root a_name_for_a_root --signature a_signature_created_by_a_call_to_generate
+```
+
+To download assets from a remote repository into a local repository:
+
+```bash
+squall --repository /path/to/repo root add --root a_name_for_a_root --signature a_signature
+```
+
+To realize a file hierarchy in the local file system.:
+
+```bash
+squall --repository /path/to/repo root --destination=/path/where/files/should/be/created --signature a_signature
+```
+
 ## How to help
 
 If you're interested in helping out with development you should check out these resources:
