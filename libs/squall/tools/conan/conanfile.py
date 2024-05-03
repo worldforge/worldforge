@@ -23,10 +23,10 @@ class SquallConan(ConanFile):
     generators = "CMakeToolchain", "CMakeDeps"
 
     def requirements(self):
-        self.requires("libcurl/8.5.0")
-        self.requires("spdlog/1.12.0")
-        self.requires("cli11/2.3.2")
-        self.test_requires("catch2/3.5.0")
+        self.requires("libcurl/8.6.0")
+        self.requires("spdlog/1.13.0")
+        self.requires("cli11/2.4.1")
+        self.test_requires("catch2/3.5.4")
 
     def export(self):
         git = Git(self, self.recipe_folder)

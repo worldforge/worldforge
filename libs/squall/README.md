@@ -16,9 +16,8 @@ used independently.
 
 Squall is build along with the main Worldforge system. There are instructions to be found [here](../../README.md).
 
-However, you might not want to build all of Worldforge just to build Squall. You still need to invoke Conan at the top
-level, but there are some flags which can be used to limit the amount of unnecessary build. From the root
-directory ("../..") use these commands:
+However, you might not want to build all of Worldforge just to build Squall. In that case you can build Squall from this
+directory with these commands:
 
 ```bash
 conan install tools/conan --build missing
