@@ -21,11 +21,11 @@
 #include <set>
 
 namespace Squall {
-std::vector<std::filesystem::path> Pruner::findAbandonedFiles(Squall::Repository& repository) {
+std::vector<std::filesystem::path> Pruner::findAbandonedFiles(const Squall::Repository& repository) {
 
 	std::set<std::filesystem::path> existingFiles;
 	auto roots = repository.listRoots();
-	for (auto root: roots) {
+	for (const auto& root: roots) {
 		auto manifestResult = repository.fetchManifest(root.second.signature);
 		if (manifestResult.manifest) {
 			existingFiles.emplace(manifestResult.fetchResult.localPath);

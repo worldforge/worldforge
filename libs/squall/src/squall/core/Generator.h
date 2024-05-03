@@ -81,7 +81,7 @@ struct SignatureGenerationContext {
 /**
  * Generates digests and manifests from an existing file structure.
  *
- * Use this when you have files stored on disk that you want to turn insert into a Squall repository.
+ * Use this when you have files stored on disk that you want to insert into a Squall repository.
  */
 class Generator {
 

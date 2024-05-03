@@ -22,11 +22,11 @@
 #include "Log.h"
 
 namespace Squall {
-Realizer::Realizer(Repository& repository,
+Realizer::Realizer(Repository repository,
 				   std::filesystem::path destination,
 				   Iterator iterator,
 				   RealizerConfig config)
-		: mRepository(repository),
+		: mRepository(std::move(repository)),
 		  mDestination(std::move(destination)),
 		  mIterator(std::move(iterator)),
 		  mConfig(config) {

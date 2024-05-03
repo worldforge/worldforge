@@ -57,6 +57,7 @@ struct RealizerConfig {
 
 /**
  * Responsible for realizing a file hierarchy in the file system.
+ * By "realize" we mean that the file hierarchy that is described in the Squall repository is recreated in the actual file system.
  *
  * This can be used when you want to have the data available as regular files.
  */
@@ -64,7 +65,7 @@ class Realizer {
 public:
 
 
-	explicit Realizer(Repository& repository,
+	explicit Realizer(Repository repository,
 					  std::filesystem::path destination,
 					  Iterator iterator,
 					  RealizerConfig config = RealizerConfig{});
@@ -73,7 +74,7 @@ public:
 
 
 private:
-	Repository& mRepository;
+	Repository mRepository;
 	std::filesystem::path mDestination;
 	Iterator mIterator;
 	RealizerConfig mConfig;

@@ -23,10 +23,16 @@
 
 namespace Squall {
 
-class Pruner {
-public:
+struct Pruner {
 
-	static std::vector<std::filesystem::path> findAbandonedFiles(Squall::Repository& repository);
+	/**
+	 * Finds and returns a list of all files that aren't reachable by any roots.
+	 *
+	 * These files are then eligible for garbage collection if that's wanted.
+	 * @param repository
+	 * @return
+	 */
+	static std::vector<std::filesystem::path> findAbandonedFiles(const Squall::Repository& repository);
 
 };
 }
