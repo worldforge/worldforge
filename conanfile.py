@@ -40,8 +40,8 @@ class Worldforge(ConanFile):
 
         self.requires("libsigcpp/3.0.7")
         self.requires("libcurl/8.6.0")
-        self.requires("spdlog/1.13.0")
-        self.requires("cli11/2.4.1")
+        self.requires("spdlog/1.14.1")
+        self.requires("cli11/2.4.2")
         self.requires("boost/1.84.0")
 
         self.requires("zlib/1.3.1")
@@ -53,17 +53,17 @@ class Worldforge(ConanFile):
         if self.options.with_client:
             self.requires("cegui/0.8.7@worldforge")
             self.requires("ogre/14.2.4@worldforge")
-            self.requires("sdl/2.30.2")
+            self.requires("sdl/2.30.3")
             self.requires("lua/5.3.6")
             self.requires("vorbis/1.3.7")
 
             if not is_msvc(self):
-                self.requires("libunwind/1.8.0")
+                self.requires("libunwind/1.8.1", force=True)
 
         if self.options.with_server:
             self.requires("worldforge-worlds/0.1.0@worldforge")
             self.requires("libgcrypt/1.10.3")
-            self.requires("sqlite3/3.45.2", force=True)
+            self.requires("sqlite3/3.45.3", force=True)
             self.requires("readline/8.2")
             self.requires("cpython/3.10.13@worldforge")
             #It would be nice if we could use the Conan provided package, but so far we're running into issues.
@@ -77,7 +77,7 @@ class Worldforge(ConanFile):
         self.requires("expat/2.6.2", override=True)
 
         self.test_requires("cppunit/1.15.1")
-        self.test_requires("catch2/3.5.4")
+        self.test_requires("catch2/3.6.0")
 
     def generate(self):
         deps = CMakeDeps(self)

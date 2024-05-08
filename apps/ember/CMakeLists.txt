@@ -65,7 +65,7 @@ find_package(Boost
         REQUIRED
         COMPONENTS system thread)
 
-find_package(SDL2 REQUIRED EXACT 2.30.2)
+find_package(SDL2 REQUIRED EXACT 2.30.3)
 
 find_package(sigc++-3 3.0.7 REQUIRED)
 

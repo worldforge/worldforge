@@ -52,7 +52,7 @@ else ()
 endif ()
 
 
-find_package(SQLite3 3.45.2 EXACT REQUIRED)
+find_package(SQLite3 3.45.3 EXACT REQUIRED)
 
 find_package(libxdg-basedir REQUIRED)
 

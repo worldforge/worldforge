@@ -15,7 +15,7 @@ class SquallConan(ConanFile):
     url = "https://github.com/worldforge/worldforge/tree/master/libs/squall"
     homepage = "https://www.worldforge.org"
     description = "Distribute and update content to clients."
-    topics = ("worldforge")
+    topics = "worldforge"
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [False, True], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
@@ -24,9 +24,9 @@ class SquallConan(ConanFile):
 
     def requirements(self):
         self.requires("libcurl/8.6.0")
-        self.requires("spdlog/1.13.0")
-        self.requires("cli11/2.4.1")
-        self.test_requires("catch2/3.5.4")
+        self.requires("spdlog/1.14.1")
+        self.requires("cli11/2.4.2")
+        self.test_requires("catch2/3.6.0")
 
     def export(self):
         git = Git(self, self.recipe_folder)
