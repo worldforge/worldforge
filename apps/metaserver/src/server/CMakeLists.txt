@@ -1,7 +1,4 @@
-find_package(Boost
-        1.84.0
-        REQUIRED
-        COMPONENTS program_options)
+wf_find_boost(program_options)
 
 add_executable(metaserver
         main.cpp

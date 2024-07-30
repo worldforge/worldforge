@@ -57,11 +57,7 @@ find_package(SQLite3 3.46.0 EXACT REQUIRED)
 find_package(libxdg-basedir REQUIRED)
 
 find_package(readline REQUIRED)
-find_package(Boost
-        1.84.0
-        EXACT
-        REQUIRED
-        COMPONENTS system)
+wf_find_boost(system)
 
 set(MEDIAREPO_DIR ${PROJECT_SOURCE_DIR}/mediarepo)
 add_compile_definitions("CYPHESIS_RAW_ASSETS_DIRECTORY=\"${MEDIAREPO_DIR}/trunk/assets\"")

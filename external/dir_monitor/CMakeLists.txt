@@ -1,7 +1,4 @@
-find_package(Boost
-        1.84.0
-        REQUIRED
-        COMPONENTS thread)
+wf_find_boost(thread)
 
 add_library(external-dirmonitor INTERFACE)
 

@@ -60,10 +60,7 @@ if (WIN32)
     add_compile_definitions("_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING") #CEGUI has a String iterator that inherits from std::iterator, which shouldn't be done. We don't want to see the warning from MSVC all the time.
 endif ()
 
-find_package(Boost
-        1.84.0
-        REQUIRED
-        COMPONENTS system thread)
+wf_find_boost(system thread)
 
 find_package(SDL2 REQUIRED EXACT 2.30.5)
 

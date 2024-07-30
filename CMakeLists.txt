@@ -102,6 +102,15 @@ add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -E Benchmark)
 add_custom_target(benchmark COMMAND ${CMAKE_CTEST_COMMAND} -R Benchmark)
 add_custom_target(dox)
 
+#Since there are multiple instances where boost is required we specify this macro to keep the version in sync.
+macro(wf_find_boost COMPONENTS)
+    find_package(Boost
+        1.85.0
+        EXACT
+        REQUIRED
+        COMPONENTS ${COMPONENTS})
+endmacro()
+
 add_subdirectory(external)
 add_subdirectory(libs)
 add_subdirectory(apps)

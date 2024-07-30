@@ -53,10 +53,7 @@ endmacro()
 
 find_package(sigc++-3 3.0.7 REQUIRED)
 
-find_package(Boost
-        1.84.0
-        REQUIRED
-        COMPONENTS headers)
+wf_find_boost(headers)
 
 find_package(spdlog REQUIRED)
 
