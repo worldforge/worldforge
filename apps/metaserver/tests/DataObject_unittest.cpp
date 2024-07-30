@@ -63,9 +63,9 @@ public:
 
 	void testConstructor() {
 
-		DataObject* msdo = new DataObject();
-		CPPUNIT_ASSERT(msdo);
-		delete msdo;
+		DataObject* msdo_temp = new DataObject();
+		CPPUNIT_ASSERT(msdo_temp);
+		delete msdo_temp;
 
 	}
 

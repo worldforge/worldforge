@@ -156,15 +156,15 @@ int main(int argc, char** argv) {
 				size_t pos = ele.find_first_of("=");
 				if (pos != std::string::npos) {
 					std::string n = ele.substr(0, pos);
-					std::string v = ele.substr(pos + 1);
+					std::string value = ele.substr(pos + 1);
 					std::cout << " register: " << n << std::endl;
-					std::cout << "    value: " << v << std::endl;
+					std::cout << "    value: " << value << std::endl;
 					MetaServerPacket a;
 					a.setPacketType(NMT_CLIENTATTR);
 					a.addPacketData(n.length());
-					a.addPacketData(v.length());
+					a.addPacketData(value.length());
 					a.addPacketData(n);
-					a.addPacketData(v);
+					a.addPacketData(value);
 					s.send_to(boost::asio::buffer(a.getBuffer(), a.getSize()), *iterator);
 				} else {
 					std::cout << " Attribute Ignored : " << ele << std::endl;
@@ -184,15 +184,15 @@ int main(int argc, char** argv) {
 				size_t pos = ele.find_first_of("=");
 				if (pos != std::string::npos) {
 					std::string n = ele.substr(0, pos);
-					std::string v = ele.substr(pos + 1);
+					std::string value = ele.substr(pos + 1);
 					std::cout << " register: " << n << std::endl;
-					std::cout << "    value: " << v << std::endl;
+					std::cout << "    value: " << value << std::endl;
 					MetaServerPacket a;
 					a.setPacketType(NMT_CLIENTFILTER);
 					a.addPacketData(n.length());
-					a.addPacketData(v.length());
+					a.addPacketData(value.length());
 					a.addPacketData(n);
-					a.addPacketData(v);
+					a.addPacketData(value);
 					s.send_to(boost::asio::buffer(a.getBuffer(), a.getSize()), *iterator);
 				} else {
 					std::cout << " Filter Ignored : " << ele << std::endl;
