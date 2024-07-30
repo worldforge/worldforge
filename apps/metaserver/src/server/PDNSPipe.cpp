@@ -38,9 +38,8 @@ int main(int argc, char** argv) {
 	boost::program_options::options_description desc("MetaServer PDNS Pipe");
 	boost::program_options::variables_map vm;
 	boost::asio::io_service io_service;
-	std::array<char, MAX_PACKET_BYTES> recvBuffer;
+	std::array<char, MAX_PACKET_BYTES> recvBuffer{};
 	size_t bytes_recvd;
-	std::string domain, banner;
 
 	/**
 	 * Note: options inside the configuration file that are NOT listed here
@@ -73,8 +72,7 @@ int main(int argc, char** argv) {
 		/**
 		 * domain and banner
 		 */
-		domain = vm["domain"].as<std::string>();
-		banner = vm["banner"].as<std::string>();
+		auto banner = vm["banner"].as<std::string>();
 
 		/**
 		 * because boost query is too stupid to take port as an int
@@ -133,7 +131,7 @@ int main(int argc, char** argv) {
 		std::string fields[6] = {};
 		std::string line;
 
-		while (1) {
+		while (true) {
 			std::string token;
 			std::stringstream iss;
 			int field_cnt = 0;
@@ -269,7 +267,7 @@ int main(int argc, char** argv) {
 //						   << "::packed_servers=" << packed_servers
 //						   << "field1=" << fields[1] << std::endl;
 //
-				if (!(total_servers > 0)) {
+				if (total_servers <= 0) {
 					/*
 					 * If we're zero or less than that means we have bubkis
 					 */
@@ -316,7 +314,7 @@ int main(int argc, char** argv) {
 				 *      4 = id
 				 *      5 = remote ip
 				 */
-				int offset = 0;
+				size_t offset = 0;
 				for (unsigned int i = 0; i < total_servers; ++i) {
 					std::cout << "DATA\t" <<
 							  name << "\t" <<

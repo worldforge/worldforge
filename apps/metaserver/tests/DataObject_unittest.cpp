@@ -159,7 +159,7 @@ public:
 		msdo->removeClientFilter("test-session", "test1");
 
 		// Make sure it's gone
-		CPPUNIT_ASSERT(msdo->getClientFilter("test-session", "test1") == "");
+		CPPUNIT_ASSERT(msdo->getClientFilter("test-session", "test1").empty());
 
 		// Can't have an empty sessionid or name/key
 		CPPUNIT_ASSERT(msdo->addClientAttribute("", "key", "value") == false);
@@ -182,7 +182,7 @@ public:
 		CPPUNIT_ASSERT(msdo->getLatency(hse, hse) == 0);
 
 		// lets make sure that the contrived latency is good
-		std::cout << "getLatency(hse,lse): " << msdo->getLatency(hse, lse) << std::endl;
+		std::cout << "getLatency(hse,lse): " << DataObject::getLatency(hse, lse) << std::endl;
 		CPPUNIT_ASSERT(msdo->getLatency(hse, lse) == 1234);
 
 		// does it exist
@@ -195,7 +195,7 @@ public:
 		CPPUNIT_ASSERT(msdo->removeHandshake(123456) == 123456);
 
 		// random handshake add
-		CPPUNIT_ASSERT(msdo->addHandshake() != 0);
+		CPPUNIT_ASSERT(msdo->addHandshake(1) != 0);
 
 		// second remove should yield a non-delete
 		CPPUNIT_ASSERT(msdo->removeHandshake(123456) == 0);

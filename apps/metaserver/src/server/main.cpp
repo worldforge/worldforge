@@ -30,7 +30,7 @@
  * System Includes
  */
 #include <unistd.h> /* daemon(), getpid() */
-#include <signal.h>
+#include <csignal>
 #include <cstdlib> /* getenv() because boost po env parsing sucks */
 #include <fstream>
 #include <filesystem>
@@ -105,7 +105,7 @@ int main(int argc, char** argv) {
 	/*
 	 * Create a 'special' directory
 	 */
-	if (home != NULL) {
+	if (home != nullptr) {
 
 		home_dot_dir = home;
 		home_dot_dir /= "/.metaserver-ng";
@@ -126,7 +126,7 @@ int main(int argc, char** argv) {
 	 *
 	 * Try for local configuration first
 	 */
-	if (home != NULL) {
+	if (home != nullptr) {
 		std::cout << "HOME : " << home << std::endl;
 		config_file_path = home;
 		config_file_path /= "/.metaserver-ng.conf";
@@ -142,7 +142,7 @@ int main(int argc, char** argv) {
 	/*
 	 * If WFHOME is setup, try to load distribution configuration
 	 */
-	if (!config_found && wfenv != NULL) {
+	if (!config_found && wfenv != nullptr) {
 		std::cout << "WFHOME: " << wfenv << std::endl;
 		/*
 		 * PREFIX/etc/metaserver-ng.conf

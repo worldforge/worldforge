@@ -3,7 +3,6 @@ wf_find_boost(program_options)
 add_executable(metaserver
         main.cpp
         MetaServer.cpp
-        MetaServerHandler.cpp
         MetaServerHandlerUDP.cpp
         DataObject.cpp
 )

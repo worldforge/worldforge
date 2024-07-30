@@ -117,7 +117,6 @@ MetaServer::MetaServer()
 		  m_isShutdown(false),
 		  m_logPacketAllow(false),
 		  m_logPacketDeny(false) {
-	m_PacketLogger = NULL;
 	m_updateTimer = NULL;
 	m_expiryTimer = NULL;
 }
@@ -136,10 +135,3 @@ DataObject::~DataObject() {
 
 }
 
-MetaServerHandler::MetaServerHandler() {
-
-}
-
-MetaServerHandler::~MetaServerHandler() {
-
-}

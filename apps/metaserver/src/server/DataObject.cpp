@@ -33,21 +33,17 @@ DataObject::DataObject() {
 	m_handshakeQueue.clear();
 	m_serverListreq.clear();
 	m_listreqExpiry.clear();
-	srand((unsigned) time(0));
-
 }
 
 
-DataObject::~DataObject() {
-
-}
+DataObject::~DataObject() = default;
 
 bool
 DataObject::addServerAttribute(const std::string& sessionid, const std::string& name, const std::string& value) {
 	/**
 	 * Can not have empty values for required keys, value *can* be an empty string
 	 */
-	if (sessionid.size() > 0 && sessionid != "" && name.size() > 0 && name != "") {
+	if (!sessionid.empty() && !sessionid.empty() && !name.empty() && !name.empty()) {
 		m_serverData[sessionid][name] = value;
 		spdlog::trace("  AddServerAttribute: {}:{}:{}", sessionid, name, value);
 		return true;
@@ -87,7 +83,7 @@ DataObject::addClientAttribute(const std::string& sessionid, const std::string& 
 	/**
 	 * Can not have empty values for required keys, value *can* be an empty string
 	 */
-	if (sessionid.size() > 0 && sessionid != "" && name.size() > 0 && name != "") {
+	if (!sessionid.empty() && !sessionid.empty() && !name.empty() && !name.empty()) {
 		m_clientData[sessionid][name] = value;
 		return true;
 	}
@@ -126,7 +122,7 @@ DataObject::addClientFilter(const std::string& sessionid, const std::string& nam
 	/**
 	 * Can not have empty values for required keys, value *can* be an empty string
 	 */
-	if (sessionid.size() > 0 && sessionid != "" && name.size() > 0 && name != "") {
+	if (!sessionid.empty() && !sessionid.empty() && !name.empty() && !name.empty()) {
 		if (keyExists<std::string>(m_clientData, sessionid)) {
 			/**
 			 * This serves as both a create and update.  In order to prevent DOS
@@ -352,7 +348,7 @@ DataObject::expireServerSessions(unsigned int expiry) {
 	std::vector<std::string> expiredSS;
 	expiredSS.clear();
 
-	boost::posix_time::ptime now = this->getNow();
+	boost::posix_time::ptime now = getNow();
 	boost::posix_time::ptime etime;
 
 	/*
@@ -396,7 +392,7 @@ DataObject::expireServerSessions(unsigned int expiry) {
 }
 
 std::list<std::string>
-DataObject::searchServerSessionByAttribute(std::string attr_name, std::string attr_val) {
+DataObject::searchServerSessionByAttribute(const std::string& attr_name, const std::string& attr_val) {
 	std::list<std::string> matched;
 
 	matched.clear();
@@ -437,7 +433,7 @@ DataObject::expireClientSessions(unsigned int expiry) {
 	std::vector<std::string> expiredCS;
 	expiredCS.clear();
 
-	boost::posix_time::ptime now = this->getNow();
+	boost::posix_time::ptime now = getNow();
 	boost::posix_time::ptime etime;
 
 	/*
@@ -451,7 +447,7 @@ DataObject::expireClientSessions(unsigned int expiry) {
 		std::string key = itr->first;
 		std::string et = itr->second["expiry"];
 
-		if (et == "" || et.length() == 0) {
+		if (et.empty()) {
 			/*
 			 * arbitrary iso string for conversion
 			 */
@@ -468,7 +464,7 @@ DataObject::expireClientSessions(unsigned int expiry) {
 		 * underlying container because the iterator becomes invalid
 		 */
 		if (now > etime) {
-			std::map<std::string, std::map<std::string, std::string> >::iterator itr_copy = itr;
+			auto itr_copy = itr;
 			++itr_copy;
 			removeClientSession(key);
 			itr = itr_copy;
@@ -523,18 +519,9 @@ DataObject::expireClientSessionCache(unsigned int expiry) {
 
 
 uint32_t
-DataObject::addHandshake(unsigned int def_hs) {
+DataObject::addHandshake(unsigned int handshake) {
 
-	unsigned int handshake = def_hs;
 	unsigned int ret = 0;
-
-	/*
-	 *  If we pass a value in ( other than 0 ), we set the handshake to that value
-	 *  otherwise we generate a random one
-	 */
-	if (handshake == 0) {
-		handshake = rand();
-	}
 
 	// set expiry in data structure, if it exists already it is updated
 	spdlog::trace("  from_iso_string: {}", getNowStr());
@@ -573,7 +560,7 @@ DataObject::expireHandshakes(unsigned int expiry) {
 	 */
 	std::vector<unsigned int> removedHS;
 
-	boost::posix_time::ptime now = this->getNow();
+	boost::posix_time::ptime now = getNow();
 	boost::posix_time::ptime etime;
 
 	/*
@@ -587,7 +574,7 @@ DataObject::expireHandshakes(unsigned int expiry) {
 		unsigned int key = itr->first;
 		std::string et = itr->second["expiry"];
 
-		if (et == "" || et.length() == 0) {
+		if (et.empty()) {
 			/*
 			 * arbitrary iso string for conversion
 			 */

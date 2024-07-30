@@ -22,7 +22,6 @@
 /*
  * Local Includes
  */
-#include "MetaServerHandler.hpp"
 #include "MetaServerPacket.hpp"
 
 /*
@@ -30,24 +29,29 @@
  */
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/udp.hpp>
-#include <boost/asio/deadline_timer.hpp>
+#include <boost/asio/steady_timer.hpp>
 
 /*
  * Forward Declarations
  */
 class MetaServer;
+
 class MetaServerPacket;
 
-class MetaServerHandlerUDP : public MetaServerHandler
-{
+class MetaServerHandlerUDP {
 
 public:
 
-	MetaServerHandlerUDP(MetaServer& ms, boost::asio::io_service& ios, const std::string address, const unsigned int port);
+	MetaServerHandlerUDP(MetaServer& ms, boost::asio::io_service& ios, const std::string& address, const unsigned int port);
+
 	~MetaServerHandlerUDP();
+
 	void start_receive();
+
 	void handle_receive(const boost::system::error_code& error, std::size_t);
-	void handle_send(MetaServerPacket& p, const boost::system::error_code& error, std::size_t);
+
+	static void handle_send(const MetaServerPacket& p, const boost::system::error_code& error, std::size_t);
+
 	void process_outbound(const boost::system::error_code& error);
 
 
@@ -57,7 +61,7 @@ private:
 	boost::asio::ip::udp::endpoint m_remoteEndpoint;
 	std::array<char, MAX_PACKET_BYTES> m_recvBuffer;
 
-	boost::asio::deadline_timer* m_outboundTimer;
+	std::unique_ptr<boost::asio::steady_timer> m_outboundTimer;
 	unsigned int m_outboundMaxInterval;
 	unsigned long m_outboundTick;
 

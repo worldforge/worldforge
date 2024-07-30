@@ -75,17 +75,17 @@ int main(int argc, char** argv)
 		std::cout << "KeepAlivesInt: " << vm["keepalive-interval"].as<int>() << std::endl;
 		std::cout << "KeepAlives   : " << vm["keepalives"].as<int>() << std::endl;
 
-		for (boost::program_options::variables_map::iterator it=vm.begin(); it!=vm.end(); ++it )
+		for (auto & it : vm)
 		{
-			if ( it->second.value().type() == typeid(int) )
+			if ( it.second.value().type() == typeid(int) )
 			{
-				std::cout << it->first.c_str() << "=" << it->second.as<int>() << std::endl;
+				std::cout << it.first.c_str() << "=" << it.second.as<int>() << std::endl;
 			}
-			else if (it->second.value().type() == typeid(std::string) )
+			else if (it.second.value().type() == typeid(std::string) )
 			{
-				std::cout << it->first.c_str() << "=" << it->second.as<std::string>().c_str() << std::endl;
+				std::cout << it.first.c_str() << "=" << it.second.as<std::string>().c_str() << std::endl;
 			}
-			else if (it->second.value().type() == typeid(attribute_list) )
+			else if (it.second.value().type() == typeid(attribute_list) )
 			{
 				std::cout << "Attribute List Added" << std::endl;
 			}
@@ -118,7 +118,7 @@ int main(int argc, char** argv)
 		/**
 		 *    1.2 - receive handshake
 		 */
-		std::array<char, MAX_PACKET_BYTES> recvBuffer;
+		std::array<char, MAX_PACKET_BYTES> recvBuffer{};
 		boost::asio::ip::udp::endpoint sender_endpoint;
 		size_t bytes_recvd;
 
@@ -158,7 +158,7 @@ int main(int argc, char** argv)
 			while(!v.empty())
 			{
 				std::string ele = v.back();
-				size_t pos = ele.find_first_of("=");
+				size_t pos = ele.find_first_of('=');
 				if( pos != std::string::npos )
 				{
 					std::string n = ele.substr(0,pos);

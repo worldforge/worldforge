@@ -82,13 +82,13 @@ int main(int argc, char** argv) {
 		std::cout << "Keepalives   : " << vm["keepalives"].as<int>() << std::endl;
 		std::cout << "---------------" << std::endl;
 
-		for (boost::program_options::variables_map::iterator it = vm.begin(); it != vm.end(); ++it) {
-			if (it->second.value().type() == typeid(int)) {
-				std::cout << it->first.c_str() << "=" << it->second.as<int>() << std::endl;
-			} else if (it->second.value().type() == typeid(std::string)) {
-				std::cout << it->first.c_str() << "=" << it->second.as<std::string>().c_str() << std::endl;
-			} else if (it->second.value().type() == typeid(attribute_list)) {
-				std::cout << it->first.c_str() << "=Attribute List" << std::endl;
+		for (auto & it : vm) {
+			if (it.second.value().type() == typeid(int)) {
+				std::cout << it.first.c_str() << "=" << it.second.as<int>() << std::endl;
+			} else if (it.second.value().type() == typeid(std::string)) {
+				std::cout << it.first.c_str() << "=" << it.second.as<std::string>().c_str() << std::endl;
+			} else if (it.second.value().type() == typeid(attribute_list)) {
+				std::cout << it.first.c_str() << "=Attribute List" << std::endl;
 			}
 		}
 
@@ -153,7 +153,7 @@ int main(int argc, char** argv) {
 			attribute_list v = vm["attribute"].as<attribute_list>();
 			while (!v.empty()) {
 				std::string ele = v.back();
-				size_t pos = ele.find_first_of("=");
+				size_t pos = ele.find_first_of('=');
 				if (pos != std::string::npos) {
 					std::string n = ele.substr(0, pos);
 					std::string value = ele.substr(pos + 1);
@@ -181,7 +181,7 @@ int main(int argc, char** argv) {
 			attribute_list v = vm["filter"].as<attribute_list>();
 			while (!v.empty()) {
 				std::string ele = v.back();
-				size_t pos = ele.find_first_of("=");
+				size_t pos = ele.find_first_of('=');
 				if (pos != std::string::npos) {
 					std::string n = ele.substr(0, pos);
 					std::string value = ele.substr(pos + 1);
@@ -206,9 +206,7 @@ int main(int argc, char** argv) {
 		 */
 		unsigned int total = 1;
 		unsigned int from = 0;
-		unsigned int packed = 0;
-		unsigned int count = 0;
-		while (1) {
+		while (true) {
 
 			if (from > total || total == 0)
 				break;
@@ -233,10 +231,10 @@ int main(int argc, char** argv) {
 
 			std::cout << "Received server list packet";
 			total = resp.getIntData(sizeof(uint32_t) * 1); // 4
-			packed = resp.getIntData(sizeof(uint32_t) * 2); // 8
+			auto packed = resp.getIntData(sizeof(uint32_t) * 2); // 8
 			std::cout << "  Received " << packed << " / " << total << " servers." << std::endl;
 
-			for (count = 1; count <= packed; count++) {
+			for (size_t count = 1; count <= packed; count++) {
 				unsigned int offset = (sizeof(uint32_t) * 2) + (sizeof(uint32_t) * count);
 				//std::cout << "     " << count << " / " << offset << " == ";
 				uint32_t ip = resp.getIntData(offset);

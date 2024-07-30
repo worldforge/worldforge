@@ -50,9 +50,6 @@ struct fmt::formatter<boost::posix_time::ptime> : ostream_formatter {
 
 MetaServer::MetaServer()
 		: m_handshakeExpirySeconds(30),
-		  m_expiryTimer(0),
-		  m_updateTimer(0),
-		  m_scoreTimer(0),
 		  m_expiryDelayMilliseconds(3000),
 		  m_updateDelayMilliseconds(5000),
 		  m_scoreDelayMilliseconds(60000),
@@ -70,13 +67,11 @@ MetaServer::MetaServer()
 		  m_logPackets(false),
 		  m_isDaemon(false),
 		  m_PacketSequence(0),
-		  m_PacketLogger(0),
-		  m_Logfile(""),
-		  m_PacketLogfile(""),
 		  m_isShutdown(false),
 		  m_logPacketAllow(false),
 		  m_logPacketDeny(false),
-		  m_serverClientCacheExpirySeconds(60) {
+		  m_serverClientCacheExpirySeconds(60),
+		  mRandomEngine{std::random_device()()} {
 
 	/*
 	 * Enumerate the ADMINISTRATIVE command set
@@ -84,8 +79,7 @@ MetaServer::MetaServer()
 	 */
 	m_adminCommandSet = {"NMT_ADMINREQ_ENUMERATE", "NMT_ADMINREQ_ADDSERVER"};
 
-	m_loggingFlushTime = msdo.getNow();
-	srand((unsigned) time(0));
+	m_loggingFlushTime = DataObject::getNow();
 
 	/*
 	 * Construct Stats map
@@ -104,11 +98,11 @@ MetaServer::~MetaServer() {
 }
 
 void
-MetaServer::expiry_timer(const boost::system::error_code& error) {
+MetaServer::expiry_timer(const boost::system::error_code&) {
 
 	spdlog::trace("Tick expiry_timer");
 
-	boost::posix_time::ptime now = msdo.getNow();
+	boost::posix_time::ptime now = DataObject::getNow();
 	boost::posix_time::ptime etime;
 	std::map<std::string, std::string>::iterator attr_iter;
 
@@ -117,7 +111,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error) {
 	 * TODO: returned vector shows removed
 	 */
 	std::vector<unsigned int> expiredHS = msdo.expireHandshakes(m_handshakeExpirySeconds);
-	if (expiredHS.size() > 0) {
+	if (!expiredHS.empty()) {
 		spdlog::trace("Expiry Handshakes: {}", expiredHS.size());
 	}
 
@@ -125,7 +119,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error) {
 	 * Sweep for server sessions ... expire any that are older than m_sessionExpirySeconds
 	 */
 	std::vector<std::string> expiredSS = msdo.expireServerSessions(m_sessionExpirySeconds);
-	if (expiredSS.size() > 0) {
+	if (!expiredSS.empty()) {
 		spdlog::trace("Expiry ServerSessions: {}", expiredSS.size());
 	}
 
@@ -133,7 +127,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error) {
 	 *  Remove client sessions that are expired
 	 */
 	std::vector<std::string> expiredCS = msdo.expireClientSessions(m_clientExpirySeconds);
-	if (expiredCS.size() > 0) {
+	if (!expiredCS.empty()) {
 		spdlog::trace("Expiry ClientSessions: {}", expiredCS.size());
 	}
 
@@ -141,7 +135,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error) {
 	 * We want to purge any cache items that are missing
 	 */
 	std::vector<std::string> expiredCSC = msdo.expireClientSessionCache(m_serverClientCacheExpirySeconds);
-	if (expiredCS.size() > 0) {
+	if (!expiredCS.empty()) {
 		spdlog::trace("Expiry ClientSession Cache: {}", expiredCS.size());
 	}
 
@@ -152,7 +146,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error) {
 	std::map<std::string, std::string>::iterator itr_inner;
 	if (m_logServerSessions) {
 		/*
-		 * NOTE: maybe make getServerSessionList return an iterator instead so we don't have copy overhead ?
+		 * NOTE: maybe make getServerSessionList return an iterator instead, so we don't have copy overhead ?
 		 */
 		std::list<std::string> slist = msdo.getServerSessionList(0, msdo.getServerSessionCount());
 		spdlog::trace(" Total Server Sessions: {}", slist.size());
@@ -173,7 +167,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error) {
 	 */
 	if (m_logClientSessions) {
 		/*
-		 * NOTE: maybe make getServerSessionList return an iterator instead so we don't have copy overhead ?
+		 * NOTE: maybe make getServerSessionList return an iterator instead, so we don't have copy overhead ?
 		 */
 		std::list<std::string> slist = msdo.getClientSessionList();
 		while (!slist.empty()) {
@@ -185,7 +179,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error) {
 				spdlog::trace("    {} == {}", itr_inner->first, itr_inner->second);
 			}
 			item = msdo.getClientFilter(key);
-			if (item.size() > 0) {
+			if (!item.empty()) {
 				spdlog::trace("    Filters:");
 				for (itr_inner = item.begin(); itr_inner != item.end(); itr_inner++) {
 					spdlog::trace("        {} == {}", itr_inner->first, itr_inner->second);
@@ -194,15 +188,6 @@ MetaServer::expiry_timer(const boost::system::error_code& error) {
 
 
 		}
-	}
-
-	/*
-	 * Flush the packet logger
-	 */
-	int i = 1;
-	if (m_logPackets) {
-		if (i > 0)
-			spdlog::trace("     PacketLogger Flushed : {}", i);
 	}
 
 	/*
@@ -221,11 +206,11 @@ MetaServer::expiry_timer(const boost::system::error_code& error) {
 	 * Set the next timer trigger
 	 */
 	m_expiryTimer->expires_from_now(boost::posix_time::milliseconds(m_expiryDelayMilliseconds));
-	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
+	m_expiryTimer->async_wait([this](const boost::system::error_code& ec) { this->expiry_timer(ec); });
 }
 
 void
-MetaServer::update_timer(const boost::system::error_code& error) {
+MetaServer::update_timer(const boost::system::error_code&) {
 
 	spdlog::trace("Tick update_timer");
 
@@ -268,11 +253,11 @@ MetaServer::update_timer(const boost::system::error_code& error) {
 	 * Reset Timer
 	 */
 	m_updateTimer->expires_from_now(boost::posix_time::milliseconds(m_updateDelayMilliseconds));
-	m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
+	m_updateTimer->async_wait([this](const boost::system::error_code& ec) { this->update_timer(ec); });
 }
 
 void
-MetaServer::score_timer(const boost::system::error_code& error) {
+MetaServer::score_timer(const boost::system::error_code&) {
 //	spdlog::trace("Tick score_timer({})", m_scoreDelayMilliseconds);
 //
 //	if(!error)
@@ -551,7 +536,7 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 void
 MetaServer::processSERVERKEEPALIVE(const MetaServerPacket& in, MetaServerPacket& out) {
 
-	uint32_t i = msdo.addHandshake();
+	uint32_t i = msdo.addHandshake(mRandomEngine());
 
 	if (i > 0) {
 		spdlog::trace("processSERVERKEEPALIVE(): {}", i);
@@ -568,10 +553,9 @@ MetaServer::processSERVERKEEPALIVE(const MetaServerPacket& in, MetaServerPacket&
  * @param out
  */
 void
-MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out) {
+MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket&) {
 	unsigned int shake = in.getIntData(4);
 	std::string ip = in.getAddressStr();
-	uint32_t packed_ip = 0;
 	spdlog::trace("processSERVERSHAKE(): {}", shake);
 
 	/**
@@ -595,7 +579,7 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 		 * If it's larger than 8 bytes, it's got an IP
 		 */
 		if (in.getSize() > 8) {
-			packed_ip = in.getIntData(8);
+			auto packed_ip = in.getIntData(8);
 			ip = IpNetToAscii(packed_ip);
 
 			ss2.str("");
@@ -617,10 +601,10 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 		boost::posix_time::ptime t1 = msdo.getHandshakeExpiry(shake);
 		spdlog::trace("{}-handShakeExpiry({}):{}", ip, shake, t1);
 
-		boost::posix_time::ptime t2 = msdo.getNow();
+		boost::posix_time::ptime t2 = DataObject::getNow();
 		spdlog::trace("{}-handShakeExpiry(now): {}", ip, t2);
 
-		unsigned int latency = msdo.getLatency(t1, t2);
+		unsigned int latency = DataObject::getLatency(t1, t2);
 		spdlog::trace("  {}-latency : {}", ip, latency);
 
 		ss3 << latency;
@@ -638,7 +622,7 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 }
 
 void
-MetaServer::processTERMINATE(const MetaServerPacket& in, MetaServerPacket& out) {
+MetaServer::processTERMINATE(const MetaServerPacket& in, MetaServerPacket&) {
 
 	/**
 	 *  For backwards compat, we make a regular "TERM" packet end a server session
@@ -673,7 +657,7 @@ MetaServer::processTERMINATE(const MetaServerPacket& in, MetaServerPacket& out) 
 void
 MetaServer::processCLIENTKEEPALIVE(const MetaServerPacket& in, MetaServerPacket& out) {
 
-	uint32_t i = msdo.addHandshake();
+	uint32_t i = msdo.addHandshake(mRandomEngine());
 
 	if (i > 0) {
 		spdlog::trace("processCLIENTKEEPALIVE(){}", i);
@@ -685,7 +669,7 @@ MetaServer::processCLIENTKEEPALIVE(const MetaServerPacket& in, MetaServerPacket&
 }
 
 void
-MetaServer::processCLIENTSHAKE(const MetaServerPacket& in, MetaServerPacket& out) {
+MetaServer::processCLIENTSHAKE(const MetaServerPacket& in, MetaServerPacket&) {
 	unsigned int shake = in.getIntData(4);
 	std::string ip = in.getAddressStr();
 	spdlog::trace("processCLIENTSHAKE(){}", shake);
@@ -799,7 +783,7 @@ MetaServer::processLISTREQ(const MetaServerPacket& in, MetaServerPacket& out) {
 	 * NOTE: I think this logic is a bug in the protocol, as the
 	 * 		original MS code looks as if this was just not working correctly.
 	 */
-	if (resp_list.size() > 0) {
+	if (!resp_list.empty()) {
 		out.addPacketData(msdo.getServerSessionCount());
 		out.addPacketData((uint32_t) resp_list.size());
 		while (!resp_list.empty()) {
@@ -948,7 +932,7 @@ MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out) {
 	 *	if large/full listings are expected, we'll need to breakup
 	 *	similar to a LISTRESP
 	 */
-	if (resp_list.size() > 0) {
+	if (!resp_list.empty()) {
 		/*
 		 * pseudo:
 		 * 	    for each resp_list item
@@ -1012,7 +996,7 @@ MetaServer::processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out) {
 	uint32_t in_addr;
 	unsigned int in_port;
 	std::stringstream ss;
-	std::string out_msg = "";
+	std::string out_msg;
 
 	spdlog::trace("processADMINREQ({})", sub_type);
 
@@ -1127,7 +1111,7 @@ MetaServer::registerConfig(boost::program_options::variables_map& vm) {
 
 	if (vm.count("server.domain")) {
 		m_Domain = vm["server.domain"].as<std::string>();
-		if (m_Domain.length() == 0)
+		if (m_Domain.empty())
 			m_Domain = "ms.worldforge.org";
 	}
 
@@ -1187,7 +1171,7 @@ MetaServer::registerConfig(boost::program_options::variables_map& vm) {
 		/*
 		 *  Set a hard default if it's not specified
 		 */
-		if (m_PacketLogfile.length() == 0) {
+		if (m_PacketLogfile.empty()) {
 			m_PacketLogfile = "~/.metaserver-ng/packetdefault.bin";
 		}
 
@@ -1204,11 +1188,11 @@ MetaServer::registerConfig(boost::program_options::variables_map& vm) {
 		m_loggingFlushSeconds = vm["logging.logging_flush_seconds"].as<unsigned int>();
 
 	//std::cout << "DEBUG: " << vm["server.port"].as<std::string>() << std::endl;
-	for (boost::program_options::variables_map::iterator it = vm.begin(); it != vm.end(); ++it) {
-		if (it->second.value().type() == typeid(int)) {
-			std::cout << "  " << it->first.c_str() << " = " << it->second.as<int>() << std::endl;
-		} else if (it->second.value().type() == typeid(std::string)) {
-			std::cout << "  " << it->first.c_str() << " = " << it->second.as<std::string>().c_str() << std::endl;
+	for (auto& it: vm) {
+		if (it.second.value().type() == typeid(int)) {
+			std::cout << "  " << it.first.c_str() << " = " << it.second.as<int>() << std::endl;
+		} else if (it.second.value().type() == typeid(std::string)) {
+			std::cout << "  " << it.first.c_str() << " = " << it.second.as<std::string>().c_str() << std::endl;
 		}
 	}
 
@@ -1273,11 +1257,11 @@ MetaServer::registerConfig(boost::program_options::variables_map& vm) {
 	spdlog::info("WorldForge MetaServer Runtime Configuration");
 	spdlog::info("Server Version: {}", SERVER_VERSION);
 	spdlog::info("API    Version: {}", API_VERSION);
-	for (boost::program_options::variables_map::iterator it = vm.begin(); it != vm.end(); ++it) {
-		if (it->second.value().type() == typeid(int)) {
-			spdlog::info("  {} = {}", it->first.c_str(), it->second.as<int>());
-		} else if (it->second.value().type() == typeid(std::string)) {
-			spdlog::info("  {} = {}", it->first.c_str(), it->second.as<std::string>().c_str());
+	for (auto& it: vm) {
+		if (it.second.value().type() == typeid(int)) {
+			spdlog::info("  {} = {}", it.first.c_str(), it.second.as<int>());
+		} else if (it.second.value().type() == typeid(std::string)) {
+			spdlog::info("  {} = {}", it.first.c_str(), it.second.as<std::string>().c_str());
 		}
 	}
 }
@@ -1333,33 +1317,32 @@ MetaServer::initTimers(boost::asio::io_service& ios) {
 	if (m_expiryTimer) {
 		spdlog::warn("Purging m_expiryTimer");
 		m_expiryTimer->cancel();
-		delete m_expiryTimer;
-		m_expiryTimer = 0;
+		m_expiryTimer.reset();
 	}
 
 	if (m_updateTimer) {
 		spdlog::warn("Purging m_updateTimer");
 		m_updateTimer->cancel();
-		delete m_updateTimer;
+		m_updateTimer.reset();
 	}
 
 	if (m_scoreTimer) {
 		spdlog::warn("Purging m_scoreTimer");
 		m_scoreTimer->cancel();
-		delete m_scoreTimer;
+		m_scoreTimer.reset();
 	}
 
-	m_expiryTimer = new boost::asio::deadline_timer(ios);
+	m_expiryTimer = std::make_unique<boost::asio::deadline_timer>(ios);
 	m_expiryTimer->expires_from_now(boost::posix_time::seconds(5));
-	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
+	m_expiryTimer->async_wait([this](const boost::system::error_code& ec) { this->expiry_timer(ec); });
 
-	m_updateTimer = new boost::asio::deadline_timer(ios);
+	m_updateTimer = std::make_unique<boost::asio::deadline_timer>(ios);
 	m_updateTimer->expires_from_now(boost::posix_time::seconds(6));
-	m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
+	m_updateTimer->async_wait([this](const boost::system::error_code& ec) { this->update_timer(ec); });
 
-	m_scoreTimer = new boost::asio::deadline_timer(ios);
+	m_scoreTimer = std::make_unique<boost::asio::deadline_timer>(ios);
 	m_scoreTimer->expires_from_now(boost::posix_time::seconds(8));
-	m_scoreTimer->async_wait(boost::bind(&MetaServer::score_timer, this, boost::asio::placeholders::error));
+	m_scoreTimer->async_wait([this](const boost::system::error_code& ec) { this->score_timer(ec); });
 
 
 //	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
@@ -1375,19 +1358,19 @@ MetaServer::initTimers(boost::asio::io_service& ios) {
 
 unsigned long long
 MetaServer::getDeltaMillis() {
-	boost::posix_time::ptime ntime = msdo.getNow();
+	boost::posix_time::ptime ntime = DataObject::getNow();
 	boost::posix_time::time_duration dur = ntime - m_startTime;
 	return dur.total_milliseconds();
 }
 
 bool
-MetaServer::isDaemon() {
+MetaServer::isDaemon() const {
 	return m_isDaemon;
 }
 
 void
 MetaServer::getMSStats(std::map<std::string, std::string>& req_stats) {
-	if (req_stats.size() == 0) {
+	if (req_stats.empty()) {
 		/*
 		 * If you've specified nothing, you get everything
 		 */

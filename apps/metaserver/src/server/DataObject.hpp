@@ -44,7 +44,7 @@ public:
 
 	~DataObject();
 
-	uint32_t addHandshake(unsigned int def_hs = 0);
+	uint32_t addHandshake(unsigned int hs);
 
 	uint32_t removeHandshake(unsigned int hs);
 
@@ -74,8 +74,6 @@ public:
 
 	std::string getClientFilter(const std::string& sessionid, const std::string& key);
 
-	void clearClientFilter(const std::string& sessionid);
-
 	bool addServerSession(const std::string& sessionid);
 
 	void removeServerSession(const std::string& sessionid);
@@ -88,7 +86,7 @@ public:
 
 	std::vector<std::string> expireServerSessions(unsigned int expiry = 0);
 
-	std::list<std::string> searchServerSessionByAttribute(std::string attr_name, std::string attr_value);
+	std::list<std::string> searchServerSessionByAttribute(const std::string& attr_name, const std::string& attr_value);
 
 	bool addClientSession(const std::string& sessionid);
 
@@ -110,11 +108,11 @@ public:
 
 	uint32_t getClientSessionCount();
 
-	boost::posix_time::ptime getNow();
+	static boost::posix_time::ptime getNow();
 
-	std::string getNowStr();
+	static std::string getNowStr();
 
-	unsigned int getLatency(boost::posix_time::ptime& t1, boost::posix_time::ptime& t2);
+	static unsigned int getLatency(boost::posix_time::ptime& t1, boost::posix_time::ptime& t2);
 
 	uint32_t createServerSessionListresp(std::string ip = "default");
 

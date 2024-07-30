@@ -19,8 +19,8 @@
 
  */
 
-#ifndef METASERVER_HPP__
-#define METASERVER_HPP__
+#ifndef METASERVER_HPP
+#define METASERVER_HPP
 
 
 /*
@@ -40,17 +40,13 @@
 #include <filesystem>
 
 #include <set>
+#include <random>
 
 
 /*
  * Magic Definitions
  */
 const char DEFAULT_CONF[] = SYSCONFDIR;
-
-/*
- * Forward Declarations
- */
-class PacketLogger;
 
 class MetaServer {
 public:
@@ -96,11 +92,11 @@ public:
 
 	std::string getLogFile() { return m_Logfile; }
 
-	bool isShutdown() { return m_isShutdown; }
+	bool isShutdown() const { return m_isShutdown; }
 
 	unsigned long long getDeltaMillis();
 
-	bool isDaemon();
+	bool isDaemon() const;
 
 	void shutDown() { m_isShutdown = true; }
 
@@ -111,9 +107,9 @@ private:
 
 	DataObject msdo;
 	unsigned int m_handshakeExpirySeconds;
-	boost::asio::deadline_timer* m_expiryTimer;
-	boost::asio::deadline_timer* m_updateTimer;
-	boost::asio::deadline_timer* m_scoreTimer;
+	std::unique_ptr<boost::asio::deadline_timer> m_expiryTimer;
+	std::unique_ptr<boost::asio::deadline_timer> m_updateTimer;
+	std::unique_ptr<boost::asio::deadline_timer> m_scoreTimer;
 	unsigned int m_expiryDelayMilliseconds;
 	unsigned int m_updateDelayMilliseconds;
 	unsigned int m_scoreDelayMilliseconds;
@@ -132,7 +128,6 @@ private:
 	bool m_logPackets;
 	bool m_isDaemon;
 	unsigned long long m_PacketSequence;
-	PacketLogger* m_PacketLogger;
 	std::string m_Logfile;
 	std::string m_PacketLogfile;
 	bool m_isShutdown;
@@ -147,6 +142,7 @@ private:
 	std::set<std::string> m_adminCommandSet;
 	std::map<std::string, std::string> m_metaStats;
 	unsigned int m_serverClientCacheExpirySeconds;
+	std::default_random_engine mRandomEngine;
 
 };
 

@@ -34,57 +34,53 @@
 #include <spdlog/spdlog.h>
 
 MetaServerHandlerUDP::MetaServerHandlerUDP(MetaServer& ms,
-					  boost::asio::io_service& ios,
-		              const std::string address,
-		              const unsigned int port )
-   : m_Socket(ios, boost::asio::ip::udp::udp::endpoint(boost::asio::ip::address::from_string(address),port)),
+										   boost::asio::io_service& ios,
+										   const std::string& address,
+										   const unsigned int port)
+		: m_Socket(ios, boost::asio::ip::udp::udp::endpoint(boost::asio::ip::address::from_string(address), port)),
+		  m_recvBuffer{},
 //     m_Socket(ios, boost::asio::ip::udp::udp::endpoint(boost::asio::ip::udp::udp::v6(),port)),
-     m_outboundMaxInterval(100),
-     m_outboundTick(0),
-	 m_Address(address),
-     m_Port(port),
-     m_msRef(ms)
-{
-	m_outboundTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
-	m_outboundTimer->async_wait(boost::bind(&MetaServerHandlerUDP::process_outbound, this, boost::asio::placeholders::error));
+		  m_outboundTimer(std::make_unique<boost::asio::steady_timer>(ios, std::chrono::seconds(1))),
+		  m_outboundMaxInterval(100),
+		  m_outboundTick(0),
+		  m_Address(address),
+		  m_Port(port),
+		  m_msRef(ms) {
+	m_outboundTimer->async_wait([this](const boost::system::error_code& error) { this->process_outbound(error); });
 
-	spdlog::info("MetaServerHandlerUDP() Startup : {},{}",m_Address , m_Port);
+	spdlog::info("MetaServerHandlerUDP() Startup : {},{}", m_Address, m_Port);
 
 	start_receive();
 }
 
-MetaServerHandlerUDP::~MetaServerHandlerUDP()
-{
+MetaServerHandlerUDP::~MetaServerHandlerUDP() {
 	spdlog::trace("MetaServerHandlerUDP() Shutdown : {},{}", m_Address, m_Port);
 }
 
 void
-MetaServerHandlerUDP::start_receive()
-{
+MetaServerHandlerUDP::start_receive() {
 
-    m_Socket.async_receive_from(
-    		boost::asio::buffer(m_recvBuffer), m_remoteEndpoint,
-    		boost::bind(&MetaServerHandlerUDP::handle_receive, this,
-    		boost::asio::placeholders::error,
-    		boost::asio::placeholders::bytes_transferred)
-    );
+	m_Socket.async_receive_from(
+			boost::asio::buffer(m_recvBuffer), m_remoteEndpoint,
+			[this](const boost::system::error_code& error, std::size_t bytes_recvd) {
+				this->handle_receive(error, bytes_recvd);
+			}
+	);
 
 }
 
 void
 MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
-									 std::size_t bytes_recvd)
-{
+									 std::size_t bytes_recvd) {
 	try {
-		if(!error || error == boost::asio::error::message_size )
-		{
+		if (!error || error == boost::asio::error::message_size) {
 
 			/**
 			 *  Create a MSP from the incoming buffer and add in some useful information
 			 */
-			MetaServerPacket msp( m_recvBuffer , bytes_recvd );
+			MetaServerPacket msp(m_recvBuffer, bytes_recvd);
 
-			msp.setAddress(m_remoteEndpoint.address().to_string(), m_remoteEndpoint.address().to_v4().to_uint() );
+			msp.setAddress(m_remoteEndpoint.address().to_string(), m_remoteEndpoint.address().to_v4().to_uint());
 			msp.setPort(m_remoteEndpoint.port());
 
 			spdlog::info("UDP: Incoming Packet [{}][{}][{}]", msp.getAddress(), NMT_PRETTY[msp.getPacketType()], bytes_recvd);
@@ -97,7 +93,7 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 			/**
 			 * The logic for what happens is inside the metaserver class
 			 */
-			m_msRef.processMetaserverPacket(msp,rsp);
+			m_msRef.processMetaserverPacket(msp, rsp);
 
 			/**
 			 * Send back response, only if it's not NULL and has some data
@@ -105,13 +101,12 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 			 * TODO: find out if MSP goes out of scope ( or buffer thereto )
 			 */
 
-			if ( rsp.getSize() > 0 && rsp.getPacketType() != NMT_NULL )
-			{
-			  spdlog::info("UDP: Outgoing Packet [{}][{}][{}]", rsp.getAddress(), NMT_PRETTY[rsp.getPacketType()], rsp.getSize());
-			  m_Socket.async_send_to(boost::asio::buffer(rsp.getBuffer(),rsp.getSize()), m_remoteEndpoint,
-				  boost::bind(&MetaServerHandlerUDP::handle_send, this, rsp,
-					boost::asio::placeholders::error,
-					boost::asio::placeholders::bytes_transferred));
+			if (rsp.getSize() > 0 && rsp.getPacketType() != NMT_NULL) {
+				spdlog::info("UDP: Outgoing Packet [{}][{}][{}]", rsp.getAddress(), NMT_PRETTY[rsp.getPacketType()], rsp.getSize());
+				m_Socket.async_send_to(boost::asio::buffer(rsp.getBuffer(), rsp.getSize()), m_remoteEndpoint,
+									   [rsp](const boost::system::error_code& error, std::size_t bytes_sent) {
+										   handle_send(rsp, error, bytes_sent);
+									   });
 			}
 
 			/**
@@ -123,7 +118,7 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 			spdlog::warn("ERROR:{}", error.message());
 		}
 
-	} catch (boost::exception& bex ) {
+	} catch (const boost::exception& bex) {
 
 		/*
 		 * This use case is to cover some unknown error we want to continue reading
@@ -136,9 +131,12 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 }
 
 void
-MetaServerHandlerUDP::handle_send(MetaServerPacket& p, const boost::system::error_code& error, std::size_t bytes_sent)
-{
+MetaServerHandlerUDP::handle_send(const MetaServerPacket&, const boost::system::error_code& error, std::size_t) {
 	// include counters and stuff
+	if (error) {
+		//Should we do something more?
+		spdlog::error("Error when trying to send: {}", error.message());
+	}
 }
 
 /**
@@ -150,13 +148,11 @@ MetaServerHandlerUDP::handle_send(MetaServerPacket& p, const boost::system::erro
  * @param error
  */
 void
-MetaServerHandlerUDP::process_outbound(const boost::system::error_code& error)
-{
+MetaServerHandlerUDP::process_outbound(const boost::system::error_code&) {
+	//TODO: should we check for errors?
 	boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
-	boost::posix_time::time_duration duration( now.time_of_day() );
-	long tick = duration.total_milliseconds();
-	long delay = m_outboundMaxInterval;
-	long delta = m_outboundMaxInterval;
+	boost::posix_time::time_duration duration(now.time_of_day());
+	auto tick = duration.total_milliseconds();
 
 	/*
 	 *  Process the outbound response packets
@@ -166,15 +162,15 @@ MetaServerHandlerUDP::process_outbound(const boost::system::error_code& error)
 	 *  Adjust timer for next loop
 	 */
 	// how long since last tick
-	delta = tick - m_outboundTick;
+	auto delta = tick - m_outboundTick;
 
 	// if we've gone over, we need to run faster, drop to 1
-	delay = (delta > m_outboundMaxInterval) ? 1 : delta;
+	auto delay = (delta > m_outboundMaxInterval) ? 1 : delta;
 
 	m_outboundTick = tick;
 
-	m_outboundTimer->expires_from_now(boost::posix_time::milliseconds(delay));
-    m_outboundTimer->async_wait(boost::bind(&MetaServerHandlerUDP::process_outbound, this, boost::asio::placeholders::error));
+	m_outboundTimer->expires_from_now(std::chrono::milliseconds(delay));
+	m_outboundTimer->async_wait([this](const boost::system::error_code& error) { this->process_outbound(error); });
 }
 
 
