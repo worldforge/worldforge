@@ -11,7 +11,7 @@ from conan.tools.system.package_manager import Apt
 
 class OgreConan(ConanFile):
     name = 'ogre'
-    upstream_version = "14.2.4"
+    upstream_version = "14.2.6"
     package_revision = ""
     version = "{0}{1}".format(upstream_version, package_revision)
 
