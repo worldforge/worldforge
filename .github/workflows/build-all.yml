@@ -25,10 +25,10 @@ jobs:
             matrix:
                 #Enable building on macOS when it can be fixed. Currently we're getting SDL linking errors.
                 #        os: [ ubuntu-20.04, ubuntu-22.04, macos-12, macos-11 ]
-                os: [ ubuntu-20.04, ubuntu-22.04, windows-2022 ]
+                os: [ ubuntu-20.04, ubuntu-22.04, ubuntu-24.04, windows-2022 ]
 
         steps:
-            -   uses: actions/checkout@v4.1.1
+            -   uses: actions/checkout@v4.1.7
                 with:
                   fetch-depth: 0 #We need all history to get proper Git versioning for dev builds.
 
@@ -45,7 +45,7 @@ jobs:
                     version: 11
 
             -   name: Cache media
-                uses: actions/cache@v4.0.0
+                uses: actions/cache@v4.0.2
                 with:
                     path: |
                         ~/install/usr/share/cyphesis/assets
@@ -57,7 +57,7 @@ jobs:
                     key: ${{ github.job }}-${{ matrix.os }}
 
             -   name: "Install packages"
-                uses: awalsh128/cache-apt-pkgs-action@v1.3.1
+                uses: awalsh128/cache-apt-pkgs-action@v1.4.2
                 if: runner.os == 'Ubuntu'
                 with:
                     #Needed for the assets processing step in Cyphesis
@@ -202,14 +202,14 @@ jobs:
 
             -   name: Store Snaps
                 if: env.BUILD_SNAP == 'true'
-                uses: actions/upload-artifact@v4.3.1
+                uses: actions/upload-artifact@v4.3.4
                 with:
                     name: snap
                     path: ~/install/usr/*.snap
 
             -   name: Store NSIS
                 if: env.BUILD_EMBER_NSIS == 'true'
-                uses: actions/upload-artifact@v4.3.1
+                uses: actions/upload-artifact@v4.3.4
                 with:
                     name: NSIS
                     path: ${{github.workspace}}/build/apps/ember/*.exe
@@ -230,7 +230,7 @@ jobs:
             #
             -   name: Store AppImage
                 if: env.BUILD_APPIMAGE == 'true'
-                uses: actions/upload-artifact@v4.3.1
+                uses: actions/upload-artifact@v4.3.4
                 with:
                     name: AppImage
                     path: Ember-x86_64.AppImage
