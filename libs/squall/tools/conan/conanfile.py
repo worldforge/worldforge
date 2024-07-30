@@ -23,7 +23,7 @@ class SquallConan(ConanFile):
     generators = "CMakeToolchain", "CMakeDeps"
 
     def requirements(self):
-        self.requires("libcurl/8.6.0")
+        self.requires("libcurl/8.8.0")
         self.requires("spdlog/1.14.1")
         self.requires("cli11/2.4.2")
         self.test_requires("catch2/3.6.0")
