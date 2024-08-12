@@ -138,17 +138,9 @@ bool _TraceBack_Check( PyObject *v );
 PyTypeObject * _Tuple_Type();
 bool _Tuple_Check( PyObject *op );
 
-int &_Py_DebugFlag();
-int &_Py_InteractiveFlag();
-int &_Py_OptimizeFlag();
-int &_Py_NoSiteFlag();
-int &_Py_TabcheckFlag();
-int &_Py_VerboseFlag();
-
 void _XINCREF( PyObject *op );
 void _XDECREF( PyObject *op );
 
-const char *__Py_PackageContext();
 };
 
 #endif    // CXX_INDIRECT_PYTHON_INTERFACE_HXX

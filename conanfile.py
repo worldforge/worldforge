@@ -65,9 +65,7 @@ class Worldforge(ConanFile):
             self.requires("libgcrypt/1.10.3")
             self.requires("sqlite3/3.46.0", force=True)
             self.requires("readline/8.2")
-            self.requires("cpython/3.10.13@worldforge")
-            #It would be nice if we could use the Conan provided package, but so far we're running into issues.
-            #self.requires("cpython/3.10.0")
+            self.requires("cpython/3.12.2")
 
         # self.requires("avahi/0.8")
 

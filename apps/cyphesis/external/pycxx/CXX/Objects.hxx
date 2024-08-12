@@ -2183,16 +2183,6 @@ namespace Py
             return PyUnicode_GET_LENGTH( ptr() );
         }
 
-        const wchar_t *unicode_data() const
-        {
-            return PyUnicode_AS_UNICODE( ptr() );
-        }
-
-        unicodestring as_unicodestring() const
-        {
-            return unicodestring( unicode_data(), PyUnicode_GET_SIZE( ptr() ) );
-        }
-
         ucs4string as_ucs4string() const
         {
             Py_UCS4 *buf = new Py_UCS4[ size() ];

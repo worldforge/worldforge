@@ -152,7 +152,7 @@ PyMethodDef *MethodTable::table()
 //================================================================================
 ExtensionModuleBase::ExtensionModuleBase( const char *name )
 : m_module_name( name )
-, m_full_module_name( __Py_PackageContext() != NULL ? std::string( __Py_PackageContext() ) : m_module_name )
+, m_full_module_name(m_module_name )
 , m_method_table()
 //m_module_def
 , m_module( NULL )

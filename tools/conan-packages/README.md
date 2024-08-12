@@ -10,7 +10,7 @@ These are the libraries used by Worldforge, provided as [Conan](https://www.cona
 Most of them are adapted to be used specifically for Worldforge, so they might be missing some features that aren't
 needed by Worldforge specifically.
 
-The libraries are automatically built by Travis and uploaded to the "worldforge/stable" channel
+The libraries are automatically built by GitHub Actions and uploaded to the "worldforge/stable" channel
 at https://artifactory.ogenvik.org/ui/repos/tree/General/conan%2Fworldforge. To use them, configure conan as such
 
 ```

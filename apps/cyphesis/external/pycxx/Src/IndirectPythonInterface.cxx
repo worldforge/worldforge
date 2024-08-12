@@ -460,15 +460,6 @@ PyTypeObject *_CObject_Type()           { return &PyCObject_Type; }
 PyTypeObject *_Bytes_Type()             { return &PyBytes_Type; }
 #endif
 
-//
-//    wrap flags
-//
-int &_Py_DebugFlag()                    { return Py_DebugFlag; }
-int &_Py_InteractiveFlag()              { return Py_InteractiveFlag; }
-int &_Py_OptimizeFlag()                 { return Py_OptimizeFlag; }
-int &_Py_NoSiteFlag()                   { return Py_NoSiteFlag; }
-int &_Py_VerboseFlag()                  { return Py_VerboseFlag; }
-const char *__Py_PackageContext()       { return _Py_PackageContext; }
 
 //
 //    Needed to keep the abstactions for delayload interface
