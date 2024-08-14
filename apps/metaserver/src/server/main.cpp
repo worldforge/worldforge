@@ -96,21 +96,21 @@ int main(int argc, char** argv) {
 	/*
 	 * Environment Wrangling
 	 */
-	const char* wfenv = std::getenv("WFHOME");
-	const char* home = std::getenv("HOME");
+	auto wfenv = std::getenv("WFHOME");
+	auto home = std::getenv("HOME");
 	bool config_found = false;
 	std::filesystem::path config_file_path;
-	std::filesystem::path home_dot_dir;
 
 	/*
 	 * Create a 'special' directory
 	 */
 	if (home != nullptr) {
 
-		home_dot_dir = home;
-		home_dot_dir /= "/.metaserver-ng";
+		std::filesystem::path home_dot_dir = home;
+		home_dot_dir /= ".metaserver-ng";
 
 		if (!std::filesystem::exists(home_dot_dir)) {
+			spdlog::info("Will create directory '{}'", home_dot_dir.string());
 			/*
 			 * NB: this throws, may need to fix that later.
 			 * We don't care about the result though, either it made it or it
@@ -129,7 +129,7 @@ int main(int argc, char** argv) {
 	if (home != nullptr) {
 		std::cout << "HOME : " << home << std::endl;
 		config_file_path = home;
-		config_file_path /= "/.metaserver-ng.conf";
+		config_file_path /= ".metaserver-ng.conf";
 		std::cout << "Searching configuration : " << config_file_path.string() << " ... ";
 
 		if (std::filesystem::is_regular_file(config_file_path)) {
@@ -148,7 +148,8 @@ int main(int argc, char** argv) {
 		 * PREFIX/etc/metaserver-ng.conf
 		 */
 		config_file_path /= wfenv;
-		config_file_path /= "/etc/metaserver-ng.conf";
+		config_file_path /= "etc";
+		config_file_path /= "metaserver-ng.conf";
 		std::cout << "Searching configuration : " << config_file_path.string();
 
 		if (std::filesystem::is_regular_file(config_file_path)) {
