@@ -75,9 +75,6 @@ class Worldforge(ConanFile):
 
         # self.requires("avahi/0.8")
 
-        if not is_msvc(self):
-            self.requires("libxdg-basedir/1.2.3@worldforge")
-
         self.requires("expat/2.6.2", override=True)
 
         self.test_requires("cppunit/1.15.1")

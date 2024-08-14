@@ -26,7 +26,7 @@ link_libraries(
         external-DetourCrowd
         external-Detour
         external-Recast
-        libxdg-basedir::libxdg-basedir
+        external-libxdg-basedir
         libgcrypt::libgcrypt
         spdlog::spdlog
 )

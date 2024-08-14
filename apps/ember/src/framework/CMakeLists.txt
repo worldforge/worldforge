@@ -54,7 +54,7 @@ target_link_libraries(ember-framework PUBLIC
 
 if (NOT WIN32)
     target_link_libraries(ember-framework PUBLIC
-            libxdg-basedir::libxdg-basedir
+            external-libxdg-basedir
     )
 endif ()
 

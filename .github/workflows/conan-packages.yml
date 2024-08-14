@@ -49,9 +49,6 @@ jobs:
                 shell: bash
                 run: |
                     if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
-                      if [[ "$ImageOS" != win* ]]; then
-                        conan create tools/conan-packages/libxdg-basedir -pr default --build missing
-                      fi
                       conan create tools/conan-packages/ogre -pr default --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=true
                       conan create tools/conan-packages/cegui -pr default --build missing
                     

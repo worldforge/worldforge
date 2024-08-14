@@ -87,10 +87,6 @@ find_package(CEGUI
         CONFIG
         REQUIRED)
 
-if (NOT WIN32)
-    find_package(libxdg-basedir REQUIRED)
-endif ()
-
 find_package(spdlog REQUIRED)
 
 find_package(Bullet 2.89 REQUIRED)
