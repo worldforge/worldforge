@@ -29,7 +29,13 @@ class Worldforge(ConanFile):
         # Unclear why the pulseaudio client lib needs openssl...
         'pulseaudio/*:with_openssl': False,
         # We're not using any mpeg stuff so no need to include that
-        'libsndfile/*:with_mpeg': False
+        'libsndfile/*:with_mpeg': False,
+        # Build Python without any extra stuff.
+        'cpython/*:with_bz2': False,
+        'cpython/*:with_gdbm': False,
+        'cpython/*:with_sqlite3': False,
+        'cpython/*:with_tkinter': False,
+        'cpython/*:with_lzma': False,
     }
 
     def config_options(self):
