@@ -55,7 +55,7 @@ jobs:
                 if: runner.os == 'Ubuntu'
                 with:
                     #Needed for the assets processing step in Cyphesis
-                    packages: imagemagick file rsync
+                    packages: imagemagick file rsync libfuse2
                     version: 1.0
 
             -   name: Setup environment
