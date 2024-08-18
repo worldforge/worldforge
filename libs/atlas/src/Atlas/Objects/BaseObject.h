@@ -43,7 +43,9 @@ public:
 
 	NoSuchAttrException(NoSuchAttrException&& rhs) noexcept:
 			Atlas::Exception(rhs),
-			m_name(rhs.m_name) {}
+			m_name(std::move(rhs.m_name)) {}
+
+	NoSuchAttrException(const NoSuchAttrException& rhs) noexcept = default;
 
 	NoSuchAttrException& operator=(NoSuchAttrException&& rhs) noexcept {
 		m_name = std::move(rhs.m_name);

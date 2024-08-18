@@ -9,13 +9,14 @@
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 
-namespace Atlas {
-namespace Objects {
+
+namespace Atlas::Objects {
 
 BaseObjectData::BaseObjectData(BaseObjectData* defaults) :
 		m_class_no(BASE_OBJECT_NO),
 		m_refCount(0),
 		m_defaults(defaults),
+		m_next(nullptr),
 		m_attrFlags(0) {
 	if (defaults == nullptr) {
 		m_attrFlags = -1; //this is default object: all attributes here
@@ -107,4 +108,4 @@ bool BaseObjectData::getAttrFlag(const std::string& name, uint32_t& flag) const 
 }
 
 }
-} // namespace Atlas::Objects
+// namespace Atlas::Objects
