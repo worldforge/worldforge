@@ -1,7 +1,6 @@
 # Worldforge
 
 [![Join us on Gitter!](https://badges.gitter.im/Worldforge.svg)](https://gitter.im/Worldforge/Lobby)
-[![Appveyor build status](https://ci.appveyor.com/api/projects/status/github/worldforge/worldforge?branch=master&svg=true)](https://ci.appveyor.com/project/erikogenvik/worldforge)
 [![Build with CMake](https://github.com/worldforge/worldforge/actions/workflows/build-all.yml/badge.svg)](https://github.com/worldforge/worldforge/actions/workflows/build-all.yml)
 
 [![cyphesis](https://snapcraft.io/cyphesis/badge.svg)](https://snapcraft.io/cyphesis)
