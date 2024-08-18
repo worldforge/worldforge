@@ -46,14 +46,14 @@ int RootData::copyAttr(const std::string& name, Element & attr) const
     return BaseObjectData::copyAttr(name, attr);
 }
 
-void RootData::setAttr(std::string name, Element attr, const Atlas::Objects::Factories* factories)
+void RootData::setAttrImpl(std::string name, Element attr, const Atlas::Objects::Factories* factories)
 {
     if (name == ID_ATTR) { setId(attr.moveString()); return; }
     if (name == PARENT_ATTR) { setParent(attr.moveString()); return; }
     if (name == STAMP_ATTR) { setStamp(attr.asInt()); return; }
     if (name == OBJTYPE_ATTR) { setObjtype(attr.moveString()); return; }
     if (name == NAME_ATTR) { setName(attr.moveString()); return; }
-    BaseObjectData::setAttr(std::move(name), std::move(attr), factories);
+    BaseObjectData::setAttrImpl(std::move(name), std::move(attr), factories);
 }
 
 void RootData::removeAttr(const std::string& name)

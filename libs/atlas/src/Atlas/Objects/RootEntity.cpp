@@ -44,13 +44,13 @@ int RootEntityData::copyAttr(const std::string& name, Element & attr) const
     return RootData::copyAttr(name, attr);
 }
 
-void RootEntityData::setAttr(std::string name, Element attr, const Atlas::Objects::Factories* factories)
+void RootEntityData::setAttrImpl(std::string name, Element attr, const Atlas::Objects::Factories* factories)
 {
     if (name == LOC_ATTR) { setLoc(attr.moveString()); return; }
     if (name == POS_ATTR) { setPosAsList(attr.moveList()); return; }
     if (name == VELOCITY_ATTR) { setVelocityAsList(attr.moveList()); return; }
     if (name == CONTAINS_ATTR) { setContainsAsList(attr.moveList()); return; }
-    RootData::setAttr(std::move(name), std::move(attr), factories);
+    RootData::setAttrImpl(std::move(name), std::move(attr), factories);
 }
 
 void RootEntityData::removeAttr(const std::string& name)

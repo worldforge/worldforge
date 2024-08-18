@@ -284,8 +284,9 @@ public:
 						 Atlas::Message::Element& attr) const;
 
 	/// Set the attribute "name" to the value given by "attr".
-	virtual void setAttr(std::string name,
-						 Atlas::Message::Element attr, const Atlas::Objects::Factories* factories = nullptr);
+	void setAttr(std::string name,
+				 Atlas::Message::Element attr,
+				 const Atlas::Objects::Factories* factories = nullptr);
 
 
 	/// Remove the attribute "name".
@@ -326,6 +327,16 @@ protected:
 
 	template<typename T>
 	static T* copyInstance(const T& instance);
+
+	/**
+	 * Virtual implementation of "setAttr". We have this separate since the "setAttr" uses a defaulted value for the "factories" parameter (which "virtual" doesn't allow).
+	 * @param name
+	 * @param attr
+	 * @param factories
+	 */
+	virtual void setAttrImpl(std::string name,
+							 Atlas::Message::Element attr,
+							 const Atlas::Objects::Factories* factories);
 
 	int m_class_no; //each class has different enum
 	int m_refCount; //how many instances
