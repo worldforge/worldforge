@@ -179,15 +179,6 @@ int BaseClient::endTask() {
 	return 0;
 }
 
-/**
- * Checks if there's an active task.
- * @return True if there's a task set.
- */
-bool BaseClient::hasTask() const {
-	return (bool) m_task;
-}
-
-
 void BaseClient::notifyConnectionComplete() {
 	createSystemAccount();
 }

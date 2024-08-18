@@ -96,27 +96,18 @@ void connectToServer(boost::asio::io_context& io_context, AwareMindFactory& mind
 
 				Flusher(boost::asio::io_context& _io_context,
 						std::weak_ptr<CommAsioClient<boost::asio::local::stream_protocol>>
-
 						_commClient,
 						std::chrono::steady_clock::duration _flushInterval
-				)
-						:
-
-						io_context(_io_context),
-						commClient(std::move(_commClient)),
-						flushInterval(_flushInterval) {
-				}
+				) : io_context(_io_context),
+					commClient(std::move(_commClient)),
+					flushInterval(_flushInterval) {}
 
 				void flush() {
 					if (auto client = commClient.lock()) {
 						if (client->m_active && client->getSocket().is_open()) {
 							rmt_ScopedCPUSample(Flusher_flush, 0)
 							client->flush();
-#if BOOST_VERSION >= 106600
 							timer.expires_after(flushInterval);
-#else
-							timer.expires_from_now(flushInterval);
-#endif
 							auto self(this->shared_from_this());
 							auto waitFn = [self](boost::system::error_code ecInner) {
 								if (!ecInner) {

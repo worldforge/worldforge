@@ -296,7 +296,7 @@ void Account::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
 	ent->setId(getIdAsString());
 }
 
-void Account::externalOperation(const Operation& op, Link& link) {
+void Account::externalOperation(const Operation& op, Link&) {
 	//External operations must come from a connection.
 	assert(m_connection != nullptr);
 	OpVector res;

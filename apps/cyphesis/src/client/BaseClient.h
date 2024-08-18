@@ -60,11 +60,6 @@ public:
 
 	void createSystemAccount(const std::string& usernameSuffix = "");
 
-	Atlas::Objects::Root createAccount(const std::string& name,
-									   const std::string& pword);
-
-	CreatorClient* createCharacter(const std::string& name);
-
 	void logout();
 
 	void externalOperation(const Operation& op, Link&) override;
@@ -79,12 +74,6 @@ public:
 	void sendWithCallback(Operation op, std::function<void(const Operation&, OpVector&)> callback,
 						  std::function<void()> timeoutCallback = std::function<void()>(),
 						  std::chrono::milliseconds timeout = std::chrono::milliseconds(5000));
-
-	/**
-	 * Checks if there's an active task.
-	 * @return True if there's a task set.
-	 */
-	bool hasTask() const;
 
 	void notifyConnectionComplete() override;
 

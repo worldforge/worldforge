@@ -60,7 +60,8 @@ struct ExternalRouter {
 	/// after passing it to here, or expect the attributes
 	/// of the operation to remain the same.
 	/// @param op The operation to be processed.
-	virtual void externalOperation(const Operation& op, Link&) = 0;
+	/// @param link The Link which sent the operation. Can be used to provide responses.
+	virtual void externalOperation(const Operation& op, Link& link) = 0;
 };
 
 
