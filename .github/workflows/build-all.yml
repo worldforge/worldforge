@@ -208,8 +208,9 @@ jobs:
 
             - name: Upload Windows executable to amber
               if: env.BUILD_EMBER_NSIS == 'true'
+              working-directory: "${{github.workspace}}/build/apps/ember"
               shell: cmd
-              run: rsync -uzcP --no-p ${{github.workspace}}/build/apps/ember/*.exe ${{ secrets.RSYNC_USER }}@amber.worldforge.org::ember-unstable/
+              run: rsync -uzcP --no-p *.exe ${{ secrets.RSYNC_USER }}@amber.worldforge.org::ember-unstable/
 
             -   name: Store AppImage
                 if: env.BUILD_APPIMAGE == 'true'
