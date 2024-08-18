@@ -80,9 +80,7 @@ jobs:
 
             -   name: Install Windows tools
                 if: runner.os == 'Windows'
-                uses: egor-tensin/setup-cygwin@v4.0.1
-                with:
-                  packages: rsync
+                uses: "GuillaumeFalourd/setup-rsync@v1.2"
 
             -   name: Install LXD (for Snapcraft)
                 if: env.BUILD_SNAP == 'true'
