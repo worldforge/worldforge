@@ -78,6 +78,12 @@ jobs:
                 run: |
                     brew install autoconf automake
 
+            -   name: Install Windows tools
+                if: runner.os == 'Windows'
+                uses: egor-tensin/setup-cygwin@v4.0.1
+                with:
+                  packages: rsync
+
             -   name: Install LXD (for Snapcraft)
                 if: env.BUILD_SNAP == 'true'
                 uses: canonical/setup-lxd@v0.1.1
