@@ -23,8 +23,8 @@ jobs:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                #Enable building on macOS when it can be fixed. Currently we're getting SDL linking errors.
-                #        os: [ ubuntu-20.04, ubuntu-22.04, macos-12, macos-11 ]
+                #Enable building on macOS when it can be fixed. Currently, we're getting SDL linking errors.
+                #        os: [ ubuntu-22.04, macos-12, macos-11 ]
                 os: [ ubuntu-22.04, ubuntu-24.04, windows-2022 ]
 
         steps:
@@ -37,12 +37,6 @@ jobs:
                 if: runner.os == 'Windows'
                 shell: bash
                 run: echo "PROFILE_CONAN=conan-default" >> $GITHUB_ENV
-
-            -   name: Set up GCC
-                uses: egor-tensin/setup-gcc@v1
-                if: ${{ matrix.os == 'ubuntu-20.04' }}
-                with:
-                    version: 11
 
             -   name: Cache media
                 uses: actions/cache@v4.0.2
@@ -70,7 +64,7 @@ jobs:
                     if [[ "$ImageOS" == "ubuntu22" ]]; then
                       echo "BUILD_SNAP=true" >> $GITHUB_ENV
                     fi
-                    if [[ "$ImageOS" == "ubuntu20" ]]; then
+                    if [[ "$ImageOS" == "ubuntu22" ]]; then
                       echo "BUILD_APPIMAGE=true" >> $GITHUB_ENV
                     fi
                     if [[ "$ImageOS" == "win22" ]]; then
@@ -105,14 +99,6 @@ jobs:
                     #Set the default profile to use g++ 17 it it's not detected
                     sed -i.backup 's/compiler.cppstd=14/compiler.cppstd=17/g' ~/.conan2/profiles/default
                     conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
-
-            -   name: Alter Conan config for Ubuntu 20.04
-                if: ${{ matrix.os == 'ubuntu-20.04' }}
-                shell: bash
-                run: |
-                    cp .github/settings_user.yml ~/.conan2/
-                    echo "os.libc=glibc" >> ~/.conan2/profiles/default
-                    echo "os.libc.version=2.31" >> ~/.conan2/profiles/default
 
             -   name: Have Conan install packages
                 shell: bash
@@ -204,6 +190,7 @@ jobs:
                 if: env.BUILD_SNAP == 'true'
                 uses: actions/upload-artifact@v4.3.4
                 with:
+                    compression-level: 0 #It's already compressed
                     name: snap
                     path: ~/install/usr/*.snap
 
@@ -211,23 +198,15 @@ jobs:
                 if: env.BUILD_EMBER_NSIS == 'true'
                 uses: actions/upload-artifact@v4.3.4
                 with:
+                    compression-level: 0 #It's already compressed
                     name: NSIS
                     path: ${{github.workspace}}/build/apps/ember/*.exe
-            #
-            #            -   name: Build AppImage
-            #                if: env.BUILD_APPIMAGE == 'true'
-            #                working-directory: ${{github.workspace}}/build/Release
-            #                run: |
-            #                    echo "Building AppImage"
-            #                    ln -s ~/install/usr/share/icons/hicolor/64x64/apps/ember.png ~/install/
-            #                    ln -s ~/install/usr/share/applications/org.worldforge.ember.desktop ~/install/
-            #                    ln -s ~/install/usr/share/icons/hicolor/64x64/apps/ember.png ~/install/.DirIcon
-            #                    curl -L https://github.com/AppImage/AppImageKit/releases/download/12/AppRun-x86_64 > ~/install/AppRun
-            #                    chmod a+x ~/install/AppRun
-            #                    curl -L https://github.com/AppImage/AppImageKit/releases/download/12/appimagetool-x86_64.AppImage > appimagetool-x86_64.AppImage
-            #                    chmod a+x appimagetool-x86_64.AppImage
-            #                    ./appimagetool-x86_64.AppImage -n ~/install
-            #
+
+            - name: Upload Windows executable to amber
+              if: env.BUILD_EMBER_NSIS == 'true'
+              shell: cmd
+              run: rsync -uzcP --no-p ${{github.workspace}}/build/apps/ember/*.exe ${{ secrets.RSYNC_USER }}@amber.worldforge.org::ember-unstable/
+
             -   name: Store AppImage
                 if: env.BUILD_APPIMAGE == 'true'
                 uses: actions/upload-artifact@v4.3.4
