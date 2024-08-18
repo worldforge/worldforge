@@ -52,7 +52,7 @@ jobs:
 
             -   name: "Install packages"
                 uses: awalsh128/cache-apt-pkgs-action@v1.4.2
-                if: runner.os == 'Ubuntu'
+                if: runner.os == 'Linux'
                 with:
                     #Needed for the assets processing step in Cyphesis
                     packages: imagemagick file rsync libfuse2
