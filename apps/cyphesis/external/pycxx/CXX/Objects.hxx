@@ -1321,13 +1321,13 @@ namespace Py
             return PySequence_Length( ptr() );
         }
 
-        explicit SeqBase<T>()
+        explicit SeqBase()
         :Object( PyTuple_New( 0 ), true )
         {
             validate();
         }
 
-        explicit SeqBase<T>( PyObject *pyob, bool owned=false )
+        explicit SeqBase( PyObject *pyob, bool owned=false )
         : Object( pyob, owned )
         {
             validate();
@@ -2709,7 +2709,7 @@ namespace Py
     class MapBase: public Object
     {
     protected:
-        explicit MapBase<T>()
+        explicit MapBase()
         {}
     public:
         // reference: proxy class for implementing []
@@ -2726,7 +2726,7 @@ namespace Py
         typedef std::pair< const T, mapref<T> > pointer;
 
         // Constructor
-        explicit MapBase<T>( PyObject *pyob, bool owned = false )
+        explicit MapBase( PyObject *pyob, bool owned = false )
         : Object( pyob, owned )
         {
             validate();
