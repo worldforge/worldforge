@@ -61,7 +61,7 @@ protected:
 	const Repository* mRepository;
 	std::vector<ManifestEntry> mManifests;
 	/**
-	 * If we want to recurse into each subdirectory or not.
+	 * If we want to recurse into each subdirectory or not. True by default.
 	 */
 	bool mRecurse;
 
@@ -69,7 +69,7 @@ protected:
 
 public:
 
-	Iterator() : mRepository(nullptr) {
+	Iterator() : mRepository(nullptr), mRecurse(true) {
 	}
 
 	Iterator(const Repository& repository, Manifest manifest, bool recurse = true);
