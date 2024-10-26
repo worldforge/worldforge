@@ -11,7 +11,7 @@ from conan.tools.system.package_manager import Apt
 
 class OgreConan(ConanFile):
     name = 'ogre'
-    upstream_version = "14.2.6"
+    upstream_version = "14.3.1"
     package_revision = ""
     version = "{0}{1}".format(upstream_version, package_revision)
 
@@ -30,7 +30,7 @@ class OgreConan(ConanFile):
                    "is a scene-oriented, real-time, 3D rendering engine.")
     short_paths = False
     requires = [
-        "freetype/2.13.2",
+        "freetype/2.13.3",
         "glslang/11.7.0"
     ]
     user = "worldforge"
