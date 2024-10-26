@@ -20,7 +20,7 @@ include(CMakeDependentOption)
 #If no VERSION is set externally, and we can't figure out the Git version, we'll use this version as fallback.
 set(VERSION_FALLBACK "0.9.0-dev")
 
-find_package(cppunit 1.8.0)
+find_package(cppunit 1.15.1 EXACT)
 find_package(spdlog REQUIRED)
 
 find_package(Git QUIET)
@@ -105,7 +105,7 @@ add_custom_target(dox)
 #Since there are multiple instances where boost is required we specify this macro to keep the version in sync.
 macro(wf_find_boost COMPONENTS)
     find_package(Boost
-        1.85.0
+        1.86.0
         EXACT
         REQUIRED
         COMPONENTS ${COMPONENTS})

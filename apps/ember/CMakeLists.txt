@@ -62,7 +62,7 @@ endif ()
 
 wf_find_boost(system thread)
 
-find_package(SDL2 REQUIRED EXACT 2.30.5)
+find_package(SDL2 REQUIRED EXACT 2.30.8)
 
 find_package(sigc++-3 3.0.7 REQUIRED)
 

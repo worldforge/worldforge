@@ -36,6 +36,7 @@ class Worldforge(ConanFile):
         'cpython/*:with_sqlite3': False,
         'cpython/*:with_tkinter': False,
         'cpython/*:with_lzma': False,
+        # 'cpython/*:with_curses': False, Currently fails during compilation if curses is disabled
     }
 
     def config_options(self):
@@ -44,11 +45,15 @@ class Worldforge(ConanFile):
 
     def requirements(self):
 
+        if not is_msvc(self):
+            #Just use a more recent version
+            self.requires("pkgconf/2.2.0", force=True)
+
         self.requires("libsigcpp/3.0.7")
-        self.requires("libcurl/8.9.1")
+        self.requires("libcurl/8.10.1")
         self.requires("spdlog/1.14.1")
         self.requires("cli11/2.4.2")
-        self.requires("boost/1.85.0")
+        self.requires("boost/1.86.0")
 
         self.requires("zlib/1.3.1")
         self.requires("bzip2/1.0.8")
@@ -59,7 +64,7 @@ class Worldforge(ConanFile):
         if self.options.with_client:
             self.requires("cegui/0.8.7@worldforge")
             self.requires("ogre/14.3.1@worldforge")
-            self.requires("sdl/2.30.5")
+            self.requires("sdl/2.30.8")
             self.requires("lua/5.3.6")
             self.requires("vorbis/1.3.7")
 
@@ -69,16 +74,14 @@ class Worldforge(ConanFile):
         if self.options.with_server:
             self.requires("worldforge-worlds/0.1.0@worldforge")
             self.requires("libgcrypt/1.10.3")
-            self.requires("sqlite3/3.46.0", force=True)
+            self.requires("sqlite3/3.47.0", force=True)
             self.requires("readline/8.2")
-            self.requires("cpython/3.12.2")
+            self.requires("cpython/3.12.7")
 
         # self.requires("avahi/0.8")
 
-        self.requires("expat/2.6.2", override=True)
-
         self.test_requires("cppunit/1.15.1")
-        self.test_requires("catch2/3.6.0")
+        self.test_requires("catch2/3.7.1")
 
     def generate(self):
         deps = CMakeDeps(self)
