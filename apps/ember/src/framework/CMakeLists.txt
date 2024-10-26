@@ -31,7 +31,7 @@ add_library(ember-framework STATIC
 
 #Check for libunwind, which is optional and if present will allow for the StackChecker feature to be enabled.
 #This allows for a developer to get some insight into why some frames take too long.
-find_package(unwind 1.1)
+find_package(libunwind 1.8)
 if (UNWIND_FOUND)
     message(STATUS "Found libunwind which allows for the 'slow frame stack print' feature to be enabled.")
     target_link_libraries(ember-framework PUBLIC unwind)
