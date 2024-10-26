@@ -121,7 +121,7 @@ Ogre::GpuProgramPtr ShaderPass::fetchOrCreateSplattingFragmentProgram(SplattingF
 
 			if (config.fog) {
 				params->setNamedAutoConstant("fogColour", Ogre::GpuProgramParameters::ACT_FOG_COLOUR);
-				params->setNamedConstant("disableFogColour", -0.0001f);
+				params->setNamedConstant("disableFogColour", 0);
 			}
 
 			if (config.offsetMapping) {
