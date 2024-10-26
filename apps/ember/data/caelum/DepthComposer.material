@@ -260,7 +260,7 @@ material Caelum/DepthComposer_SkyDomeHaze
 
 			texture_unit AtmosphereDepth
 			{			
-				texture AtmosphereDepth.png 1d
+				texture AtmosphereDepth.png 1d 0
 				tex_address_mode clamp
 			}
 		}
@@ -293,7 +293,7 @@ material Caelum/DepthComposer_SkyDomeHaze_ExpGroundFog
 
 			texture_unit AtmosphereDepth
 			{			
-				texture AtmosphereDepth.png 1d
+				texture AtmosphereDepth.png 1d 0
 			    filtering bilinear		
 				tex_address_mode clamp
 			}

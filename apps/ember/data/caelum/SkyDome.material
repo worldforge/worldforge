@@ -124,7 +124,7 @@ material CaelumSkyDomeMaterial
 
 			texture_unit
 			{
-				texture AtmosphereDepth.png 0
+				texture AtmosphereDepth.png 1d 0
 				tex_address_mode clamp
 				tex_coord_set 1
 			}
