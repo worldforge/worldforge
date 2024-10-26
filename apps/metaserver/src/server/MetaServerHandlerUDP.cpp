@@ -104,8 +104,8 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 			if (rsp.getSize() > 0 && rsp.getPacketType() != NMT_NULL) {
 				spdlog::info("UDP: Outgoing Packet [{}][{}][{}]", rsp.getAddress(), NMT_PRETTY[rsp.getPacketType()], rsp.getSize());
 				m_Socket.async_send_to(boost::asio::buffer(rsp.getBuffer(), rsp.getSize()), m_remoteEndpoint,
-									   [rsp](const boost::system::error_code& error, std::size_t bytes_sent) {
-										   handle_send(rsp, error, bytes_sent);
+									   [rsp](const boost::system::error_code& send_error, std::size_t bytes_sent) {
+										   handle_send(rsp, send_error, bytes_sent);
 									   });
 			}
 
