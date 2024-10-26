@@ -67,7 +67,7 @@ struct IInputAdapter {
 	 * @param character 
 	 * @return true if other IInputAdapters should continue handle the event, false if no more handling should happen
 	 */
-	virtual bool injectChar(int character) = 0;
+	virtual bool injectChar(std::int32_t character) = 0;
 
 	/**
 	 *    Injects a key down event. Returns false if the event shouldn't be processed any more.

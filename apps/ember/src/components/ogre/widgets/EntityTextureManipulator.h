@@ -55,7 +55,7 @@ public:
 
 	bool injectMouseButtonDown(Input::MouseButton button) override;
 
-	bool injectChar(int character) override;
+	bool injectChar(std::int32_t character) override;
 
 	bool injectKeyDown(const SDL_Scancode& key) override;
 

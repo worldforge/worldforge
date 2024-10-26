@@ -247,7 +247,7 @@ bool ModelEditHelper::injectMouseButtonDown(Input::MouseButton button) {
 	return true;
 }
 
-bool ModelEditHelper::injectChar(int character) {
+bool ModelEditHelper::injectChar(std::int32_t character) {
 	return true;
 }
 

@@ -343,7 +343,7 @@ bool TerrainEditorOverlay::injectMouseButtonDown(Input::MouseButton button) {
 	return true;
 }
 
-bool TerrainEditorOverlay::injectChar(int) {
+bool TerrainEditorOverlay::injectChar(std::int32_t) {
 	return true;
 }
 
