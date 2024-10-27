@@ -379,7 +379,7 @@ void Application::mainLoop() {
 
 			//Check if it took more than 140% of the allotted time (but avoid floats when doing the comparisons).
 			if (updatedRendering && (timeFrame.getElapsedTime().count() * 1'000'000) > (desiredFpsListener.getTimePerFrame().count() * 1'400'000)) {
-				logger->debug("Frame took too long.");
+				logger->debug("Frame took too long ({}ms).", timeFrame.getElapsedTime().count() / 1'000'000);
 			}
 
 			StackChecker::printBacktraces();
