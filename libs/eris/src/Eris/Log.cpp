@@ -1,7 +1,3 @@
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "Log.h"
 
 #include <Atlas/Message/MEncoder.h>
@@ -9,7 +5,6 @@
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/PresentationBridge.h>
-
 
 namespace Atlas {
 namespace Objects {

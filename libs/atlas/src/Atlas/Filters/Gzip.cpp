@@ -4,10 +4,6 @@
 
 // $Id$
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #if defined(HAVE_ZLIB_H) && defined(HAVE_LIBZ)
 #define ZLIB_CONST
 

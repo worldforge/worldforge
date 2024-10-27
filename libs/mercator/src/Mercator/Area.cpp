@@ -2,10 +2,6 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2005 Alistair Riddoch
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "Area.h"
 #include "Segment.h"
 

@@ -23,10 +23,6 @@
 // Author: Ron Steinke
 // Created: 2001-12-13
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "stream.h"
 #include "quaternion.h"
 #include "MersenneTwister.h"

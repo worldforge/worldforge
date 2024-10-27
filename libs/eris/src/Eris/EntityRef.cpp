@@ -1,7 +1,3 @@
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "EntityRef.h"
 #include "Entity.h"
 #include "View.h"

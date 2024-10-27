@@ -64,10 +64,6 @@
 #include <ostream>
 #include <climits>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 namespace WFMath {
 
 const MTRand::uint32 MTRand::state_size;

@@ -28,10 +28,6 @@
 // found here <http://www.cs.ualberta.ca/~andreas/math/matrfaq_latest.html>
 // and here <http://www.cs.berkeley.edu/~laura/cs184/quat/quaternion.html>.
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "quaternion.h"
 #include "error.h"
 #include "rotmatrix.h"

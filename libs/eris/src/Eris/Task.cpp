@@ -1,9 +1,5 @@
 #include <utility>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "Task.h"
 #include "View.h"
 #include "Entity.h"

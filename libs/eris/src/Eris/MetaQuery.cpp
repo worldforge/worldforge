@@ -1,9 +1,5 @@
 #include "MetaQuery.h"
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "Metaserver.h"
 #include "Connection.h"
 

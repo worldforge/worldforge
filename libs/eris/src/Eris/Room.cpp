@@ -1,7 +1,3 @@
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "Room.h"
 #include "Lobby.h"
 #include "Connection.h"

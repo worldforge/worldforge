@@ -1,7 +1,3 @@
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "Account.h"
 #include "Connection.h"
 #include "LogStream.h"

@@ -2,10 +2,6 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Damien McGinnes
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "Intersect.h"
 #include "Segment.h"
 

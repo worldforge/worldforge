@@ -23,10 +23,6 @@
 // Author: Ron Steinke
 // Created: 2001-12-7
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "rotmatrix_funcs.h"
 #include "quaternion.h"
 

@@ -4,10 +4,6 @@
 
 // $Id$
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #if defined(HAVE_BZLIB_H) && defined(HAVE_LIBBZ2)
 
 #include <Atlas/Filters/Bzip2.h>

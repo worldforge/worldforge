@@ -1,7 +1,3 @@
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "Calendar.h"
 #include "Avatar.h"
 #include "Exceptions.h"

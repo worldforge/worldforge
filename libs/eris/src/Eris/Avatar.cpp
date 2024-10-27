@@ -1,7 +1,3 @@
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "Avatar.h"
 #include "Entity.h"
 #include "Connection.h"

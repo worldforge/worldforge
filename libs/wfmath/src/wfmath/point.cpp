@@ -23,10 +23,6 @@
 
 // Author: Ron Steinke
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "point_funcs.h"
 #include "axisbox_funcs.h"
 

@@ -1,8 +1,6 @@
 #include <utility>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+
 
 #include "Entity.h"
 #include "Connection.h"
@@ -23,7 +21,6 @@
 #include <algorithm>
 #include <set>
 #include <cassert>
-
 
 template<>
 struct fmt::formatter<WFMath::Quaternion> : ostream_formatter {

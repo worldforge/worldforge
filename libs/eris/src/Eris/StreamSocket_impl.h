@@ -19,10 +19,6 @@
 #ifndef STREAMSOCKET_IMPL_H_
 #define STREAMSOCKET_IMPL_H_
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "StreamSocket.h"
 
 #include <Atlas/Codec.h>

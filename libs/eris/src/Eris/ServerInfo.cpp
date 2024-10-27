@@ -1,8 +1,3 @@
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "ServerInfo.h"
 
 #include "Log.h"

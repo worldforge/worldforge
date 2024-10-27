@@ -38,10 +38,6 @@
 #include <winsock2.h> 
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 static const long Million = 1000000;
 
 // apparently, some architectures use int instead of long

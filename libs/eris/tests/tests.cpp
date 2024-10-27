@@ -1,8 +1,3 @@
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "stubServer.h"
 #include "testUtils.h"
 #include "controller.h"
