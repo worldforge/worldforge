@@ -36,49 +36,10 @@
 namespace Ember::Lua {
 
 
-/**
- * Wraps a function returning a reference into one returning a pointer.
- * This is useful because SOL will apply memory ownership on references, but not on pointers.
- * In almost all cases when working with accessors we don't want SOL to release the memory of it.
- */
-//template<typename ReturnT>
-//inline auto make_accessor(ReturnT& v()) {
-//	return [=]() {
-//		return &(v());
-//	};
-//}
-///**
-// * Wraps a member method returning a reference into one returning a pointer.
-// * This is useful because SOL will apply memory ownership on references, but not on pointers.
-// * In almost all cases when working with accessors we don't want SOL to release the memory of it.
-// */
-//template<typename T, typename ReturnT>
-//inline auto make_accessor(ReturnT& (T::* v)()) {
-//	return [=](T* self) {
-//		return &(((*self).*v)());
-//	};
-//}
-//
-///**
-// * Wraps a member method returning a reference into one returning a pointer.
-// * This is useful because SOL will apply memory ownership on references, but not on pointers.
-// * In almost all cases when working with accessors we don't want SOL to release the memory of it.
-// */
-//template<typename T, typename ReturnT>
-//inline auto make_accessor(ReturnT& (T::* v)() const) {
-//	return [=](T* self) {
-//		return &(((*self).*v)());
-//	};
-//}
-
-
-
-
-
 template<typename ReturnT>
 inline auto make_accessor(ReturnT& v()) {
-	return [=]() -> ReturnT& {
-		return (v());
+	return [=]() -> ReturnT* {
+		return &(v());
 	};
 }
 
@@ -89,8 +50,8 @@ inline auto make_accessor(ReturnT& v()) {
  */
 template<typename T, typename ReturnT>
 inline auto make_accessor(ReturnT& (T::* v)()) {
-	return [=](T* self) -> ReturnT& {
-		return (((*self).*v)());
+	return [=](T* self) -> ReturnT* {
+		return &(((*self).*v)());
 	};
 }
 
@@ -100,9 +61,9 @@ inline auto make_accessor(ReturnT& (T::* v)()) {
  * In almost all cases when working with accessors we don't want SOL to release the memory of it.
  */
 template<typename T, typename ReturnT>
-inline auto make_accessor(ReturnT& (T::* v)() const) {
-	return [=](T* self) -> ReturnT& {
-		return (((*self).*v)());
+inline auto make_accessor_const(ReturnT& (T::* const v )() const) {
+	return [=](const T* self) -> const ReturnT* {
+		return &(((*self).*v)());
 	};
 }
 
@@ -148,18 +109,13 @@ struct LuaConnector {
 	inline std::unique_ptr<LuaConnection> connect(sol::function fn, sol::object self) const {
 		return std::make_unique<LuaConnection>(mConnectFn(std::move(fn), std::move(self)));
 	}
-	//Can't use the below code since sigc::nil is declared but not defined. Perhaps if we upgrade sigc to a version which uses C++11 templates it will work.
-//	template<typename ReturnT, typename... Args>
-//	inline static std::unique_ptr<LuaConnector> create(sigc::signal<ReturnT, Args...>& signal) {
-//		return std::make_unique<LuaConnector>([&](const sol::function& function) {
-//			return signal.connect([&](Args... args) {
-//				if (function) {
-//					function(&args...);
-//				}
-//			});
-//		});
-//	}
 
+	template<typename ReturnT, typename... Args>
+	inline static std::unique_ptr<LuaConnector> create(sigc::signal<ReturnT(Args...)>& signal) {
+		return std::make_unique<LuaConnector>([&](const sol::function& function, const sol::object& self) {
+			return signal.connect(buildLuaCaller<ReturnT, Args...>(function, self));
+		});
+	}
 
 	template<typename TReturn, typename... Args>
 	inline static auto buildLuaCaller(const sol::function& function, const sol::object& self) {
@@ -185,28 +141,6 @@ struct LuaConnector {
 				}
 			}
 		};
-	}
-
-	template<typename TReturn>
-	inline static std::unique_ptr<LuaConnector> create(sigc::signal<TReturn()>& signal) {
-		return std::make_unique<LuaConnector>([&](const sol::function& function, const sol::object& self) {
-			return signal.connect(buildLuaCaller<TReturn>(function, self));
-		});
-	}
-
-	template<typename TReturn, typename T0>
-	inline static std::unique_ptr<LuaConnector> create(sigc::signal<TReturn(T0)>& signal) {
-		return std::make_unique<LuaConnector>([&](const sol::function& function, const sol::object& self) {
-			return signal.connect(buildLuaCaller<TReturn, T0>(function, self));
-		});
-	}
-
-
-	template<typename TReturn, typename T0, typename T1>
-	inline static std::unique_ptr<LuaConnector> create(sigc::signal<TReturn(T0, T1)>& signal) {
-		return std::make_unique<LuaConnector>([&](const sol::function& function, const sol::object& self) {
-			return signal.connect(buildLuaCaller<TReturn, T0, T1>(function, self));
-		});
 	}
 
 	template<typename T, typename SignalT>

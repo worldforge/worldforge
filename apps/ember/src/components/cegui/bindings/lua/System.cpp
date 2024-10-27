@@ -16,22 +16,22 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 #include "LuaFunctor.h"
+#include "components/lua/Connector.h"
 
 using namespace CEGUI;
 
 template<>
 void registerLua<System>(sol::table& space) {
 	auto system = space.new_usertype<System>("System", sol::no_constructor);
-	system["getSingleton"] = &System::getSingleton;
-	system["getDefaultGUIContext"] = &System::getDefaultGUIContext;
+	system["getSingleton"] = ::Ember::Lua::make_accessor(&System::getSingleton);
+	system["getDefaultGUIContext"] = ::Ember::Lua::make_accessor_const(&System::getDefaultGUIContext);
 
 	auto guiContext = space.new_usertype<GUIContext>("GUIContext", sol::no_constructor);
 	guiContext["getRootWindow"] = &GUIContext::getRootWindow;
 	guiContext["getModalWindow"] = &GUIContext::getModalWindow;
 	guiContext["getWindowContainingMouse"] = &GUIContext::getWindowContainingMouse;
-	guiContext["getMouseCursor"] = sol::resolve<const MouseCursor&() const>(&GUIContext::getMouseCursor);
-	guiContext["getMouseCursorConst"] = sol::resolve<const MouseCursor&() const>(&GUIContext::getMouseCursor);
-	guiContext["getMouseCursorNonConst"] = sol::resolve<MouseCursor&()>(&GUIContext::getMouseCursor);
+	guiContext["getMouseCursor"] = ::Ember::Lua::make_accessor(&GUIContext::getMouseCursor);
+	guiContext["getMouseCursorConst"] = ::Ember::Lua::make_accessor_const(&GUIContext::getMouseCursor);
 
 	auto udim = space.new_usertype<UDim>("UDim",
 										 sol::constructors<UDim(), UDim(float, float)>(),
