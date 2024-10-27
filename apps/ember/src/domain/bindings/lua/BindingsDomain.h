@@ -20,7 +20,7 @@
 #define EMBER_BINDINGSDOMAIN_H
 
 
-#include "sol2/sol.hpp"
+#include "sol2/forward.hpp"
 
 void registerBindingsDomain(sol::state_view& lua);
 

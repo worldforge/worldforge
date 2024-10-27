@@ -20,7 +20,7 @@
 #define EMBER_BINDINGSCEGUI_H
 
 
-#include "sol2/sol.hpp"
+#include "sol2/forward.hpp"
 
 void registerBindingsCEGUI(sol::state_view& lua);
 

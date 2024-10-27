@@ -20,7 +20,7 @@
 #define EMBER_BINDINGSOGRE_H
 
 
-#include "sol2/sol.hpp"
+#include "sol2/forward.hpp"
 
 void registerBindingsOgre(sol::state_view& lua);
 

@@ -20,7 +20,7 @@
 #define EMBER_BINDINGSWFMATH_H
 
 
-#include "sol2/sol.hpp"
+#include "sol2/forward.hpp"
 
 void registerBindingsWFMath(sol::state_view& lua);
 

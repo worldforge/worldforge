@@ -24,7 +24,7 @@
 #define EMBEROGRELUASCRIPTINGCALLCONTEXT_H
 
 #include "framework/IScriptingProvider.h"
-#include "sol2/sol.hpp"
+#include "sol2/forward.hpp"
 
 
 namespace Ember::Lua {

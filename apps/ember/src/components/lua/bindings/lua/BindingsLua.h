@@ -20,7 +20,7 @@
 #define EMBER_BINDINGSLUA_H
 
 
-#include "sol2/sol.hpp"
+#include "sol2/forward.hpp"
 
 void registerBindingsLua(sol::state_view& lua);
 

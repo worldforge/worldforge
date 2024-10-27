@@ -24,7 +24,7 @@
 #define EMBEROGRELUACONSOLEOBJECT_H
 
 #include "framework/ConsoleCommandWrapper.h"
-#include "sol2/sol.hpp"
+#include "sol2/forward.hpp"
 
 #include <memory>
 

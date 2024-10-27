@@ -19,7 +19,7 @@
 #ifndef EMBER_BINDINGSVARCONF_H
 #define EMBER_BINDINGSVARCONF_H
 
-#include "sol2/sol.hpp"
+#include "sol2/forward.hpp"
 
 void registerBindingsVarconf(sol::state_view& lua);
 

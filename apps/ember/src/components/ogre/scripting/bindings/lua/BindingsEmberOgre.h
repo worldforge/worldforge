@@ -19,7 +19,7 @@
 #ifndef EMBER_BINDINGSEMBEROGRE_H
 #define EMBER_BINDINGSEMBEROGRE_H
 
-#include "sol2/sol.hpp"
+#include "sol2/forward.hpp"
 
 void registerBindingsEmberOgre(sol::state_view& lua);
 

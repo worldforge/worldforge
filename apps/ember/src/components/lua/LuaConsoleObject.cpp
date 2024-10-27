@@ -22,6 +22,7 @@
 //
 #include "LuaConsoleObject.h"
 #include "framework/ConsoleBackend.h"
+#include "sol2/sol.hpp"
 
 namespace Ember::Lua {
 

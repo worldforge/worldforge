@@ -20,7 +20,7 @@
 #define EMBER_BINDINGSREPRESENTATIONS_H
 
 
-#include "sol2/sol.hpp"
+#include "sol2/forward.hpp"
 
 void registerBindingsRepresentations(sol::state_view& lua);
 

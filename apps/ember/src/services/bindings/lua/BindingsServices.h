@@ -19,7 +19,7 @@
 #ifndef EMBER_BINDINGSSERVICES_H
 #define EMBER_BINDINGSSERVICES_H
 
-#include "sol2/sol.hpp"
+#include "sol2/forward.hpp"
 
 void registerBindingsServices(sol::state_view& lua);
 
