@@ -84,7 +84,6 @@ World::World(Eris::View& view,
 		mView(view),
 		mRenderWindow(renderWindow),
 		mSignals(signals),
-		mCalendar(std::make_unique<Eris::Calendar>(view.getAvatar())),
 		mScene(std::make_unique<Scene>()),
 		mViewport(renderWindow.addViewport(&mScene->getMainCamera())),
 		mAvatar(nullptr),
@@ -102,7 +101,8 @@ World::World(Eris::View& view,
 		mLodLevelManager(std::make_unique<Lod::LodLevelManager>(graphicalChangeAdapter, mScene->getMainCamera())),
 		mEnvironment(std::make_unique<Environment::Environment>(mScene->getSceneManager(),
 																*mTerrainManager,
-																std::make_unique<Environment::CaelumEnvironment>(&mScene->getSceneManager(), &renderWindow, mScene->getMainCamera(), *mCalendar),
+																std::make_unique<Environment::CaelumEnvironment>(&mScene->getSceneManager(), &renderWindow, mScene->getMainCamera(),
+																												 mView.getAvatar().getWorld().getCalendar()),
 																std::make_unique<Environment::SimpleEnvironment>(&mScene->getSceneManager(), &renderWindow, mScene->getMainCamera()))),
 		mRenderDistanceManager(std::make_unique<RenderDistanceManager>(graphicalChangeAdapter, *(mEnvironment->getFog()), mScene->getMainCamera())),
 		mConfigListenerContainer(std::make_unique<ConfigListenerContainer>()),
@@ -255,11 +255,6 @@ RenderDistanceManager& World::getRenderDistanceManager() const {
 
 Environment::Environment* World::getEnvironment() const {
 	return mEnvironment.get();
-}
-
-Eris::Calendar& World::getCalendar() const {
-	assert(mCalendar);
-	return *mCalendar;
 }
 
 void World::terrainManager_AfterTerrainUpdate(const std::vector<WFMath::AxisBox<2>>& areas, const std::vector<std::shared_ptr<Terrain::TerrainPageGeometry>>&) {

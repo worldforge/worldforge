@@ -395,9 +395,8 @@ void Account::loginComplete(const AtlasAccount& p) {
 		return;
 	}
 
-	//The user name being different should not be a fatal thing.
+	//We could be logged in with a different username than we specified, that's normal.
 	if (p->getUsername() != m_username) {
-		logger->warn("received username does not match existing");
 		m_username = p->getUsername();
 	}
 

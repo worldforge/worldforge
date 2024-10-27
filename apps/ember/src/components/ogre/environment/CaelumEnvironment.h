@@ -55,7 +55,7 @@ class CaelumSun;
  */
 class CaelumEnvironment : public IEnvironmentProvider, public ConsoleObject, public virtual sigc::trackable {
 public:
-	CaelumEnvironment(Ogre::SceneManager* sceneMgr, Ogre::RenderWindow* window, Ogre::Camera& camera, Eris::Calendar& calendar);
+	CaelumEnvironment(Ogre::SceneManager* sceneMgr, Ogre::RenderWindow* window, Ogre::Camera& camera, const Eris::Calendar& calendar);
 
 	~CaelumEnvironment() override;
 
@@ -126,7 +126,7 @@ private:
 	/**
 	 * @brief Holds the main calendar instance for this world.
 	 */
-	Eris::Calendar& mCalendar;
+	const Eris::Calendar& mCalendar;
 
 	std::unique_ptr<CaelumSky> mSky;
 	std::unique_ptr<CaelumSun> mSun;

@@ -36,7 +36,7 @@
 
 namespace Ember::OgreView::Environment {
 
-CaelumEnvironment::CaelumEnvironment(Ogre::SceneManager* sceneMgr, Ogre::RenderWindow* window, Ogre::Camera& camera, Eris::Calendar& calendar) :
+CaelumEnvironment::CaelumEnvironment(Ogre::SceneManager* sceneMgr, Ogre::RenderWindow* window, Ogre::Camera& camera, const Eris::Calendar& calendar) :
 		SetCaelumTime("set_caelumtime", this, "Sets the caelum time. parameters: <hour> <minute>"),
 		mCaelumSystem(nullptr),
 		mSceneMgr(sceneMgr),
@@ -161,9 +161,10 @@ void CaelumEnvironment::setupCaelum(::Ogre::SceneManager* sceneMgr, ::Ogre::Rend
 	mCaelumSystem->setGlobalFogDensityMultiplier(0.005f);
 	mCaelumSystem->setMinimumAmbientLight(Ogre::ColourValue(0.2f, 0.2f, 0.2f, 1.0f));
 
-	mCaelumSystem->setEnsureSingleShadowSource(true); //we want to use only one shadow caster source, for now at least
-	mCaelumSystem->setEnsureSingleLightSource(
-			true); //We want to only use the brightest light source only, even if another is closer. This is to make sure the main light is taken from the sun instead of the moon (which will result in a dark landscape).
+	//we want to use only one shadow caster source, for now at least
+	mCaelumSystem->setEnsureSingleShadowSource(true);
+	//We want to only use the brightest light source only, even if another is closer. This is to make sure the main light is taken from the sun instead of the moon (which will result in a dark landscape).
+	mCaelumSystem->setEnsureSingleLightSource(true);
 
 	mSky = std::make_unique<CaelumSky>(*this);
 
@@ -194,7 +195,7 @@ void CaelumEnvironment::setupCaelum(::Ogre::SceneManager* sceneMgr, ::Ogre::Rend
 	 }
 	 */
 
-	//advance it one second to force it to do initial updating, since other subsystems such as the terrain rendering depends on the sun postions etc.
+	//advance it one second to force it to do initial updating, since other subsystems such as the terrain rendering depends on the sun positions etc.
 	mCaelumSystem->updateSubcomponents(1);
 
 	//This will make caelum update itself automatically each frame

@@ -13,6 +13,7 @@
 #include "Response.h"
 #include "EventService.h"
 #include "TypeInfo.h"
+#include "World.h"
 
 #include <wfmath/atlasconv.h>
 #include <sigc++/slot.h>
@@ -39,6 +40,7 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
 		m_entityId(std::move(entityId)),
 		m_entity(nullptr),
 		m_view(new View(*this)),
+		m_world(new World(*m_view)),
 		m_isAdmin(false),
 		m_logoutTimer(nullptr) {
 	m_account.getConnection().registerRouterForTo(m_view.get(), getEntityId());

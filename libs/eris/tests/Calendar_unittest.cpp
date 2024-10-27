@@ -42,22 +42,17 @@
 
 #include <cassert>
 
-class TestAvatar : public Eris::Avatar {
-  public:
-    TestAvatar(Eris::Account * ac, std::string mindId, std::string entityId) :
-               Eris::Avatar(*ac, mindId, entityId) { }
-
-};
-
 static const int MPY = 12;
 static const int DPM = 28;
 static const int HPD = 24;
 static const int MPH = 60;
 static const int SPM = 60;
 
-class TestCalendar : public Eris::Calendar {
-  public:
-    TestCalendar(Eris::Avatar & av) : Eris::Calendar(av) { }
+struct TestCalendar : public Eris::Calendar {
+
+	std::chrono::milliseconds test_now = {};
+
+    TestCalendar() : Eris::Calendar([this](){return test_now;}) { }
 
     void test_setSaneDefault() {
         Atlas::Message::MapType data;
@@ -74,9 +69,6 @@ class TestCalendar : public Eris::Calendar {
         initFromCalendarAttr(data);
     }
 
-    void test_topLevelEntityChanged() {
-        topLevelEntityChanged();
-    }
 };
 
 class TestConnection : public Eris::Connection {
@@ -96,7 +88,6 @@ class TestConnection : public Eris::Connection {
 };
 
 
-static std::chrono::milliseconds stub_worldtime;
 int main()
 {
 
@@ -167,39 +158,17 @@ int main()
 
     // Test constructor
     {
-        std::string fake_char_id("1");
-		std::string fake_mind_id("12");
-		TestAvatar ea(nullptr, fake_mind_id, fake_char_id);
-        Eris::Calendar ec(ea);
-    }
-
-    // FIXME Can't set the toplevel on the view, which is required to
-    // test all paths through the constructor.
-
-    // Test topLevelEntityChanged()
-    {
-        std::string fake_char_id("1");
-		std::string fake_mind_id("12");
-		TestAvatar ea(nullptr, fake_mind_id, fake_char_id);
-
-        TestCalendar ec(ea);
-
-        ec.test_topLevelEntityChanged();
+        Eris::Calendar ec([](){return std::chrono::milliseconds(0);});
     }
 
     /// Test overflow of 32bit seconds
 
     // Test calendar process time at the origin of time
     {
-        std::string fake_char_id("1");
-		std::string fake_mind_id("12");
-		TestAvatar ea(nullptr, fake_mind_id, fake_char_id);
 
-        TestCalendar ec(ea);
+        TestCalendar ec;
 
         ec.test_setSaneDefault();
-
-        stub_worldtime = std::chrono::milliseconds{0};
 
         Eris::DateTime dt = ec.now();
 
@@ -213,15 +182,12 @@ int main()
 
     // Test calendar process time at the origin of time plus some time
     {
-        std::string fake_char_id("1");
-		std::string fake_mind_id("12");
-		TestAvatar ea(nullptr, fake_mind_id, fake_char_id);
 
-        TestCalendar ec(ea);
+        TestCalendar ec;
 
         ec.test_setSaneDefault();
 
-        stub_worldtime = std::chrono::milliseconds{1LL * MPY * DPM * HPD * MPH * SPM};
+        ec.test_now = std::chrono::milliseconds{1LL * MPY * DPM * HPD * MPH * SPM * 1000};
 
         Eris::DateTime dt = ec.now();
 
@@ -232,7 +198,7 @@ int main()
         assert(dt.minutes() == 0);
         assert(dt.seconds() == 0);
 
-        stub_worldtime = std::chrono::milliseconds{1000LL * MPY * DPM * HPD * MPH * SPM};
+        ec.test_now = std::chrono::milliseconds{1000LL * MPY * DPM * HPD * MPH * SPM * 1000};
 
         dt = ec.now();
 
@@ -244,33 +210,11 @@ int main()
         assert(dt.seconds() == 0);
     }
 
-    // Test calendar process time at the limit of an unsigned 32bit int seconds
-    {
-        std::string fake_char_id("1");
-		std::string fake_mind_id("12");
-		TestAvatar ea(nullptr, fake_mind_id, fake_char_id);
-
-        TestCalendar ec(ea);
-
-        ec.test_setSaneDefault();
-
-        stub_worldtime = std::chrono::milliseconds{std::numeric_limits<unsigned int>::max() + 10LL};
-
-        Eris::DateTime dt = ec.now();
-
-        // std::cout << dt.year() << ":" << dt.month() << ":" << dt.dayOfMonth() << ":" << dt.hours() << ":" << dt.minutes() << ":" << dt.seconds() << std::endl;
-
-        assert(dt.year() > 0);
-    }
-
     // Test event emitted
     {
         SignalFlagger flagger;
-        std::string fake_char_id("1");
-		std::string fake_mind_id("12");
-		TestAvatar ea(nullptr, fake_mind_id, fake_char_id);
 
-        TestCalendar ec(ea);
+        TestCalendar ec;
         ec.Updated.connect(sigc::mem_fun(flagger,
                 &SignalFlagger::set));
 
@@ -301,11 +245,6 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entId) :
 
 Avatar::~Avatar()
 {
-}
-
-std::chrono::milliseconds View::getWorldTime()
-{
-    return stub_worldtime;
 }
 
 void Avatar::onTransferRequested(const TransferInfo &transfer) {

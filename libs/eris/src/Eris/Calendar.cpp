@@ -11,30 +11,24 @@
 #include "iround.h"
 
 #include <cmath>
+#include <utility>
 
 using namespace Atlas::Message;
 
 namespace Eris {
 
-Calendar::Calendar(Avatar& av) :
-		m_avatar(av),
+Calendar::Calendar(std::function<std::chrono::milliseconds()> timeProvider) :
+		m_timeProvider(std::move(timeProvider)),
 		m_daysPerMonth(0),
 		m_monthsPerYear(0),
 		m_hoursPerDay(0),
 		m_minutesPerHour(0),
 		m_secondsPerMinute(0) {
-	av.getView().TopLevelEntityChanged.connect(
-			sigc::mem_fun(*this, &Calendar::topLevelEntityChanged));
-	// hook up right now if currently valid
-	if (av.getView().getTopLevel()) topLevelEntityChanged();
 }
 
-void Calendar::topLevelEntityChanged() {
+void Calendar::startObserve(Entity& entity) {
 	m_calendarObserver.disconnect();
-	Entity* tl = m_avatar.getView().getTopLevel();
-	if (!tl || !tl->hasProperty("calendar")) return;
-
-	m_calendarObserver = tl->observe("calendar", sigc::mem_fun(*this, &Calendar::calendarAttrChanged), true);
+	m_calendarObserver = entity.observe("calendar", sigc::mem_fun(*this, &Calendar::calendarAttrChanged), true);
 }
 
 void Calendar::calendarAttrChanged(const Element& value) {
@@ -79,27 +73,28 @@ DateTime Calendar::now() const {
 	// we don't have valid calendar data yet
 	if (m_daysPerMonth == 0) return n;
 
-	auto world_time = m_avatar.getView().getWorldTime().count();
+	auto world_time_in_seconds = duration_cast<std::chrono::seconds>(m_timeProvider()).count();
 
-	n.m_seconds = world_time % m_secondsPerMinute;
-	world_time /= m_secondsPerMinute;
+	n.m_seconds = world_time_in_seconds % m_secondsPerMinute;
+	world_time_in_seconds /= m_secondsPerMinute;
 
-	n.m_minutes = world_time % m_minutesPerHour;
-	world_time /= m_minutesPerHour;
+	n.m_minutes = world_time_in_seconds % m_minutesPerHour;
+	world_time_in_seconds /= m_minutesPerHour;
 
-	n.m_hours = world_time % m_hoursPerDay;
-	world_time /= m_hoursPerDay;
+	n.m_hours = world_time_in_seconds % m_hoursPerDay;
+	world_time_in_seconds /= m_hoursPerDay;
 
-	n.m_dayOfMonth = world_time % m_daysPerMonth;
-	world_time /= m_daysPerMonth;
+	n.m_dayOfMonth = world_time_in_seconds % m_daysPerMonth;
+	world_time_in_seconds /= m_daysPerMonth;
 
-	n.m_month = world_time % m_monthsPerYear;
-	world_time /= m_monthsPerYear;
+	n.m_month = world_time_in_seconds % m_monthsPerYear;
+	world_time_in_seconds /= m_monthsPerYear;
 
-	n.m_year = static_cast<int>(world_time);
+	n.m_year = static_cast<int>(world_time_in_seconds);
 
 	n.m_valid = true;
 	return n;
 }
+
 
 } // of namespace Eris

@@ -7,6 +7,7 @@
 
 #include <map>
 #include <string>
+#include "Entity.h"
 
 
 namespace Atlas::Message {
@@ -59,7 +60,7 @@ private:
 
 class Calendar : public sigc::trackable {
 public:
-	explicit Calendar(Avatar&);
+	explicit Calendar(std::function<std::chrono::milliseconds()> timeProvider);
 
 	DateTime now() const;
 
@@ -70,16 +71,16 @@ public:
 	int hoursPerDay() const { return m_hoursPerDay; }
 
 	///Emitted when the calendar is updated.
-	sigc::signal<void()> Updated;
+	mutable sigc::signal<void()> Updated;
+
+	void startObserve(Entity& entity);
 
 protected:
-	void topLevelEntityChanged();
-
 	void calendarAttrChanged(const Atlas::Message::Element& value);
 
 	void initFromCalendarAttr(const Atlas::Message::MapType& cal);
 
-	Avatar& m_avatar;
+	std::function<std::chrono::milliseconds()> m_timeProvider;
 
 	int m_daysPerMonth,
 			m_monthsPerYear,

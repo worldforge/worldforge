@@ -3,6 +3,7 @@
 
 #include "Types.h"
 #include "EntityRef.h"
+#include "World.h"
 
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <Atlas/Message/Element.h>
@@ -60,6 +61,8 @@ public:
 	Connection& getConnection() const;
 
 	Account& getAccount() const;
+
+	const World& getWorld() const;
 
 	/** get the current local approximation of world time. */
 	std::chrono::milliseconds getWorldTime();
@@ -225,6 +228,7 @@ protected:
 	Entity* m_entity;
 
 	std::unique_ptr<View> m_view;
+	std::unique_ptr<World> m_world;
 
 	sigc::connection m_entityAppearanceCon;
 	sigc::connection m_avatarEntityDeletedConnection;
@@ -261,6 +265,10 @@ inline Account& Avatar::getAccount() const {
 
 inline const std::map<std::string, std::unique_ptr<EntityRef>>& Avatar::getActiveContainers() const {
 	return m_activeContainers;
+}
+
+inline const World& Avatar::getWorld() const {
+	return *m_world;
 }
 
 

@@ -257,12 +257,6 @@ public:
 	RenderDistanceManager& getRenderDistanceManager() const;
 
 	/**
-	 * @brief Accessor for the main server calendar.
-	 * @return The main server calendar.
-	 */
-	Eris::Calendar& getCalendar() const;
-
-	/**
 	 * @brief Emitted when the world has received the avatar entity.
 	 */
 	sigc::signal<void()> EventGotAvatar;
@@ -285,11 +279,6 @@ protected:
 	 * @brief An EmberOgre signals instance, used for emitting signals for external components to listen to.
 	 */
 	EmberOgreSignals& mSignals;
-
-	/**
-	 * @brief Represents the server calendar.
-	 */
-	std::unique_ptr<Eris::Calendar> mCalendar;
 
 	/**
 	 * @brief The scene instance, which handles the Ogre::SceneManager.
@@ -393,10 +382,8 @@ protected:
 	/**
 	 * @brief Listens to updates to the terrain and makes sure that entities are adjusted.
 	 */
-	void terrainManager_AfterTerrainUpdate(const std::vector<WFMath::AxisBox < 2>>
-
-	& areas,
-	const std::vector<std::shared_ptr<Terrain::TerrainPageGeometry>>&);
+	void terrainManager_AfterTerrainUpdate(const std::vector<WFMath::AxisBox<2>>& areas,
+										   const std::vector<std::shared_ptr<Terrain::TerrainPageGeometry>>&);
 
 	/**
 	 * @brief Sent from the view when an avatar entity has been created.
@@ -418,9 +405,8 @@ protected:
 	 * @param entity The entity to update.
 	 * @param areas The areas which have been updated.
 	 */
-	void updateEntityPosition(EmberEntity* entity, const std::vector<WFMath::AxisBox < 2>>
-
-	& areas);
+	void updateEntityPosition(EmberEntity* entity,
+							  const std::vector<WFMath::AxisBox<2>>& areas);
 
 	void View_topLevelEntityChanged();
 

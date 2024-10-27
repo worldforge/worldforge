@@ -24,7 +24,9 @@ set(SOURCE_FILES
         Eris/TypeInfo.cpp
         Eris/TypeService.cpp
         Eris/View.cpp
-        Eris/ActiveMarker.cpp)
+        Eris/ActiveMarker.cpp
+        Eris/World.cpp
+)
 
 set(HEADER_FILES
         Eris/Account.h
@@ -61,7 +63,9 @@ set(HEADER_FILES
         Eris/View.h
         Eris/WaitFreeQueue.h
         Eris/ActiveMarker.h
-        Eris/Usage.h)
+        Eris/Usage.h
+        Eris/World.h
+)
 
 wf_add_library(${LIBNAME} SOURCE_FILES HEADER_FILES)
 
