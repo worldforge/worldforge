@@ -11,21 +11,27 @@
 #include <asio/any_io_executor.hpp>
 #include <asio/append.hpp>
 #include <asio/associated_cancellation_slot.hpp>
+#include <asio/compose.hpp>
+#include <asio/default_completion_token.hpp>
 #include <asio/post.hpp>
 namespace saf
 {
-namespace net    = asio;
-using error_code = std::error_code;
+namespace net      = asio;
+using error_code   = std::error_code;
+using system_error = std::system_error;
 } // namespace saf
 #else
 #include <boost/asio/any_io_executor.hpp>
 #include <boost/asio/append.hpp>
 #include <boost/asio/associated_cancellation_slot.hpp>
+#include <boost/asio/compose.hpp>
+#include <boost/asio/default_completion_token.hpp>
 #include <boost/asio/post.hpp>
 namespace saf
 {
-namespace net    = boost::asio;
-using error_code = boost::system::error_code;
+namespace net      = boost::asio;
+using error_code   = boost::system::error_code;
+using system_error = boost::system::system_error;
 } // namespace saf
 #endif
 
@@ -37,6 +43,7 @@ enum class future_errc
     unready_future,
     promise_already_satisfied,
     future_already_retrieved,
+    value_already_extracted,
     broken_promise,
 };
 } // namespace saf
@@ -51,16 +58,19 @@ struct is_error_code_enum<saf::future_errc> : true_type
 
 namespace saf
 {
-inline const std::error_category& future_category()
+inline const std::error_category&
+future_category()
 {
     static const struct : std::error_category
     {
-        const char* name() const noexcept override
+        const char*
+        name() const noexcept override
         {
             return "future";
         }
 
-        std::string message(int ev) const override
+        std::string
+        message(int ev) const override
         {
             switch (static_cast<future_errc>(ev))
             {
@@ -72,6 +82,8 @@ inline const std::error_category& future_category()
                     return "Promise already satisfied";
                 case future_errc::future_already_retrieved:
                     return "Future already retrieved";
+                case future_errc::value_already_extracted:
+                    return "Value already extracted";
                 case future_errc::broken_promise:
                     return "Broken promise";
                 default:
@@ -83,7 +95,8 @@ inline const std::error_category& future_category()
     return category;
 };
 
-inline std::error_code make_error_code(future_errc e)
+inline std::error_code
+make_error_code(future_errc e)
 {
     return { static_cast<int>(e), future_category() };
 }
@@ -123,13 +136,15 @@ struct bilist_node
             prev_->next_ = this;
     }
 
-    void unlink() const noexcept
+    void
+    unlink() const noexcept
     {
         next_->prev_ = prev_;
         prev_->next_ = next_;
     }
 
-    void link_before(bilist_node* next) noexcept
+    void
+    link_before(bilist_node* next) noexcept
     {
         next_        = next;
         prev_        = next->prev_;
@@ -141,8 +156,9 @@ struct bilist_node
 class service_member : public bilist_node
 {
   public:
-    virtual void shutdown() noexcept = 0;
-    virtual ~service_member()        = default;
+    virtual void
+    shutdown() noexcept       = 0;
+    virtual ~service_member() = default;
 };
 
 template<bool CC>
@@ -150,15 +166,18 @@ class locking_strategy
 {
     struct null_mutex
     {
-        void lock()
+        void
+        lock()
         {
         }
 
-        void unlock() noexcept
+        void
+        unlock() noexcept
         {
         }
 
-        bool try_lock()
+        bool
+        try_lock()
         {
             return true;
         }
@@ -167,9 +186,10 @@ class locking_strategy
     std::conditional_t<CC, std::mutex, null_mutex> mutex_;
 
   public:
-    auto internal_lock() noexcept
+    auto
+    internal_lock() noexcept
     {
-        return std::lock_guard{ mutex_ };
+        return std::unique_lock{ mutex_ };
     }
 };
 
@@ -186,19 +206,22 @@ class service final
     {
     }
 
-    void register_queue(bilist_node* sm) noexcept
+    void
+    register_queue(bilist_node* sm) noexcept
     {
         auto lg = this->internal_lock();
         sm->link_before(&entries_);
     }
 
-    void unregister_queue(bilist_node* sm) noexcept
+    void
+    unregister_queue(bilist_node* sm) noexcept
     {
         auto lg = this->internal_lock();
         sm->unlink();
     }
 
-    void shutdown() noexcept override
+    void
+    shutdown() noexcept override
     {
         auto e   = std::move(entries_);
         auto* nx = e.next_;
@@ -213,7 +236,8 @@ class service final
 
 struct wait_op : bilist_node
 {
-    virtual void shutdown() noexcept  = 0;
+    virtual void
+    shutdown() noexcept               = 0;
     virtual void complete(error_code) = 0;
     virtual ~wait_op()                = default;
 };
@@ -231,12 +255,14 @@ class wait_op_model final : public wait_op
     {
     }
 
-    [[nodiscard]] auto get_cancellation_slot() const noexcept
+    [[nodiscard]] auto
+    get_cancellation_slot() const noexcept
     {
         return net::get_associated_cancellation_slot(handler_);
     }
 
-    static wait_op_model* construct(Executor e, Handler handler)
+    static wait_op_model*
+    construct(Executor e, Handler handler)
     {
         auto halloc = net::get_associated_allocator(handler);
         auto alloc  = typename std::allocator_traits<
@@ -255,9 +281,8 @@ class wait_op_model final : public wait_op
         }
     }
 
-    static void destroy(
-        wait_op_model* self,
-        net::associated_allocator_t<Handler> halloc)
+    static void
+    destroy(wait_op_model* self, net::associated_allocator_t<Handler> halloc)
     {
         auto alloc = typename std::allocator_traits<
             decltype(halloc)>::template rebind_alloc<wait_op_model>(halloc);
@@ -266,7 +291,8 @@ class wait_op_model final : public wait_op
         traits.deallocate(alloc, self, 1);
     }
 
-    void complete(error_code ec) override
+    void
+    complete(error_code ec) override
     {
         get_cancellation_slot().clear();
         auto g = std::move(work_guard_);
@@ -276,7 +302,8 @@ class wait_op_model final : public wait_op
         net::post(g.get_executor(), net::append(std::move(h), ec));
     }
 
-    void shutdown() noexcept override
+    void
+    shutdown() noexcept override
     {
         get_cancellation_slot().clear();
         this->unlink();
@@ -307,24 +334,29 @@ class shared_state final
         service_->register_queue(this);
     }
 
-    shared_state(const shared_state&)            = delete;
-    shared_state& operator=(const shared_state&) = delete;
+    shared_state(const shared_state&) = delete;
+    shared_state&
+    operator=(const shared_state&) = delete;
 
-    shared_state(shared_state&&)            = delete;
-    shared_state& operator=(shared_state&&) = delete;
+    shared_state(shared_state&&) = delete;
+    shared_state&
+    operator=(shared_state&&) = delete;
 
-    [[nodiscard]] Executor get_executor() const
+    [[nodiscard]] Executor
+    get_executor() const
     {
         return executor_;
     }
 
-    [[nodiscard]] bool is_ready() const noexcept
+    [[nodiscard]] bool
+    is_ready() const noexcept
     {
         return value_.index() != 0;
     }
 
     template<typename... Args>
-    void set_value(Args&&... args)
+    void
+    set_value(Args&&... args)
     {
         if (is_ready())
             throw future_error{ future_errc::promise_already_satisfied };
@@ -334,7 +366,8 @@ class shared_state final
         complete_all({});
     }
 
-    void set_exception(std::exception_ptr exception_ptr)
+    void
+    set_exception(std::exception_ptr exception_ptr)
     {
         if (is_ready())
             throw future_error{ future_errc::promise_already_satisfied };
@@ -344,27 +377,56 @@ class shared_state final
         complete_all({});
     }
 
-    decltype(auto) get()
+    auto
+    extract()
     {
         if (!is_ready())
             throw future_error{ future_errc::unready_future };
 
         if (auto* p = std::get_if<2>(&value_))
         {
+            auto tmp = std::move(*p);
+            value_.template emplace<1>(std::make_exception_ptr(
+                future_error{ future_errc::value_already_extracted }));
             if constexpr (std::is_same_v<T, void>)
             {
                 return;
             }
             else
             {
-                return *p;
+                return tmp;
             }
         }
 
         std::rethrow_exception(std::get<1>(value_));
     }
 
-    decltype(auto) get() const
+    auto
+    try_extract()
+    {
+        struct pair_t
+        {
+            std::exception_ptr eptr;
+            T value;
+        };
+
+        if (auto* p = std::get_if<2>(&value_))
+        {
+            pair_t r{ {}, std::move(*p) };
+            value_.template emplace<1>(std::make_exception_ptr(
+                future_error{ future_errc::value_already_extracted }));
+            return r;
+        }
+
+        if (auto* p = std::get_if<1>(&value_))
+            return pair_t{ *p, {} };
+
+        return pair_t{ std::make_exception_ptr(
+            future_error{ future_errc::unready_future }), {} };
+    }
+
+    decltype(auto)
+    get() const
     {
         if (!is_ready())
             throw future_error{ future_errc::unready_future };
@@ -385,7 +447,8 @@ class shared_state final
     }
 
     template<typename CompletionToken>
-    auto async_wait(CompletionToken&& token)
+    auto
+    async_wait(CompletionToken&& token)
     {
         return net::async_initiate<decltype(token), void(error_code)>(
             [this](auto handler)
@@ -411,7 +474,7 @@ class shared_state final
                         {
                             if (type != net::cancellation_type::none)
                             {
-                                auto innerLock = this->internal_lock();
+                                auto lg = this->internal_lock();
                                 // already completed
                                 if (!c_slot.is_connected())
                                     return;
@@ -424,7 +487,8 @@ class shared_state final
             token);
     }
 
-    void complete_all(error_code ec)
+    void
+    complete_all(error_code ec)
     {
         auto& nx = waiters_.next_;
         while (nx != &waiters_)
@@ -438,7 +502,8 @@ class shared_state final
     }
 
   private:
-    void shutdown() noexcept override
+    void
+    shutdown() noexcept override
     {
         service_ = nullptr;
         auto& nx = waiters_.next_;
@@ -496,7 +561,8 @@ class shared_future
      * @throws `future_error{ future_errc::no_state }` Thrown if future does not
      * contain a shared state.
      */
-    [[nodiscard]] Executor get_executor() const
+    [[nodiscard]] Executor
+    get_executor() const
     {
         if (!shared_state_)
             throw future_error{ future_errc::no_state };
@@ -512,7 +578,8 @@ class shared_future
      *
      * @returns true if the future contains a shared state, otherwise false.
      */
-    [[nodiscard]] bool is_valid() const noexcept
+    [[nodiscard]] bool
+    is_valid() const noexcept
     {
         return !!shared_state_;
     }
@@ -527,7 +594,8 @@ class shared_future
      * @throws `future_error{ future_errc::no_state }` Thrown if shared_future
      * does not contain a shared state.
      */
-    [[nodiscard]] bool is_ready() const
+    [[nodiscard]] bool
+    is_ready() const
     {
         if (!shared_state_)
             throw future_error{ future_errc::no_state };
@@ -550,9 +618,13 @@ class shared_future
      * @throws `future_error{ future_errc::unready_future }` Thrown on if
      * promise side has not set a value or an exception yet.
      *
+     * @throws `future_error{ future_errc::value_already_extracted }` Thrown if
+     * the value was already extracted out of the shared state.
+     *
      * @throws stored exception if the promise side set an exception.
      */
-    decltype(auto) get() const
+    decltype(auto)
+    get() const
     {
         if (!shared_state_)
             throw future_error{ future_errc::no_state };
@@ -583,8 +655,13 @@ class shared_future
      * @param token The completion_token that will be used to produce a
      * completion handler.
      */
-    template<typename CompletionToken>
-    auto async_wait(CompletionToken&& token)
+    template<
+        typename CompletionToken =
+            typename net::default_completion_token<Executor>::type>
+    auto
+    async_wait(
+        CompletionToken&& token =
+            typename net::default_completion_token<Executor>::type{})
     {
         if (!shared_state_)
             throw future_error{ future_errc::no_state };
@@ -633,11 +710,13 @@ class future
     {
     }
 
-    future(const future&)            = delete;
-    future& operator=(const future&) = delete;
+    future(const future&) = delete;
+    future&
+    operator=(const future&) = delete;
 
-    future(future&&) noexcept            = default;
-    future& operator=(future&&) noexcept = default;
+    future(future&&) noexcept = default;
+    future&
+    operator=(future&&) noexcept = default;
 
     /// Gets the executor associated with the object.
     /**
@@ -646,7 +725,8 @@ class future
      * @throws `future_error{ future_errc::no_state }` Thrown if future does not
      * contain a shared state.
      */
-    [[nodiscard]] Executor get_executor() const
+    [[nodiscard]] Executor
+    get_executor() const
     {
         if (!shared_state_)
             throw future_error{ future_errc::no_state };
@@ -662,7 +742,8 @@ class future
      *
      * @returns true if the future contains a shared state, otherwise false.
      */
-    [[nodiscard]] bool is_valid() const noexcept
+    [[nodiscard]] bool
+    is_valid() const noexcept
     {
         return !!shared_state_;
     }
@@ -677,7 +758,8 @@ class future
      * @throws `future_error{ future_errc::no_state }` Thrown if future does not
      * contain a shared state.
      */
-    [[nodiscard]] bool is_ready() const
+    [[nodiscard]] bool
+    is_ready() const
     {
         if (!shared_state_)
             throw future_error{ future_errc::no_state };
@@ -692,17 +774,21 @@ class future
      * This function returns the result or throws the exception that the promise
      * side set.
      *
-     * @returns T& or void if T is void
+     * @returns const T& or void if T is void
      *
      * @throws `future_error{ future_errc::no_state }` Thrown if future does not
      * contain a shared state.
      *
-     * @throws `future_error{ future_errc::unready_future }` Thrown on if
+     * @throws `future_error{ future_errc::unready_future }` Thrown if
      * promise side has not set a value or an exception yet.
+     *
+     * @throws `future_error{ future_errc::value_already_extracted }` Thrown if
+     * the value was already extracted out of the shared state.
      *
      * @throws stored exception if the promise side set an exception.
      */
-    decltype(auto) get()
+    decltype(auto)
+    get() const
     {
         if (!shared_state_)
             throw future_error{ future_errc::no_state };
@@ -710,6 +796,105 @@ class future
         auto lg = shared_state_->internal_lock();
 
         return shared_state_->get();
+    }
+
+    /// Extract the result.
+    /**
+     * This function moves the result out of the shared state or throws the
+     * exception set by the promise. If it successfully extracts the value,
+     * an exception of `future_error{ future_errc::value_already_extracted }`
+     * will be stored in the shared state.
+     *
+     * @note: This interface requires `T` to be Moveable. You can consider using
+     * @ref get if your type does not meet this requirement.
+     *
+     * @returns T or void if T is void
+     *
+     * @throws `future_error{ future_errc::no_state }` Thrown if future does not
+     * contain a shared state.
+     *
+     * @throws `future_error{ future_errc::unready_future }` Thrown if
+     * promise side has not set a value or an exception yet.
+     *
+     * @throws `future_error{ future_errc::value_already_extracted }` Thrown if
+     * the value was already extracted out of the shared state.
+     *
+     * @throws stored exception if the promise side set an exception.
+     */
+    decltype(auto)
+    extract()
+    {
+        if (!shared_state_)
+            throw future_error{ future_errc::no_state };
+
+        auto lg = shared_state_->internal_lock();
+
+        return shared_state_->extract();
+    }
+
+    /// Starts an asynchronous extract operation on the future.
+    /**
+     * This function initiates an asynchronous wait on the future and either
+     * moves the result out of the shared state or completes with the exception
+     * set by the promise. If it successfully extracts the value,
+     * an exception of `future_error{ future_errc::value_already_extracted }`
+     * will be stored in the shared state.
+     *
+     * @note: This interface requires `T` to be DefaultConstructible and
+     * Moveable. You can consider using @ref async_wait and @ref get if your
+     * type does not meet these requirements.
+     *
+     * For each call to async_extract(), the completion handler will be called
+     * exactly once. The completion handler will be called when:
+     *
+     * @li The promise sets a value.
+     *
+     * @li The promise sets an exception.
+     *
+     * @li The promise goes out of scope and an exception of `future_error{
+     * future_errc::broken_promise }` set automatically.
+     *
+     * @li The future was canceled, in which case the handler
+     * is passed an exception_ptr that contains
+     * system_error{ net::error::operation_aborted }.
+     *
+     * @li The value was already extracted, in which case the handler
+     * is passed an exception_ptr that contains
+     * future_error{ future_errc::value_already_extracted }.
+     *
+     * @param token The completion_token that will be used to produce a
+     * completion handler.
+     */
+    template<
+        typename CompletionToken =
+            typename net::default_completion_token<Executor>::type>
+    auto
+    async_extract(
+        CompletionToken&& token =
+            typename net::default_completion_token<Executor>::type{})
+    {
+        if (!shared_state_)
+            throw future_error{ future_errc::no_state };
+
+        return boost::asio::
+            async_compose<CompletionToken, void(std::exception_ptr, T)>(
+                [shared_state = shared_state_,
+                 init         = false](auto&& self, error_code ec = {}) mutable
+                {
+                    if (!std::exchange(init, true))
+                        return shared_state->async_wait(std::move(self));
+
+                    if (ec)
+                        return self.complete(
+                            std::make_exception_ptr(system_error(ec)), T{});
+
+                    auto ul = shared_state->internal_lock();
+                    auto rv = shared_state->try_extract();
+                    ul.unlock();
+                    self.complete(rv.eptr, std::move(rv.value));
+                },
+                token,
+                shared_state_->get_executor());
     }
 
     /// Creates a shared_future.
@@ -723,7 +908,8 @@ class future
      * @throws `future_error{ future_errc::no_state }` Thrown if future does not
      * contain a shared state.
      */
-    [[nodiscard]] shared_future<T, Executor, CC> share()
+    [[nodiscard]] shared_future<T, Executor, CC>
+    share()
     {
         if (!shared_state_)
             throw future_error{ future_errc::no_state };
@@ -752,8 +938,13 @@ class future
      * @param token The completion_token that will be used to produce a
      * completion handler.
      */
-    template<typename CompletionToken>
-    auto async_wait(CompletionToken&& token)
+    template<
+        typename CompletionToken =
+            typename net::default_completion_token<Executor>::type>
+    auto
+    async_wait(
+        CompletionToken&& token =
+            typename net::default_completion_token<Executor>::type{})
     {
         if (!shared_state_)
             throw future_error{ future_errc::no_state };
@@ -860,11 +1051,13 @@ class promise
     {
     }
 
-    promise(const promise&)            = delete;
-    promise& operator=(const promise&) = delete;
+    promise(const promise&) = delete;
+    promise&
+    operator=(const promise&) = delete;
 
-    promise(promise&&) noexcept            = default;
-    promise& operator=(promise&&) noexcept = default;
+    promise(promise&&) noexcept = default;
+    promise&
+    operator=(promise&&) noexcept = default;
 
     /// Gets the executor associated with the object.
     /**
@@ -873,7 +1066,8 @@ class promise
      * @throws `future_error{ future_errc::no_state }` Thrown if promise does
      * not contain a shared state.
      */
-    [[nodiscard]] Executor get_executor() const
+    [[nodiscard]] Executor
+    get_executor() const
     {
         if (!shared_state_)
             throw future_error{ future_errc::no_state };
@@ -888,7 +1082,8 @@ class promise
      *
      * @returns true if the promise contains a shared state, otherwise false.
      */
-    [[nodiscard]] bool is_valid() const noexcept
+    [[nodiscard]] bool
+    is_valid() const noexcept
     {
         return !!shared_state_;
     }
@@ -905,7 +1100,8 @@ class promise
      * contain a shared state.
      */
     template<typename... Args>
-    void set_value(Args&&... args)
+    void
+    set_value(Args&&... args)
     {
         if (!shared_state_)
             throw future_error{ future_errc::no_state };
@@ -926,7 +1122,8 @@ class promise
      * @throws `future_error{ future_errc::no_state }` Thrown if future does not
      * contain a shared state.
      */
-    void set_exception(std::exception_ptr exception_ptr)
+    void
+    set_exception(std::exception_ptr exception_ptr)
     {
         if (!shared_state_)
             throw future_error{ future_errc::no_state };
@@ -948,7 +1145,8 @@ class promise
      * @throws `future_error{ future_errc::no_state }` Thrown if future does not
      * contain a shared state.
      */
-    [[nodiscard]] future<T, Executor, CC> get_future()
+    [[nodiscard]] future<T, Executor, CC>
+    get_future()
     {
         if (!shared_state_)
             throw future_error{ future_errc::no_state };

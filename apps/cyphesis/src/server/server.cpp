@@ -532,14 +532,13 @@ int run() {
 			spdlog::debug("Assets have changed; will regenerate Squall repository.");
 			auto promise = saf::promise<std::optional<Squall::Signature>>{ctx};
 			auto future = promise.get_future();
-			auto f = std::async([assetsPath, p = std::move(promise), &assetsHandler]() mutable {
+			std::async([assetsPath, p = std::move(promise), &assetsHandler]() mutable {
 				auto result = assetsHandler.refreshSquallRepository(assetsPath);
 				p.set_value(result);
 			});
 
 			boost::asio::co_spawn(ctx, [future = std::move(future), &assetsHandler, &serverRouting]() mutable -> boost::asio::awaitable<void> {
-				co_await future.async_wait(boost::asio::deferred);
-				std::optional<Squall::Signature> result = future.get();
+				auto result = co_await future.async_extract();
 				if (result.has_value()) {
 					spdlog::info("New Squall repository root is {}.", result.value().str());
 					serverRouting.setAssets({assetsHandler.resolveAssetsUrl()});
