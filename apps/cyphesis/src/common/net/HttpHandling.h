@@ -24,6 +24,7 @@
 #include <filesystem>
 #include "common/Monitors.h"
 #include "CommHttpClient.h"
+#include "saf/saf.hpp"
 
 struct HttpHandleContext {
 	std::ostream& io;
@@ -39,14 +40,13 @@ public:
 	enum class HandleResult {
 		Handled, Ignored
 	};
-	typedef std::function<HandleResult(HttpHandleContext)> HttpHandler;
+	typedef std::function<boost::asio::awaitable<HandleResult>(HttpHandleContext)> HttpHandler;
 
 
-	explicit HttpHandling(const Monitors& monitors);
+	explicit HttpHandling(const Monitors& monitors, boost::asio::io_context& contextMain);
 
-	void processQuery(std::ostream&, const std::list<std::string>&) override;
+	boost::asio::awaitable<void> processQuery(std::ostream&, const std::list<std::string>&) override;
 
-	//std::vector<std::unique_ptr<HttpPathHandler>> mHandlers;
 	std::vector<HttpHandler> mHandlers;
 
 	static void sendHeaders(std::ostream&,
@@ -61,6 +61,7 @@ public:
 
 private:
 	const Monitors& m_monitors;
+	boost::asio::io_context& m_contextMain;
 
 };
 

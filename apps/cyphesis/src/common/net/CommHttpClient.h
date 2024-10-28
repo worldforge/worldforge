@@ -24,9 +24,10 @@
 #include <string>
 #include <memory>
 #include <Atlas/Objects/Factories.h>
+#include "saf/saf.hpp"
 
 struct HttpRequestProcessor {
-	virtual void processQuery(std::ostream& body, const std::list<std::string>& headers) = 0;
+	virtual boost::asio::awaitable<void> processQuery(std::ostream& body, const std::list<std::string>& headers) = 0;
 };
 
 /// \brief Handle an internet socket connected to a remote web browser.
@@ -34,6 +35,7 @@ struct HttpRequestProcessor {
 class CommHttpClient : public std::enable_shared_from_this<CommHttpClient> {
 protected:
 
+	boost::asio::thread_pool& mContext;
 	boost::asio::ip::tcp::socket mSocket;
 
 	boost::asio::streambuf mBuffer;
@@ -44,15 +46,15 @@ protected:
 
 	HttpRequestProcessor& m_requestProcessor;
 
-	void do_read();
+	boost::asio::awaitable<void> do_read();
 
 	bool read();
 
-	void write();
+	boost::asio::awaitable<void> write();
 
 public:
 	CommHttpClient(const std::string& name,
-				   boost::asio::io_context& io_context,
+				   boost::asio::thread_pool& io_context,
 				   HttpRequestProcessor& requestProcessor);
 
 	virtual ~CommHttpClient();

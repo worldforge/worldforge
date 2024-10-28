@@ -20,8 +20,9 @@
 static const bool debug_flag = false;
 
 CommHttpClient::CommHttpClient(const std::string& name,
-							   boost::asio::io_context& io_context,
+							   boost::asio::thread_pool& io_context,
 							   HttpRequestProcessor& requestProcessor) :
+		mContext(io_context),
 		mSocket(io_context),
 		mStream(&mBuffer),
 		m_requestProcessor(requestProcessor) {
@@ -30,39 +31,30 @@ CommHttpClient::CommHttpClient(const std::string& name,
 CommHttpClient::~CommHttpClient() = default;
 
 void CommHttpClient::serveRequest() {
-	do_read();
+	boost::asio::co_spawn(mContext, [self = this->shared_from_this()] { return self->do_read(); }, boost::asio::detached);
 }
 
-void CommHttpClient::do_read() {
-	auto self(this->shared_from_this());
-	mSocket.async_read_some(mBuffer.prepare(1024),
-							[this, self](boost::system::error_code ec, std::size_t length) {
-								if (!ec) {
-									mBuffer.commit(length);
-									bool complete = read();
-									if (complete) {
-										write();
-									}
-									//By calling do_read again we make sure that the instance
-									//doesn't go out of scope ("shared_from this"). As soon as that
-									//doesn't happen, and there's no do_write in progress, the instance
-									//will be deleted since there's no more references to it.
-									this->do_read();
-								}
-							});
-
+boost::asio::awaitable<void> CommHttpClient::do_read() {
+	boost::system::error_code ec;
+	do {
+		auto length = co_await mSocket.async_read_some(mBuffer.prepare(1024), boost::asio::redirect_error(boost::asio::use_awaitable, ec));
+		if (!ec) {
+			mBuffer.commit(length);
+			bool complete = read();
+			if (complete) {
+				co_await write();
+			}
+		}
+	} while (!ec);
 }
 
-void CommHttpClient::write() {
-	m_requestProcessor.processQuery(mStream, m_headers);
+boost::asio::awaitable<void> CommHttpClient::write() {
+	co_await m_requestProcessor.processQuery(mStream, m_headers);
 	mStream << std::flush;
-	auto self(this->shared_from_this());
-	boost::asio::async_write(mSocket, mBuffer.data(),
-							 [this, self](boost::system::error_code ec, std::size_t length) {
-								 if (!ec) {
-								 }
-								 mSocket.close();
-							 });
+	boost::system::error_code ec;
+	co_await boost::asio::async_write(mSocket, mBuffer.data(), boost::asio::redirect_error(boost::asio::use_awaitable, ec));
+	//Ignore any errors
+	mSocket.close();
 }
 
 bool CommHttpClient::read() {

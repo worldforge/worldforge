@@ -26,34 +26,41 @@
 #include <varconf/config.h>
 #include <fstream>
 
-HttpHandling::HttpHandling(const Monitors& monitors)
-		: m_monitors(monitors) {
+HttpHandling::HttpHandling(const Monitors& monitors, boost::asio::io_context& contextMain)
+		: m_monitors(monitors), m_contextMain(contextMain) {
 
-	//Should we perhaps make this something the caller has to register?
-	mHandlers.emplace_back([this](HttpHandleContext
-								  context) -> HandleResult {
+	auto handler = [this](HttpHandleContext context) -> boost::asio::awaitable<HandleResult> {
 		if (context.path == "/config") {
 			sendHeaders(context.io);
-			auto conf = global_conf->getSection(::instance);
+
+			//Obtain the global conf from the main context.
+			auto promise = std::make_shared<saf::promise<std::optional<varconf::sec_map>>>(m_contextMain);
+			boost::asio::post(m_contextMain, [promise] {
+				promise->set_value(global_conf->getSection(::instance));
+			});
+
+			auto conf = co_await promise->get_future().async_extract();
 
 			if (conf) {
 				for (auto& entry: *conf) {
 					context.io << entry.first << " " << entry.second << "\n";
 				}
 			}
-			return HandleResult::Handled;
+			co_return HandleResult::Handled;
 		} else if (context.path == "/monitors") {
 			sendHeaders(context.io);
 			m_monitors.send(context.io);
-			return HandleResult::Handled;
+			co_return HandleResult::Handled;
 		} else if (context.path == "/monitors/numerics") {
 			sendHeaders(context.io);
 			m_monitors.sendNumerics(context.io);
-			return HandleResult::Handled;
+			co_return HandleResult::Handled;
 		} else {
-			return HandleResult::Ignored;
+			co_return HandleResult::Ignored;
 		}
-	});
+	};
+	//Should we perhaps make this something the caller has to register?
+	mHandlers.emplace_back(handler);
 }
 
 void HttpHandling::sendHeaders(std::ostream& io,
@@ -79,18 +86,18 @@ void HttpHandling::reportBadRequest(std::ostream& io,
 	   << "</h1></body></html>\n";
 }
 
-void HttpHandling::processQuery(std::ostream& io,
-								const std::list<std::string>& headers) {
+boost::asio::awaitable<void> HttpHandling::processQuery(std::ostream& io,
+														const std::list<std::string>& headers) {
 	if (headers.empty()) {
 		reportBadRequest(io);
-		return;
+		co_return;
 	}
 	const std::string& request = headers.front();
 	std::string::size_type i = request.find(' ');
 
 	if (i == std::string::npos) {
 		reportBadRequest(io);
-		return;
+		co_return;
 	}
 
 	std::string path;
@@ -105,9 +112,9 @@ void HttpHandling::processQuery(std::ostream& io,
 	}
 
 	for (auto& handler: mHandlers) {
-		auto result = handler({.io=io, .headers=headers, .path=path});
+		auto result = co_await handler({.io=io, .headers=headers, .path=path});
 		if (result == HandleResult::Handled) {
-			return;
+			co_return;
 		}
 	}
 	spdlog::debug("Path '{}' not found.", path);

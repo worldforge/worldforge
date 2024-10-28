@@ -33,7 +33,7 @@
 
 class TestHttpCache : public HttpHandling {
 public:
-	TestHttpCache(const Monitors& m) : HttpHandling(m) {}
+	TestHttpCache(const Monitors& m, boost::asio::io_context& contextMain) : HttpHandling(m, contextMain) {}
 
 	void test_sendHeaders(std::ostream& io,
 						  int status,
@@ -54,12 +54,14 @@ int main() {
 	global_conf = varconf::Config::inst();
 
 	{
-		HttpHandling httpCache(Monitors::instance());
+		boost::asio::io_context contextMain;
+		HttpHandling httpCache(Monitors::instance(), contextMain);
 	}
 
 	// No header, invalid
 	{
-		HttpHandling hc(Monitors::instance());
+		boost::asio::io_context contextMain;
+		HttpHandling hc(Monitors::instance(), contextMain);
 
 		hc.processQuery(std::cout, std::list<std::string>());
 
@@ -67,7 +69,8 @@ int main() {
 
 	// Bad request header
 	{
-		HttpHandling hc(Monitors::instance());
+		boost::asio::io_context contextMain;
+		HttpHandling hc(Monitors::instance(), contextMain);
 
 		std::list<std::string> headers;
 		headers.push_back("boo");
@@ -78,7 +81,8 @@ int main() {
 
 	// Legacy HTTP (0.9??)
 	{
-		HttpHandling hc(Monitors::instance());
+		boost::asio::io_context contextMain;
+		HttpHandling hc(Monitors::instance(), contextMain);
 
 		std::list<std::string> headers;
 		headers.push_back("GET foo");
@@ -89,7 +93,8 @@ int main() {
 
 	// HTTP (n.m??)
 	{
-		HttpHandling hc(Monitors::instance());
+		boost::asio::io_context contextMain;
+		HttpHandling hc(Monitors::instance(), contextMain);
 
 		std::list<std::string> headers;
 		headers.push_back("GET foo HTTP/1.0");
@@ -100,7 +105,8 @@ int main() {
 
 	// HTTP get /config
 	{
-		HttpHandling hc(Monitors::instance());
+		boost::asio::io_context contextMain;
+		HttpHandling hc(Monitors::instance(), contextMain);
 
 		std::list<std::string> headers;
 		headers.push_back("GET /config HTTP/1.0");
@@ -111,7 +117,8 @@ int main() {
 
 	// HTTP get /config with some config
 	{
-		HttpHandling hc(Monitors::instance());
+		boost::asio::io_context contextMain;
+		HttpHandling hc(Monitors::instance(), contextMain);
 
 		global_conf->setItem(instance, "bar", "value");
 
@@ -124,7 +131,8 @@ int main() {
 
 	// HTTP get /monitors
 	{
-		HttpHandling hc(Monitors::instance());
+		boost::asio::io_context contextMain;
+		HttpHandling hc(Monitors::instance(), contextMain);
 
 		std::list<std::string> headers;
 		headers.push_back("GET /monitors HTTP/1.0");
@@ -134,13 +142,15 @@ int main() {
 	}
 
 	{
-		TestHttpCache hc(Monitors::instance());
+		boost::asio::io_context contextMain;
+		TestHttpCache hc(Monitors::instance(), contextMain);
 
 		hc.test_sendHeaders(std::cout, 200, "test/html", "OK");
 	}
 
 	{
-		TestHttpCache hc(Monitors::instance());
+		boost::asio::io_context contextMain;
+		TestHttpCache hc(Monitors::instance(), contextMain);
 
 		hc.test_reportBadRequest(std::cout, 200, "Bad request");
 	}

@@ -235,7 +235,11 @@ struct SocketListeners {
 	std::unique_ptr<CommAsioListener<ip::tcp, CommHttpClient>> httpListener;
 };
 
-SocketListeners createListeners(io_context& io_context, ServerRouting& serverRouting, Atlas::Objects::Factories& atlasFactories, HttpRequestProcessor& httpRequestProcessor) {
+SocketListeners createListeners(io_context& io_context,
+								boost::asio::thread_pool& httpPool,
+								ServerRouting& serverRouting,
+								Atlas::Objects::Factories& atlasFactories,
+								HttpRequestProcessor& httpRequestProcessor) {
 
 	SocketListeners socketListeners;
 
@@ -327,7 +331,7 @@ SocketListeners createListeners(io_context& io_context, ServerRouting& serverRou
 
 
 	auto httpCreator = [&]() -> std::shared_ptr<CommHttpClient> {
-		return std::make_shared<CommHttpClient>(serverRouting.getName(), io_context, httpRequestProcessor);
+		return std::make_shared<CommHttpClient>(serverRouting.getName(), httpPool, httpRequestProcessor);
 	};
 
 	auto httpStarter = [&](CommHttpClient& client) {
@@ -391,6 +395,10 @@ int run() {
 
 	//A pointer because we need to reset this before we shut down the Python API. Perhaps this could be done better?
 	auto io_context = std::make_unique<boost::asio::io_context>();
+
+	//We'll use a separate thread pool for the background http requests.
+	boost::asio::thread_pool httpThreadPool{1};
+
 
 	try {
 		auto& atlasFactories = AtlasFactories::factories;
@@ -503,7 +511,7 @@ int run() {
 		StorageManager store(world, serverDatabase->database(), entityBuilder, propertyManager);
 
 		//Instantiate at startup
-		HttpHandling httpCache(monitors);
+		HttpHandling httpCache(monitors, *io_context);
 		httpCache.mHandlers.emplace_back(buildSquallHandler(squallRepositoryPath / "data"));
 
 		// This ID is currently generated every time, but should perhaps be
@@ -654,7 +662,7 @@ int run() {
 
 		//Inner loop, where listeners are active.
 		{
-			auto socketListeners = createListeners(*io_context, serverRouting, atlasFactories, httpCache);
+			auto socketListeners = createListeners(*io_context, httpThreadPool, serverRouting, atlasFactories, httpCache);
 
 			auto metaClient = createMetaClient(*io_context);
 			auto mdnsClient = createMDNSClient(*io_context, serverRouting);

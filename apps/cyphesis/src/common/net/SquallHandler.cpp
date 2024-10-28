@@ -24,7 +24,7 @@
 #include <fstream>
 
 HttpHandling::HttpHandler buildSquallHandler(std::filesystem::path repositoryDataPath) {
-	return [repositoryDataPath = std::move(repositoryDataPath)](HttpHandleContext context) -> HttpHandling::HandleResult {
+	return [repositoryDataPath = std::move(repositoryDataPath)](HttpHandleContext context) ->boost::asio::awaitable< HttpHandling::HandleResult> {
 		if (context.path.starts_with("/squall/")) {
 			auto squallPathSegment = context.path.substr(8);
 			auto squallPath = repositoryDataPath / squallPathSegment;
@@ -54,9 +54,9 @@ HttpHandling::HttpHandler buildSquallHandler(std::filesystem::path repositoryDat
 					}
 				}
 			}
-			return HttpHandling::HandleResult::Handled;
+			co_return HttpHandling::HandleResult::Handled;
 		} else {
-			return HttpHandling::HandleResult::Ignored;
+			co_return HttpHandling::HandleResult::Ignored;
 		}
 	};
 }

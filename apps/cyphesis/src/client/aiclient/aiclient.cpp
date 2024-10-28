@@ -210,7 +210,8 @@ int main(int argc, char** argv) {
 
 		{
 			boost::asio::io_context io_context;
-			HttpHandling httpCache(monitors);
+			boost::asio::thread_pool httpThreadPool {1};
+			HttpHandling httpCache(monitors, io_context);
 			AwareMindFactory mindFactory(typeStore);
 
 			AssetsManager assets_manager(std::make_unique<FileSystemObserver>(io_context));
@@ -273,7 +274,7 @@ int main(int argc, char** argv) {
 
 
 			auto httpCreator = [&]() -> std::shared_ptr<CommHttpClient> {
-				return std::make_shared<CommHttpClient>("cyaiclient", io_context, httpCache);
+				return std::make_shared<CommHttpClient>("cyaiclient", httpThreadPool, httpCache);
 			};
 
 			auto httpStarter = [&](CommHttpClient& client) {
