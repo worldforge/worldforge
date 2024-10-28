@@ -369,14 +369,16 @@ int Options::check_config(varconf::Config& config,
 	for (auto& section_entry: m_sectionMap) {
 		const std::string& section_name = section_entry.first;
 		const OptionMap& section_help = section_entry.second;
-		const varconf::sec_map& section = config.getSection(section_name);
+		auto section = config.getSection(section_name);
 
-		for (auto& entry: section) {
-			const std::string& option_name = entry.first;
-			if (section_help.find(option_name) == section_help.end() &&
-				entry.second->scope() == varconf::INSTANCE) {
-				spdlog::warn("Invalid option -- {}:{}",
-							 section_name, option_name);
+		if (section) {
+			for (auto& entry: *section) {
+				const std::string& option_name = entry.first;
+				if (section_help.find(option_name) == section_help.end() &&
+					entry.second->scope() == varconf::INSTANCE) {
+					spdlog::warn("Invalid option -- {}:{}",
+								 section_name, option_name);
+				}
 			}
 		}
 	}

@@ -34,10 +34,12 @@ HttpHandling::HttpHandling(const Monitors& monitors)
 								  context) -> HandleResult {
 		if (context.path == "/config") {
 			sendHeaders(context.io);
-			auto& conf = global_conf->getSection(::instance);
+			auto conf = global_conf->getSection(::instance);
 
-			for (auto& entry: conf) {
-				context.io << entry.first << " " << entry.second << "\n";
+			if (conf) {
+				for (auto& entry: *conf) {
+					context.io << entry.first << " " << entry.second << "\n";
+				}
 			}
 			return HandleResult::Handled;
 		} else if (context.path == "/monitors") {

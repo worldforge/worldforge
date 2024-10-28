@@ -201,16 +201,6 @@ public:
 	bool isItemSet(const std::string& section, const std::string& key, const std::string& value) const;
 
 	/**
-	 * Returns true if the key exists in the section give but is successfully
-	 * removed.
-	 *
-	 * @param Section of config space to look in.
-	 * @param Key to remove.
-	 */
-	bool deleteItem(const std::string& section, const std::string& key);
-
-
-	/**
 	 *    Returns a map of the specified section.
 	 * @param sectionName
 	 * @return

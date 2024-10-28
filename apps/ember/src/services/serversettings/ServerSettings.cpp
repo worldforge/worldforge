@@ -95,9 +95,6 @@ bool ServerSettings::eraseItem(const ServerSettingsCredentials& credentials, con
 	return mConfig->erase(getSectionForServerCredentials(credentials), cleanKey);
 }
 
-const varconf::sec_map& ServerSettings::getServerSettings(const ServerSettingsCredentials& credentials) {
-	return mConfig->getSection(getSectionForServerCredentials(credentials));
-}
 
 std::filesystem::path ServerSettings::getFullConfigFilePath() const {
 	ConfigService& cfgService = ConfigService::getSingleton();

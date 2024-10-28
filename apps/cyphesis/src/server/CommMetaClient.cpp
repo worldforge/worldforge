@@ -244,11 +244,13 @@ void CommMetaClient::updateAttributes() {
 	 * In the event that a user has specified a variable that matches
 	 * the name of a monitor, the configured item will have priority.
 	 */
-	const varconf::sec_map& c = global_conf->getSection("metaattributes");
-	for (auto& kv: c) {
-		std::string s = kv.second.as_string();
-		boost::algorithm::trim(s);
-		m_serverAttributes[kv.first] = s;
+	auto c = global_conf->getSection("metaattributes");
+	if (c) {
+		for (auto& kv: *c) {
+			std::string s = kv.second.as_string();
+			boost::algorithm::trim(s);
+			m_serverAttributes[kv.first] = s;
+		}
 	}
 
 

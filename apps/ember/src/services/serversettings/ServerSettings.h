@@ -98,14 +98,6 @@ public:
 	bool eraseItem(const ServerSettingsCredentials& credentials, const std::string& key);
 
 	/**
-	 * @brief Gets all settings for a server.
-	 *
-	 * @param credentials The server credentials.
-	 * @returns All settings for the specified server.
-	 */
-	const std::map<std::string, varconf::Variable>& getServerSettings(const ServerSettingsCredentials& credentials);
-
-	/**
 	 * @brief Writes settings to disk.
 	 *
 	 * Call this whenever you've set any values to make sure that settings are stored.

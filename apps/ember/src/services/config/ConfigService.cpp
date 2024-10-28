@@ -165,20 +165,28 @@ ConfigService::SectionMap ConfigService::getSection(const std::string& sectionNa
 	SectionMap combinedSection;
 
 	if (mInstanceConfig.findSection(sectionName)) {
-		const SectionMap& section = mInstanceConfig.getSection(sectionName);
-		combinedSection.insert(section.begin(), section.end());
+		auto section = mInstanceConfig.getSection(sectionName);
+		if (section) {
+			combinedSection.insert(section->begin(), section->end());
+		}
 	}
 	if (mCommandLineConfig.findSection(sectionName)) {
-		const SectionMap& section = mCommandLineConfig.getSection(sectionName);
-		combinedSection.insert(section.begin(), section.end());
+		auto section = mCommandLineConfig.getSection(sectionName);
+		if (section) {
+			combinedSection.insert(section->begin(), section->end());
+		}
 	}
 	if (mUserConfig.findSection(sectionName)) {
-		const SectionMap& section = mUserConfig.getSection(sectionName);
-		combinedSection.insert(section.begin(), section.end());
+		auto section = mUserConfig.getSection(sectionName);
+		if (section) {
+			combinedSection.insert(section->begin(), section->end());
+		}
 	}
 	if (mGlobalConfig.findSection(sectionName)) {
-		const SectionMap& section = mGlobalConfig.getSection(sectionName);
-		combinedSection.insert(section.begin(), section.end());
+		auto section = mGlobalConfig.getSection(sectionName);
+		if (section) {
+			combinedSection.insert(section->begin(), section->end());
+		}
 	}
 	return combinedSection;
 }
@@ -243,10 +251,6 @@ bool ConfigService::itemExists(const std::string& section, const std::string& ke
 
 bool ConfigService::hasItem(const std::string& section, const std::string& key) const {
 	return mGlobalConfig.find(section, key) || mUserConfig.find(section, key) || mInstanceConfig.find(section, key) || mCommandLineConfig.find(section, key);
-}
-
-bool ConfigService::deleteItem(const std::string& section, const std::string& key) {
-	return mGlobalConfig.erase(section, key) | mUserConfig.erase(section, key) | mInstanceConfig.erase(section, key) | mCommandLineConfig.erase(section, key);
 }
 
 bool ConfigService::loadSavedConfig(const std::string& filename, const StringConfigMap& commandLineSettings) {

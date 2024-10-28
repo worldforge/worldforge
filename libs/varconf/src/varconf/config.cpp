@@ -286,10 +286,13 @@ void Config::getEnv(const std::string& prefix, Scope scope) {
 	}
 }
 
-const sec_map& Config::getSection(const std::string& section) {
-	// TODO: This will create a new section in the config file. Is really the
-	//  desired behaviour?
-	return m_conf[section];
+std::optional<sec_map> Config::getSection(const std::string& section) const {
+	auto I = m_conf.find(section);
+	if (I != m_conf.end()) {
+		return {I->second};
+	} else {
+		return {};
+	}
 }
 
 Variable Config::getItem(const std::string& section, const std::string& key) const {

@@ -37,6 +37,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <optional>
 
 namespace varconf {
 
@@ -105,7 +106,7 @@ public:
 	bool findItem(const std::string& section, const std::string& key) const;
 
 	// Returns value of specified section.
-	const sec_map& getSection(const std::string& section);
+	std::optional<sec_map> getSection(const std::string& section) const;
 
 	// Returns value of specified key under specified section.
 	Variable getItem(const std::string& section, const std::string& key) const;
