@@ -16,9 +16,7 @@ add_library(cyphesis-common
         system_uid.cpp
         system_prefix.cpp
         serialno.cpp
-        TypeNode_impl.h
         Property.cpp
-        PropertyManager_impl.h
         Router.cpp
         AtlasFileLoader.cpp
         Monitors.cpp

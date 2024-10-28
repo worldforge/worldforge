@@ -22,6 +22,7 @@
 
 #include <iostream>
 #include <mutex>
+#include "SynchedState_impl.h"
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
@@ -32,13 +33,11 @@ Monitors::~Monitors() = default;
 
 
 void Monitors::insert(std::string key, const Element& val) {
-	std::scoped_lock lock(mMutex);
-	m_pairs[std::move(key)] = val;
+	mState.withState([&](auto& state) { state.m_pairs[std::move(key)] = val; });
 }
 
 void Monitors::watch(std::string name, std::unique_ptr<VariableBase> monitor) {
-	std::scoped_lock lock(mMutex);
-	m_variableMonitors[std::move(name)] = std::move(monitor);
+	mState.withState([&](auto& state) { state.m_variableMonitors[std::move(name)] = std::move(monitor); });
 }
 
 void Monitors::watch(std::string name, int& value) {
@@ -71,50 +70,52 @@ static std::ostream& operator<<(std::ostream& s, const Element& e) {
 }
 
 void Monitors::send(std::ostream& io) const {
-	std::scoped_lock lock(mMutex);
-	for (auto& entry: m_pairs) {
-		io << entry.first << " " << entry.second << "\n";
-	}
-
-	for (auto& entry: m_variableMonitors) {
-		io << entry.first << " ";
-		entry.second->send(io);
-		io << "\n";
-	}
-}
-
-void Monitors::sendNumerics(std::ostream& io) const {
-	std::scoped_lock lock(mMutex);
-	for (auto& entry: m_pairs) {
-		if (entry.second.isNum()) {
+	mState.withStateConst<void>([&](auto& state) {
+		for (auto& entry: state.m_pairs) {
 			io << entry.first << " " << entry.second << "\n";
 		}
-	}
 
-	for (auto& entry: m_variableMonitors) {
-		if (entry.second->isNumeric()) {
+		for (auto& entry: state.m_variableMonitors) {
 			io << entry.first << " ";
 			entry.second->send(io);
 			io << "\n";
 		}
-	}
+	});
+}
 
+void Monitors::sendNumerics(std::ostream& io) const {
 
+	mState.withStateConst([&](auto& state) {
+		for (auto& entry: state.m_pairs) {
+			if (entry.second.isNum()) {
+				io << entry.first << " " << entry.second << "\n";
+			}
+		}
+
+		for (auto& entry: state.m_variableMonitors) {
+			if (entry.second->isNumeric()) {
+				io << entry.first << " ";
+				entry.second->send(io);
+				io << "\n";
+			}
+		}
+	});
 }
 
 int Monitors::readVariable(const std::string& key, std::ostream& out_stream) const {
-	std::scoped_lock lock(mMutex);
-	auto J = m_variableMonitors.find(key);
-	if (J != m_variableMonitors.end()) {
-		J->second->send(out_stream);
-		return 0;
-	}
+	return mState.withStateConst<int>([&](auto& state) {
+		auto J = state.m_variableMonitors.find(key);
+		if (J != state.m_variableMonitors.end()) {
+			J->second->send(out_stream);
+			return 0;
+		}
 
-	auto I = m_pairs.find(key);
-	if (I != m_pairs.end()) {
-		out_stream << I->second;
-		return 0;
-	}
+		auto I = state.m_pairs.find(key);
+		if (I != state.m_pairs.end()) {
+			out_stream << I->second;
+			return 0;
+		}
 
-	return 1;
+		return 1;
+	});
 }

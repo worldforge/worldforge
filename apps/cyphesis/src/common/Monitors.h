@@ -21,6 +21,7 @@
 
 #include <Atlas/Message/Element.h>
 #include "Singleton.h"
+#include "SynchedState.h"
 #include <memory>
 #include <mutex>
 
@@ -33,9 +34,12 @@ class VariableBase;
 class Monitors : public Singleton<Monitors> {
 private:
 
-	mutable std::mutex mMutex;
-	Atlas::Message::MapType m_pairs;
-	std::map<std::string, std::unique_ptr<VariableBase>> m_variableMonitors;
+	struct State {
+		Atlas::Message::MapType m_pairs;
+		std::map<std::string, std::unique_ptr<VariableBase>> m_variableMonitors;
+	};
+	SynchedState<State> mState;
+
 public:
 	Monitors();
 
