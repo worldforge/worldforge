@@ -22,6 +22,7 @@
 #include <Atlas/Message/Element.h>
 #include "Singleton.h"
 #include <memory>
+#include <mutex>
 
 class VariableBase;
 
@@ -30,8 +31,9 @@ class VariableBase;
 /// Any code can insert or update key value pairs here, and subsystems like
 /// the http interface can access it.
 class Monitors : public Singleton<Monitors> {
-protected:
+private:
 
+	mutable std::mutex mMutex;
 	Atlas::Message::MapType m_pairs;
 	std::map<std::string, std::unique_ptr<VariableBase>> m_variableMonitors;
 public:

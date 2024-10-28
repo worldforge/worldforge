@@ -21,6 +21,7 @@
 #include "Variable.h"
 
 #include <iostream>
+#include <mutex>
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
@@ -31,10 +32,12 @@ Monitors::~Monitors() = default;
 
 
 void Monitors::insert(std::string key, const Element& val) {
+	std::scoped_lock lock(mMutex);
 	m_pairs[std::move(key)] = val;
 }
 
 void Monitors::watch(std::string name, std::unique_ptr<VariableBase> monitor) {
+	std::scoped_lock lock(mMutex);
 	m_variableMonitors[std::move(name)] = std::move(monitor);
 }
 
@@ -68,6 +71,7 @@ static std::ostream& operator<<(std::ostream& s, const Element& e) {
 }
 
 void Monitors::send(std::ostream& io) const {
+	std::scoped_lock lock(mMutex);
 	for (auto& entry: m_pairs) {
 		io << entry.first << " " << entry.second << "\n";
 	}
@@ -80,6 +84,7 @@ void Monitors::send(std::ostream& io) const {
 }
 
 void Monitors::sendNumerics(std::ostream& io) const {
+	std::scoped_lock lock(mMutex);
 	for (auto& entry: m_pairs) {
 		if (entry.second.isNum()) {
 			io << entry.first << " " << entry.second << "\n";
@@ -98,6 +103,7 @@ void Monitors::sendNumerics(std::ostream& io) const {
 }
 
 int Monitors::readVariable(const std::string& key, std::ostream& out_stream) const {
+	std::scoped_lock lock(mMutex);
 	auto J = m_variableMonitors.find(key);
 	if (J != m_variableMonitors.end()) {
 		J->second->send(out_stream);
