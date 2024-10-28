@@ -164,6 +164,7 @@ namespace sqlite3pp
     int bind(int idx, char const* value, copy_semantic fcopy);
     int bind(int idx, void const* value, int n, copy_semantic fcopy);
     int bind(int idx, std::string const& value, copy_semantic fcopy);
+    int bind(int idx, char16_t const* value, copy_semantic fcopy);
     int bind(int idx);
     int bind(int idx, null_type);
 
@@ -178,6 +179,7 @@ namespace sqlite3pp
 
     int step();
     int reset();
+    int clear_bindings();
 
    protected:
     explicit statement(database& db, char const* stmt = nullptr);
@@ -219,6 +221,14 @@ namespace sqlite3pp
       }
       bindstream& operator << (std::string const& value) {
         auto rc = cmd_.bind(idx_, value, copy);
+        if (rc != SQLITE_OK) {
+          throw database_error(cmd_.db_);
+        }
+        ++idx_;
+        return *this;
+      }
+      bindstream& operator << (std::nullptr_t value) {
+        auto rc = cmd_.bind(idx_);
         if (rc != SQLITE_OK) {
           throw database_error(cmd_.db_);
         }
@@ -287,6 +297,7 @@ namespace sqlite3pp
       char const* get(int idx, char const*) const;
       std::string get(int idx, std::string) const;
       void const* get(int idx, void const*) const;
+      char16_t const* get(int idx, char16_t const*) const;
       null_type get(int idx, null_type) const;
 
      private:
@@ -295,14 +306,13 @@ namespace sqlite3pp
 
     class query_iterator
     {
-      	// iterator traits
-        using difference_type = ptrdiff_t;
-        using value_type = rows;
-        using pointer = rows*;
-        using reference = rows&;
-        using iterator_category = std::input_iterator_tag;
-
      public:
+      typedef std::input_iterator_tag iterator_category;
+      typedef rows value_type;
+      typedef std::ptrdiff_t difference_type;
+      typedef rows* pointer;
+      typedef rows& reference;
+
       query_iterator();
       explicit query_iterator(query* cmd);
 

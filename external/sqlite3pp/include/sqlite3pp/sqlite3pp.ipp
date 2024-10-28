@@ -68,8 +68,13 @@ namespace sqlite3pp
   {
     if (dbname) {
       auto rc = connect(dbname, flags, vfs);
-      if (rc != SQLITE_OK)
+      if (rc != SQLITE_OK) {
+        // Whether or not an error occurs when it is opened, resources
+	// associated with the database connection handle should be released
+	// by passing it to sqlite3_close() when it is no longer required.
+        disconnect();
         throw database_error("can't connect database");
+      }
     }
   }
 
@@ -308,6 +313,11 @@ namespace sqlite3pp
     return sqlite3_reset(stmt_);
   }
 
+  inline int statement::clear_bindings()
+  {
+    return sqlite3_clear_bindings(stmt_);
+  }
+
   inline int statement::bind(int idx, int value)
   {
     return sqlite3_bind_int(stmt_, idx, value);
@@ -326,6 +336,11 @@ namespace sqlite3pp
   inline int statement::bind(int idx, char const* value, copy_semantic fcopy)
   {
     return sqlite3_bind_text(stmt_, idx, value, std::strlen(value), fcopy == copy ? SQLITE_TRANSIENT : SQLITE_STATIC );
+  }
+
+  inline int statement::bind(int idx, char16_t const* value, copy_semantic fcopy)
+  {
+    return sqlite3_bind_text16(stmt_, idx, value, std::char_traits<char16_t>::length(value) * sizeof(char16_t), fcopy == copy ? SQLITE_TRANSIENT : SQLITE_STATIC );
   }
 
   inline int statement::bind(int idx, void const* value, int n, copy_semantic fcopy)
@@ -485,9 +500,15 @@ namespace sqlite3pp
     return reinterpret_cast<char const*>(sqlite3_column_text(stmt_, idx));
   }
 
+  inline char16_t const* query::rows::get(int idx, char16_t const*) const
+  {
+    return reinterpret_cast<char16_t const*>(sqlite3_column_text16(stmt_, idx));
+  }
+
   inline std::string query::rows::get(int idx, std::string) const
   {
-    return get(idx, (char const*)0);
+    char const* c = get(idx, (char const*)0);
+    return c ? std::string(c) : std::string();
   }
 
   inline void const* query::rows::get(int idx, void const*) const
