@@ -84,7 +84,7 @@ void HttpHandling::processQuery(std::ostream& io,
 		return;
 	}
 	const std::string& request = headers.front();
-	std::string::size_type i = request.find(" ");
+	std::string::size_type i = request.find(' ');
 
 	if (i == std::string::npos) {
 		reportBadRequest(io);
@@ -94,7 +94,7 @@ void HttpHandling::processQuery(std::ostream& io,
 	std::string path;
 	++i;
 
-	std::string::size_type j = request.find(" ", i + 1);
+	std::string::size_type j = request.find(' ', i + 1);
 
 	if (j != std::string::npos) {
 		path = request.substr(i, j - i);
@@ -103,11 +103,11 @@ void HttpHandling::processQuery(std::ostream& io,
 	}
 
 	for (auto& handler: mHandlers) {
-		auto result = handler({io, headers, path});
+		auto result = handler({.io=io, .headers=headers, .path=path});
 		if (result == HandleResult::Handled) {
 			return;
 		}
 	}
-	spdlog::debug("Path '{}'not found.", path);
+	spdlog::debug("Path '{}' not found.", path);
 	reportBadRequest(io, 404, "Not Found");
 }

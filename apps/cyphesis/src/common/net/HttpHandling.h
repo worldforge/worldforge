@@ -42,9 +42,9 @@ public:
 	typedef std::function<HandleResult(HttpHandleContext)> HttpHandler;
 
 
-	HttpHandling(const Monitors& monitors);
+	explicit HttpHandling(const Monitors& monitors);
 
-	void processQuery(std::ostream&, const std::list<std::string>&);
+	void processQuery(std::ostream&, const std::list<std::string>&) override;
 
 	//std::vector<std::unique_ptr<HttpPathHandler>> mHandlers;
 	std::vector<HttpHandler> mHandlers;

@@ -95,7 +95,6 @@
 #include <varconf/config.h>
 #include <filesystem>
 
-#include <memory>
 #include <thread>
 #include <fstream>
 
@@ -526,8 +525,7 @@ int run() {
 		serverRouting.setAssets({assetsHandler.resolveAssetsUrl()});
 
 
-		auto& ctx = *io_context;
-		assets_manager.observeDirectory(assetsPath.string(), [assetsPath, &ctx, &assetsHandler, &serverRouting](const std::filesystem::path& path) {
+		assets_manager.observeDirectory(assetsPath.string(), [assetsPath, &ctx = *io_context, &assetsHandler, &serverRouting](const std::filesystem::path& path) {
 
 			spdlog::debug("Assets have changed; will regenerate Squall repository.");
 			auto promise = saf::promise<std::optional<Squall::Signature>>{ctx};

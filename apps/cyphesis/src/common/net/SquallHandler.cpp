@@ -25,7 +25,7 @@
 
 HttpHandling::HttpHandler buildSquallHandler(std::filesystem::path repositoryDataPath) {
 	return [repositoryDataPath = std::move(repositoryDataPath)](HttpHandleContext context) -> HttpHandling::HandleResult {
-		if (context.path.rfind("/squall/", 0) == 0) {
+		if (context.path.starts_with("/squall/")) {
 			auto squallPathSegment = context.path.substr(8);
 			auto squallPath = repositoryDataPath / squallPathSegment;
 			auto absolutePath = std::filesystem::absolute(squallPath);
