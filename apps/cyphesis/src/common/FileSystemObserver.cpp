@@ -41,7 +41,9 @@ FileSystemObserver::FileSystemObserver(boost::asio::io_context& ioService)
 }
 
 FileSystemObserver::~FileSystemObserver() {
-	assert(mCallBacks.empty());
+	if (!mCallBacks.empty()) {
+		spdlog::warn("There were still {} callbacks registered in FileSystemObserver when shutting down. There should be 0.", mCallBacks.size());
+	}
 }
 
 void FileSystemObserver::stop() {

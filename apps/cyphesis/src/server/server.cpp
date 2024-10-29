@@ -88,6 +88,7 @@
 #include <rules/simulation/python/CyPy_LocatedEntity_impl.h>
 #include <rules/simulation/ExternalMind.h>
 #include <rules/simulation/PhysicalDomain.h>
+#include <rules/simulation/ScriptsProperty.h>
 #include "saf/saf.hpp"
 
 #include <Atlas/Objects/RootEntity.h>
@@ -714,6 +715,9 @@ int run() {
 	io_context->run();
 
 	io_context.reset();
+
+	//Clear all cached Python scripts before shutting down. Perhaps do this in a better way so we don't need to know about it here?
+	ScriptsProperty::sScriptFactories.clear();
 
 	shutdown_python_api();
 
