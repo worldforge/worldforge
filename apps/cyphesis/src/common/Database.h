@@ -144,7 +144,7 @@ public:
 								 RelationType kind) = 0;
 
 	DatabaseResult selectRelation(const std::string& name,
-								  const std::string& id);
+								  const std::string& id) const;
 
 	int createRelationRow(const std::string& name,
 						  const std::string& id,
@@ -160,7 +160,7 @@ public:
 
 	DatabaseResult selectSimpleRowBy(const std::string& name,
 									 const std::string& column,
-									 const std::string& value);
+									 const std::string& value) const;
 
 	int createSimpleRow(const std::string& name,
 						const std::string& id,
@@ -196,7 +196,7 @@ public:
 					 int seq,
 					 const std::string& location_entity_id);
 
-	DatabaseResult selectEntities(const std::string& loc);
+	DatabaseResult selectEntities(const std::string& loc) const;
 
 	/**
 	 * Returns the number of entities stored in the database.
@@ -207,17 +207,14 @@ public:
 
 	virtual int registerPropertyTable() = 0;
 
-	int insertProperties(const std::string& id,
-						 const KeyValues& tuples);
+	int upsertProperties(const std::string& id,
+						 const std::vector<std::tuple<std::string, std::string>>& tuples);
 
-	DatabaseResult selectProperties(const std::string& loc);
-
-	int updateProperties(const std::string& id,
-						 const KeyValues& tuples);
+	DatabaseResult selectProperties(const std::string& loc) const;
 
 	virtual int registerThoughtsTable() = 0;
 
-	DatabaseResult selectThoughts(const std::string& loc);
+	DatabaseResult selectThoughts(const std::string& loc) const;
 
 	int replaceThoughts(const std::string& id,
 						const std::vector<std::string>& thoughts);

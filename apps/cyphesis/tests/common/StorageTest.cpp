@@ -225,11 +225,6 @@ long Database::newId() {
 	return 1;
 }
 
-DatabaseResult Database::selectSimpleRowBy(const std::string& name, const std::string& column, const std::string& value) {
-	return DatabaseResult(std::unique_ptr<DatabaseNullResultWorker>(new DatabaseNullResultWorker()));
-}
-
-
 void encrypt_password(const std::string& pwd, std::string& hash) {
 	hash = pwd;
 }

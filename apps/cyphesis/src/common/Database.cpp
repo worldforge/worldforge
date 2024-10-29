@@ -18,21 +18,18 @@
 
 #include "Database.h"
 
-#include "id.h"
 #include "log.h"
 #include "debug.h"
 #include "globals.h"
-#include "const.h"
 
 #include <Atlas/Codecs/Packed.h>
 
 #include <varconf/config.h>
 
-#include <cstring>
-
 #include <cassert>
 #include <boost/algorithm/string.hpp>
 #include <sstream>
+#include <ranges>
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
@@ -101,7 +98,7 @@ int Database::decodeMessage(const std::string& data,
 }
 
 DatabaseResult Database::selectRelation(const std::string& name,
-										const std::string& id) {
+										const std::string& id) const {
 	std::string query = "SELECT target FROM ";
 	query += name;
 	query += " WHERE source = ";
@@ -138,7 +135,7 @@ int Database::removeRelationRowByOther(const std::string& name,
 
 DatabaseResult Database::selectSimpleRowBy(const std::string& name,
 										   const std::string& column,
-										   const std::string& value) {
+										   const std::string& value) const {
 	auto query = fmt::format("SELECT * FROM {0} WHERE {1} = {2}", name, column, value);
 
 	cy_debug_print("Selecting on " << column << " = " << value
@@ -194,7 +191,7 @@ int Database::updateEntityWithoutLoc(const std::string& id,
 }
 
 
-DatabaseResult Database::selectEntities(const std::string& loc) {
+DatabaseResult Database::selectEntities(const std::string& loc) const {
 	std::string query = fmt::format("SELECT id, type, seq FROM entities"
 									" WHERE loc = {}", loc);
 
@@ -223,23 +220,15 @@ int Database::dropEntity(long id) {
 	return 0;
 }
 
-int Database::insertProperties(const std::string& id,
-							   const KeyValues& tuples) {
-	int first = 1;
-	std::string query("INSERT INTO properties(id, name, value) VALUES ");
-	for (auto& tuple: tuples) {
-		if (first) {
-			query += fmt::format("({}, '{}', '{}')", id, tuple.first, tuple.second);
-			first = 0;
-		} else {
-			query += fmt::format(", ({}, '{}', '{}')", id, tuple.first, tuple.second);
-		}
-	}
-	query += " ON CONFLICT DO UPDATE SET value=excluded.value";
+int Database::upsertProperties(const std::string& id,
+							   const std::vector<std::tuple<std::string, std::string>>& tuples) {
+	auto insertClauses = tuples | std::views::transform([id](auto entry) { return fmt::format("({}, '{}', '{}')", id, std::get<0>(entry), std::get<1>(entry)); });
+	auto query = fmt::format("INSERT INTO properties(id, name, value) VALUES {} ON CONFLICT DO UPDATE SET value=excluded.value", fmt::join(insertClauses, ", "));
+
 	return scheduleCommand(query);
 }
 
-DatabaseResult Database::selectProperties(const std::string& id) {
+DatabaseResult Database::selectProperties(const std::string& id) const {
 	std::string query = fmt::format("SELECT name, value FROM properties"
 									" WHERE id = {}", id);
 
@@ -248,13 +237,7 @@ DatabaseResult Database::selectProperties(const std::string& id) {
 	return runSimpleSelectQuery(query);
 }
 
-int Database::updateProperties(const std::string& id,
-							   const KeyValues& tuples) {
-	return insertProperties(id, tuples);
-}
-
-
-DatabaseResult Database::selectThoughts(const std::string& loc) {
+DatabaseResult Database::selectThoughts(const std::string& loc) const {
 	std::string query = fmt::format("SELECT thought FROM thoughts"
 									" WHERE id = {}", loc);
 

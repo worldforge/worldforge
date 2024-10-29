@@ -201,15 +201,15 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Entity::RootEntity;
 
 
-DatabaseResult Database::selectEntities(const std::string& loc) {
+DatabaseResult Database::selectEntities(const std::string& loc) const {
 	return DatabaseResult(std::make_unique<DatabaseNullResultWorker>());
 }
 
-DatabaseResult Database::selectProperties(const std::string& loc) {
+DatabaseResult Database::selectProperties(const std::string& loc) const  {
 	return DatabaseResult(std::make_unique<DatabaseNullResultWorker>());
 }
 
-DatabaseResult Database::selectThoughts(const std::string& loc) {
+DatabaseResult Database::selectThoughts(const std::string& loc) const  {
 	return DatabaseResult(std::make_unique<DatabaseNullResultWorker>());
 }
 
@@ -273,22 +273,19 @@ long Database::entitiesCount() const {
 int Database::insertEntity(const std::string& id,
 						   const std::string& loc,
 						   const std::string& type,
-						   int seq,
-						   const std::string& value) {
+						   int seq) {
 	return 0;
 }
 
 int Database::updateEntity(const std::string& id,
 						   int seq,
-						   const std::string& location_data,
-						   const std::string& location_entity_id) {
+						   const std::string& location_data) {
 	return 0;
 
 }
 
 int Database::updateEntityWithoutLoc(const std::string& id,
-									 int seq,
-									 const std::string& location_data) {
+									 int seq) {
 	return 0;
 
 }

@@ -60,7 +60,7 @@ int main() {
 
 DatabaseResult Database::selectSimpleRowBy(const std::string& name,
 										   const std::string& column,
-										   const std::string& value) {
+										   const std::string& value) const {
 	return DatabaseResult(std::make_unique<DatabaseNullResultWorker>());
 }
 

@@ -46,8 +46,6 @@ using Atlas::Message::MapType;
 using Atlas::Message::Element;
 
 
-typedef Database::KeyValues KeyValues;
-
 static const bool debug_flag = false;
 
 StorageManager::StorageManager(WorldRouter& world,
@@ -113,7 +111,7 @@ void StorageManager::entityInserted(LocatedEntity& ent) {
 		return;
 	}
 	// Queue the entity to be inserted into the persistence tables.
-	m_unstoredEntities.emplace_back(Ref<LocatedEntity>(&ent));
+	m_unstoredEntities.emplace_back(&ent);
 	ent.addFlags(entity_queued);
 }
 
@@ -130,7 +128,7 @@ void StorageManager::entityUpdated(LocatedEntity& ent) {
 		// std::cout << "Already queued " << ent.getId() << std::endl;
 		return;
 	}
-	m_dirtyEntities.emplace_back(Ref<LocatedEntity>(&ent));
+	m_dirtyEntities.emplace_back(&ent);
 	// std::cout << "Updated fired " << ent.getId() << std::endl;
 	ent.addFlags(entity_queued);
 }
@@ -146,22 +144,8 @@ void StorageManager::encodeElement(const Atlas::Message::Element& element, std::
 	m_db.encodeObject(map, store);
 }
 
-struct Measure {
-	std::chrono::steady_clock::time_point lastMeasured = std::chrono::steady_clock::now();
-
-	void report(const std::string& task) {
-		auto now = std::chrono::steady_clock::now();
-		std::chrono::nanoseconds elapsed = std::chrono::steady_clock::now() - lastMeasured;
-		spdlog::info("Task \"{}\" took {} ms.", task, elapsed.count() / 1'000'000);
-		lastMeasured = now;
-	}
-};
-
 void StorageManager::restorePropertiesRecursively(LocatedEntity& ent) {
-	Measure m;
 	DatabaseResult res = m_db.selectProperties(ent.getIdAsString());
-
-	m.report(fmt::format("query props for {}, got {}", ent.getIdAsString(), res.size()));
 
 	//Keep track of those properties that have been set on the instance, so we'll know what
 	//type properties we should ignore.
@@ -184,7 +168,6 @@ void StorageManager::restorePropertiesRecursively(LocatedEntity& ent) {
 		}
 		MapType prop_data;
 		m_db.decodeMessage(val_string, prop_data);
-		m.report(fmt::format("decode \"{}\" for {}", name, ent.getIdAsString()));
 		auto J = prop_data.find("val");
 		if (J == prop_data.end()) {
 			spdlog::error("No property value data for {}:{}",
@@ -201,7 +184,6 @@ void StorageManager::restorePropertiesRecursively(LocatedEntity& ent) {
 				continue;
 			}
 		}
-		m.report(fmt::format("check existing \"{}\" for {}", name, ent.getIdAsString()));
 
 
 		auto* prop = ent.modProperty(name, val);
@@ -209,17 +191,14 @@ void StorageManager::restorePropertiesRecursively(LocatedEntity& ent) {
 			auto newProp = m_propertyManager.addProperty(name);
 			prop = ent.setProperty(name, std::move(newProp));
 		}
-		m.report(fmt::format("create prop \"{}\" for {}", name, ent.getIdAsString()));
 
 		//If we get to here the property either doesn't exist, or have a different value than the default or existing property.
 		prop->set(val);
 		prop->addFlags(prop_flag_persistence_clean | prop_flag_persistence_seen);
 		prop->apply(ent);
 		ent.propertyApplied(name, *prop);
-		m.report(fmt::format("apply prop \"{}\" for {}", name, ent.getIdAsString()));
 		instanceProperties.insert(name);
 	}
-	m.report("created properties");
 
 	if (ent.getType()) {
 		for (auto& propIter: ent.getType()->defaults()) {
@@ -235,7 +214,6 @@ void StorageManager::restorePropertiesRecursively(LocatedEntity& ent) {
 			}
 		}
 	}
-	m.report("applied type properties");
 
 	if (ent.m_parent) {
 		auto domain = ent.m_parent->getDomain();
@@ -243,7 +221,6 @@ void StorageManager::restorePropertiesRecursively(LocatedEntity& ent) {
 			domain->addEntity(ent);
 		}
 	}
-	m.report("added to domain");
 
 
 	//Now restore all properties of the child entities.
@@ -276,7 +253,7 @@ void StorageManager::insertEntity(LocatedEntity& ent) {
 					  ent.getType()->name(),
 					  ent.getSeq());
 	++m_insertEntityCount;
-	KeyValues property_tuples;
+	std::vector<std::tuple<std::string, std::string>> property_tuples;
 	const auto& properties = ent.getProperties();
 	for (auto& entry: properties) {
 		auto& prop = entry.second.property;
@@ -288,14 +265,18 @@ void StorageManager::insertEntity(LocatedEntity& ent) {
 			continue;
 		}
 		if (entry.second.modifiers.empty()) {
-			encodeProperty(*prop, property_tuples[entry.first]);
+			std::string value;
+			encodeProperty(*prop, value);
+			property_tuples.emplace_back(entry.first, value);
 		} else {
-			encodeElement(entry.second.baseValue, property_tuples[entry.first]);
+			std::string value;
+			encodeElement(entry.second.baseValue, value);
+			property_tuples.emplace_back(entry.first, value);
 		}
 		prop->addFlags(prop_flag_persistence_clean | prop_flag_persistence_seen);
 	}
 	if (!property_tuples.empty()) {
-		m_db.insertProperties(ent.getIdAsString(), property_tuples);
+		m_db.upsertProperties(ent.getIdAsString(), property_tuples);
 		++m_insertPropertyCount;
 	}
 	ent.removeFlags(entity_queued);
@@ -316,8 +297,7 @@ void StorageManager::updateEntity(LocatedEntity& ent) {
 									ent.getSeq());
 	}
 	++m_updateEntityCount;
-	KeyValues new_property_tuples;
-	KeyValues upd_property_tuples;
+	std::vector<std::tuple<std::string, std::string>> tuples;
 	auto& properties = ent.getProperties();
 	for (const auto& property: properties) {
 		auto& prop = property.second.property;
@@ -328,28 +308,16 @@ void StorageManager::updateEntity(LocatedEntity& ent) {
 		if (prop->hasFlags(prop_flag_persistence_mask)) {
 			continue;
 		}
-		KeyValues& active_store = prop->hasFlags(prop_flag_persistence_seen) ? upd_property_tuples : new_property_tuples;
 		if (property.second.modifiers.empty()) {
-			Atlas::Message::Element element;
-			prop->get(element);
-			if (element.isNone()) {
-				//TODO: Add code for deleting a database row when the value is none.
-				Atlas::Message::MapType propMap{{"val", std::move(element)}};
-				m_db.encodeObject(propMap, active_store[property.first]);
-			} else {
-				Atlas::Message::MapType propMap{{"val", std::move(element)}};
-				m_db.encodeObject(propMap, active_store[property.first]);
-			}
+			//TODO: Add code for deleting a database row when the value is none.
+			std::string value;
+			encodeProperty(*prop, value);
+			tuples.emplace_back(property.first, value);
 		} else {
-			auto& element = property.second.baseValue;
-			if (element.isNone()) {
-				//TODO: Add code for deleting a database row when the value is none.
-				Atlas::Message::MapType propMap{{"val", element}};
-				m_db.encodeObject(propMap, active_store[property.first]);
-			} else {
-				Atlas::Message::MapType propMap{{"val", element}};
-				m_db.encodeObject(propMap, active_store[property.first]);
-			}
+			//TODO: Add code for deleting a database row when the value is none.
+			std::string value;
+			encodeElement(property.second.baseValue, value);
+			tuples.emplace_back(property.first, value);
 		}
 
 		// FIXME check if this is new or just modded.
@@ -360,13 +328,8 @@ void StorageManager::updateEntity(LocatedEntity& ent) {
 		}
 		prop->addFlags(prop_flag_persistence_clean | prop_flag_persistence_seen);
 	}
-	if (!new_property_tuples.empty()) {
-		m_db.insertProperties(ent.getIdAsString(),
-							  new_property_tuples);
-	}
-	if (!upd_property_tuples.empty()) {
-		m_db.updateProperties(ent.getIdAsString(),
-							  upd_property_tuples);
+	if (!tuples.empty()) {
+		m_db.upsertProperties(ent.getIdAsString(), tuples);
 	}
 	ent.addFlags(entity_clean_mask);
 }
@@ -515,7 +478,7 @@ int StorageManager::restoreWorld(const Ref<LocatedEntity>& ent) {
 	return 0;
 }
 
-int StorageManager::shutdown(bool& exit_flag_ref, const std::map<long, Ref<LocatedEntity>>& entites) {
+int StorageManager::shutdown(bool&, const std::map<long, Ref<LocatedEntity>>&) {
 	tick();
 	m_db.blockUntilAllQueriesComplete();
 	return 0;

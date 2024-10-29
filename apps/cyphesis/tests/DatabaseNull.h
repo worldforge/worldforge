@@ -121,7 +121,7 @@ public:
 		return 0;
 	}
 
-	int registerEntityTable(const std::map<std::string, int>& chunks) override {
+	int registerEntityTable() override {
 		return 0;
 	}
 
@@ -150,10 +150,6 @@ public:
 	}
 
 	int scheduleCommand(const std::string& query) override {
-		return 0;
-	}
-
-	int runMaintainance() {
 		return 0;
 	}
 
