@@ -182,21 +182,18 @@ public:
 
 	// Interface for Entity and Property tables.
 
-	virtual int registerEntityTable(const std::map<std::string, int>& chunks) = 0;
+	virtual int registerEntityTable() = 0;
 
 	int insertEntity(const std::string& id,
 					 const std::string& loc,
 					 const std::string& type,
-					 int seq,
-					 const std::string& value);
+					 int seq);
 
 	int updateEntityWithoutLoc(const std::string& id,
-							   int seq,
-							   const std::string& location_data);
+							   int seq);
 
 	int updateEntity(const std::string& id,
 					 int seq,
-					 const std::string& location_data,
 					 const std::string& location_entity_id);
 
 	DatabaseResult selectEntities(const std::string& loc);

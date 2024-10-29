@@ -94,7 +94,7 @@ public:
 
 	int registerThoughtsTable() override;
 
-	int registerEntityTable(const std::map<std::string, int>& chunks) override;
+	int registerEntityTable() override;
 
 	int registerPropertyTable() override;
 

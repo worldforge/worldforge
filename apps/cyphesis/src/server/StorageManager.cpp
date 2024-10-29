@@ -146,8 +146,22 @@ void StorageManager::encodeElement(const Atlas::Message::Element& element, std::
 	m_db.encodeObject(map, store);
 }
 
+struct Measure {
+	std::chrono::steady_clock::time_point lastMeasured = std::chrono::steady_clock::now();
+
+	void report(const std::string& task) {
+		auto now = std::chrono::steady_clock::now();
+		std::chrono::nanoseconds elapsed = std::chrono::steady_clock::now() - lastMeasured;
+		spdlog::info("Task \"{}\" took {} ms.", task, elapsed.count() / 1'000'000);
+		lastMeasured = now;
+	}
+};
+
 void StorageManager::restorePropertiesRecursively(LocatedEntity& ent) {
+	Measure m;
 	DatabaseResult res = m_db.selectProperties(ent.getIdAsString());
+
+	m.report(fmt::format("query props for {}, got {}", ent.getIdAsString(), res.size()));
 
 	//Keep track of those properties that have been set on the instance, so we'll know what
 	//type properties we should ignore.
@@ -170,6 +184,7 @@ void StorageManager::restorePropertiesRecursively(LocatedEntity& ent) {
 		}
 		MapType prop_data;
 		m_db.decodeMessage(val_string, prop_data);
+		m.report(fmt::format("decode \"{}\" for {}", name, ent.getIdAsString()));
 		auto J = prop_data.find("val");
 		if (J == prop_data.end()) {
 			spdlog::error("No property value data for {}:{}",
@@ -186,6 +201,7 @@ void StorageManager::restorePropertiesRecursively(LocatedEntity& ent) {
 				continue;
 			}
 		}
+		m.report(fmt::format("check existing \"{}\" for {}", name, ent.getIdAsString()));
 
 
 		auto* prop = ent.modProperty(name, val);
@@ -193,14 +209,17 @@ void StorageManager::restorePropertiesRecursively(LocatedEntity& ent) {
 			auto newProp = m_propertyManager.addProperty(name);
 			prop = ent.setProperty(name, std::move(newProp));
 		}
+		m.report(fmt::format("create prop \"{}\" for {}", name, ent.getIdAsString()));
 
 		//If we get to here the property either doesn't exist, or have a different value than the default or existing property.
 		prop->set(val);
 		prop->addFlags(prop_flag_persistence_clean | prop_flag_persistence_seen);
 		prop->apply(ent);
 		ent.propertyApplied(name, *prop);
+		m.report(fmt::format("apply prop \"{}\" for {}", name, ent.getIdAsString()));
 		instanceProperties.insert(name);
 	}
+	m.report("created properties");
 
 	if (ent.getType()) {
 		for (auto& propIter: ent.getType()->defaults()) {
@@ -216,6 +235,7 @@ void StorageManager::restorePropertiesRecursively(LocatedEntity& ent) {
 			}
 		}
 	}
+	m.report("applied type properties");
 
 	if (ent.m_parent) {
 		auto domain = ent.m_parent->getDomain();
@@ -223,6 +243,7 @@ void StorageManager::restorePropertiesRecursively(LocatedEntity& ent) {
 			domain->addEntity(ent);
 		}
 	}
+	m.report("added to domain");
 
 
 	//Now restore all properties of the child entities.
@@ -248,15 +269,12 @@ void StorageManager::restorePropertiesRecursively(LocatedEntity& ent) {
 }
 
 void StorageManager::insertEntity(LocatedEntity& ent) {
-	std::string location;
-	Atlas::Message::MapType map;
-	m_db.encodeObject(map, location);
+
 
 	m_db.insertEntity(ent.getIdAsString(),
 					  ent.m_parent ? ent.m_parent->getIdAsString() : "",
 					  ent.getType()->name(),
-					  ent.getSeq(),
-					  location);
+					  ent.getSeq());
 	++m_insertEntityCount;
 	KeyValues property_tuples;
 	const auto& properties = ent.getProperties();
@@ -287,20 +305,15 @@ void StorageManager::insertEntity(LocatedEntity& ent) {
 }
 
 void StorageManager::updateEntity(LocatedEntity& ent) {
-	std::string location;
-	Atlas::Message::MapType map;
-	m_db.encodeObject(map, location);
 
-	//Under normal circumstances only the top world won't have a location.
+	//Under normal circumstances only the top world won't have a parent location.
 	if (ent.m_parent) {
 		m_db.updateEntity(ent.getIdAsString(),
 						  ent.getSeq(),
-						  location,
 						  ent.m_parent->getIdAsString());
 	} else {
 		m_db.updateEntityWithoutLoc(ent.getIdAsString(),
-									ent.getSeq(),
-									location);
+									ent.getSeq());
 	}
 	++m_updateEntityCount;
 	KeyValues new_property_tuples;
@@ -493,6 +506,7 @@ int StorageManager::restoreWorld(const Ref<LocatedEntity>& ent) {
 		//We do this by first restoring the children, without any properties, and the assigning the properties to
 		//all entities in order.
 		auto childCount = restoreChildren(*ent);
+		spdlog::info("Completed initial restoration of {} entities, will now populate with properties.", childCount);
 
 		restorePropertiesRecursively(*ent);
 

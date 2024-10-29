@@ -240,7 +240,7 @@ int DatabaseSQLite::registerSimpleTable(const std::string& name,
 	}
 	std::string createquery = "CREATE TABLE IF NOT EXISTS ";
 	createquery += name;
-	createquery += " (id integer UNIQUE PRIMARY KEY";
+	createquery += " (id integer NOT NULL PRIMARY KEY";
 	auto Iend = row.end();
 	for (auto I = row.begin(); I != Iend; ++I) {
 		createquery += ", ";
@@ -263,6 +263,7 @@ int DatabaseSQLite::registerSimpleTable(const std::string& name,
 		} else {
 			spdlog::error("Illegal column type in database simple row");
 		}
+		createquery += " NOT NULL";
 	}
 	createquery += ")";
 
@@ -296,24 +297,19 @@ long DatabaseSQLite::newId() {
 	return new_id;
 }
 
-int DatabaseSQLite::registerEntityTable(const std::map<std::string, int>& chunks) {
+int DatabaseSQLite::registerEntityTable() {
 	assert(m_database);
 
 	std::string query = fmt::format("CREATE TABLE IF NOT EXISTS entities ("
-									"id integer UNIQUE PRIMARY KEY, "
+									"id integer NOT NULL PRIMARY KEY, "
 									"loc integer, "
-									"type char({}), "
-									"seq integer", consts::id_len);
-	auto I = chunks.begin();
-	auto Iend = chunks.end();
-	for (; I != Iend; ++I) {
-		query += fmt::format(", {} varchar(1024)", I->first);
-	}
-	query += ")";
+									"type char({}) NOT NULL, "
+									"seq integer NOT NULL)", consts::id_len);
 	if (runCommandQuery(query) != 0) {
 		return -1;
 	}
-	query = fmt::format("INSERT INTO entities VALUES ({}, null, 'world', 0, '')",
+	//There's always a special "world" entity
+	query = fmt::format("INSERT INTO entities VALUES ({}, null, 'world', 0)",
 						consts::rootWorldIntId);
 	if (runCommandQuery(query) != 0) {
 		return -1;
@@ -325,10 +321,11 @@ int DatabaseSQLite::registerPropertyTable() {
 	assert(m_database);
 
 	std::string query = fmt::format("CREATE TABLE IF NOT EXISTS properties ("
-									"id integer REFERENCES entities "
+									"id integer NOT NULL REFERENCES entities "
 									"ON DELETE CASCADE, "
-									"name varchar({}), "
-									"value text)", consts::id_len);
+									"name varchar({}) NOT NULL, "
+									"value text,"
+									"PRIMARY KEY (id, name))", consts::id_len);
 	if (runCommandQuery(query) != 0) {
 		return -1;
 	}
@@ -344,9 +341,9 @@ int DatabaseSQLite::registerThoughtsTable() {
 	assert(m_database);
 
 	std::string query = "CREATE TABLE IF NOT EXISTS thoughts ("
-						"id integer REFERENCES entities "
+						"id integer NOT NULL PRIMARY KEY REFERENCES entities "
 						"ON DELETE CASCADE, "
-						"thought text)";
+						"thought text NOT NULL)";
 	if (runCommandQuery(query) != 0) {
 		return -1;
 	}

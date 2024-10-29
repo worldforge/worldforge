@@ -139,12 +139,7 @@ int Database::removeRelationRowByOther(const std::string& name,
 DatabaseResult Database::selectSimpleRowBy(const std::string& name,
 										   const std::string& column,
 										   const std::string& value) {
-	std::string query = "SELECT * FROM ";
-	query += name;
-	query += " WHERE ";
-	query += column;
-	query += " = ";
-	query += value;
+	auto query = fmt::format("SELECT * FROM {0} WHERE {1} = {2}", name, column, value);
 
 	cy_debug_print("Selecting on " << column << " = " << value
 								   << " ... ");
@@ -156,15 +151,7 @@ int Database::createSimpleRow(const std::string& name,
 							  const std::string& id,
 							  const std::string& columns,
 							  const std::string& values) {
-	std::string query = "INSERT INTO ";
-	query += name;
-	query += " ( id, ";
-	query += columns;
-	query += " ) VALUES ( ";
-	query += id;
-	query += ", ";
-	query += values;
-	query += ")";
+	auto query = fmt::format("INSERT INTO {0} ( id, {1}) VALUES ({2}, {3})", name, id, columns, values);
 
 	return scheduleCommand(query);
 }
@@ -173,15 +160,7 @@ int Database::updateSimpleRow(const std::string& name,
 							  const std::string& key,
 							  const std::string& value,
 							  const std::string& columns) {
-	std::string query = "UPDATE ";
-	query += name;
-	query += " SET ";
-	query += columns;
-	query += " WHERE ";
-	query += key;
-	query += "='";
-	query += value;
-	query += "'";
+	auto query = fmt::format("UPDATE {0} SET {1} WHERE {2} = '{3}'", name, columns, key, value);
 
 	return scheduleCommand(query);
 }
@@ -190,36 +169,33 @@ int Database::updateSimpleRow(const std::string& name,
 int Database::insertEntity(const std::string& id,
 						   const std::string& loc,
 						   const std::string& type,
-						   int seq,
-						   const std::string& value) {
+						   int seq) {
 	std::string query = fmt::format("INSERT INTO entities VALUES "
-									"({}, {}, '{}', {}, '{}')",
-									id, loc, type, seq, value);
+									"({}, {}, '{}', {})",
+									id, loc, type, seq);
 	return scheduleCommand(query);
 }
 
 int Database::updateEntity(const std::string& id,
 						   int seq,
-						   const std::string& location_data,
 						   const std::string& location_entity_id) {
-	std::string query = fmt::format("UPDATE entities SET seq = {}, location = '{}',"
+	std::string query = fmt::format("UPDATE entities SET seq = {}, "
 									" loc = '{}'"
-									" WHERE id = {}", seq, location_data,
+									" WHERE id = {}", seq,
 									location_entity_id, id);
 	return scheduleCommand(query);
 }
 
 int Database::updateEntityWithoutLoc(const std::string& id,
-									 int seq,
-									 const std::string& location_data) {
-	std::string query = fmt::format("UPDATE entities SET seq = {}, location = '{}'"
-									" WHERE id = {}", seq, location_data, id);
+									 int seq) {
+	std::string query = fmt::format("UPDATE entities SET seq = {}"
+									" WHERE id = {}", seq, id);
 	return scheduleCommand(query);
 }
 
 
 DatabaseResult Database::selectEntities(const std::string& loc) {
-	std::string query = fmt::format("SELECT id, type, seq, location FROM entities"
+	std::string query = fmt::format("SELECT id, type, seq FROM entities"
 									" WHERE loc = {}", loc);
 
 	cy_debug_print("Selecting on loc = " << loc << " ... ");
@@ -250,7 +226,7 @@ int Database::dropEntity(long id) {
 int Database::insertProperties(const std::string& id,
 							   const KeyValues& tuples) {
 	int first = 1;
-	std::string query("INSERT INTO properties VALUES ");
+	std::string query("INSERT INTO properties(id, name, value) VALUES ");
 	for (auto& tuple: tuples) {
 		if (first) {
 			query += fmt::format("({}, '{}', '{}')", id, tuple.first, tuple.second);
@@ -259,6 +235,7 @@ int Database::insertProperties(const std::string& id,
 			query += fmt::format(", ({}, '{}', '{}')", id, tuple.first, tuple.second);
 		}
 	}
+	query += " ON CONFLICT DO UPDATE SET value=excluded.value";
 	return scheduleCommand(query);
 }
 
@@ -273,13 +250,7 @@ DatabaseResult Database::selectProperties(const std::string& id) {
 
 int Database::updateProperties(const std::string& id,
 							   const KeyValues& tuples) {
-	for (const auto& entry: tuples) {
-		std::string query = fmt::format("UPDATE properties SET value = '{2}' WHERE"
-										" id={0} AND name='{1}'",
-										id, entry.first, entry.second);
-		scheduleCommand(query);
-	}
-	return 0;
+	return insertProperties(id, tuples);
 }
 
 

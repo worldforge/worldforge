@@ -43,10 +43,8 @@ Storage::Storage(Database& database) : m_connection(database) {
 					 "\"{}\".", ::instance);
 	}
 
-	std::map<std::string, int> chunks;
-	chunks["location"] = 0;
 
-	if (m_connection.registerEntityTable(chunks) != 0) {
+	if (m_connection.registerEntityTable() != 0) {
 		throw std::runtime_error("Failed to create Entity in database.");
 	}
 
