@@ -20,6 +20,7 @@
 #define CYPHESIS_ASSETSHANDLER_H
 
 #include "squall/core/Signature.h"
+#include "common/SynchedState.h"
 #include <string>
 #include <filesystem>
 #include <optional>
@@ -36,7 +37,12 @@ private:
 
 	std::filesystem::path mSquallRepositoryPath;
 
-	std::optional<Squall::Signature> mSquallSignature;
+	struct State {
+		std::optional<Squall::Signature> mSquallSignature;
+	};
+
+	SynchedState<State> mState;
+
 };
 
 #endif  // CYPHESIS_ASSETSHANDLER_H

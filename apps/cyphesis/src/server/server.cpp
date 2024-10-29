@@ -399,6 +399,7 @@ int run() {
 
 	//We'll use a separate thread pool for the background http requests.
 	boost::asio::thread_pool httpThreadPool{1};
+	boost::asio::thread_pool squallThreadPool{1};
 
 
 	try {
@@ -534,14 +535,14 @@ int run() {
 		serverRouting.setAssets({assetsHandler.resolveAssetsUrl()});
 
 
-		assets_manager.observeDirectory(assetsPath.string(), [assetsPath, &ctx = *io_context, &assetsHandler, &serverRouting](const std::filesystem::path& path) {
+		assets_manager.observeDirectory(assetsPath.string(), [assetsPath, &ctx = *io_context, &assetsHandler, &serverRouting, &squallThreadPool](const std::filesystem::path& path) {
 
 			spdlog::debug("Assets have changed; will regenerate Squall repository.");
 			auto promise = saf::promise<std::optional<Squall::Signature>>{ctx};
 			auto future = promise.get_future();
-			std::async([assetsPath, p = std::move(promise), &assetsHandler]() mutable {
-				auto result = assetsHandler.refreshSquallRepository(assetsPath);
-				p.set_value(result);
+			//Run squall thread pool.
+			boost::asio::post(squallThreadPool, [assetsPath, p = std::move(promise), &assetsHandler]() mutable {
+				p.set_value(assetsHandler.refreshSquallRepository(assetsPath));
 			});
 
 			boost::asio::co_spawn(ctx, [future = std::move(future), &assetsHandler, &serverRouting]() mutable -> boost::asio::awaitable<void> {
