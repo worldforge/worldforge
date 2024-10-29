@@ -148,7 +148,7 @@ int Database::createSimpleRow(const std::string& name,
 							  const std::string& id,
 							  const std::string& columns,
 							  const std::string& values) {
-	auto query = fmt::format("INSERT INTO {0} ( id, {1}) VALUES ({2}, {3})", name, id, columns, values);
+	auto query = fmt::format("INSERT INTO {0} ( id, {1}) VALUES ({2}, {3})", name, columns, id, values);
 
 	return scheduleCommand(query);
 }
