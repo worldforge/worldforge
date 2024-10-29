@@ -57,6 +57,7 @@ target_link_libraries(cyphesis-common PUBLIC
         external-saf
         external-binreloc
         external-bytesize
+        Microsoft.GSL::GSL
 )
 
 target_compile_features(cyphesis-common PUBLIC cxx_std_20)

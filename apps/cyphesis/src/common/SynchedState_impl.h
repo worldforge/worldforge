@@ -22,26 +22,26 @@
 
 template<typename T>
 template<typename TReturn>
-TReturn SynchedState<T>::withState(std::function<TReturn(T&)> block) {
+TReturn SynchedState<T>::withState(std::function<TReturn(gsl::not_null<T*>)> block) {
 	std::scoped_lock lock(mMutex);
-	return block(mState);
+	return block(&mState);
 }
 
 template<typename T>
-void SynchedState<T>::withState(std::function<void(T&)> block) {
+void SynchedState<T>::withState(std::function<void(gsl::not_null<T*>)> block) {
 	std::scoped_lock lock(mMutex);
-	block(mState);
+	block(&mState);
 }
 
 template<typename T>
 template<typename TReturn>
-TReturn SynchedState<T>::withStateConst(std::function<TReturn(const T&)> block) const {
+TReturn SynchedState<T>::withStateConst(std::function<TReturn(gsl::not_null<const T*>)> block) const {
 	std::scoped_lock lock(mMutex);
-	return block(mState);
+	return block(&mState);
 }
 
 template<typename T>
-void SynchedState<T>::withStateConst(std::function<void(const T&)> block) const {
+void SynchedState<T>::withStateConst(std::function<void(gsl::not_null<const T*>)> block) const {
 	std::scoped_lock lock(mMutex);
-	block(mState);
+	block(&mState);
 }

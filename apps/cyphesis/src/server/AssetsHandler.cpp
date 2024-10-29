@@ -30,7 +30,7 @@ AssetsHandler::AssetsHandler(std::filesystem::path squallRepositoryPath)
 }
 
 std::string AssetsHandler::resolveAssetsUrl() const {
-	auto signature = mState.withStateConst<std::optional<Squall::Signature>>([](auto state) { return state.mSquallSignature; });
+	auto signature = mState.withStateConst<std::optional<Squall::Signature>>([](auto state) { return state->mSquallSignature; });
 
 	if (signature) {
 		//By omitting host we're telling the client to use the same host as the current connection.
@@ -47,7 +47,7 @@ std::optional<Squall::Signature> AssetsHandler::refreshSquallRepository(std::fil
 	auto rootSignatureResult = assetsGenerator.generateFromAssets("cyphesis-" + ruleset_name);
 	if (rootSignatureResult) {
 		mState.withState([rootSignatureResult](auto state) {
-			state.mSquallSignature = *rootSignatureResult;
+			state->mSquallSignature = *rootSignatureResult;
 		});
 	}
 	return rootSignatureResult;

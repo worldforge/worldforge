@@ -22,6 +22,7 @@ set(VERSION_FALLBACK "0.9.0-dev")
 
 find_package(cppunit 1.15.1 EXACT)
 find_package(spdlog REQUIRED)
+find_package(Microsoft.GSL REQUIRED)
 
 find_package(Git QUIET)
 

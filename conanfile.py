@@ -46,7 +46,7 @@ class Worldforge(ConanFile):
     def requirements(self):
 
         if not is_msvc(self):
-            #Just use a more recent version
+            # Just use a more recent version
             self.requires("pkgconf/2.2.0", force=True)
 
         self.requires("libsigcpp/3.0.7")
@@ -54,6 +54,7 @@ class Worldforge(ConanFile):
         self.requires("spdlog/1.14.1")
         self.requires("cli11/2.4.2")
         self.requires("boost/1.86.0")
+        self.requires("ms-gsl/4.0.0")
 
         self.requires("zlib/1.3.1")
         self.requires("bzip2/1.0.8")

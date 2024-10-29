@@ -35,8 +35,8 @@ class Monitors : public Singleton<Monitors> {
 private:
 
 	struct State {
-		Atlas::Message::MapType m_pairs;
-		std::map<std::string, std::unique_ptr<VariableBase>> m_variableMonitors;
+		Atlas::Message::MapType pairs;
+		std::map<std::string, std::unique_ptr<VariableBase>> variableMonitors;
 	};
 	SynchedState<State> mState;
 

@@ -33,11 +33,11 @@ Monitors::~Monitors() = default;
 
 
 void Monitors::insert(std::string key, const Element& val) {
-	mState.withState([&](auto& state) { state.m_pairs[std::move(key)] = val; });
+	mState.withState([&](auto state) { state->pairs[std::move(key)] = val; });
 }
 
 void Monitors::watch(std::string name, std::unique_ptr<VariableBase> monitor) {
-	mState.withState([&](auto& state) { state.m_variableMonitors[std::move(name)] = std::move(monitor); });
+	mState.withState([&](auto state) { state->variableMonitors[std::move(name)] = std::move(monitor); });
 }
 
 void Monitors::watch(std::string name, int& value) {
@@ -70,12 +70,12 @@ static std::ostream& operator<<(std::ostream& s, const Element& e) {
 }
 
 void Monitors::send(std::ostream& io) const {
-	mState.withStateConst<void>([&](auto& state) {
-		for (auto& entry: state.m_pairs) {
+	mState.withStateConst<void>([&](auto state) {
+		for (auto& entry: state->pairs) {
 			io << entry.first << " " << entry.second << "\n";
 		}
 
-		for (auto& entry: state.m_variableMonitors) {
+		for (auto& entry: state->variableMonitors) {
 			io << entry.first << " ";
 			entry.second->send(io);
 			io << "\n";
@@ -85,14 +85,14 @@ void Monitors::send(std::ostream& io) const {
 
 void Monitors::sendNumerics(std::ostream& io) const {
 
-	mState.withStateConst([&](auto& state) {
-		for (auto& entry: state.m_pairs) {
+	mState.withStateConst([&](auto state) {
+		for (auto& entry: state->pairs) {
 			if (entry.second.isNum()) {
 				io << entry.first << " " << entry.second << "\n";
 			}
 		}
 
-		for (auto& entry: state.m_variableMonitors) {
+		for (auto& entry: state->variableMonitors) {
 			if (entry.second->isNumeric()) {
 				io << entry.first << " ";
 				entry.second->send(io);
@@ -103,15 +103,15 @@ void Monitors::sendNumerics(std::ostream& io) const {
 }
 
 int Monitors::readVariable(const std::string& key, std::ostream& out_stream) const {
-	return mState.withStateConst<int>([&](auto& state) {
-		auto J = state.m_variableMonitors.find(key);
-		if (J != state.m_variableMonitors.end()) {
+	return mState.withStateConst<int>([&](auto state) {
+		auto J = state->variableMonitors.find(key);
+		if (J != state->variableMonitors.end()) {
 			J->second->send(out_stream);
 			return 0;
 		}
 
-		auto I = state.m_pairs.find(key);
-		if (I != state.m_pairs.end()) {
+		auto I = state->pairs.find(key);
+		if (I != state->pairs.end()) {
 			out_stream << I->second;
 			return 0;
 		}

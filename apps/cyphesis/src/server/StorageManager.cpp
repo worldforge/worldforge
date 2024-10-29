@@ -469,7 +469,7 @@ int StorageManager::restoreWorld(const Ref<LocatedEntity>& ent) {
 		//We do this by first restoring the children, without any properties, and the assigning the properties to
 		//all entities in order.
 		auto childCount = restoreChildren(*ent);
-		spdlog::info("Completed initial restoration of {} entities, will now populate with properties.", childCount);
+		spdlog::debug("Completed initial restoration of {} entities, will now populate with properties.", childCount);
 
 		restorePropertiesRecursively(*ent);
 

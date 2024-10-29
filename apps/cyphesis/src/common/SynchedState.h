@@ -18,13 +18,16 @@
 
 #pragma once
 
-
-#include "boost/noncopyable.hpp"
 #include <functional>
 #include <mutex>
+#include <boost/noncopyable.hpp>
+#include <gsl/pointers>
 
 /**
  * Hides state behind a mutex.
+ *
+ * Note that the callback takes a "gsl::not_null" instance. Initially we used a reference, but it was too easy to by mistake declare the callback with a value type, thus inadvertently causing
+ * a copy operation.
  * @tparam T
  */
 template<typename T>
@@ -34,12 +37,12 @@ private:
 	T mState;
 public:
 	template<typename TReturn>
-	TReturn withState(std::function<TReturn(T& state)> block);
+	TReturn withState(std::function<TReturn(gsl::not_null<T*> state)> block);
 
-	void withState(std::function<void(T& state)> block);
+	void withState(std::function<void(gsl::not_null<T*> state)> block);
 
 	template<typename TReturn>
-	TReturn withStateConst(std::function<TReturn(const T& state)> block) const;
+	TReturn withStateConst(std::function<TReturn(gsl::not_null<const T*> state)> block) const;
 
-	void withStateConst(std::function<void(const T& state)> block) const;
+	void withStateConst(std::function<void(gsl::not_null<const T*> state)> block) const;
 };
