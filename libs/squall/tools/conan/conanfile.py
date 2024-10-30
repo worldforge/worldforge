@@ -28,14 +28,6 @@ class SquallConan(ConanFile):
         self.requires("cli11/2.4.2")
         self.test_requires("catch2/3.7.1")
 
-    def export(self):
-        git = Git(self, self.recipe_folder)
-        try:
-            scm_url, scm_commit = git.get_url_and_commit()
-            update_conandata(self, {"sources": {"commit": scm_commit, "url": scm_url}})
-        except ConanException:
-            pass
-
     def export_sources(self):
         folder = os.path.join(self.recipe_folder, "../..")
         copy(self, "*", folder, self.export_sources_folder, excludes=["build"])
