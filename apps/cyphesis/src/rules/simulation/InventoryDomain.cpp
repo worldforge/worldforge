@@ -20,14 +20,12 @@
 #include "rules/simulation/LocatedEntity.h"
 
 #include "common/TypeNode.h"
-#include "AmountProperty.h"
 #include "StackableDomain.h"
 #include "ModeDataProperty.h"
 
 #include <Atlas/Objects/Anonymous.h>
 
 #include <unordered_set>
-#include <common/operations/Update.h>
 
 static const bool debug_flag = true;
 
@@ -152,7 +150,7 @@ std::vector<Domain::CollisionEntry> InventoryDomain::queryCollision(const WFMath
 	if (m_entity.m_contains) {
 		entries.reserve(m_entity.m_contains->size());
 		for (auto& child: *m_entity.m_contains) {
-			entries.emplace_back(Domain::CollisionEntry{child.get(), WFMath::Point<3>::ZERO(), 0.0f});
+			entries.emplace_back(Domain::CollisionEntry{.entity=child.get(), .collisionPoint=WFMath::Point<3>::ZERO(), .distance=0.0f});
 		}
 	}
 	return entries;
@@ -160,9 +158,9 @@ std::vector<Domain::CollisionEntry> InventoryDomain::queryCollision(const WFMath
 
 std::optional<std::function<void()>> InventoryDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
 	if (&reacher == &m_entity) {
-		auto obs = new ClosenessObserverEntry{target, callback};
+		auto obs = new ClosenessObserverEntry{.target=target, .callback=callback};
 		m_closenessObservations[target.getIdAsString()].emplace(obs, std::unique_ptr<ClosenessObserverEntry>(obs));
-		return std::optional<std::function<void()>>([this, &target, obs]() {
+		return {[this, &target, obs]() {
 			auto I = m_closenessObservations.find(target.getIdAsString());
 			if (I != m_closenessObservations.end()) {
 				auto J = I->second.find(obs);
@@ -173,7 +171,7 @@ std::optional<std::function<void()>> InventoryDomain::observeCloseness(LocatedEn
 					}
 				}
 			}
-		});
+		}};
 	}
 	return {};
 }

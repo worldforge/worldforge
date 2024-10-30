@@ -30,7 +30,7 @@ class TerrainEffectorProperty : public Property<Atlas::Message::MapType, Located
 protected:
 	TerrainEffectorProperty(const TerrainEffectorProperty& rhs) = default;
 
-	const TerrainProperty* getTerrain(LocatedEntity& owner, LocatedEntity** terrainHolder = nullptr);
+	const TerrainProperty* getTerrain(const LocatedEntity& owner, const LocatedEntity** terrainHolder = nullptr);
 
 	friend class TerrainEffectorPropertytest;
 

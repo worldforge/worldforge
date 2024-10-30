@@ -88,6 +88,8 @@ protected:
 	 */
 	int mParsedLayer;
 
+	bool mIsScaled;
+
 	/**
 	 * @brief Places the area.
 	 * If no Mercator::Area instance has been created, one will be created here. If however there's already an existing area it will be updated.

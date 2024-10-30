@@ -51,7 +51,7 @@ protected:
 		std::vector<std::string> surfaceNames;
 	};
 
-	std::pair<std::unique_ptr<Mercator::TileShader>, std::vector<std::string>> createShaders(const Atlas::Message::ListType& surfaceList) const;
+	static std::pair<std::unique_ptr<Mercator::TileShader>, std::vector<std::string>> createShaders(const Atlas::Message::ListType& surfaceList) ;
 
 	TerrainProperty(const TerrainProperty& rhs) = default;
 
@@ -73,23 +73,21 @@ public:
 
 	void apply(LocatedEntity& entity) override;
 
-	bool getHeightAndNormal(LocatedEntity& entity, float x, float z, float&, Vector3D&) const;
+	static bool getHeightAndNormal(LocatedEntity& entity, float x, float z, float&, Vector3D&) ;
 
-	bool getHeight(LocatedEntity& entity, float x, float z, float&) const;
+	static bool getHeight(LocatedEntity& entity, float x, float z, float&) ;
 
-	std::optional<int> getSurface(LocatedEntity& entity, float x, float z) const;
+	static std::optional<int> getSurface(LocatedEntity& entity, float x, float z) ;
 
 	/// \brief Find the mods at a given location
 	///
 	/// @param pos the x,y coordinates of a point on the terrain
 	/// @param mods a reference to the list to be returned
-	std::optional<std::vector<LocatedEntity*>> findMods(LocatedEntity& entity, float x, float z) const;
+	static std::optional<std::vector<LocatedEntity*>> findMods(LocatedEntity& entity, float x, float z) ;
 
-	Mercator::Terrain& getData(const LocatedEntity& entity);
+	static Mercator::Terrain& getData(const LocatedEntity& entity);
 
-	Mercator::Terrain& getData(const LocatedEntity& entity) const;
-
-	const std::vector<std::string>& getSurfaceNames(const LocatedEntity& entity) const;
+	static const std::vector<std::string>& getSurfaceNames(const LocatedEntity& entity) ;
 
 
 };

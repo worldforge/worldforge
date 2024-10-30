@@ -36,303 +36,285 @@ using WFMath::RotBox;
 using WFMath::numeric_constants;
 
 template<int dim>
-class LinearCourse : public Course<dim, Line>
-{
+class LinearCourse : public Course<dim, Line> {
 };
 
-Shape::Shape()
-{
-}
+Shape::Shape() = default;
 
-Shape::~Shape()
-{
-}
+Shape::~Shape() = default;
 
 //////////////////////////////// Ball /////////////////////////////////
 
 template<>
-Polygon<2> MathShape<Ball, 2>::outline(CoordType precision) const
-{
-    Polygon<2> shape_outline;
-    CoordType radius = m_shape.radius();
-    CoordType segments = radius * numeric_constants<CoordType>::pi() * 2.f / precision;
-    // FIXME lrint this properly
-    size_t count = (size_t) std::ceil(segments);
-    CoordType seg = numeric_constants<CoordType>::pi() * 2.f / count;
-    for (size_t i = 0; i < count; ++i) {
-        shape_outline.addCorner(i, Point<2>(radius * std::cos(seg * i),
-                                            radius * std::sin(seg * i)));
-    }
-    return shape_outline;
+Polygon<2> MathShape<Ball, 2>::outline(CoordType precision) const {
+	Polygon<2> shape_outline;
+	CoordType radius = m_shape.radius();
+	CoordType segments = radius * numeric_constants<CoordType>::pi() * 2.f / precision;
+	// FIXME lrint this properly
+	auto count = (size_t) std::ceil(segments);
+	CoordType seg = numeric_constants<CoordType>::pi() * 2.f / (double) count;
+	for (size_t i = 0; i < count; ++i) {
+		shape_outline.addCorner(i, Point<2>(radius * std::cos(seg * (double) i),
+											radius * std::sin(seg * (double) i)));
+	}
+	return shape_outline;
 }
 
 template<>
-const char* MathShape<Ball, 2>::getType() const
-{
-    return "circle";
+const char* MathShape<Ball, 2>::getType() const {
+	return "circle";
 }
 
 template<>
-int MathShape<Ball, 2>::fromAtlas(const Element& data)
-{
-    int ret = -1;
-    try {
-        if (data.isMap()) {
-            m_shape.fromAtlas(data.Map());
-            ret = 0;
-        }
-    }
-    catch (const Atlas::Message::WrongTypeException& e) {
-    }
-    return ret;
+int MathShape<Ball, 2>::fromAtlas(const Element& data) {
+	int ret = -1;
+	try {
+		if (data.isMap()) {
+			m_shape.fromAtlas(data.Map());
+			ret = 0;
+		}
+	}
+	catch (const Atlas::Message::WrongTypeException& e) {
+	}
+	return ret;
 }
 
 template<>
-void MathShape<Ball, 2>::toAtlas(MapType& data) const
-{
-    Element e = m_shape.toAtlas();
-    if (e.isMap()) {
-        data = e.Map();
-        data["type"] = getType();
-    }
+void MathShape<Ball, 2>::toAtlas(MapType& data) const {
+	Element e = m_shape.toAtlas();
+	if (e.isMap()) {
+		data = e.Map();
+		data["type"] = getType();
+	}
 }
 
 /////////////////////////////// Course ////////////////////////////////
 
 template<>
-Polygon<2> MathShape<LinearCourse, 2>::outline(CoordType precision) const
-{
-    Polygon<2> shape_outline;
-    size_t count = m_shape.numCorners();
-    if (count == 0) {
-        shape_outline.resize(count * 2);
-        for (size_t i = 0; i < count; ++i) {
-            WFMath::Vector<2> dir(0, 0);
-            if (i != 0) {
-                dir += m_shape.getCorner(i - 1) - m_shape.getCorner(i);
-            }
-            if (i < count - 1) {
-                dir += m_shape.getCorner(i) - m_shape.getCorner(i + 1);
-            }
-            CoordType mag = dir.mag();
-            dir /= mag;
-            // FIXME Actually sort the outline
-        }
-    }
-    return shape_outline;
+Polygon<2> MathShape<LinearCourse, 2>::outline(CoordType precision) const {
+	Polygon<2> shape_outline;
+	size_t count = m_shape.numCorners();
+	if (count != 0) {
+		shape_outline.resize(count * 2);
+		for (size_t i = 0; i < count; ++i) {
+			WFMath::Vector<2> dir(0, 0);
+			if (i != 0) {
+				dir += m_shape.getCorner(i - 1) - m_shape.getCorner(i);
+			}
+			if (i < count - 1) {
+				dir += m_shape.getCorner(i) - m_shape.getCorner(i + 1);
+			}
+			CoordType mag = dir.mag();
+			dir /= mag;
+			// FIXME Actually sort the outline
+		}
+	}
+	return shape_outline;
 }
 
 template<>
-const char* MathShape<LinearCourse, 2>::getType() const
-{
-    return "course";
+const char* MathShape<LinearCourse, 2>::getType() const {
+	return "course";
 }
 
 ////////////////////////////// AxisBox ////////////////////////////////
 
 template<>
-const char* MathShape<AxisBox, 2>::getType() const
-{
-    return "box";
+const char* MathShape<AxisBox, 2>::getType() const {
+	return "box";
 }
 
 template<>
-int MathShape<AxisBox, 2>::fromAtlas(const Element& data)
-{
-    int ret = -1;
-    try {
-        if (data.isMap()) {
-            const MapType& datamap = data.Map();
-            auto I = datamap.find("points");
-            if (I != datamap.end()) {
-                m_shape.fromAtlas(I->second);
-                ret = 0;
-            }
-        } else {
-            m_shape.fromAtlas(data.asList());
-            ret = 0;
-        }
-    }
-    catch (const Atlas::Message::WrongTypeException& e) {
-    }
-    return ret;
+int MathShape<AxisBox, 2>::fromAtlas(const Element& data) {
+	int ret = -1;
+	try {
+		if (data.isMap()) {
+			const MapType& datamap = data.Map();
+			auto I = datamap.find("points");
+			if (I != datamap.end()) {
+				m_shape.fromAtlas(I->second);
+				ret = 0;
+			}
+		} else {
+			m_shape.fromAtlas(data.asList());
+			ret = 0;
+		}
+	}
+	catch (const Atlas::Message::WrongTypeException& e) {
+	}
+	return ret;
 }
 
 template<>
-void MathShape<AxisBox, 2>::toAtlas(MapType& data) const
-{
-    data["type"] = getType();
-    data["points"] = m_shape.toAtlas();
+void MathShape<AxisBox, 2>::toAtlas(MapType& data) const {
+	data["type"] = getType();
+	data["points"] = m_shape.toAtlas();
 }
 
 //////////////////////////////// Line /////////////////////////////////
 
 template<>
-const char* MathShape<Line, 2>::getType() const
-{
-    return "line";
+const char* MathShape<Line, 2>::getType() const {
+	return "line";
 }
 
 template<>
-void MathShape<Line, 2>::scale(CoordType factor)
-{
-    size_t count = m_shape.numCorners();
-    for (size_t i = 0; i < count; ++i) {
-        auto corner = m_shape.getCorner(i);
-        m_shape.moveCorner(i, Point<2>(corner.x() * factor,
-                                       corner.y() * factor));
-    }
+void MathShape<Line, 2>::scale(CoordType factor) {
+	size_t count = m_shape.numCorners();
+	for (size_t i = 0; i < count; ++i) {
+		auto corner = m_shape.getCorner(i);
+		m_shape.moveCorner(i, Point<2>(corner.x() * factor,
+									   corner.y() * factor));
+	}
 }
+
 
 /////////////////////////////// Point /////////////////////////////////
 
 template<>
-const char* MathShape<Point, 2>::getType() const
-{
-    return "point";
+const char* MathShape<Point, 2>::getType() const {
+	return "point";
 }
 
 template<>
-bool MathShape<Point, 2>::intersect(const Point<2>& p) const
-{
-    return WFMath::Equal(m_shape, p);
+bool MathShape<Point, 2>::intersect(const Point<2>& p) const {
+	return WFMath::Equal(m_shape, p);
 }
 
 template<>
-int MathShape<Point, 2>::fromAtlas(const Element& data)
-{
-    int ret = -1;
-    try {
-        if (data.isMap()) {
-            const MapType& datamap = data.Map();
-            auto I = datamap.find("pos");
-            if (I != datamap.end()) {
-                m_shape.fromAtlas(I->second);
-                ret = 0;
-            }
-        } else {
-            m_shape.fromAtlas(data.asList());
-            ret = 0;
-        }
-    }
-    catch (const Atlas::Message::WrongTypeException& e) {
-    }
-    return ret;
+int MathShape<Point, 2>::fromAtlas(const Element& data) {
+	int ret = -1;
+	try {
+		if (data.isMap()) {
+			const MapType& datamap = data.Map();
+			auto I = datamap.find("pos");
+			if (I != datamap.end()) {
+				m_shape.fromAtlas(I->second);
+				ret = 0;
+			}
+		} else {
+			m_shape.fromAtlas(data.asList());
+			ret = 0;
+		}
+	}
+	catch (const Atlas::Message::WrongTypeException& e) {
+	}
+	return ret;
 }
 
 template<>
-void MathShape<Point, 2>::toAtlas(MapType& data) const
-{
-    Element e = m_shape.toAtlas();
-    if (e.isList()) {
-        data["pos"] = e.asList();
-        data["type"] = getType();
-    }
+void MathShape<Point, 2>::toAtlas(MapType& data) const {
+	Element e = m_shape.toAtlas();
+	if (e.isList()) {
+		data["pos"] = e.asList();
+		data["type"] = getType();
+	}
 }
 
 ////////////////////////////// Polygon ////////////////////////////////
 
 template<>
-Polygon<2> MathShape<Polygon, 2>::outline(CoordType precision) const
-{
-    return m_shape;
+Polygon<2> MathShape<Polygon, 2>::outline(CoordType precision) const {
+	return m_shape;
 }
 
 template<>
-const char* MathShape<Polygon, 2>::getType() const
-{
-    return "polygon";
+const char* MathShape<Polygon, 2>::getType() const {
+	return "polygon";
 }
 
 template<>
-CoordType MathShape<Polygon, 2>::area() const
-{
-    CoordType area = 0;
+CoordType MathShape<Polygon, 2>::area() const {
+	CoordType area = 0;
 
-    size_t count = m_shape.numCorners();
-    for (size_t i = 0; i < count; ++i) {
-        Point<2> corner = m_shape.getCorner(i);
-        Point<2> corner2 = m_shape.getCorner((i + 1) % count);
-        area += corner.x() * corner2.y();
-        area -= corner.y() * corner2.x();
-    }
+	size_t count = m_shape.numCorners();
+	for (size_t i = 0; i < count; ++i) {
+		Point<2> corner = m_shape.getCorner(i);
+		Point<2> corner2 = m_shape.getCorner((i + 1) % count);
+		area += corner.x() * corner2.y();
+		area -= corner.y() * corner2.x();
+	}
 
-    return std::fabs(area / 2.f);
+	return std::fabs(area / 2.f);
 }
 
 template<>
-void MathShape<Polygon, 2>::scale(CoordType factor)
-{
-    for (size_t i = 0; i < m_shape.numCorners(); ++i) {
-        Point<2> corner = m_shape.getCorner(i);
-        m_shape.moveCorner(i, Point<2>(corner.x() * factor,
-                                       corner.y() * factor));
-    }
+void MathShape<Polygon, 2>::scale(CoordType factor) {
+	for (size_t i = 0; i < m_shape.numCorners(); ++i) {
+		Point<2> corner = m_shape.getCorner(i);
+		m_shape.moveCorner(i, Point<2>(corner.x() * factor,
+									   corner.y() * factor));
+	}
+}
+
+template<>
+void MathShape<Polygon, 2>::scaleInPlace(Polygon<2>& shape, const WFMath::Vector<2>& scale) {
+	for (size_t i = 0; i < shape.numCorners(); ++i) {
+		Point<2> corner = shape.getCorner(i);
+		shape.moveCorner(i, Point<2>(corner.x() * scale.x(),
+									 corner.y() * scale.y()));
+	}
 }
 
 /////////////////////////////// RotBox ////////////////////////////////
 
 template<>
-const char* MathShape<RotBox, 2>::getType() const
-{
-    return "rotbox";
+const char* MathShape<RotBox, 2>::getType() const {
+	return "rotbox";
 }
 
 template<>
-int MathShape<RotBox, 2>::fromAtlas(const Element& data)
-{
-    int ret = -1;
-    try {
-        if (data.isMap()) {
-            m_shape.fromAtlas(data.Map());
-            ret = 0;
-        }
-    }
-    catch (const Atlas::Message::WrongTypeException& e) {
-    }
-    return ret;
+int MathShape<RotBox, 2>::fromAtlas(const Element& data) {
+	int ret = -1;
+	try {
+		if (data.isMap()) {
+			m_shape.fromAtlas(data.Map());
+			ret = 0;
+		}
+	}
+	catch (const Atlas::Message::WrongTypeException& e) {
+	}
+	return ret;
 }
 
 template<>
-void MathShape<RotBox, 2>::toAtlas(MapType& data) const
-{
-    Element e = m_shape.toAtlas();
-    if (e.isMap()) {
-        data = e.Map();
-        data["type"] = getType();
-    }
+void MathShape<RotBox, 2>::toAtlas(MapType& data) const {
+	Element e = m_shape.toAtlas();
+	if (e.isMap()) {
+		data = e.Map();
+		data["type"] = getType();
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////
 
-std::unique_ptr<Shape> Shape::newFromAtlas(const MapType& data)
-{
-    auto I = data.find("type");
-    if (I == data.end() || !I->second.isString()) {
-        return nullptr;
-    }
-    const std::string& type = I->second.String();
-    std::unique_ptr<Shape> new_shape;
-    if (type == "polygon") {
-        new_shape = std::make_unique<MathShape<Polygon>>();
-    } else if (type == "line") {
-        new_shape = std::make_unique<MathShape<Line>>();
-    } else if (type == "circle") {
-        new_shape = std::make_unique<MathShape<Ball>>();
-    } else if (type == "point") {
-        new_shape = std::make_unique<MathShape<Point>>();
-    } else if (type == "rotbox") {
-        new_shape = std::make_unique<MathShape<RotBox>>();
-    } else if (type == "box") {
-        new_shape = std::make_unique<MathShape<AxisBox>>();
-    }
-    if (new_shape != nullptr) {
-        int res = new_shape->fromAtlas(data);
-        if (res != 0) {
-            new_shape.reset();
-        }
-    }
-    return new_shape;
+std::unique_ptr<Form<2>> Form<2>::newFromAtlas(const MapType& data) {
+	auto I = data.find("type");
+	if (I == data.end() || !I->second.isString()) {
+		return nullptr;
+	}
+	const std::string& type = I->second.String();
+	std::unique_ptr<Form<2>> new_shape;
+	if (type == "polygon") {
+		new_shape = std::make_unique<MathShape<Polygon>>();
+	} else if (type == "line") {
+		new_shape = std::make_unique<MathShape<Line>>();
+	} else if (type == "circle") {
+		new_shape = std::make_unique<MathShape<Ball>>();
+	} else if (type == "point") {
+		new_shape = std::make_unique<MathShape<Point>>();
+	} else if (type == "rotbox") {
+		new_shape = std::make_unique<MathShape<RotBox>>();
+	} else if (type == "box") {
+		new_shape = std::make_unique<MathShape<AxisBox>>();
+	}
+	if (new_shape != nullptr) {
+		int res = new_shape->fromAtlas(data);
+		if (res != 0) {
+			new_shape.reset();
+		}
+	}
+	return new_shape;
 }
 
 template

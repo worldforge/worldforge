@@ -234,7 +234,7 @@ AreaAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, con
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/AreaAdapter.layout");
 	PushButton* button = dynamic_cast<PushButton*> (container->getChildRecursive("showButton"));
 	Combobox* layerWindow = dynamic_cast<Combobox*> (container->getChildRecursive("Layer"));
-	return new AreaAdapter(element, button, layerWindow, entity);
+	return new AreaAdapter(element, button, layerWindow, dynamic_cast<ToggleButton*> (container->getChildRecursive("IsScaled")), entity);
 }
 
 template<>

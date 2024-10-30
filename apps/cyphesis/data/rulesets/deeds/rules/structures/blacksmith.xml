@@ -47,6 +47,7 @@
             <map name="area">
                 <map name="default">
                     <int name="layer">7</int>
+					<int name="scaled">1</int>
                     <map name="shape">
                         <list name="points">
                             <list>

@@ -46,9 +46,14 @@ public:
 	* @param layer The layer of the area will be put here.
 	* @return True if the parsing was successful.
 	*/
-	static bool parseArea(const Atlas::Message::MapType& areaData, WFMath::Polygon<2>& poly, int& layer);
+	static bool parseArea(const Atlas::Message::MapType& areaData,
+						  WFMath::Polygon<2>& poly,
+						  int& layer,
+						  bool& isScaled);
 
-	static Atlas::Message::Element createElement(const WFMath::Polygon<2>& poly, int layer);
+	static Atlas::Message::Element createElement(const WFMath::Polygon<2>& poly,
+												 int layer,
+												 bool isScaled);
 
 };
 

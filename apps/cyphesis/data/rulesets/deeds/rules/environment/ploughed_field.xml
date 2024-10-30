@@ -9,6 +9,7 @@
                 <int name="vis_dist">100</int>
                 <map name="area">
                     <int name="layer">8</int>
+					<int name="scaled">1</int>
                     <map name="shape">
                         <list name="points">
                             <list>

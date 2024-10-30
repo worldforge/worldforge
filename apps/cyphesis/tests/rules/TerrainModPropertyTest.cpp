@@ -139,7 +139,7 @@ int main()
 
 #include <Mercator/TerrainMod.h>
 
-const TerrainProperty * TerrainEffectorProperty::getTerrain(LocatedEntity & owner, LocatedEntity**)
+const TerrainProperty * TerrainEffectorProperty::getTerrain(const LocatedEntity & owner, const LocatedEntity**)
 {
     return stub_getTerrain_return;
 }

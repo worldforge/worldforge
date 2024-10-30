@@ -1,101 +1,102 @@
 <atlas>
-    <map>
-        <map name="attributes">
-            <map name="area">
-                <map name="default">
-                    <int name="layer">6</int>
-                    <map name="shape">
-                        <list name="points">
-                            <list>
-                                <float>-0.035</float>
-                                <float>-0.035</float>
-                            </list>
-                            <list>
-                                <float>-0.05</float>
-                                <float>0</float>
-                            </list>
-                            <list>
-                                <float>-0.035</float>
-                                <float>0.035</float>
-                            </list>
-                            <list>
-                                <float>0</float>
-                                <float>0.05</float>
-                            </list>
-                            <list>
-                                <float>0.035</float>
-                                <float>0.035</float>
-                            </list>
-                            <list>
-                                <float>0.05</float>
-                                <float>0</float>
-                            </list>
-                            <list>
-                                <float>0.035</float>
-                                <float>-0.035</float>
-                            </list>
-                            <list>
-                                <float>0</float>
-                                <float>-0.05</float>
-                            </list>
-                        </list>
-                        <string name="type">polygon</string>
-                    </map>
-                </map>
-            </map>
-            <map name="bbox">
-                <list name="default">
-                    <float>-1</float>
-                    <float>0</float>
-                    <float>-1</float>
-                    <float>1</float>
-                    <float>12</float>
-                    <float>1</float>
-                </list>
-            </map>
-            <map name="fruit_chance">
-                <int name="default">5</int>
-            </map>
-            <map name="fruit_name">
-                <string name="default">acorn</string>
-            </map>
-            <map name="fruits">
-                <int name="default">0</int>
-            </map>
-            <map name="fruits_max">
-                <int name="default">10</int>
-            </map>
-            <map name="fruiting_min_scale">
-                <int name="default">0.8</int>
-            </map>
-            <map name="density">
-                <float name="default">600</float>
-            </map>
-            <map name="maxscale">
-                <float name="default">1</float>
-            </map>
-            <map name="planted_scaled_offset">
-                <float name="default">-0.1</float>
-            </map>
-            <map name="present">
-                <string name="default">dural/plants/trees/oak/oak_straight.modeldef</string>
-            </map>
-            <map name="usages">
-                <map name="default">
-                    <map name="harvest">
-                        <string name="name">Harvest</string>
-                        <string name="handler">world.tasks.GenericUsage.use</string>
-                        <string name="constraint">actor can_reach tool</string>
-                        <string name="description">Harvest acorns.</string>
-                    </map>
-                </map>
-            </map>
-            <map name="name">
-                <string name="default">Oak tree</string>
-            </map>
-        </map>
-        <string name="id">oak</string>
-        <string name="objtype">class</string>
-        <string name="parent">tree</string>
-    </map>
+	<map>
+		<map name="attributes">
+			<map name="area">
+				<map name="default">
+					<int name="layer">6</int>
+					<int name="scaled">1</int>
+					<map name="shape">
+						<list name="points">
+							<list>
+								<float>-3.5</float>
+								<float>-3.5</float>
+							</list>
+							<list>
+								<float>0</float>
+								<float>-5</float>
+							</list>
+							<list>
+								<float>3.5</float>
+								<float>-3.5</float>
+							</list>
+							<list>
+								<float>5</float>
+								<float>0</float>
+							</list>
+							<list>
+								<float>3.5</float>
+								<float>3.5</float>
+							</list>
+							<list>
+								<float>0</float>
+								<float>5</float>
+							</list>
+							<list>
+								<float>-3.5</float>
+								<float>3.5</float>
+							</list>
+							<list>
+								<float>-5</float>
+								<float>0</float>
+							</list>
+						</list>
+						<string name="type">polygon</string>
+					</map>
+				</map>
+			</map>
+			<map name="bbox">
+				<list name="default">
+					<float>-1</float>
+					<float>0</float>
+					<float>-1</float>
+					<float>1</float>
+					<float>12</float>
+					<float>1</float>
+				</list>
+			</map>
+			<map name="fruit_chance">
+				<int name="default">5</int>
+			</map>
+			<map name="fruit_name">
+				<string name="default">acorn</string>
+			</map>
+			<map name="fruits">
+				<int name="default">0</int>
+			</map>
+			<map name="fruits_max">
+				<int name="default">10</int>
+			</map>
+			<map name="fruiting_min_scale">
+				<int name="default">0.8</int>
+			</map>
+			<map name="density">
+				<float name="default">600</float>
+			</map>
+			<map name="maxscale">
+				<float name="default">1</float>
+			</map>
+			<map name="planted_scaled_offset">
+				<float name="default">-0.1</float>
+			</map>
+			<map name="present">
+				<string name="default">dural/plants/trees/oak/oak_straight.modeldef</string>
+			</map>
+			<map name="usages">
+				<map name="default">
+					<map name="harvest">
+						<string name="name">Harvest</string>
+						<string name="handler">world.tasks.GenericUsage.use</string>
+						<string name="constraint">actor can_reach tool</string>
+						<string name="description">Harvest acorns.</string>
+					</map>
+				</map>
+			</map>
+			<map name="name">
+				<string name="default">Oak tree</string>
+			</map>
+		</map>
+		<string name="id">oak</string>
+		<string name="objtype">class</string>
+		<string name="parent">tree</string>
+	</map>
 </atlas>

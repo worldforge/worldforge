@@ -79,7 +79,10 @@ protected:
 
 
 	template<template<int> class Shape>
-	std::unique_ptr<InnerTranslator> buildTranslator(const Atlas::Message::MapType& modElement, const std::string& typeName, Shape<2>& shape, const Atlas::Message::Element& shapeElement);
+	std::unique_ptr<InnerTranslator> buildTranslator(
+			const Atlas::Message::MapType& modElement,
+			const std::string& typeName, Shape<2>& shape,
+			const Atlas::Message::Element& shapeElement);
 
 	std::shared_ptr<InnerTranslator> mInnerTranslator;
 };

@@ -28,7 +28,7 @@
 
 namespace Ember::OgreView::Terrain {
 
-bool TerrainAreaParser::parseArea(const Atlas::Message::MapType& areaData, WFMath::Polygon<2>& poly, int& layer) {
+bool TerrainAreaParser::parseArea(const Atlas::Message::MapType& areaData, WFMath::Polygon<2>& poly, int& layer, bool& isScaled) {
 
 	//Earlier versions of Cyphesis had all of the shape data directly in the area map attribute,
 	//whereas newer versions have it all stored in a "shape" subentity. We therefore need to check for both
@@ -64,10 +64,17 @@ bool TerrainAreaParser::parseArea(const Atlas::Message::MapType& areaData, WFMat
 		layer = 0;
 	}
 
+	it = areaData.find("scaled");
+	if ((it != areaData.end()) && it->second.isInt()) {
+		isScaled = it->second.Int() == 1;
+	} else {
+		isScaled = false;
+	}
+
 	return true;
 }
 
-Atlas::Message::Element TerrainAreaParser::createElement(const WFMath::Polygon<2>& poly, int layer) {
+Atlas::Message::Element TerrainAreaParser::createElement(const WFMath::Polygon<2>& poly, int layer, bool isScaled) {
 	Atlas::Message::MapType map;
 	if (poly.isValid()) {
 		Atlas::Message::Element shapeElement = poly.toAtlas();
@@ -79,6 +86,9 @@ Atlas::Message::Element TerrainAreaParser::createElement(const WFMath::Polygon<2
 		}
 	}
 	map["layer"] = layer;
+	if (isScaled) {
+		map["scaled"] = 1;
+	}
 	return map;
 
 }

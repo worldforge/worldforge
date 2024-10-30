@@ -410,7 +410,7 @@ Ref<LocatedEntity> Entity::createNewEntity(const Operation& op, OpVector& res) {
 		return {};
 	}
 	try {
-		RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
+		auto ent = smart_dynamic_cast<RootEntity>(args.front());
 		if (!ent.isValid()) {
 			error(op, "Entity to be created is malformed", res, getIdAsString());
 			return {};

@@ -111,7 +111,7 @@ int main() {
 
 #include "common/log.h"
 
-const TerrainProperty* TerrainEffectorProperty::getTerrain(LocatedEntity& owner, LocatedEntity**) {
+const TerrainProperty* TerrainEffectorProperty::getTerrain(const LocatedEntity& owner, const LocatedEntity**) {
 	return 0;
 }
 

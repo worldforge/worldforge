@@ -270,6 +270,8 @@ public:
 	/** Returns the entity's bounding box in the entity's local system coordinates. **/
 	const WFMath::AxisBox<3>& getBBox() const;
 
+	const WFMath::Vector<3>& getScale() const;
+
 	/**
 	 * @brief Returns true if the entity has a bounding box.
 	 * Not all entities have bounding boxes, but those that are represented as physical objects in the world usually do.
@@ -693,6 +695,10 @@ inline const WFMath::Quaternion& Entity::getOrientation() const {
 /** Returns the entity's bounding box in the entity's local system coordinates. **/
 inline const WFMath::AxisBox<3>& Entity::getBBox() const {
 	return m_bbox;
+}
+
+inline const WFMath::Vector<3>& Entity::getScale() const {
+	return m_scale;
 }
 
 inline bool Entity::hasBBox() const {

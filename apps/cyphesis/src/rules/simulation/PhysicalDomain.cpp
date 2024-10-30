@@ -32,7 +32,6 @@
 #include "common/operations/Tick.h"
 #include "rules/simulation/BaseWorld.h"
 #include "PerceptionSightProperty.h"
-#include "rules/BBoxProperty_impl.h"
 #include "rules/ScaleProperty_impl.h"
 #include "SimulationSpeedProperty.h"
 #include "ModeDataProperty.h"
@@ -42,11 +41,11 @@
 
 #include <Mercator/Segment.h>
 #include <Mercator/TerrainMod.h>
+#include <Mercator/Area.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
 
-#include <wfmath/atlasconv.h>
 
 #include <btBulletDynamicsCommon.h>
 #include <BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h>
@@ -54,12 +53,12 @@
 
 #include <sigc++/bind.h>
 
+#include <algorithm>
 #include <memory>
 #include <unordered_set>
 #include <optional>
-#include <algorithm>
 #include <fmt/format.h>
-#include "common/Property_impl.h"
+#include "AreaProperty.h"
 
 static const bool debug_flag = false;
 
@@ -166,7 +165,7 @@ bool removeAndShift(std::vector<T>& collection, const T& entry) {
 }
 }
 
-int PhysicalDomain::s_processTimeUs = 0;
+long PhysicalDomain::s_processTimeUs = 0;
 
 /**
  * The minimum angular resolution of visibility, expressed as degrees.
@@ -189,7 +188,7 @@ const double VISIBILITY_RATIO = 1.0 / std::tan((WFMath::numeric_constants<double
  * "normal" world.
  * We'll base this on VISIBILITY_RATIO.
  */
-const float VISIBILITY_SCALING_FACTOR = 1.0f / VISIBILITY_RATIO;
+const float VISIBILITY_SCALING_FACTOR = 1.0f / (float) VISIBILITY_RATIO;
 
 /**
  * A list of "thresholds" for visibility distance into which any visibility sphere's radius will be slotted into.
@@ -343,9 +342,9 @@ struct PhysicalDomain::PhysicalMotionState : public btMotionState {
 };
 
 struct PhysicalDomain::WaterCollisionCallback : public btOverlappingPairCallback {
-	PhysicalDomain* m_domain;
+	PhysicalDomain* m_domain = nullptr;
 
-	void addToWater(BulletEntry* waterEntry, BulletEntry* otherEntry) {
+	void addToWater(BulletEntry* waterEntry, BulletEntry* otherEntry) const {
 		otherEntry->waterNearby = waterEntry;
 		if (!otherEntry->addedToMovingList) {
 			m_domain->m_movingEntities.emplace_back(otherEntry);
@@ -355,7 +354,7 @@ struct PhysicalDomain::WaterCollisionCallback : public btOverlappingPairCallback
 		}
 	}
 
-	void removeFromWater(BulletEntry* waterEntry, BulletEntry* otherEntry) {
+	void removeFromWater(BulletEntry* waterEntry, BulletEntry* otherEntry) const {
 		if (otherEntry->waterNearby == waterEntry) {
 			otherEntry->waterNearby = otherEntry;
 			if (!otherEntry->addedToMovingList) {
@@ -367,9 +366,9 @@ struct PhysicalDomain::WaterCollisionCallback : public btOverlappingPairCallback
 		}
 	}
 
-	virtual btBroadphasePair* addOverlappingPair(btBroadphaseProxy* proxy0, btBroadphaseProxy* proxy1) {
-		btCollisionObject* colObj0 = (btCollisionObject*) proxy0->m_clientObject;
-		btCollisionObject* colObj1 = (btCollisionObject*) proxy1->m_clientObject;
+	btBroadphasePair* addOverlappingPair(btBroadphaseProxy* proxy0, btBroadphaseProxy* proxy1) override {
+		auto* colObj0 = (btCollisionObject*) proxy0->m_clientObject;
+		auto* colObj1 = (btCollisionObject*) proxy1->m_clientObject;
 		if (colObj0->getUserIndex() == USER_INDEX_WATER_BODY) {
 			//Don't let two water bodies affect each other
 			if (colObj1->getUserIndex() != USER_INDEX_WATER_BODY) {
@@ -382,12 +381,12 @@ struct PhysicalDomain::WaterCollisionCallback : public btOverlappingPairCallback
 			auto otherEntry = (BulletEntry*) colObj0->getUserPointer();
 			addToWater(waterBodyEntry, otherEntry);
 		}
-		return 0;
+		return nullptr;
 	}
 
-	virtual void* removeOverlappingPair(btBroadphaseProxy* proxy0, btBroadphaseProxy* proxy1, btDispatcher* dispatcher) {
-		btCollisionObject* colObj0 = (btCollisionObject*) proxy0->m_clientObject;
-		btCollisionObject* colObj1 = (btCollisionObject*) proxy1->m_clientObject;
+	void* removeOverlappingPair(btBroadphaseProxy* proxy0, btBroadphaseProxy* proxy1, btDispatcher* dispatcher) override {
+		auto* colObj0 = (btCollisionObject*) proxy0->m_clientObject;
+		auto* colObj1 = (btCollisionObject*) proxy1->m_clientObject;
 		if (colObj0->getUserIndex() == USER_INDEX_WATER_BODY) {
 			//Don't let two water bodies affect each other
 			if (colObj1->getUserIndex() != USER_INDEX_WATER_BODY) {
@@ -400,10 +399,10 @@ struct PhysicalDomain::WaterCollisionCallback : public btOverlappingPairCallback
 			auto otherEntry = (BulletEntry*) colObj0->getUserPointer();
 			removeFromWater(waterBodyEntry, otherEntry);
 		}
-		return 0;
+		return nullptr;
 	}
 
-	virtual void removeOverlappingPairsContainingProxy(btBroadphaseProxy* /*proxy0*/, btDispatcher* /*dispatcher*/) {
+	void removeOverlappingPairsContainingProxy(btBroadphaseProxy* /*proxy0*/, btDispatcher* /*dispatcher*/) override {
 	}
 };
 
@@ -412,9 +411,9 @@ struct PhysicalDomain::VisibilityPairCallback : public btOverlappingPairCallback
 		bool collides = (proxy0->m_collisionFilterGroup & proxy1->m_collisionFilterMask) != 0;
 		collides = collides && (proxy1->m_collisionFilterGroup & proxy0->m_collisionFilterMask);
 		if (collides) {
-			btCollisionObject* movedObject = (btCollisionObject*) proxy0->m_clientObject;
+			auto* movedObject = (btCollisionObject*) proxy0->m_clientObject;
 			auto movedEntry = (BulletEntry*) movedObject->getUserPointer();
-			btCollisionObject* otherObject = (btCollisionObject*) proxy1->m_clientObject;
+			auto* otherObject = (btCollisionObject*) proxy1->m_clientObject;
 			auto otherEntry = (BulletEntry*) otherObject->getUserPointer();
 			if (movedEntry != otherEntry) {
 				if (movedObject == movedEntry->viewSphere.get()) {
@@ -433,9 +432,9 @@ struct PhysicalDomain::VisibilityPairCallback : public btOverlappingPairCallback
 		bool collides = (proxy0->m_collisionFilterGroup & proxy1->m_collisionFilterMask) != 0;
 		collides = collides && (proxy1->m_collisionFilterGroup & proxy0->m_collisionFilterMask);
 		if (collides) {
-			btCollisionObject* movedObject = (btCollisionObject*) proxy0->m_clientObject;
+			auto* movedObject = (btCollisionObject*) proxy0->m_clientObject;
 			auto movedEntry = (BulletEntry*) movedObject->getUserPointer();
-			btCollisionObject* otherObject = (btCollisionObject*) proxy1->m_clientObject;
+			auto* otherObject = (btCollisionObject*) proxy1->m_clientObject;
 			auto otherEntry = (BulletEntry*) otherObject->getUserPointer();
 			if (movedEntry != otherEntry) {
 				if (movedObject == movedEntry->viewSphere.get()) {
@@ -457,7 +456,7 @@ std::chrono::steady_clock::duration postDuration;
 
 PhysicalDomain::PhysicalDomain(LocatedEntity& entity) :
 		Domain(entity),
-		mWorldInfo{&m_propellingEntries, &m_steppingEntries},
+		mWorldInfo{.propellingEntries=&m_propellingEntries, .steppingEntries=&m_steppingEntries},
 		//default config for now
 		m_collisionConfiguration(new btDefaultCollisionConfiguration()),
 		m_dispatcher(new btCollisionDispatcher(m_collisionConfiguration.get())),
@@ -476,8 +475,13 @@ PhysicalDomain::PhysicalDomain(LocatedEntity& entity) :
 											   m_visibilityBroadphase.get(),
 											   m_collisionConfiguration.get())),
 		m_visibilityCheckCountdown(0),
-		mContainingEntityEntry{entity, mFakeProperties.positionProperty, mFakeProperties.velocityProperty,
-							   mFakeProperties.angularVelocityProperty, mFakeProperties.orientationProperty},
+		mContainingEntityEntry{
+				.entity=entity,
+				.positionProperty=mFakeProperties.positionProperty,
+				.velocityProperty=mFakeProperties.velocityProperty,
+				.angularVelocityProperty=mFakeProperties.angularVelocityProperty,
+				.orientationProperty=mFakeProperties.orientationProperty
+		},
 		m_terrain(nullptr),
 		m_ghostPairCallback(new WaterCollisionCallback()) {
 	mContainingEntityEntry.bbox = ScaleProperty<LocatedEntity>::scaledBbox(m_entity);
@@ -496,7 +500,7 @@ PhysicalDomain::PhysicalDomain(LocatedEntity& entity) :
 
 	auto terrainProperty = m_entity.getPropertyClassFixed<TerrainProperty>();
 	if (terrainProperty) {
-		m_terrain = &terrainProperty->getData(m_entity);
+		m_terrain = &TerrainProperty::getData(m_entity);
 	}
 
 	createDomainBorders();
@@ -571,7 +575,7 @@ PhysicalDomain::PhysicalDomain(LocatedEntity& entity) :
 						btVector3 bottomOfObject = worldTransform.getOrigin();
 						bottomOfObject.setY(aabbMin.y());
 						btVector3 bottomOfRay = bottomOfObject;
-						float rayDistance = entry->step_factor * (aabbMax.y() - aabbMin.y());
+						auto rayDistance = (float) entry->step_factor * (aabbMax.y() - aabbMin.y());
 
 						bottomOfRay.setY(bottomOfRay.y() - rayDistance);
 
@@ -714,7 +718,7 @@ void PhysicalDomain::buildTerrainPages() {
 	}
 	const auto* terrainProperty = m_entity.getPropertyClassFixed<TerrainProperty>();
 	if (terrainProperty) {
-		auto& terrain = terrainProperty->getData(m_entity);
+		auto& terrain = TerrainProperty::getData(m_entity);
 		auto& segments = terrain.getTerrain();
 		for (auto& row: segments) {
 			for (auto& entry: row.second) {
@@ -724,11 +728,7 @@ void PhysicalDomain::buildTerrainPages() {
 					terrainEntry.rigidBody->setFriction(*friction);
 				}
 				if (spinningFriction) {
-#if BT_BULLET_VERSION < 285
-					spdlog::warn("Your version of Bullet doesn't support spinning friction.");
-#else
 					terrainEntry.rigidBody->setSpinningFriction(*spinningFriction);
-#endif
 				}
 				if (rollingFriction) {
 					terrainEntry.rigidBody->setRollingFriction(*rollingFriction);
@@ -1013,7 +1013,7 @@ void PhysicalDomain::updateVisibilityOfDirtyEntities(OpVector& res) {
 	}
 }
 
-float PhysicalDomain::getMassForEntity(const LocatedEntity& entity) const {
+float PhysicalDomain::getMassForEntity(const LocatedEntity& entity) {
 	float mass = 0;
 
 	auto massProp = entity.getPropertyType<double>("mass");
@@ -1058,7 +1058,16 @@ void PhysicalDomain::addEntity(LocatedEntity& entity) {
 	WFMath::AxisBox<3> bbox = ScaleProperty<LocatedEntity>::scaledBbox(entity);
 	btVector3 angularFactor(1, 1, 1);
 
-	auto result = m_entries.emplace(entity.getIdAsInt(), std::unique_ptr<BulletEntry>(new BulletEntry{entity, posProp, velocityProp, angularProp, orientationProp, bbox}));
+	auto result = m_entries.emplace(entity.getIdAsInt(),
+									std::make_unique<BulletEntry>(BulletEntry{
+											.entity=entity,
+											.positionProperty=posProp,
+											.velocityProperty=velocityProp,
+											.angularVelocityProperty=angularProp,
+											.orientationProperty=orientationProp,
+											.bbox=bbox}
+									)
+	);
 	auto& entry = *result.first->second;
 
 	auto angularFactorProp = entity.getPropertyClassFixed<AngularFactorProperty>();
@@ -1152,11 +1161,7 @@ void PhysicalDomain::addEntity(LocatedEntity& entity) {
 			}
 			auto frictionSpinProp = entity.getPropertyType<double>("friction_spin");
 			if (frictionSpinProp) {
-#if BT_BULLET_VERSION < 285
-				spdlog::warn("Your version of Bullet doesn't support spinning friction.");
-#else
 				rigidBodyCI.m_spinningFriction = (btScalar) frictionSpinProp->data();
-#endif
 			}
 
 			auto rigidBody = new btRigidBody(rigidBodyCI);
@@ -1172,10 +1177,10 @@ void PhysicalDomain::addEntity(LocatedEntity& entity) {
 			entry.collisionObject->setUserPointer(&entry);
 
 			//To prevent tunneling we'll turn on CCD with suitable values.
-			float minSize = std::min(size.x(), std::min(size.y(), size.z()));
+			auto minSize = std::min({size.x(), size.y(), size.z()});
 //          float maxSize = std::max(size.x(), std::max(size.y(), size.z()));
-			entry.collisionObject->setCcdMotionThreshold(minSize * CCD_MOTION_FACTOR);
-			entry.collisionObject->setCcdSweptSphereRadius(minSize * CCD_SPHERE_FACTOR);
+			entry.collisionObject->setCcdMotionThreshold((float) minSize * CCD_MOTION_FACTOR);
+			entry.collisionObject->setCcdSweptSphereRadius((float) minSize * CCD_SPHERE_FACTOR);
 
 			//Set up cached speed values
 			auto speedGroundProp = entity.getPropertyType<double>("speed_ground");
@@ -1486,15 +1491,11 @@ void PhysicalDomain::childEntityPropertyApplied(const std::string& name, const P
 		}
 	} else if (name == "friction_spin") {
 		if (bulletEntry.collisionObject) {
-#if BT_BULLET_VERSION < 285
-			spdlog::warn("Your version of Bullet doesn't support spinning friction.");
-#else
 			auto frictionProp = dynamic_cast<const Property<double, LocatedEntity>*>(&prop);
 			bulletEntry.collisionObject->setSpinningFriction(static_cast<btScalar>(frictionProp->data()));
 			if (getMassForEntity(bulletEntry.entity) != 0) {
 				bulletEntry.collisionObject->activate();
 			}
-#endif
 		}
 	} else if (name == "mode") {
 		if (bulletEntry.collisionObject) {
@@ -1695,6 +1696,8 @@ void PhysicalDomain::childEntityPropertyApplied(const std::string& name, const P
 		sendMoveSight(bulletEntry, true, false, false, false, false);
 	} else if (name == TerrainModProperty::property_name) {
 		updateTerrainMod(bulletEntry, true);
+	} else if (name == AreaProperty::property_name) {
+		updateTerrainArea(bulletEntry, true);
 	} else if (name == "speed_ground") {
 		bulletEntry.speedGround = dynamic_cast<const Property<double, LocatedEntity>*>(&prop)->data();
 	} else if (name == "speed_water") {
@@ -1744,7 +1747,7 @@ void PhysicalDomain::updateTerrainMod(const BulletEntry& entry, bool forceUpdate
 			if (terrainModProperty && m_terrain) {
 				auto& pos = entry.positionProperty.data();
 				//We need to get the vertical position in the terrain, without any mods.
-				Mercator::Segment* segment = m_terrain->getSegmentAtPos(pos.x(), pos.z());
+				Mercator::Segment* segment = m_terrain->getSegmentAtPos((float) pos.x(), (float) pos.z());
 				auto modPos = pos;
 				if (segment) {
 					std::vector<WFMath::AxisBox<2>> terrainAreas;
@@ -1757,7 +1760,7 @@ void PhysicalDomain::updateTerrainMod(const BulletEntry& entry, bool forceUpdate
 						}
 						segment->getHeight(modPos.x() - (segment->getXRef()), modPos.z() - (segment->getZRef()), height);
 					} else {
-						Mercator::HeightMap heightMap((unsigned int) segment->getResolution());
+						Mercator::HeightMap heightMap(segment->getResolution());
 						heightMap.allocate();
 						segment->populateHeightMap(heightMap);
 
@@ -1789,7 +1792,11 @@ void PhysicalDomain::updateTerrainMod(const BulletEntry& entry, bool forceUpdate
 						if (modifier) {
 							auto bbox = modifier->bbox();
 							terrainAreas.push_back(bbox);
-							m_terrainMods[entry.entity.getIdAsInt()] = TerrainModEntry{modPos, entry.orientationProperty.data(), bbox};
+							m_terrainMods[entry.entity.getIdAsInt()] = TerrainModEntry{
+									.modPos=modPos,
+									.modOrientation=entry.orientationProperty.data(),
+									.area=bbox
+							};
 						} else {
 							m_terrainMods.erase(entry.entity.getIdAsInt());
 						}
@@ -1815,7 +1822,63 @@ void PhysicalDomain::updateTerrainMod(const BulletEntry& entry, bool forceUpdate
 	}
 }
 
-void PhysicalDomain::getCollisionFlagsForEntity(const BulletEntry& entry, short& collisionGroup, short& collisionMask) const {
+void PhysicalDomain::updateTerrainArea(const BulletEntry& entry, bool forceUpdate) {
+	//TODO store as flag in BulletEntry so we don't need to do lookup
+	auto modeProp = entry.entity.getPropertyClassFixed<ModeProperty>();
+	if (modeProp) {
+		if (modeProp->getMode() == ModeProperty::Mode::Planted) {
+			auto terrainAreaProperty = entry.entity.getPropertyClassFixed<const AreaProperty>();
+			if (terrainAreaProperty && m_terrain) {
+				auto& pos = entry.positionProperty.data();
+				auto& orientation = entry.orientationProperty.data();
+				if (pos.isValid()) {
+					auto& state = terrainAreaProperty->getData();
+
+
+					auto shape = state.shape->shape();
+
+					if (state.scaled) {
+						auto scaleProperty = entry.entity.getPropertyClassFixed<const ScaleProperty<LocatedEntity>>();
+						if (scaleProperty && scaleProperty->data().isValid()) {
+							MathShape<WFMath::Polygon, 2>::scaleInPlace(shape, {scaleProperty->data().x(), scaleProperty->data().z()});
+						}
+					}
+
+					if (orientation.isValid()) {
+						/// rotation about Y axis
+						WFMath::Vector<3> xVec = WFMath::Vector<3>(1.0, 0.0, 0.0).rotate(orientation);
+						WFMath::CoordType theta = std::atan2(xVec.z(), xVec.x());
+						WFMath::RotMatrix<2> rm;
+						shape.rotatePoint(rm.rotation(theta), WFMath::Point<2>(0, 0));
+					}
+					shape.shift({pos.x(), pos.z()});
+					auto area = std::make_unique<Mercator::Area>(state.layer, false);
+					area->setShape(state.shape->shape());
+					auto newAffectedArea = area->bbox();
+					if (newAffectedArea.isValid()) {
+						m_dirtyTerrainSurfaceAreas.emplace_back(newAffectedArea);
+					}
+					auto oldAffectedArea = m_terrain->updateArea(entry.entity.getIdAsInt(), std::move(area));
+					if (oldAffectedArea.isValid() && oldAffectedArea != newAffectedArea) {
+						m_dirtyTerrainSurfaceAreas.emplace_back(oldAffectedArea);
+					}
+				}
+			}
+		} else {
+			//Make sure the terrain mod is removed if the entity isn't planted
+			auto I = m_terrainMods.find(entry.entity.getIdAsInt());
+			if (I != m_terrainMods.end()) {
+				std::vector<WFMath::AxisBox<2>> terrainAreas;
+				terrainAreas.emplace_back(I->second.area);
+				m_terrain->updateMod(entry.entity.getIdAsInt(), nullptr);
+				m_terrainMods.erase(I);
+				refreshTerrain(terrainAreas);
+			}
+		}
+	}
+}
+
+void PhysicalDomain::getCollisionFlagsForEntity(const BulletEntry& entry, short& collisionGroup, short& collisionMask) {
 	//The "group" defines the features of this object, which other bodies can mask out.
 	//The "mask" defines the other kind of object this body will react with.
 
@@ -1879,18 +1942,15 @@ void PhysicalDomain::entityPropertyApplied(const std::string& name, const Proper
 			entry.second.rigidBody->setRollingFriction(static_cast<btScalar>(frictionRollingProp->data()));
 		}
 	} else if (name == "friction_spin") {
-#if BT_BULLET_VERSION < 285
-		spdlog::warn("Your version of Bullet doesn't support spinning friction.");
-#else
+
 		auto frictionSpinningProp = dynamic_cast<const Property<double, LocatedEntity>*>(&prop);
 		for (auto& entry: m_terrainSegments) {
 			entry.second.rigidBody->setSpinningFriction(static_cast<btScalar>(frictionSpinningProp->data()));
 		}
-#endif
 	} else if (name == TerrainProperty::property_name) {
 		auto terrainProperty = m_entity.getPropertyClassFixed<TerrainProperty>();
 		if (terrainProperty) {
-			m_terrain = &terrainProperty->getData(m_entity);
+			m_terrain = &TerrainProperty::getData(m_entity);
 		}
 	}
 }
@@ -2177,7 +2237,10 @@ void PhysicalDomain::applyNewPositionForEntity(BulletEntry& entry, const WFMath:
 
 }
 
-void PhysicalDomain::applyDestination(std::chrono::milliseconds tickSize, BulletEntry& entry, const PropelProperty* propelProp, const Vector3Property<LocatedEntity>& destinationProp) {
+void PhysicalDomain::applyDestination(std::chrono::milliseconds tickSize,
+									  BulletEntry& entry,
+									  const PropelProperty* propelProp,
+									  const Vector3Property<LocatedEntity>& destinationProp) {
 	bool hasDestination = destinationProp.data().isValid();
 	bool hasPropel = propelProp && propelProp->data().isValid() && propelProp->data() != WFMath::Vector<3>::ZERO();
 
@@ -2201,7 +2264,7 @@ void PhysicalDomain::applyDestination(std::chrono::milliseconds tickSize, Bullet
 			speed = entry.speedGround;
 		}
 
-		float propelSpeed = 1.0;
+		double propelSpeed = 1.0;
 		if (hasPropel) {
 			propelSpeed = propelProp->data().mag();
 		}
@@ -2217,7 +2280,7 @@ void PhysicalDomain::applyDestination(std::chrono::milliseconds tickSize, Bullet
 		direction.normalize();
 
 
-		applyPropel(entry, direction * propelSpeed);
+		applyPropel(entry, direction * (float) propelSpeed);
 	} else if (hasPropel) {
 		applyPropel(entry, Convert::toBullet(propelProp->data()));
 	}
@@ -2299,9 +2362,18 @@ void PhysicalDomain::applyPropel(BulletEntry& entry, btVector3 propel) {
 				if (K == m_propellingEntries.end()) {
 					if (entry.step_factor > 0) {
 						auto height = entry.bbox.upperBound(1) - entry.bbox.lowerBound(1);
-						m_propellingEntries.emplace(entity.getIdAsInt(), PropelEntry{rigidBody, &entry, propel, (float) (height * entry.step_factor)});
+						m_propellingEntries.emplace(entity.getIdAsInt(), PropelEntry{
+								.rigidBody=rigidBody,
+								.bulletEntry=&entry,
+								.velocity=propel,
+								.stepHeight=(float) (height * entry.step_factor)
+						});
 					} else {
-						m_propellingEntries.emplace(entity.getIdAsInt(), PropelEntry{rigidBody, &entry, propel, 0});
+						m_propellingEntries.emplace(entity.getIdAsInt(), PropelEntry{
+								.rigidBody=rigidBody,
+								.bulletEntry=&entry,
+								.velocity=propel,
+								.stepHeight=0});
 					}
 				} else {
 					K->second.velocity = propel;
@@ -2463,25 +2535,25 @@ void PhysicalDomain::applyTransformInternal(BulletEntry& entry,
 
 void PhysicalDomain::refreshTerrain(const std::vector<WFMath::AxisBox<2>>& areas) {
 	//Schedule dirty terrain areas for update in processDirtyTerrainAreas() which is called for each tick.
-	m_dirtyTerrainAreas.insert(m_dirtyTerrainAreas.end(), areas.begin(), areas.end());
+	m_dirtyTerrainSegmentAreas.insert(m_dirtyTerrainSegmentAreas.end(), areas.begin(), areas.end());
 }
 
 void PhysicalDomain::processDirtyTerrainAreas() {
 	if (!m_terrain) {
-		m_dirtyTerrainAreas.clear();
+		m_dirtyTerrainSegmentAreas.clear();
 		return;
 	}
 
-	if (m_dirtyTerrainAreas.empty()) {
+	if (m_dirtyTerrainSegmentAreas.empty()) {
 		return;
 	}
 	rmt_ScopedCPUSample(PhysicalDomain_processDirtyTerrainAreas, 0)
 
 	std::set<Mercator::Segment*> dirtySegments;
-	for (auto& area: m_dirtyTerrainAreas) {
+	for (auto& area: m_dirtyTerrainSegmentAreas) {
 		m_terrain->processSegments(area, [&](Mercator::Segment& s, int, int) { dirtySegments.insert(&s); });
 	}
-	m_dirtyTerrainAreas.clear();
+	m_dirtyTerrainSegmentAreas.clear();
 
 	std::optional<float> friction;
 	auto frictionProp = m_entity.getPropertyType<double>("friction");
@@ -2513,17 +2585,16 @@ void PhysicalDomain::processDirtyTerrainAreas() {
 			terrainEntry.rigidBody->setRollingFriction(*frictionRolling);
 		}
 		if (frictionSpinning) {
-#if BT_BULLET_VERSION < 285
-			spdlog::warn("Your version of Bullet doesn't support spinning friction.");
-#else
 			terrainEntry.rigidBody->setSpinningFriction(*frictionSpinning);
-#endif
 		}
 
 		struct : public btCollisionWorld::ContactResultCallback {
 			std::vector<PhysicalDomain::BulletEntry*> m_entries;
 
-			btScalar addSingleResult(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, int partId0, int index0, const btCollisionObjectWrapper* colObj1Wrap,
+			btScalar addSingleResult(btManifoldPoint& cp,
+									 const btCollisionObjectWrapper* colObj0Wrap,
+									 int partId0, int index0,
+									 const btCollisionObjectWrapper* colObj1Wrap,
 									 int partId1, int index1) override {
 				auto* bulletEntry = static_cast<BulletEntry*>(colObj1Wrap->m_collisionObject->getUserPointer());
 				if (bulletEntry && (m_entries.empty() || *m_entries.rbegin() != bulletEntry)) {
@@ -2539,11 +2610,11 @@ void PhysicalDomain::processDirtyTerrainAreas() {
 		auto area = segment->getRect();
 		WFMath::Vector<2> size = area.highCorner() - area.lowCorner();
 
-		btBoxShape boxShape(btVector3(size.x() * 0.5f, worldHeight, size.y() * 0.5f));
+		btBoxShape boxShape(btVector3((float)size.x() * 0.5f, (float) worldHeight, (float) size.y() * 0.5f));
 		btCollisionObject collObject;
 		collObject.setCollisionShape(&boxShape);
 		auto center = area.getCenter();
-		collObject.setWorldTransform(btTransform(btQuaternion::getIdentity(), btVector3(center.x(), 0, center.y())));
+		collObject.setWorldTransform(btTransform(btQuaternion::getIdentity(), btVector3((float) center.x(), 0, (float) center.y())));
 		m_dynamicsWorld->contactTest(&collObject, callback);
 
 		cy_debug_print("Matched " << callback.m_entries.size() << " entries")
@@ -2560,6 +2631,33 @@ void PhysicalDomain::processDirtyTerrainAreas() {
 			move->setArgs1(anon);
 			entry->entity.sendWorld(move);
 		}
+	}
+}
+
+
+void PhysicalDomain::processDirtyTerrainSurfaces() {
+	if (!m_terrain) {
+		m_dirtyTerrainSurfaceAreas.clear();
+		return;
+	}
+
+	if (m_dirtyTerrainSurfaceAreas.empty()) {
+		return;
+	}
+	rmt_ScopedCPUSample(PhysicalDomain_processDirtyTerrainSurfaces, 0)
+
+	std::set<Mercator::Segment*> dirtySegments;
+	for (auto& area: m_dirtyTerrainSurfaceAreas) {
+		m_terrain->processSegments(area, [&](Mercator::Segment& s, int, int) { dirtySegments.insert(&s); });
+	}
+	m_dirtyTerrainSurfaceAreas.clear();
+
+
+	cy_debug_print("dirty segments: " << dirtySegments.size())
+	for (auto& segment: dirtySegments) {
+		cy_debug_print("rebuilding segment at x: " << segment->getXRef() << " z: " << segment->getZRef())
+
+		segment->populateSurfaces();
 	}
 }
 
@@ -2718,7 +2816,7 @@ void PhysicalDomain::processMovedEntity(BulletEntry& bulletEntry, std::chrono::m
 		//Since callbacks can remove observations we need to first collect att invalid observations, and then remove them carefully.
 		std::vector<ClosenessObserverEntry*> invalidEntries;
 		for (auto& observation: bulletEntry.closenessObservations) {
-			if (!isWithinReach(*observation->reacher, *observation->target, observation->reach, {})) {
+			if (!isWithinReach(*observation->reacher, *observation->target, (float) observation->reach, {})) {
 				invalidEntries.emplace_back(observation);
 			}
 		}
@@ -2780,17 +2878,18 @@ void PhysicalDomain::tick(std::chrono::milliseconds tickSize, OpVector& res) {
 		auto bulletEntry1 = static_cast<BulletEntry*>(object1->getUserPointer());
 
 		if (bulletEntry0->mode == ModeProperty::Mode::Projectile) {
-			projectileCollisions.emplace_back(bulletEntry0, BulletCollisionEntry{bulletEntry1, cp.getPositionWorldOnB()});
+			projectileCollisions.emplace_back(bulletEntry0, BulletCollisionEntry{.bulletEntry=bulletEntry1, .pos=cp.getPositionWorldOnB()});
 		}
 		if (bulletEntry1->mode == ModeProperty::Mode::Projectile) {
-			projectileCollisions.emplace_back(bulletEntry1, BulletCollisionEntry{bulletEntry0, cp.getPositionWorldOnA()});
+			projectileCollisions.emplace_back(bulletEntry1, BulletCollisionEntry{.bulletEntry=bulletEntry0, .pos=cp.getPositionWorldOnA()});
 		}
 		return true;
 	};
 
 	auto simulationSpeedProp = m_entity.getPropertyClassFixed<SimulationSpeedProperty>();
 	if (simulationSpeedProp) {
-		tickSize *= simulationSpeedProp->data();
+		// Need to do some casts instead of "tickSize *= simulationSpeedProp->data();" to get guarantees of correct conversions.
+		tickSize = std::chrono::milliseconds{(long) ((double) tickSize.count() * simulationSpeedProp->data())};
 	}
 	auto tickSizeInSeconds = to_seconds(tickSize);
 
@@ -2952,6 +3051,7 @@ void PhysicalDomain::tick(std::chrono::milliseconds tickSize, OpVector& res) {
 	}
 
 	processDirtyTerrainAreas();
+	processDirtyTerrainSurfaces();
 
 	auto duration = std::chrono::steady_clock::now() - start;
 	auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(duration);
@@ -3174,7 +3274,7 @@ void PhysicalDomain::plantOnEntity(PhysicalDomain::BulletEntry& plantedEntry, Ph
 	auto& newModeDataProp = plantedEntry.entity.requirePropertyClassFixed<ModeDataProperty>();
 
 	if (entryPlantedOn) {
-		newModeDataProp.setPlantedData({entryPlantedOn->entity.getIdAsInt()});
+		newModeDataProp.setPlantedData({.entityId=entryPlantedOn->entity.getIdAsInt()});
 		entryPlantedOn->attachedEntities.insert(&plantedEntry);
 	} else {
 		newModeDataProp.clearData();
@@ -3234,7 +3334,7 @@ bool PhysicalDomain::isEntityReachable(const LocatedEntity& reachingEntity, floa
 	return false;
 }
 
-bool PhysicalDomain::isWithinReach(BulletEntry& reacherEntry, BulletEntry& targetEntry, float reach, const WFMath::Point<3>& positionOnQueriedEntity) const {
+bool PhysicalDomain::isWithinReach(BulletEntry& reacherEntry, BulletEntry& targetEntry, float reach, const WFMath::Point<3>& positionOnQueriedEntity) {
 
 
 	btVector3 queriedEntityPos;
@@ -3313,10 +3413,10 @@ std::vector<Domain::CollisionEntry> PhysicalDomain::queryCollision(const WFMath:
 	std::vector<Domain::CollisionEntry> result;
 	result.reserve(callback.m_entries.size());
 	for (auto& entry: callback.m_entries) {
-		result.emplace_back(Domain::CollisionEntry{&entry.first->entity,
-												   Convert::toWF<WFMath::Point<3>>(entry.second.getPositionWorldOnA()),
+		result.emplace_back(Domain::CollisionEntry{.entity=&entry.first->entity,
+				.collisionPoint=Convert::toWF<WFMath::Point<3>>(entry.second.getPositionWorldOnA()),
 //                                                   std::abs(entry.second.getDistance())});
-												   (float) entry.second.getPositionWorldOnB().distance(pos.getOrigin())});
+				.distance=(float) entry.second.getPositionWorldOnB().distance(pos.getOrigin())});
 	}
 	return result;
 }
@@ -3327,15 +3427,15 @@ std::optional<std::function<void()>> PhysicalDomain::observeCloseness(LocatedEnt
 	if (reacherEntryI != m_entries.end() && targetEntryI != m_entries.end()) {
 		auto* reacherEntry = reacherEntryI->second.get();
 		auto* targetEntry = targetEntryI->second.get();
-		auto obs = new ClosenessObserverEntry{reacherEntry, targetEntry, reach, callback};
+		auto obs = new ClosenessObserverEntry{.reacher=reacherEntry, .target=targetEntry, .reach=reach, .callback=callback};
 		reacherEntry->closenessObservations.insert(obs);
 		targetEntry->closenessObservations.insert(obs);
 		m_closenessObservations.emplace(obs, std::unique_ptr<ClosenessObserverEntry>(obs));
-		return std::optional<std::function<void()>>([this, reacherEntry, targetEntry, obs]() {
+		return {([this, reacherEntry, targetEntry, obs]() {
 			reacherEntry->closenessObservations.erase(obs);
 			targetEntry->closenessObservations.erase(obs);
 			m_closenessObservations.erase(obs);
-		});
+		})};
 	}
 	return {};
 }
@@ -3348,7 +3448,7 @@ void PhysicalDomain::removed() {
 	}
 }
 
-float PhysicalDomain::calculateVisibilitySphereRadius(const BulletEntry& entry) const {
+float PhysicalDomain::calculateVisibilitySphereRadius(const BulletEntry& entry) {
 	auto visProp = entry.entity.getPropertyClassFixed<VisibilityDistanceProperty>();
 
 	double radius;
@@ -3366,13 +3466,13 @@ float PhysicalDomain::calculateVisibilitySphereRadius(const BulletEntry& entry) 
 	for (size_t i = 0; i < VISIBILITY_DISTANCE_THRESHOLDS.size(); ++i) {
 		if (radius < VISIBILITY_DISTANCE_THRESHOLDS[i]) {
 			if (i == 0) {
-				return VISIBILITY_DISTANCE_THRESHOLDS[0] * VISIBILITY_SCALING_FACTOR;
+				return (float) VISIBILITY_DISTANCE_THRESHOLDS[0] * VISIBILITY_SCALING_FACTOR;
 			} else {
-				return VISIBILITY_DISTANCE_THRESHOLDS[i - 1] * VISIBILITY_SCALING_FACTOR;
+				return (float) VISIBILITY_DISTANCE_THRESHOLDS[i - 1] * VISIBILITY_SCALING_FACTOR;
 			}
 		}
 	}
 	//If we get here the visibility is beyond the largest threshold, so return that.
-	return VISIBILITY_DISTANCE_THRESHOLDS.back() * VISIBILITY_SCALING_FACTOR;
+	return (float) VISIBILITY_DISTANCE_THRESHOLDS.back() * VISIBILITY_SCALING_FACTOR;
 
 }

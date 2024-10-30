@@ -30,11 +30,21 @@
 #include <Mercator/Area.h>
 
 
+namespace {
+void scaleInPlace(WFMath::Polygon<2>& poly, const WFMath::Vector<2>& scale) {
+	for (size_t i = 0; i < poly.numCorners(); ++i) {
+		auto corner = poly.getCorner(i);
+		poly.moveCorner(i, {corner.x() * scale.x(), corner.y() * scale.y()});
+	}
+}
+}
+
 namespace Ember::OgreView::Terrain {
 
 TerrainArea::TerrainArea(EmberEntity& entity) :
 		mEntity(entity),
-		mParsedLayer(0) {
+		mParsedLayer(0),
+		mIsScaled(false) {
 }
 
 std::unique_ptr<Mercator::Area> TerrainArea::parse(const Atlas::Message::Element& value) {
@@ -44,8 +54,7 @@ std::unique_ptr<Mercator::Area> TerrainArea::parse(const Atlas::Message::Element
 	}
 
 	const Atlas::Message::MapType& areaData = value.Map();
-	TerrainAreaParser parser;
-	if (!parser.parseArea(areaData, mParsedPoly, mParsedLayer)) {
+	if (!TerrainAreaParser::parseArea(areaData, mParsedPoly, mParsedLayer, mIsScaled)) {
 		return {};
 	} else {
 
@@ -80,9 +89,15 @@ std::unique_ptr<Mercator::Area> TerrainArea::updatePosition() {
 }
 
 bool TerrainArea::placeArea(WFMath::Polygon<2>& poly) {
-	//If the position if invalid we can't do anything with the area yet.
+	//If the position is invalid we can't do anything with the area yet.
 	if (!mEntity.getPosition().isValid()) {
 		return false;
+	}
+
+	if (mIsScaled) {
+		if (mEntity.getScale().isValid()) {
+			scaleInPlace(poly, {mEntity.getScale().x(), mEntity.getScale().z()});
+		}
 	}
 
 	// transform polygon into terrain coords

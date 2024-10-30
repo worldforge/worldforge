@@ -56,7 +56,11 @@ public:
 	 * @param layerWindow A combox which will contain a list of the available layers which can be specified for the area.
 	 * @param entity The entity to which the area belongs. This is needed to do height lookups so that the polygon points are snapped to the ground. It's optional, but the graphical representation might not work if it's omitted.
 	 */
-	AreaAdapter(const ::Atlas::Message::Element& element, CEGUI::PushButton* showButton, CEGUI::Combobox* layerWindow, EmberEntity* entity);
+	AreaAdapter(const ::Atlas::Message::Element& element,
+				CEGUI::PushButton* showButton,
+				CEGUI::Combobox* layerWindow,
+				CEGUI::ToggleButton* scaledWindow,
+				EmberEntity* entity);
 
 	/**
 	 * @brief Dtor.
@@ -98,10 +102,14 @@ protected:
 	 */
 	int mLayer;
 
+	bool mIsScaled;
+
 	/**
 	 * @brief A combo box used for selecting the area layer to use.
 	 */
 	CEGUI::Combobox* mLayerWindow;
+
+	CEGUI::ToggleButton* mScaledWindow;
 
 	/**
 	 * @brief An optional entity to which the area belongs.

@@ -108,10 +108,10 @@ ContainsProperty::ContainsProperty(LocatedEntitySet& data) :
 int ContainsProperty::get(Element& e) const {
 	// FIXME Not sure if this is best. Why did we bother to virtualise
 	// addToMessage() if we have to do this here?
-	e = ListType();
+	e = ListType(m_data.size());
 	auto& contlist = e.List();
 	for (auto& entry: m_data) {
-		contlist.push_back(entry->getIdAsString());
+		contlist.emplace_back(entry->getIdAsString());
 	}
 	return 0;
 }

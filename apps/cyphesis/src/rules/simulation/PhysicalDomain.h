@@ -76,7 +76,7 @@ class PropelProperty;
  */
 class PhysicalDomain : public Domain {
 public:
-	static int s_processTimeUs;
+	static long s_processTimeUs;
 
 	explicit PhysicalDomain(LocatedEntity& entity);
 
@@ -307,12 +307,13 @@ protected:
 	 * The entities contained in the set are thus _possibly_ contained in the water, but not necessarily. The main reason
 	 * for keeping this structure is for when a water body is moved (which would be _very_ seldom).
 	 * In those cases we also need to move the entities that are contained, which is what the set is for.
-	 * A std::set is an expensive container, but as we anticipate entities rarely moveing in and out of water, and even more
+	 * A std::set is an expensive container, but as we anticipate entities rarely moving in and out of water, and even more
 	 * rarely a water entity being moved instead, we can probably afford it in this case.
 	 */
 	//std::map<BulletEntry*, std::set<BulletEntry*>> m_waterBodies;
 
-	std::vector<WFMath::AxisBox<2>> m_dirtyTerrainAreas;
+	std::vector<WFMath::AxisBox<2>> m_dirtyTerrainSegmentAreas;
+	std::vector<WFMath::AxisBox<2>> m_dirtyTerrainSurfaceAreas;
 
 	struct TerrainModEntry {
 		WFMath::Point<3> modPos;
@@ -446,11 +447,11 @@ protected:
 	 */
 	void entityPropertyApplied(const std::string& name, const PropertyBase& prop);
 
-	float getMassForEntity(const LocatedEntity& entity) const;
+	static float getMassForEntity(const LocatedEntity& entity) ;
 
-	void getCollisionFlagsForEntity(const BulletEntry& entry, short& collisionGroup, short& collisionMask) const;
+	static void getCollisionFlagsForEntity(const BulletEntry& entry, short& collisionGroup, short& collisionMask) ;
 
-	void sendMoveSight(BulletEntry& bulletEntry, bool posChange, bool velocityChange, bool orientationChange, bool angularChange, bool modeChanged);
+	static void sendMoveSight(BulletEntry& bulletEntry, bool posChange, bool velocityChange, bool orientationChange, bool angularChange, bool modeChanged);
 
 	void processMovedEntity(BulletEntry& bulletEntry, std::chrono::milliseconds timeSinceLastUpdate);
 
@@ -466,7 +467,11 @@ protected:
 
 	void updateTerrainMod(const BulletEntry& entry, bool forceUpdate = false);
 
+	void updateTerrainArea(const BulletEntry& entry, bool forceUpdate = false);
+
 	void processDirtyTerrainAreas();
+
+	void processDirtyTerrainSurfaces();
 
 	void applyDestination(std::chrono::milliseconds tickSize, BulletEntry& entry, const PropelProperty* propelProp, const Vector3Property<LocatedEntity>& destinationProp);
 
@@ -479,7 +484,7 @@ protected:
 	 */
 	void processWaterBodies();
 
-	std::shared_ptr<btCollisionShape> createCollisionShapeForEntry(LocatedEntity& entity,
+	static std::shared_ptr<btCollisionShape> createCollisionShapeForEntry(LocatedEntity& entity,
 																   const WFMath::AxisBox<3>& bbox,
 																   float mass,
 																   btVector3& centerOfMassOffset);
@@ -506,11 +511,11 @@ protected:
 								std::set<LocatedEntity*>& transformedEntities,
 								bool calculatePosition);
 
-	Atlas::Objects::Operation::RootOperation scheduleTick(LocatedEntity& entity);
+	static Atlas::Objects::Operation::RootOperation scheduleTick(LocatedEntity& entity);
 
 	HandlerResult tick_handler(LocatedEntity& entity, const Operation& op, OpVector& res);
 
-	bool isWithinReach(BulletEntry& reacherEntry, BulletEntry& targetEntry, float reach, const WFMath::Point<3>& positionOnQueriedEntity) const;
+	static bool isWithinReach(BulletEntry& reacherEntry, BulletEntry& targetEntry, float reach, const WFMath::Point<3>& positionOnQueriedEntity) ;
 
 
 	/**
@@ -519,7 +524,7 @@ protected:
 	 * @param entity
 	 * @return
 	 */
-	float calculateVisibilitySphereRadius(const BulletEntry& entry) const;
+	static float calculateVisibilitySphereRadius(const BulletEntry& entry) ;
 };
 
 #endif /* PHYSICALDOMAIN_H_ */

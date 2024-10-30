@@ -9,6 +9,7 @@
         <map>
         	<map name="area">
         		<int name="layer">6</int>
+    			<int name="scaled">1</int>
         		<map name="shape">
 	    			<list name="points">
 	    				<list><float>-1</float><float>-1</float></list>

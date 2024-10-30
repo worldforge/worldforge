@@ -21,44 +21,48 @@
 #include <common/log.h>
 
 #include "physics/Shape.h"
-
+#include <wfmath/polygon.h>
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 
+
+namespace {
+std::unique_ptr<MathShape<WFMath::Polygon>> newFromAtlas(const MapType& data) {
+	auto I = data.find("type");
+	if (I == data.end() || !I->second.isString()) {
+		return nullptr;
+	}
+	const std::string& type = I->second.String();
+	if (type == "polygon") {
+		auto new_shape = std::make_unique<MathShape<WFMath::Polygon>>();
+		int res = new_shape->fromAtlas(data);
+		if (res != 0) {
+			new_shape.reset();
+		}
+		return new_shape;
+	} else {
+		return {};
+	}
+}
+}
+
 AreaProperty::AreaProperty(const AreaProperty& other)
 		: TerrainEffectorProperty(other),
-		  m_layer(other.m_layer) {
-	if (other.m_shape) {
-		m_shape.reset(other.m_shape->copy());
-	}
+		  mState(State{
+				  .layer=other.mState.layer,
+				  .shape = other.mState.shape ? std::unique_ptr<MathShape<WFMath::Polygon>>(other.mState.shape->copy()) : nullptr
+		  }) {
 }
 
 /// \brief AreaProperty constructor
 ///
 /// @param flags Flags used to persist this property
-AreaProperty::AreaProperty() : TerrainEffectorProperty(),
-							   m_layer(0) {
+AreaProperty::AreaProperty() : TerrainEffectorProperty() {
 }
 
 AreaProperty::~AreaProperty() = default;
-
-void AreaProperty::apply(LocatedEntity& owner) {
-	if (!m_shape) {
-		spdlog::error("Terrain area has no shape to apply");
-		return;
-	}
-
-	const TerrainProperty* terrain = getTerrain(owner);
-
-	if (!terrain) {
-		spdlog::error("Terrain area could not find terrain");
-		return;
-	}
-
-	/// TODO: Write the code to handle all the Mercator stuff
-}
 
 void AreaProperty::set(const Element& ent) {
 	if (!ent.isMap()) {
@@ -73,21 +77,20 @@ void AreaProperty::set(const Element& ent) {
 		spdlog::error("Area shape data missing or is not map");
 		return;
 	}
-	auto shape = Shape::newFromAtlas(I->second.Map());
-	auto formShape = dynamic_cast<Form<2>*>(shape.get());
-	if (!formShape) {
-		//Make sure we reset the data.
-		m_shape.reset();
-	} else {
-		shape.release();
-		m_shape.reset(formShape);
-	}
+	mState.shape = newFromAtlas(I->second.Map());
 
 	I = m_data.find("layer");
 	if (I != Iend && I->second.isInt()) {
-		m_layer = static_cast<int>(I->second.Int());
+		mState.layer = static_cast<int>(I->second.Int());
 	} else {
-		m_layer = 0;
+		mState.layer = 0;
+	}
+
+	I = m_data.find("scaled");
+	if (I != Iend && I->second.isInt()) {
+		mState.scaled = I->second.Int() == 1;
+	} else {
+		mState.scaled = false;
 	}
 }
 

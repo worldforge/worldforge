@@ -34,10 +34,16 @@
 
 namespace Ember::OgreView::Gui::Adapters::Atlas {
 
-AreaAdapter::AreaAdapter(const ::Atlas::Message::Element& element, CEGUI::PushButton* showButton, CEGUI::Combobox* layerWindow, EmberEntity* entity) :
+AreaAdapter::AreaAdapter(const ::Atlas::Message::Element& element,
+						 CEGUI::PushButton* showButton,
+						 CEGUI::Combobox* layerWindow,
+						 CEGUI::ToggleButton* scaledWindow,
+						 EmberEntity* entity) :
 		AdapterBase(element),
 		mLayer(0),
+		mIsScaled(false),
 		mLayerWindow(layerWindow),
+		mScaledWindow(scaledWindow),
 		mEntity(entity),
 		mPolygonAdapter(nullptr) {
 	if (element.isMap()) {
@@ -51,13 +57,18 @@ AreaAdapter::AreaAdapter(const ::Atlas::Message::Element& element, CEGUI::PushBu
 			mPolygonAdapter = std::make_unique<PolygonAdapter>(getDefaultPolygon().toAtlas(), showButton, entity);
 		}
 		WFMath::Polygon<2> poly;
-		Ember::OgreView::Terrain::TerrainAreaParser::parseArea(areaData, poly, mLayer);
+		Ember::OgreView::Terrain::TerrainAreaParser::parseArea(areaData, poly, mLayer, mIsScaled);
 	} else {
 		mPolygonAdapter = std::make_unique<PolygonAdapter>(getDefaultPolygon().toAtlas(), showButton, entity);
 	}
 
 	if (mLayerWindow) {
 		addGuiEventConnection(mLayerWindow->subscribeEvent(CEGUI::Combobox::EventListSelectionChanged, CEGUI::Event::Subscriber(&AreaAdapter::layerWindow_ListSelectionChanged, this)));
+	}
+	if (mScaledWindow) {
+		addGuiEventConnection(mScaledWindow->subscribeEvent(CEGUI::ToggleButton::EventSelectStateChanged, [this] {
+			mIsScaled = mScaledWindow->isSelected();
+		}));
 	}
 
 	updateGui(mOriginalValue);
@@ -74,9 +85,20 @@ WFMath::Polygon<2> AreaAdapter::getDefaultPolygon() {
 }
 
 void AreaAdapter::updateGui(const ::Atlas::Message::Element& element) {
+	if (element.isMap()) {
+		if (mScaledWindow) {
+			auto& map = element.Map();
+			auto I = map.find("scaled");
+			if (I != map.end() && I->second.isInt()) {
+				mScaledWindow->setSelected(I->second.Int() == 1);
+			} else {
+				mScaledWindow->setSelected(false);
+			}
+		}
+	}
 }
 
-bool AreaAdapter::layerWindow_TextChanged(const CEGUI::EventArgs& e) {
+bool AreaAdapter::layerWindow_TextChanged(const CEGUI::EventArgs&) {
 	if (!mSelfUpdate) {
 		mLayer = std::stoi(mLayerWindow->getText().c_str());
 		EventValueChanged.emit();
@@ -84,7 +106,7 @@ bool AreaAdapter::layerWindow_TextChanged(const CEGUI::EventArgs& e) {
 	return true;
 }
 
-bool AreaAdapter::layerWindow_ListSelectionChanged(const CEGUI::EventArgs& e) {
+bool AreaAdapter::layerWindow_ListSelectionChanged(const CEGUI::EventArgs&) {
 	if (!mSelfUpdate) {
 		if (mLayerWindow->getSelectedItem()) {
 			mLayer = (int) mLayerWindow->getSelectedItem()->getID();
@@ -111,7 +133,7 @@ void AreaAdapter::fillElementFromGui() {
 	if (item) {
 		mLayer = (int) item->getID();
 	}
-	mEditedValue = Terrain::TerrainAreaParser::createElement(mPolygonAdapter->getShape(), mLayer);
+	mEditedValue = Terrain::TerrainAreaParser::createElement(mPolygonAdapter->getShape(), mLayer, mIsScaled);
 }
 
 bool AreaAdapter::_hasChanges() {

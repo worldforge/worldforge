@@ -20,17 +20,23 @@
 #define RULESETS_AREA_PROPERTY_H
 
 #include "TerrainEffectorProperty.h"
+#include "physics/Shape.h"
 #include <memory>
 
-template<int dim>
-class Form;
 
-/// \brief Class to handle Entity terrain property
+/// \brief Class to handle Entity terrain area property
 /// \ingroup PropertyClasses
 class AreaProperty : public TerrainEffectorProperty {
+public:
+	struct State {
+		int layer;
+		//We currently only support polygons.
+		std::unique_ptr<MathShape<WFMath::Polygon>> shape;
+		bool scaled;
+	};
 protected:
-	int m_layer;
-	std::unique_ptr<Form<2>> m_shape;
+
+	State mState;
 
 	AreaProperty(const AreaProperty& other);
 
@@ -42,9 +48,7 @@ public:
 
 	~AreaProperty() override;
 
-	const Form<2>* shape() const { return m_shape.get(); }
-
-	void apply(LocatedEntity&) override;
+	const State& getData() const { return mState; }
 
 	void set(const Atlas::Message::Element& val) override;
 

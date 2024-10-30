@@ -23,11 +23,9 @@
 #include "AtlasProperties.h"
 
 #include "common/TypeNode.h"
-#include "common/PropertyManager.h"
 #include "common/operations/Update.h"
 
 #include <Atlas/Objects/RootOperation.h>
-#include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
 
 #include <memory>
@@ -364,10 +362,10 @@ PropertyBase* LocatedEntity::modProperty(const std::string& name, const Atlas::M
 
 PropertyBase* LocatedEntity::setProperty(const std::string& name,
 										 std::unique_ptr<PropertyBase> prop) {
-	auto p = prop.get();
-	m_properties[name].property = std::move(prop);
-	p->install(*this, name);
-	return p;
+	auto& installedProp = m_properties[name];
+	installedProp.property = std::move(prop);;
+	installedProp.property->install(*this, name);
+	return installedProp.property.get();
 }
 
 void LocatedEntity::installDelegate(int, const std::string&) {
@@ -429,7 +427,7 @@ void LocatedEntity::sendWorld(OpVector& res) {
 /// The previously associated script is deleted.
 /// @param script Pointer to the script to be associated with this entity
 void LocatedEntity::setScript(std::unique_ptr<Script<LocatedEntity>> script) {
-	script->attachPropertyCallbacks(*this, [this](const Operation op) { sendWorld(op); });
+	script->attachPropertyCallbacks(*this, [this](const Operation& op) { sendWorld(op); });
 	m_scripts.emplace_back(std::move(script));
 }
 
@@ -473,7 +471,7 @@ void LocatedEntity::broadcast(const Atlas::Objects::Operation::RootOperation& op
 		} else if (visibility == Visibility::PROTECTED) {
 			//Protected ops also goes to the entity itself
 			if (!entity->hasFlags(entity_admin) &&
-					entity->getIdAsInt() != getIdAsInt()) {
+				entity->getIdAsInt() != getIdAsInt()) {
 				continue;
 			}
 		}
@@ -792,7 +790,7 @@ void LocatedEntity::merge(const MapType& ent) {
 		if (modifier->getType() == ModifierType::Default) {
 			setAttr(key, modifier.get());
 		} else {
-			modifiedAttributes.emplace_back(std::make_pair(parsedPropertyName.second, std::move(modifier)));
+			modifiedAttributes.emplace_back(parsedPropertyName.second, std::move(modifier));
 		}
 	}
 

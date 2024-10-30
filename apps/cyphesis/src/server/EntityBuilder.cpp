@@ -80,7 +80,7 @@ Ref<Entity> EntityBuilder::newChildEntity(RouterId id,
 	if (attributes) {
 		attributes->removeAttr("parent");
 	}
-	return factory->newEntity(std::move(id), attributes);
+	return factory->newEntity(id, attributes);
 
 }
 

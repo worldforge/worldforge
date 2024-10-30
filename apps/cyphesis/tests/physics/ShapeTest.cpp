@@ -60,7 +60,7 @@ void test_conversion(Shape& s) {
 	assert(data.find("type") != data.end());
 	assert(data["type"] != "unknown");
 
-	auto copy = Shape::newFromAtlas(data);
+	auto copy = Form<2>::newFromAtlas(data);
 	assert(copy);
 	std::cout << "A: " << s << std::endl
 			  << "B: " << *copy << std::endl;
@@ -76,7 +76,7 @@ int main() {
 	{
 		MapType m;
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(!s);
 	}
@@ -312,7 +312,7 @@ int main() {
 		MapType m;
 		m["type"] = "polygon";
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s == 0);
 	}
@@ -322,7 +322,7 @@ int main() {
 		m["type"] = "polygon";
 		m["points"] = ListType(3, ListType(2, 1.f));
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s != 0);
 		assert(s->isValid());
@@ -333,7 +333,7 @@ int main() {
 		m["type"] = "polygon";
 		m["points"] = ListType(3, ListType(2, 1.f));
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s != 0);
 		assert(s->isValid());
@@ -353,7 +353,7 @@ int main() {
 		points.push_back(point);
 		m["points"] = points;
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s != 0);
 		assert(s->isValid());
@@ -372,7 +372,7 @@ int main() {
 		points.push_back(point);
 		m["points"] = points;
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s != 0);
 		assert(s->isValid());
@@ -393,7 +393,7 @@ int main() {
 		points.push_back(point);
 		m["points"] = points;
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s != 0);
 		assert(s->isValid());
@@ -413,7 +413,7 @@ int main() {
 		points.push_back(point);
 		m["points"] = points;
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 		assert(s != 0);
 
 		Area* a = dynamic_cast<Area*>(s.get());
@@ -444,7 +444,7 @@ int main() {
 		MapType m;
 		m["type"] = "circle";
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s != 0);
 		assert(!s->isValid());
@@ -487,7 +487,7 @@ int main() {
 		m["radius"] = 23.9;
 		m["position"] = ListType(2, 1.f);
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s != 0);
 		assert(s->isValid());
@@ -499,7 +499,7 @@ int main() {
 		m["radius"] = 23.9;
 		m["position"] = ListType(2, 1.f);
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s != 0);
 
@@ -513,7 +513,7 @@ int main() {
 		m["radius"] = 23.9;
 		m["position"] = ListType(2, 1.f);
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 		assert(s != 0);
 
 		Area* a = dynamic_cast<Area*>(s.get());
@@ -531,7 +531,7 @@ int main() {
 		m["radius"] = 23.9;
 		m["position"] = ListType(2, 1.f);
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 		assert(s != 0);
 
 		test_conversion(*s);
@@ -558,7 +558,7 @@ int main() {
 		MapType m;
 		m["type"] = "rotbox";
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s == 0);
 	}
@@ -569,7 +569,7 @@ int main() {
 		m["point"] = ListType(2, 1.f);
 		m["size"] = ListType(2, 1.f);
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s != 0);
 		assert(s->isValid());
@@ -581,7 +581,7 @@ int main() {
 		m["point"] = ListType(2, 1.f);
 		m["size"] = ListType(2, 1.f);
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s != 0);
 		assert(s->isValid());
@@ -596,11 +596,11 @@ int main() {
 		m["point"] = ListType(2, 1.f);
 		m["size"] = ListType(2, 1.f);
 
-		auto s = Shape::newFromAtlas(m);
-		assert(s != 0);
+		auto s = Form<2>::newFromAtlas(m);
+		assert(s != nullptr);
 
 		Area* a = dynamic_cast<Area*>(s.get());
-		assert(a != 0);
+		assert(a != nullptr);
 
 		Point<2> low = a->lowCorner();
 		Point<2> high = a->highCorner();
@@ -614,7 +614,7 @@ int main() {
 		m["point"] = ListType(2, 1.f);
 		m["size"] = ListType(2, 1.f);
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 		assert(s != 0);
 
 		// FIXME This doesn't work with an actual rotated box, as the underlying
@@ -675,7 +675,7 @@ int main() {
 		MapType m;
 		m["type"] = "line";
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s == 0);
 	}
@@ -685,7 +685,7 @@ int main() {
 		m["type"] = "line";
 		m["points"] = ListType(3, ListType(2, 1.f));
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s != 0);
 		assert(s->isValid());
@@ -696,7 +696,7 @@ int main() {
 		m["type"] = "line";
 		m["points"] = ListType(3, ListType(2, 1.f));
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s != 0);
 		assert(s->isValid());
@@ -716,7 +716,7 @@ int main() {
 		points.push_back(point);
 		m["points"] = points;
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s != 0);
 		assert(s->isValid());
@@ -734,7 +734,7 @@ int main() {
 		points.push_back(point);
 		m["points"] = points;
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		s->scale(2);
 	}
@@ -750,7 +750,7 @@ int main() {
 		points.push_back(point);
 		m["points"] = points;
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 
 		assert(s != 0);
 		assert(s->isValid());
@@ -770,7 +770,7 @@ int main() {
 		points.push_back(point);
 		m["points"] = points;
 
-		auto s = Shape::newFromAtlas(m);
+		auto s = Form<2>::newFromAtlas(m);
 		assert(s != 0);
 
 		Area* a = dynamic_cast<Area*>(s.get());

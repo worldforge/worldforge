@@ -43,7 +43,7 @@ using Atlas::Objects::Entity::Anonymous;
 PropertyInstanceState<TerrainProperty::State> TerrainProperty::sInstanceState;
 
 
-void TerrainProperty::applyToState(LocatedEntity& entity, State& state) const {
+void TerrainProperty::applyToState(LocatedEntity&, State& state) const {
 
 	auto& terrain = *state.terrain;
 
@@ -61,7 +61,7 @@ void TerrainProperty::applyToState(LocatedEntity& entity, State& state) const {
 
 
 void TerrainProperty::install(LocatedEntity& owner, const std::string& name) {
-	auto state = std::make_unique<TerrainProperty::State>(TerrainProperty::State{std::make_unique<Mercator::Terrain>(Mercator::Terrain::SHADED), {}});
+	auto state = std::make_unique<TerrainProperty::State>(TerrainProperty::State{.terrain=std::make_unique<Mercator::Terrain>(Mercator::Terrain::SHADED), .tileShader={}});
 
 	sInstanceState.addState(owner, std::move(state));
 }
@@ -76,7 +76,7 @@ void TerrainProperty::apply(LocatedEntity& entity) {
 
 }
 
-std::pair<std::unique_ptr<Mercator::TileShader>, std::vector<std::string>> TerrainProperty::createShaders(const Atlas::Message::ListType& surfaceList) const {
+std::pair<std::unique_ptr<Mercator::TileShader>, std::vector<std::string>> TerrainProperty::createShaders(const Atlas::Message::ListType& surfaceList) {
 	std::vector<std::string> surfaceNames;
 	if (!surfaceList.empty()) {
 		auto tileShader = std::make_unique<Mercator::TileShader>();
@@ -137,7 +137,7 @@ bool TerrainProperty::getHeightAndNormal(LocatedEntity& entity,
 										 float x,
 										 float y,
 										 float& height,
-										 Vector3D& normal) const {
+										 Vector3D& normal) {
 	auto& terrain = *sInstanceState.getState(entity)->terrain;
 	auto s = terrain.getSegmentAtPos(x, y);
 	if (s && !s->isValid()) {
@@ -146,7 +146,7 @@ bool TerrainProperty::getHeightAndNormal(LocatedEntity& entity,
 	return terrain.getHeightAndNormal(x, y, height, normal);
 }
 
-bool TerrainProperty::getHeight(LocatedEntity& entity, float x, float y, float& height) const {
+bool TerrainProperty::getHeight(LocatedEntity& entity, float x, float y, float& height) {
 	auto& terrain = *sInstanceState.getState(entity)->terrain;
 	auto s = terrain.getSegmentAtPos(x, y);
 	if (s && !s->isValid()) {
@@ -161,18 +161,18 @@ bool TerrainProperty::getHeight(LocatedEntity& entity, float x, float y, float& 
 /// @param pos the x,z coordinates of the point on the terrain
 /// @param material a reference to the integer to be used to store the
 /// material identifier at this location.
-std::optional<int> TerrainProperty::getSurface(LocatedEntity& entity, float x, float z) const {
+std::optional<int> TerrainProperty::getSurface(LocatedEntity& entity, float x, float z) {
 	auto& terrain = *sInstanceState.getState(entity)->terrain;
 	auto segment = terrain.getSegmentAtPos(x, z);
 	if (segment == nullptr) {
-		cy_debug(std::cerr << "No terrain at this point" << std::endl;);
+		cy_debug_print("No terrain at this point")
 		return {};
 	}
 	if (!segment->isValid()) {
 		segment->populate();
 	}
-	x -= segment->getXRef();
-	z -= segment->getZRef();
+	x -= (float) segment->getXRef();
+	z -= (float) segment->getZRef();
 	assert(x <= segment->getSize());
 	assert(z <= segment->getSize());
 	auto& surfaces = segment->getSurfaces();
@@ -181,7 +181,7 @@ std::optional<int> TerrainProperty::getSurface(LocatedEntity& entity, float x, f
 	segment->getHeightAndNormal(x, z, height, normal);
 	cy_debug_print("At the point " << x << "," << z
 								   << " of the segment the height is " << height << std::endl;
-						   std::cout << "The segment has " << surfaces.size());
+						   std::cout << "The segment has " << surfaces.size())
 	if (surfaces.empty()) {
 		spdlog::error("The terrain has no surface data");
 		return {};
@@ -193,7 +193,7 @@ std::optional<int> TerrainProperty::getSurface(LocatedEntity& entity, float x, f
 	return tile_surface((int) x, (int) z, 0);
 }
 
-std::optional<std::vector<LocatedEntity*>> TerrainProperty::findMods(LocatedEntity& entity, float x, float z) const {
+std::optional<std::vector<LocatedEntity*>> TerrainProperty::findMods(LocatedEntity& entity, float x, float z) {
 	auto& terrain = *sInstanceState.getState(entity)->terrain;
 	auto seg = terrain.getSegmentAtPos(x, z);
 	if (seg == nullptr) {
@@ -211,9 +211,9 @@ std::optional<std::vector<LocatedEntity*>> TerrainProperty::findMods(LocatedEnti
 				spdlog::warn("Terrrain mod with no context");
 				continue;
 			}
-			cy_debug_print("Context has id" << c->m_id);
+			cy_debug_print("Context has id" << c->m_id)
 			auto tc = static_cast<TerrainContext<LocatedEntity>*>(c);
-			cy_debug_print("Context has pointer " << tc->m_entity.get());
+			cy_debug_print("Context has pointer " << tc->m_entity.get())
 			ret.push_back(tc->m_entity.get());
 		}
 	}
@@ -225,11 +225,7 @@ Mercator::Terrain& TerrainProperty::getData(const LocatedEntity& entity) {
 	return *state->terrain;
 }
 
-Mercator::Terrain& TerrainProperty::getData(const LocatedEntity& entity) const {
-	auto* state = sInstanceState.getState(entity);
-	return *state->terrain;
-}
 
-const std::vector<std::string>& TerrainProperty::getSurfaceNames(const LocatedEntity& entity) const {
+const std::vector<std::string>& TerrainProperty::getSurfaceNames(const LocatedEntity& entity) {
 	return sInstanceState.getState(entity)->surfaceNames;
 }

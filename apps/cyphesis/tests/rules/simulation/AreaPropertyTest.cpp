@@ -58,10 +58,10 @@ int main() {
 
 #include "physics/Shape.h"
 
-const TerrainProperty* TerrainEffectorProperty::getTerrain(LocatedEntity& owner, LocatedEntity**) {
+const TerrainProperty* TerrainEffectorProperty::getTerrain(const LocatedEntity& owner, const LocatedEntity**) {
 	return 0;
 }
 
-std::unique_ptr<Shape> Shape::newFromAtlas(const MapType& data) {
+std::unique_ptr<Form<2>> Form<2>::newFromAtlas(const MapType& data) {
 	return {};
 }

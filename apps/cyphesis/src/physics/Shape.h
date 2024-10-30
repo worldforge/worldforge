@@ -25,12 +25,12 @@
 #include <string>
 #include <memory>
 
-namespace Atlas {
-    namespace Message {
-        class Element;
-        typedef std::map<std::string, Element> MapType;
-    }
+
+namespace Atlas::Message {
+	class Element;
+	typedef std::map<std::string, Element> MapType;
 }
+
 
 /// \brief Shape interface for inheritance based use of wfmath shapes
 class Shape {
@@ -46,7 +46,7 @@ class Shape {
     virtual bool isValid() const = 0;
     virtual WFMath::CoordType area() const = 0;
     virtual WFMath::AxisBox<2> footprint() const = 0;
-    virtual WFMath::Polygon<2> outline(WFMath::CoordType p = 1.f) const = 0;
+    virtual WFMath::Polygon<2> outline(WFMath::CoordType p) const = 0;
 
     virtual void scale(WFMath::CoordType factor) = 0;
 
@@ -58,9 +58,6 @@ class Shape {
     virtual int fromAtlas(const Atlas::Message::Element &) = 0;
 
     virtual void stream(std::ostream &) const = 0;
-
-    /// \brief Name constructor
-    static std::unique_ptr<Shape> newFromAtlas(const Atlas::Message::MapType &);
 };
 
 template <int dim>
@@ -76,8 +73,14 @@ class Form<2> : public Shape {
     virtual bool intersect(const WFMath::Point<2> &) const = 0;
 
     Form<2> * copy() const override = 0;
+
+    static std::unique_ptr<Form<2>> newFromAtlas(const Atlas::Message::MapType &);
+
 };
 
+/**
+ * We currently don't support 3d shapes in general, so this is unused.
+ */
 template <>
 class Form<3> : public Shape {
   public:
@@ -130,6 +133,8 @@ class MathShape : public Form<dim> {
     virtual void stream(std::ostream &) const;
 
     const ShapeT<dim> & shape() { return m_shape; }
+
+	static void scaleInPlace(ShapeT<dim>& shape, const WFMath::Vector<2>& scale);
 };
 
 

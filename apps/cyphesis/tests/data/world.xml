@@ -1818,43 +1818,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -1910,43 +1873,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -2132,43 +2058,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -2224,43 +2113,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -2316,43 +2168,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -2408,43 +2223,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -2483,43 +2261,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -2558,43 +2299,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -2633,43 +2337,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -2725,43 +2392,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -2817,43 +2447,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -2892,43 +2485,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -2984,43 +2540,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -3059,43 +2578,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -3151,43 +2633,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -3226,43 +2671,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -3318,43 +2726,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -3393,43 +2764,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -3485,43 +2819,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -3577,43 +2874,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -3652,43 +2912,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -3744,43 +2967,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -3836,43 +3022,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -3928,43 +3077,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -4020,43 +3132,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -4095,43 +3170,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -4187,43 +3225,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -4262,43 +3263,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -4354,43 +3318,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -4429,43 +3356,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -4521,43 +3411,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -4596,43 +3449,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -4688,43 +3504,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -4763,43 +3542,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -4855,43 +3597,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -4947,43 +3652,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -5022,43 +3690,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -5097,43 +3728,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -5172,43 +3766,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -5247,43 +3804,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -5322,43 +3842,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -5414,43 +3897,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -5506,43 +3952,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -5581,43 +3990,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -5656,43 +4028,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -5748,43 +4083,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -5823,43 +4121,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -5898,43 +4159,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -5990,43 +4214,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>
@@ -6065,43 +4252,6 @@
     <string name="parent">oak</string>
     <float name="stamp">1</float>
     <string name="objtype">obj</string>
-    <map name="area">
-      <int name="layer">6</int>
-      <list name="points">
-        <list>
-          <float>-3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>-5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>-3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>5</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>3.5</float>
-        </list>
-        <list>
-          <float>5</float>
-          <float>0</float>
-        </list>
-        <list>
-          <float>3.5</float>
-          <float>-3.5</float>
-        </list>
-        <list>
-          <float>0</float>
-          <float>-5</float>
-        </list>
-      </list>
-    </map>
     <list name="bbox">
       <float>-2</float>
       <float>-2</float>

@@ -404,7 +404,7 @@ Terrain::Rect Terrain::updateArea(long id, std::unique_ptr<Area> area) {
 			}
 		}
 
-		m_terrainAreas[id] = TerrainAreaEntry{std::move(area), rect};
+		m_terrainAreas[id] = TerrainAreaEntry{.terrainArea=std::move(area), .rect=rect};
 	}
 
 	for (auto& segment: removed) {
