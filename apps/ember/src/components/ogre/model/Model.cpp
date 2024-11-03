@@ -67,8 +67,11 @@ Model::Model(Ogre::SceneManager& manager, const ModelDefinitionPtr& definition, 
 Model::~Model() {
 
 	mDefinition->removeModelInstance(this);
-	for (auto& submodel: mSubmodels) {
-		removeMovable(submodel->getEntity());
+	//If we're using instancing the submodel movables will be handled by SubModelPart instead.
+	if (!mUseInstancing) {
+		for (auto& submodel: mSubmodels) {
+			removeMovable(submodel->getEntity());
+		}
 	}
 	mSkeletonOwnerEntity = nullptr;
 	mSubmodels.clear();
@@ -627,7 +630,6 @@ Action* Model::getAction(ActivationDefinition::Type type, const std::string& tri
 	}
 	return nullptr;
 }
-
 
 
 void Model::addMovable(Ogre::MovableObject* movable) {

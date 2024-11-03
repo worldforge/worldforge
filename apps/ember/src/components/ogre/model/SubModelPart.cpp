@@ -357,7 +357,7 @@ const std::vector<SubModelPartEntity>& SubModelPart::getSubentities() const {
 
 void SubModelPart::destroy() {
 	for (auto& item: mInstancedEntities) {
-		//There's a bug where the InstancedEntity doesn't contain a pointer to it's scene manager; we need to go through the InstanceBatch instead
+		//There's a bug where the InstancedEntity doesn't contain a pointer to its scene manager; we need to go through the InstanceBatch instead
 		::Ember::OgreView::Model::Model::sInstancedEntities[item->_getOwner()->_getManager()].erase(item);
 		mSubModel.mModel.removeMovable(item);
 		mSubModel.mEntity._getManager()->destroyInstancedEntity(item);
