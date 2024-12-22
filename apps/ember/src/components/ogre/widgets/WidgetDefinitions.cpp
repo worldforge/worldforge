@@ -43,7 +43,6 @@
 
 #endif
 
-
 namespace Ember::OgreView::Gui {
 
 WidgetDefinitions::WidgetDefinitions() = default;
@@ -121,14 +120,14 @@ void WidgetDefinitions::registerPlugin(GUIManager& guiManager, const std::filesy
 
 	try {
 		auto registerFn = boost::dll::import_alias<std::function<void()>(GUIManager&)>(
-				pluginPath, "registerWidget"
+				{pluginPath}, "registerWidget"
 		);
 		logger->info("Creating Widget Plugin from '{}'.", pluginPath.string());
 		auto disconnectFn = registerFn(guiManager);
-		PluginEntry pluginEntry{pluginPath, std::move(registerFn), std::move(disconnectFn)};
+		PluginEntry pluginEntry(pluginPath, std::move(registerFn), std::move(disconnectFn));
 		mPlugins.emplace(pluginPath, std::move(pluginEntry));
 	} catch (const std::exception& ex) {
-		logger->error("Error when loading plugin '{}': {}", pluginPath.string(), ex);
+		logger->error("Error when loading plugin '{}': {}", pluginPath.string(), ex.what());
 	}
 #endif
 }

@@ -25,7 +25,6 @@
 
 #include <boost/dll.hpp>
 #include <utility>
-#include <vector>
 #include <set>
 #include <map>
 #include "WidgetPlugin.h"
@@ -72,7 +71,16 @@ public:
 	 * The pluginCallback will automatically be called on destruction.
 	 */
 	struct PluginEntry {
+#ifdef WF_USE_WIDGET_PLUGINS
+
+		explicit PluginEntry(std::filesystem::path pluginPath, WidgetPluginFunction dllPluginFn, WidgetPluginCallback callback) :
+				path(std::move(pluginPath)),
+				pluginFn(std::move(dllPluginFn)),
+				pluginCallback(std::move(callback)) {}
+
+#else
 		explicit PluginEntry(WidgetPluginCallback callback) : pluginCallback(std::move(callback)) {}
+#endif
 
 		PluginEntry(PluginEntry&& rhs) = default;
 
