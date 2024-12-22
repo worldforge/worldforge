@@ -67,7 +67,7 @@ void refreshShader(const std::filesystem::path& path, const std::string& group) 
 													if (usedProg) {
 														if (usedProg.get() == gpuProgram) {
 															Ember::logger->info("Reloading material {} since the GPU program at {} was changed.", material->getName(),
-																				 gpuProgram->getSourceFile());
+																				gpuProgram->getSourceFile());
 															material->reload();
 															break;
 														}
@@ -379,14 +379,13 @@ void OgreResourceLoader::observeDirectory(const std::filesystem::path& path, std
 				}
 			}
 
-			auto startsWith = [](const std::filesystem::path& root, std::filesystem::path aPath) {
-				while (!aPath.empty()) {
-					if (aPath == root) {
-						return true;
-					}
-					aPath = aPath.parent_path();
+			auto startsWith = [](const std::filesystem::path& root, const std::filesystem::path& aPath) {
+				try {
+					auto compareResult = root.compare(aPath);
+					return compareResult < 0;
+				} catch (const std::runtime_error&) {
+					return false;
 				}
-				return false;
 			};
 
 			auto locations = Ogre::ResourceGroupManager::getSingleton().listResourceLocations(group);
