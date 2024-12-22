@@ -64,7 +64,7 @@ Subversion media. Which you might want if you're developing locally.
 This step also requires ImageMagick to be installed.
 
 If you only want to build the server or the client you can supply these options to the "conan install..." command:
-"-o Worldforge/*:with_client=False" or "-o Worldforge/*:with_server=False". 
+"-o Worldforge/*:with_client=False" or "-o Worldforge/*:with_server=False".
 
 ### CMake < 3.23
 
@@ -115,6 +115,19 @@ conan install -s build_type=Debug . --build missing -c tools.system.package_mana
 
 You might also want to look into the ```.gdbinit``` file to see how you can set it up to ungrab the mouse when
 debugging.
+
+### Widgets as plugins
+
+When developing it's good to be able to reload UI widgets without having to restart Ember. This can be achieved by
+building UI widgets as "plugins". In this mode the UI widgets are build as shared objects (.so/.dll) and are reloaded
+whenever they are changed (which is whenever they are recompiled and reinstalled by CMake).
+
+To enable this you need to add the "widgets_as_plugins=True" flag to the "conan install" command as described above.
+For example:
+
+```bash
+conan install -s build_type=Debug . --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True -o "widgets_as_plugins=True"
+```
 
 ## Running a server
 

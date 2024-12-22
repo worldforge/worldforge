@@ -18,12 +18,17 @@ class Worldforge(ConanFile):
     options = {
         "with_client": [True, False],
         "with_server": [True, False],
-        "without_metaserver_server": [True, False]
+        "without_metaserver_server": [True, False],
+        # If this is enabled, we'll build the UI widgets as plugins, which means that they can be reloaded at runtime.
+        # This is useful when doing development, but also means that some libs needs to be built as shared libs.
+        "widgets_as_plugins": [True, False]
     }
 
     default_options = {
         "with_client": True,
         "with_server": True,
+        # By default we'll not build widgets as plugins, as this requires some libs to be built as shared.
+        "widgets_as_plugins": False,
         # Normally you don't want to build the actual metaserver server.
         "without_metaserver_server": True,
         # Unclear why the pulseaudio client lib needs openssl...
@@ -42,6 +47,12 @@ class Worldforge(ConanFile):
     def config_options(self):
         if is_msvc(self):
             self.options.with_server = False
+
+        # If we've enabled widget plugins we need to build OGRE and some used libraries as shared libs.
+        if self.options.widgets_as_plugins:
+            self.options["ogre/*:shared"] = True
+            self.options["glslang/*:shared"] = False
+            self.options["spirv-tools/*:shared"] = False
 
     def requirements(self):
 
@@ -111,6 +122,10 @@ class Worldforge(ConanFile):
 
         if not self.options.without_metaserver_server:
             tc.variables["BUILD_METASERVER_SERVER"] = "TRUE"
+
+        if self.options.widgets_as_plugins:
+            print("Widgets will be built as plugins, which is mainly of use during development.")
+            tc.variables["WF_USE_WIDGET_PLUGINS"] = "TRUE"
 
         tc.generate()
 

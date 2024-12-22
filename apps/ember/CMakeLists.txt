@@ -13,8 +13,6 @@ add_compile_definitions("EMBER_SYSCONFDIR=\"${CMAKE_INSTALL_FULL_SYSCONFDIR}\"")
 
 include_directories(${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR}/generated)
 
-#On Unix we'll automatically build all widgets as reloadable modules, but not on Windows or OSX (since we couldn't get it to work as we would like).
-cmake_dependent_option(WF_USE_WIDGET_PLUGINS "Build widgets as reloadable plugins." ON "UNIX AND NOT APPLE;NOT CONAN_FOUND" OFF)
 
 #Needs to declare a GLOBAL variable to pass plugin list down to the src/main/CMakeFile.
 define_property(GLOBAL PROPERTY PLUGIN_LIBS_LIST
@@ -39,20 +37,14 @@ macro(wf_add_plugin _LIB_NAME _SOURCE_FILES)
         #We need to tell msvc to ignore any problems with resolving symbols since they will be resolved when the plugin is loaded.
         #TODO: make the symbols exported anyway so this isn't needed
         set_target_properties(${_LIB_NAME} PROPERTIES LINK_FLAGS "/FORCE:UNRESOLVED")
-    elseif ()
-        set_target_properties(${_LIB_NAME} PROPERTIES LINK_FLAGS "-Wl,-undefined -Wl,dynamic_lookup \
-    -Wl,-no_pie \
-    -Wl,-search_paths_first")
+    else ()
+        set_target_properties(${_LIB_NAME} PROPERTIES LINK_FLAGS "-Wl,-undefined -Wl,dynamic_lookup")
     endif ()
-
     set_property(GLOBAL APPEND PROPERTY PLUGIN_LIBS_LIST "${_LIB_NAME}")
     message(STATUS "Registered widget plugin ${_LIB_NAME}")
 
-    #Remove all linking to libraries
-    set_target_properties(${_LIB_NAME} PROPERTIES LINK_LIBRARIES "")
-    #And copy the include directories from the emberogre target.
-    target_include_directories(${_LIB_NAME} PRIVATE $<TARGET_PROPERTY:emberogre,INTERFACE_INCLUDE_DIRECTORIES>)
 
+    target_link_libraries(${_LIB_NAME} ember-shared)
 endmacro()
 
 if (WIN32)
@@ -60,7 +52,12 @@ if (WIN32)
     add_compile_definitions("_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING") #CEGUI has a String iterator that inherits from std::iterator, which shouldn't be done. We don't want to see the warning from MSVC all the time.
 endif ()
 
-wf_find_boost(system thread)
+wf_find_boost(system thread url)
+
+if (WF_USE_WIDGET_PLUGINS)
+    #If we build widgets as plugin we need to dynamically load them, which boost::dll helps with.
+    wf_find_boost(dll)
+endif ()
 
 find_package(SDL2 REQUIRED EXACT 2.30.8)
 
@@ -93,9 +90,6 @@ find_package(Bullet 2.89 REQUIRED)
 
 
 if (WF_USE_WIDGET_PLUGINS)
-    message(STATUS "Widget Plugins will be built dynamically")
-    # This is needed to make Widget Plugins work.
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
     add_compile_definitions("WF_USE_WIDGET_PLUGINS")
 endif ()
 

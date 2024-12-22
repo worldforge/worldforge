@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.18)
 
 project(Worldforge)
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/tools/cmake)
 
 # Meta data
 set(DESCRIPTION "The Worldforge project.")
@@ -88,8 +87,15 @@ option(BUILD_TESTING "Should tests always be built; otherwise they will be built
 option(SKIP_EMBER "Skips building the Ember client." OFF)
 option(SKIP_CYPHESIS "Skips building the Cyphesis server." OFF)
 option(BUILD_METASERVER_SERVER "Includes the MetaServer server into the build. This isn't normally needed." OFF)
+option(WF_USE_WIDGET_PLUGINS "Build widgets as reloadable plugins." OFF)
 
 add_compile_definitions("PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
+
+if (WF_USE_WIDGET_PLUGINS)
+    message(STATUS "Widget Plugins will be built dynamically")
+    # This is needed to make Widget Plugins work.
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif ()
 
 
 if (APPLE)
@@ -106,10 +112,10 @@ add_custom_target(dox)
 #Since there are multiple instances where boost is required we specify this macro to keep the version in sync.
 macro(wf_find_boost COMPONENTS)
     find_package(Boost
-        1.86.0
-        EXACT
-        REQUIRED
-        COMPONENTS ${COMPONENTS})
+            1.86.0
+            EXACT
+            REQUIRED
+            COMPONENTS ${COMPONENTS})
 endmacro()
 
 add_subdirectory(external)
