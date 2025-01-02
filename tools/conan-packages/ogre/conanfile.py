@@ -6,7 +6,6 @@ from conan.tools.apple import is_apple_os
 from conan.tools.cmake import CMake, cmake_layout, CMakeToolchain
 from conan.tools.files import get, patch
 from conan.tools.microsoft import is_msvc
-from conan.tools.system.package_manager import Apt
 
 
 class OgreConan(ConanFile):
@@ -29,10 +28,7 @@ class OgreConan(ConanFile):
     description = ("Object-Oriented Graphics Rendering Engine (OGRE) "
                    "is a scene-oriented, real-time, 3D rendering engine.")
     short_paths = False
-    requires = [
-        "freetype/2.13.3",
-        "glslang/11.7.0"
-    ]
+
     user = "worldforge"
     package_type = "library"
     exports_sources = ["patches*"]
@@ -40,8 +36,12 @@ class OgreConan(ConanFile):
     def layout(self):
         cmake_layout(self)
 
-    def system_requirements(self):
-        Apt(self).install(["libgl1-mesa-dev", "libegl1-mesa-dev", "libxrandr-dev"])
+    def requirements(self):
+        self.requires("freetype/2.13.3")
+        self.requires("glslang/11.7.0")
+        self.requires("opengl/system")
+        if self.settings.os == "Linux":
+            self.requires("xorg/system")
 
     def source(self):
         get(self, "https://github.com/OGRECave/ogre/archive/v{0}.tar.gz".format(self.upstream_version), strip_root=True)
