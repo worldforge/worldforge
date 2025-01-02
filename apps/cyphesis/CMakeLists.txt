@@ -52,7 +52,7 @@ else ()
 endif ()
 
 
-find_package(SQLite3 3.47.0 EXACT REQUIRED)
+find_package(SQLite3 3.47.1 EXACT REQUIRED)
 
 find_package(readline REQUIRED)
 wf_find_boost(system)

@@ -37,7 +37,6 @@ set(ember-libraries
         external-Detour
         Boost::url
         Boost::filesystem
-        OgreMain
 )
 
 
@@ -86,7 +85,7 @@ if (WF_USE_WIDGET_PLUGINS)
 
     #add_dependencies(ember ${_PLUGIN_LIBS_LIST})
     foreach (PLUGIN ${_PLUGIN_LIBS_LIST})
-        add_dependencies(${PLUGIN} ember)
+        add_dependencies(${PLUGIN} ember-shared)
     endforeach (PLUGIN)
     target_link_libraries(ember
             ember-shared

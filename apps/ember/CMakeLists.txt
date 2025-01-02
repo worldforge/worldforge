@@ -59,11 +59,11 @@ if (WF_USE_WIDGET_PLUGINS)
     wf_find_boost(dll)
 endif ()
 
-find_package(SDL2 REQUIRED EXACT 2.30.8)
+find_package(SDL2 REQUIRED EXACT 2.30.9)
 
 find_package(sigc++-3 3.0.7 REQUIRED)
 
-find_package(OGRE 14.3.1 EXACT REQUIRED)
+find_package(OGRE 14.3.2 EXACT REQUIRED)
 
 #With Conan there will be a hard coded path to Freetype within the Overlay target. Let's remove that and link to
 # Freetype ourselves.

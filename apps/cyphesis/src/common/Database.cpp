@@ -30,6 +30,7 @@
 #include <boost/algorithm/string.hpp>
 #include <sstream>
 #include <ranges>
+#include <fmt/ranges.h>
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
