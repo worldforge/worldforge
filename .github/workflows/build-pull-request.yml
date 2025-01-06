@@ -1,9 +1,8 @@
-name: Build Squall standalone
-#This is an extra build action just to make sure that Squall can be built separately.
+name: Build pull request
 
 on:
     workflow_dispatch:
-    push:
+    pull_request:
         branches:
             - master
 
@@ -11,14 +10,8 @@ env:
     CONAN_REVISIONS_ENABLED: 1
     CONAN_SCM_TO_CONANDATA: 1
     CONAN_SYSREQUIRES_MODE: enabled
-    CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
-    CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
     PROFILE_CONAN: conan-release
     CI: 1 #This will turn off a couple of warnings in the build
-
-defaults:
-    run:
-        shell: bash
 
 jobs:
     build:
@@ -26,24 +19,17 @@ jobs:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                #        os: [ ubuntu-20.04, ubuntu-22.04, macos-12, macos-11 ]
-                os: [ ubuntu-22.04, ubuntu-24.04, windows-2022, macos-14 ]
+                #Enable building on macOS when it can be fixed. Currently, we're getting SDL linking errors.
+                #        os: [ ubuntu-22.04, macos-12, macos-11 ]
+                os: [ ubuntu-22.04, ubuntu-24.04, windows-2022 ]
 
         steps:
             -   uses: actions/checkout@v4.2.2
-                with:
-                  fetch-depth: 0 #We need all history to get proper Git versioning for dev builds.
-
 
             -   name: Workaround preset name difference
                 if: runner.os == 'Windows'
+                shell: bash
                 run: echo "PROFILE_CONAN=conan-default" >> $GITHUB_ENV
-
-            -   name: Set up GCC
-                uses: egor-tensin/setup-gcc@v1
-                if: ${{ matrix.os == 'ubuntu-20.04' }}
-                with:
-                    version: 11
 
             -   name: Use ccache
                 uses: hendrikmuhs/ccache-action@v1.2
@@ -51,8 +37,19 @@ jobs:
                     key: ${{ github.job }}-${{ matrix.os }}
 
             -   name: Setup environment
+                shell: bash
                 run: |
                     export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+
+            -   name: Install Mac tools
+                shell: bash
+                if: runner.os == 'macOS'
+                run: |
+                    brew install autoconf automake
+
+            -   name: Install Windows tools
+                if: runner.os == 'Windows'
+                uses: "GuillaumeFalourd/setup-rsync@v1.2"
 
             -   uses: actions/setup-python@v5
                 with:
@@ -68,33 +65,26 @@ jobs:
                     sed -i.backup 's/compiler.cppstd=14/compiler.cppstd=17/g' ~/.conan2/profiles/default
                     conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
 
-            -   name: Alter Conan config for Ubuntu 20.04
-                if: ${{ matrix.os == 'ubuntu-20.04' }}
-                run: |
-                    cp .github/settings_user.yml ~/.conan2/
-                    echo "os.libc=glibc" >> ~/.conan2/profiles/default
-                    echo "os.libc.version=2.31" >> ~/.conan2/profiles/default
-
             -   name: Have Conan install packages
-                working-directory: libs/squall
+                shell: bash
                 run: |
                     export PATH=~/.local/bin:$PATH
-                    conan install tools/conan -pr default --build=missing
+                    conan install . -pr default --build=missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
                     if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
                       conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
                       conan upload "*" -r worldforge -c
                     fi
 
             -   name: Configure CMake
-                working-directory: libs/squall
-                run: cmake --preset $PROFILE_CONAN . -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/install/usr -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+                shell: bash
+                #The -DCMAKE_C_FLAGS="-s" will strip all executables, which we want because we want to provide a Snap package
+                run: cmake --preset $PROFILE_CONAN . -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/install/usr -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_FLAGS="-s" -DATLAS_GENERATE_OBJECTS=OFF -DATLAS_DISABLE_BENCHMARKS=ON
 
             -   name: Build
-                working-directory: libs/squall
+                shell: bash
                 run: cmake --build --preset conan-release --parallel 4
 
             -   name: Test
-                working-directory: libs/squall
                 shell: bash
                 run: |
                     if [[ "$ImageOS" == "win22" ]]; then
@@ -102,7 +92,3 @@ jobs:
                     else
                         cmake --build --preset conan-release --parallel 4 --target check
                     fi
-
-            -   name: Install all
-                working-directory: libs/squall
-                run: cmake --build --preset conan-release --target install
