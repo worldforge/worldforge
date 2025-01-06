@@ -40,8 +40,6 @@
 
 #include <set>
 
-#include <cassert>
-
 class Domain;
 
 class LocatedEntity;
@@ -82,88 +80,88 @@ typedef std::set<Ref<LocatedEntity>> LocatedEntitySet;
 
 /// \brief Flag indicating entity has been written to permanent store
 /// \ingroup EntityFlags
-static const std::uint32_t entity_clean = 1u << 0u;
+static constexpr std::uint32_t entity_clean = 1u << 0u;
 /// \brief Flag indicating entity POS has been written to permanent store
 /// \ingroup EntityFlags
-static const std::uint32_t entity_pos_clean = 1u << 1u;
+static constexpr std::uint32_t entity_pos_clean = 1u << 1u;
 /// \brief Flag indicating entity ORIENT has been written to permanent store
 /// \ingroup EntityFlags
-static const std::uint32_t entity_orient_clean = 1u << 2u;
+static constexpr std::uint32_t entity_orient_clean = 1u << 2u;
 
-static const std::uint32_t entity_clean_mask = entity_clean |
+static constexpr std::uint32_t entity_clean_mask = entity_clean |
 											   entity_pos_clean |
 											   entity_orient_clean;
 
 /// \brief Flag indicating entity is perceptive
 /// \ingroup EntityFlags
-static const std::uint32_t entity_perceptive = 1u << 3u;
+static constexpr std::uint32_t entity_perceptive = 1u << 3u;
 /// \brief Flag indicating entity has been destroyed
 /// \ingroup EntityFlags
-static const std::uint32_t entity_destroyed = 1u << 4u;
+static constexpr std::uint32_t entity_destroyed = 1u << 4u;
 /// \brief Flag indicating entity has been queued for storage update
 /// \ingroup EntityFlags
-static const std::uint32_t entity_queued = 1u << 5u;
+static constexpr std::uint32_t entity_queued = 1u << 5u;
 /// \brief Flag indicaiting entity is ephemeral
 /// \ingroup EntityFlags
-static const std::uint32_t entity_ephem = 1u << 6u;
+static constexpr std::uint32_t entity_ephem = 1u << 6u;
 /// \brief Flag indicating entity is visible
 /// \ingroup EntityFlags
 /// Currently only used on MemEntity
-static const std::uint32_t entity_visible = 1u << 7u;
+static constexpr std::uint32_t entity_visible = 1u << 7u;
 /// \brief Flag indicating entity is asleep
 /// \ingroup EntityFlags
 /// Currently only used on BaseMind
-static const std::uint32_t entity_asleep = 1u << 8u;
+static constexpr std::uint32_t entity_asleep = 1u << 8u;
 /// \brief Flag indicating entity contains a Domain, used for movement and sights
 /// \ingroup EntityFlags
-static const std::uint32_t entity_domain = 1u << 9u;
+static constexpr std::uint32_t entity_domain = 1u << 9u;
 
 /// \brief Flag indicating entity has thoughts that needs to be persisted.
 /// \ingroup EntityFlags
-static const std::uint32_t entity_dirty_thoughts = 1u << 10u;
+static constexpr std::uint32_t entity_dirty_thoughts = 1u << 10u;
 
 /// \brief Flag indicating entity has a location which has been changed since last sent to clients,
 /// and new location data should be sent on the next Update.
 /// \ingroup EntityFlags
-static const std::uint32_t entity_dirty_location = 1u << 11u;
+static constexpr std::uint32_t entity_dirty_location = 1u << 11u;
 
 /**
  * The entity is an admin character, and has additional capabilities.
  */
-static const std::uint32_t entity_admin = 1u << 12u;
+static constexpr std::uint32_t entity_admin = 1u << 12u;
 
 /**
  * The entity is stackable.
  */
-static const std::uint32_t entity_stacked = 1u << 13u;
+static constexpr std::uint32_t entity_stacked = 1u << 13u;
 
 /**
  * The entity should be visible when contained, even if it normally wouldn't be.
  * This is of use for things like fires or effects.
  * Note that any entity_visibility_protected or entity_visibility_private flags still should apply.
  */
-static const std::uint32_t entity_contained_visible = 1u << 14u;
+static constexpr std::uint32_t entity_contained_visible = 1u << 14u;
 
 /**
  * The entity won't allow any kind of modifiers to affect it.
  */
-static const std::uint32_t entity_modifiers_not_allowed = 1u << 15u;
+static constexpr std::uint32_t entity_modifiers_not_allowed = 1u << 15u;
 
 /**
  * The entity can only be seen by its parent entity.
  * This is useful for adding entities to a character entity, which only the character entity should see.
  */
-static const std::uint32_t entity_visibility_protected = 1u << 16u;
+static constexpr std::uint32_t entity_visibility_protected = 1u << 16u;
 
 /**
  * The entity can only be seen by the simulation, and admin entities.
  */
-static const std::uint32_t entity_visibility_private = 1u << 17u;
+static constexpr std::uint32_t entity_visibility_private = 1u << 17u;
 
 /**
  * The entity has a pending Update broadcast op queued, and thus doesn't need any more.
  */
-static const std::uint32_t entity_update_broadcast_queued = 1u << 18u;
+static constexpr std::uint32_t entity_update_broadcast_queued = 1u << 18u;
 
 struct EntityState {
 	/// Map of properties
@@ -208,8 +206,6 @@ protected:
 	 * Collects all observers of the child, i.e. all entities that are currently observing it.
 	 * This method will walk upwards the entity chain.
 	 * @param child The child entity that's being observed.
-	 * @param op
-	 * @param res
 	 */
 	void collectObserversForChild(const LocatedEntity& child, std::set<const LocatedEntity*>& receivers) const;
 
@@ -229,11 +225,7 @@ public:
 	/// List of entities which use this as ref
 	std::unique_ptr<LocatedEntitySet> m_contains;
 
-	inline const std::set<Ref<LocatedEntity>>* containsAsPtr() const {
-		return m_contains.get();
-	}
-
-	inline std::set<Ref<LocatedEntity>>* containsAsPtr() {
+    const std::set<Ref<LocatedEntity>>* containsAsPtr() const {
 		return m_contains.get();
 	}
 
@@ -306,7 +298,7 @@ public:
 	/// @return zero if this entity has an attribute with the name given
 	/// nonzero otherwise
 	int getAttr(const std::string& name,
-				Atlas::Message::Element&) const;
+				Atlas::Message::Element& attr) const;
 
 	/// \brief Get the value of an attribute
 	///
@@ -321,7 +313,7 @@ public:
 	/// @return zero if this entity has an attribute with the name given
 	/// nonzero otherwise
 	int getAttrType(const std::string& name,
-					Atlas::Message::Element&,
+					Atlas::Message::Element& attr,
 					int type) const;
 
 	/// \brief Get the value of an attribute if it is the right type
@@ -601,7 +593,6 @@ public:
 	/**
 	 * Enqueues a new Update op if there's none already queued.
 	 * This version sends it directly to the world.
-	 * @param res
 	 */
 	void enqueueUpdateOp();
 
