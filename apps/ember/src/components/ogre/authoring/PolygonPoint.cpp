@@ -21,10 +21,7 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "PolygonPoint.h"
-#include "Polygon.h"
 #include "IPolygonPositionProvider.h"
-
-#include "MovementAdapter.h"
 
 #include "../Convert.h"
 #include "../MousePicker.h"
@@ -35,6 +32,7 @@
 #include <OgreSceneManager.h>
 
 #include <memory>
+#include <framework/Log.h>
 
 namespace Ember::OgreView::Authoring {
 

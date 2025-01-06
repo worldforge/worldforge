@@ -28,6 +28,7 @@
 #include <Atlas/Objects/Operation.h>
 
 #include <algorithm>
+#include <fstream>
 #include <sstream>
 
 using Atlas::Objects::Root;

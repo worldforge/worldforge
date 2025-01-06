@@ -23,13 +23,11 @@
 #ifndef EMBEROGREOGRESETUP_H
 #define EMBEROGREOGRESETUP_H
 
-#include "EmberOgrePrerequisites.h"
 #include "OgreIncludes.h"
 #include "OgrePluginLoader.h"
 #include "framework/ConsoleCommandWrapper.h"
 #include "framework/ConsoleObject.h"
 #include <OgreConfigOptionMap.h>
-#include <OgreFrameListener.h>
 #include <OgreMaterialManager.h>
 #include <sigc++/trackable.h>
 #include <memory>

@@ -21,7 +21,6 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "ActionBarInput.h"
-#include "framework/Tokeniser.h"
 #include "framework/ConsoleBackend.h"
 
 using namespace Ember;

@@ -25,7 +25,6 @@
 #include "services/input/IInputAdapter.h"
 #include <string>
 #include <memory>
-#include <OgreRoot.h>
 
 
 namespace Ember::OgreView {

@@ -20,11 +20,12 @@
 #define TERRAINSHADER_H
 
 #include "TerrainLayerDefinition.h"
-#include <Mercator/Shader.h>
 
+namespace Mercator {
+class Shader;
+}
 
 namespace Ember::OgreView::Terrain {
-
 struct TerrainLayerDefinition;
 
 struct TerrainLayer {
@@ -37,8 +38,6 @@ struct TerrainShader {
 	TerrainLayer layer;
 	Mercator::Shader& shader;
 };
-
-
 }
 
 

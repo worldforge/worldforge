@@ -18,9 +18,7 @@
 
 #include "TerrainPageDataProvider.h"
 #include "components/ogre/terrain/TerrainHandler.h"
-#include "components/ogre/terrain/TerrainInfo.h"
 #include "components/ogre/terrain/TerrainPage.h"
-#include "Convert.h"
 
 
 namespace Ember::OgreView {

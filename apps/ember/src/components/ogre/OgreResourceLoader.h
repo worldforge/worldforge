@@ -24,10 +24,7 @@
 #ifndef EMBEROGREOGRERESOURCELOADER_H
 #define EMBEROGREOGRERESOURCELOADER_H
 
-#include "EmberOgrePrerequisites.h"
 #include "framework/ConsoleCommandWrapper.h"
-#include <OgreConfigFile.h>
-#include <map>
 #include "framework/Session.h"
 #include <filesystem>
 #include <squall/core/Repository.h>

@@ -24,7 +24,6 @@
 #ifndef EMBEROGREAVATARLOGGER_H
 #define EMBEROGREAVATARLOGGER_H
 
-#include "framework/ConsoleObject.h"
 #include <sigc++/trackable.h>
 #include <fstream>
 #include <string>

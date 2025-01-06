@@ -19,15 +19,10 @@
 #include "TerrainShaderParser.h"
 
 #include "components/ogre/terrain/TerrainHandler.h"
-#include "components/ogre/terrain/TerrainShader.h"
 #include "components/ogre/terrain/TerrainLayerDefinition.h"
 #include "components/ogre/terrain/TerrainLayerDefinitionManager.h"
 
 #include <Mercator/Shader.h>
-#include <Mercator/FillShader.h>
-#include <Mercator/ThresholdShader.h>
-#include <Mercator/DepthShader.h>
-#include <Mercator/GrassShader.h>
 #include <Mercator/ShaderFactory.h>
 
 #include <Atlas/Message/Element.h>

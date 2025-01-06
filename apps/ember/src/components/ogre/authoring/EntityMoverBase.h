@@ -28,6 +28,7 @@
 #include "SnapToMovement.h"
 #include "framework/ConsoleCommandWrapper.h"
 #include <wfmath/point.h>
+#include <wfmath/quaternion.h>
 #include <memory>
 #include <sigc++/signal.h>
 #include <sigc++/trackable.h>
@@ -54,7 +55,7 @@ class SnapToMovement;
  *
  * @brief Provides a single class which listens for whether snapping should be enabled.
  *
- * @note You should preferable keep just one static instance of this available.
+ * @note You should preferably keep just one static instance of this available.
  */
 class SnapListener : public ConsoleObject {
 public:

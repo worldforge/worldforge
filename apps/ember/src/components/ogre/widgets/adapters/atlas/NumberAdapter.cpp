@@ -25,13 +25,6 @@
 
 #include <wfmath/const.h>
 
-
-
-
-
-
-
-
 namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 NumberAdapter::NumberAdapter(const ::Atlas::Message::Element& element, CEGUI::Combobox* textWindow)

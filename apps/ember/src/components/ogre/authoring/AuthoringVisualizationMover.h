@@ -21,9 +21,6 @@
 
 #include <sigc++/trackable.h>
 
-
-
-
 namespace Ember::OgreView::Authoring {
 class AuthoringVisualization;
 

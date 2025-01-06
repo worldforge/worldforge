@@ -22,7 +22,6 @@
 #include "components/ogre/OgreIncludes.h"
 #include "components/ogre/terrain/OgreImage.h"
 #include <vector>
-#include <OgreTexture.h>
 
 namespace Ember::OgreView::Terrain {
 

@@ -19,15 +19,9 @@
 #ifndef DIMEENTITYFACTORY_H
 #define DIMEENTITYFACTORY_H
 
-#include "EmberOgrePrerequisites.h"
-
 #include <Eris/Factory.h>
 
-#include <Atlas/Objects/Entity.h>
-
 #include <sigc++/trackable.h>
-#include <sigc++/signal.h>
-#include <set>
 
 namespace Eris {
 class Entity;

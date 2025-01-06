@@ -23,11 +23,8 @@
 #ifndef EMBEROGRECAELUMSKY_H
 #define EMBEROGRECAELUMSKY_H
 
-#include "components/ogre/EmberOgrePrerequisites.h"
 #include "CaelumEnvironment.h"
 #include "services/config/ConfigListenerContainer.h"
-
-
 
 
 namespace Ember::OgreView::Environment {

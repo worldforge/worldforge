@@ -29,13 +29,10 @@
 #include <OgreVector.h>
 #include <OgreLight.h>
 #include <OgreColourValue.h>
-#include <OgreResource.h>
-#include <OgreSharedPtr.h>
 
 #include <Eris/ActiveMarker.h>
 
 #include <map>
-#include <unordered_map>
 #include <vector>
 #include <unordered_set>
 #include <optional>

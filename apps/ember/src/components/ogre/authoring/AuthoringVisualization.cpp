@@ -20,7 +20,6 @@
 #include "domain/EmberEntity.h"
 #include "components/ogre/Convert.h"
 #include "components/ogre/OgreInfo.h"
-#include "components/ogre/EmberEntityUserObject.h"
 #include "components/ogre/EmberOgre.h"
 #include "components/ogre/World.h"
 #include "components/ogre/Scene.h"

@@ -19,7 +19,6 @@
 #include "Screen.h"
 #include "camera/Recorder.h"
 
-#include "services/EmberServices.h"
 #include "services/config/ConfigService.h"
 
 #include "framework/Exception.h"
@@ -28,7 +27,6 @@
 
 #include <OgreCamera.h>
 #include <OgreRenderWindow.h>
-#include <OgreRoot.h>
 #include <OgreViewport.h>
 #include <filesystem>
 

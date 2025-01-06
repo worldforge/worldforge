@@ -86,7 +86,7 @@ std::unique_ptr<ISceneRenderingTechnique> Scene::removeRenderingTechnique(const 
 	return nullptr;
 }
 
-std::unique_ptr<Terrain::ITerrainAdapter> Scene::createTerrainAdapter() {
+std::unique_ptr<Terrain::ITerrainAdapter> Scene::createTerrainAdapter() const {
 	ConfigService& configService = ConfigService::getSingleton();
 	int pageSize = static_cast<int>(configService.getValue("terrain", "pagesize"));
 

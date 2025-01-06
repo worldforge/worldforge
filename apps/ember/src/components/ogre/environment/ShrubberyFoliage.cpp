@@ -29,14 +29,9 @@
 #include "FoliageLoader.h"
 
 #include "../Scene.h"
-#include "../Convert.h"
-#include "../terrain/TerrainInfo.h"
 #include "../terrain/TerrainManager.h"
 
-#include "../terrain/ITerrainAdapter.h"
-
 #include "BatchPage.h"
-#include "TreeLoader3D.h"
 
 namespace Ember::OgreView::Environment {
 

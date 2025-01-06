@@ -29,9 +29,6 @@
 #include "components/ogre/model/Model.h"
 #include "OgreInfo.h"
 
-#include <OgreSceneNode.h>
-#include <OgreSceneManager.h>
-
 
 namespace Ember::OgreView {
 

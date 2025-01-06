@@ -23,7 +23,6 @@
 #include <CEGUI/Window.h>
 #include <CEGUI/WindowManager.h>
 #include <framework/Service.h>
-#include <services/EmberServices.h>
 #include <services/server/ServerService.h>
 #include <Eris/Account.h>
 

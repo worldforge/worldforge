@@ -23,8 +23,6 @@
 #ifndef EMBEROGREEMBERMODELMAPPINGMANAGER_H
 #define EMBEROGREEMBERMODELMAPPINGMANAGER_H
 
-#include "components/ogre/EmberOgrePrerequisites.h"
-
 #include <OgreResourceManager.h>
 #include "framework/Singleton.h"
 

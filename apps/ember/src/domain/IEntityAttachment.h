@@ -21,9 +21,6 @@
 
 #include "IVisualizable.h"
 
-#include <string>
-#include <memory>
-
 namespace WFMath {
 template<int>
 class Point;

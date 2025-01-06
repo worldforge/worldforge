@@ -25,9 +25,6 @@
 #include <sigc++/signal.h>
 #include <sigc++/trackable.h>
 #include <OgreMath.h>
-#include <OgreVector.h>
-#include <OgreQuaternion.h>
-#include <OgreRay.h>
 
 namespace varconf {
 class Variable;

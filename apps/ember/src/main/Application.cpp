@@ -19,7 +19,6 @@
 #include "services/sound/SoundService.h"
 #include "services/scripting/ScriptingService.h"
 #include "services/input/Input.h"
-#include "services/serversettings/ServerSettings.h"
 
 #include "framework/ShutdownException.h"
 #include "framework/TimeFrame.h"

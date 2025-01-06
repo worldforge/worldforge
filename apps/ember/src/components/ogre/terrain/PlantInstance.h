@@ -21,7 +21,6 @@
 #define EMBEROGRE_TERRAIN_PLANTINSTANCE_H_
 
 #include <OgreVector.h>
-#include <OgreVector.h>
 
 
 namespace Ember::OgreView::Terrain {

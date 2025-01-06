@@ -22,6 +22,8 @@
 //
 #include "ServerWidget.h"
 
+#include <Atlas/Objects/RootEntity.h>
+
 #include "ColouredListItem.h"
 #include "ModelRenderer.h"
 #include "EntityTextureManipulator.h"
@@ -38,20 +40,16 @@
 #include "services/config/ConfigService.h"
 #include "services/serversettings/ServerSettings.h"
 #include "services/serversettings/ServerSettingsCredentials.h"
-#include "services/EmberServices.h"
 
 #include <Eris/SpawnPoint.h>
 #include <Eris/TypeService.h>
 
 #include <CEGUI/widgets/Listbox.h>
 #include <CEGUI/widgets/PushButton.h>
-#include <CEGUI/widgets/Editbox.h>
 #include <CEGUI/widgets/RadioButton.h>
-#include <CEGUI/widgets/ComboDropList.h>
 #include <CEGUI/widgets/Combobox.h>
 #include <CEGUI/widgets/TabControl.h>
-
-#include <sigc++/bind.h>
+#include <Eris/Account.h>
 
 
 using namespace CEGUI;

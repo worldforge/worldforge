@@ -21,8 +21,6 @@
 
 #include "StateBase.h"
 #include "AccountAvailableState.h"
-#include "framework/ConsoleCommandWrapper.h"
-#include "framework/ConsoleObject.h"
 #include "services/server/ServerServiceSignals.h"
 #include "framework/AutoCloseConnection.h"
 #include <Eris/ServerInfo.h>

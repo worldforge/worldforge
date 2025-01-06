@@ -24,10 +24,8 @@
 #include "EntityRecipeManager.h"
 
 
-
 namespace Ember::OgreView::Authoring {
-EntityRecipeManager::EntityRecipeManager() :
-		mXmlSerializer() {
+EntityRecipeManager::EntityRecipeManager() {
 	Ogre::ResourceGroupManager::getSingleton()._registerScriptLoader(this);
 }
 
@@ -50,8 +48,4 @@ void EntityRecipeManager::parseScript(Ogre::DataStreamPtr& stream, const Ogre::S
 		mEntries.emplace(entry.first, std::move(entry.second));
 	}
 }
-
-
 }
-
-

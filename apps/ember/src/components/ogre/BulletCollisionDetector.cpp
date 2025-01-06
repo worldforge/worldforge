@@ -19,9 +19,6 @@
 #include "BulletCollisionDetector.h"
 
 #include "model/Model.h"
-#include "model/SubModel.h"
-
-#include <OgreNode.h>
 
 
 namespace Ember::OgreView {

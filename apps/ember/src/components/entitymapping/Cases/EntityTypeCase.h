@@ -23,12 +23,6 @@
 #ifndef EMBEROGRE_MODEL_MAPPING_CASESENTITYTYPECASE_H
 #define EMBEROGRE_MODEL_MAPPING_CASESENTITYTYPECASE_H
 
-
-
-
-
-
-
 namespace Ember::EntityMapping::Matches {
 class EntityTypeMatch;
 }

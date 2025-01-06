@@ -27,10 +27,7 @@
 
 #include "XMLModelDefinitionSerializer.h"
 
-#include "framework/TimeFrame.h"
 #include "framework/Tokeniser.h"
-
-#include <OgreRoot.h>
 
 #include <utility>
 #include <boost/algorithm/string.hpp>

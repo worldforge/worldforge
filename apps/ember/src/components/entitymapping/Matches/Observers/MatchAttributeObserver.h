@@ -29,11 +29,6 @@
 
 #include <Eris/Entity.h>
 
-
-
-
-
-
 namespace Ember::EntityMapping::Matches {
 
 class AttributeMatch;

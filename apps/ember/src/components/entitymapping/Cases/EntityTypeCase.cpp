@@ -22,11 +22,6 @@
 //
 #include "EntityTypeCase.h"
 
-
-
-
-
-
 namespace Ember::EntityMapping::Cases {
 
 void EntityTypeCase::_setState(bool state) {

@@ -21,7 +21,6 @@
 
 #include "domain/Types.h"
 #include <OgrePrerequisites.h>
-#include <OgreMaterial.h>
 
 #include <memory>
 

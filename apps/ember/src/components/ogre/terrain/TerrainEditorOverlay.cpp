@@ -27,13 +27,11 @@
 #include "components/ogre/Convert.h"
 #include "components/ogre/Avatar.h"
 #include "components/ogre/camera/MainCamera.h"
-#include "components/ogre/GUIManager.h"
 #include "domain/EmberEntity.h"
 #include "components/ogre/MousePicker.h"
 #include "components/ogre/World.h"
 #include "components/ogre/Scene.h"
 
-#include "services/EmberServices.h"
 #include "services/server/ServerService.h"
 
 #include <Eris/Connection.h>

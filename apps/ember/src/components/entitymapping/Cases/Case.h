@@ -25,11 +25,6 @@
 
 #include "CaseBase.h"
 
-
-
-
-
-
 namespace Ember::EntityMapping::Cases {
 
 /**

@@ -22,8 +22,6 @@
 //
 #include "GrassFoliage.h"
 
-#include "framework/Log.h"
-
 #include "FoliageLayer.h"
 
 #include "../Scene.h"
@@ -31,15 +29,8 @@
 #include "../terrain/TerrainInfo.h"
 #include "../terrain/TerrainManager.h"
 #include "../terrain/TerrainLayerDefinition.h"
-#include "../terrain/ITerrainAdapter.h"
-
-#include "BatchPage.h"
-
-#include <OgreTechnique.h>
 
 #include <utility>
-
-
 
 
 namespace Ember::OgreView::Environment {

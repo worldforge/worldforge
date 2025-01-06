@@ -24,10 +24,6 @@
 #include "TerrainLayerDefinition.h"
 #include "XMLLayerDefinitionSerializer.h"
 
-#include <OgreTextureManager.h>
-#include <boost/algorithm/string.hpp>
-
-
 namespace Ember::OgreView::Terrain {
 
 

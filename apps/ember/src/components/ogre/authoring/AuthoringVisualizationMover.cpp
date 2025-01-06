@@ -20,9 +20,6 @@
 #include "AuthoringVisualization.h"
 #include "EntityMover.h"
 
-
-
-
 namespace Ember::OgreView::Authoring {
 AuthoringVisualizationMover::AuthoringVisualizationMover(AuthoringVisualization& visualization, EntityMover& mover) :
 		mVisualization(visualization), mMover(mover) {

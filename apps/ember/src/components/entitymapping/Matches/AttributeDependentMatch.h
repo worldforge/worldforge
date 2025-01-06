@@ -23,13 +23,7 @@
 #ifndef EMBEROGRE_MODEL_MAPPING_MATCHESATTRIBUTEDEPENDENTMATCH_H
 #define EMBEROGRE_MODEL_MAPPING_MATCHESATTRIBUTEDEPENDENTMATCH_H
 
-#include <Atlas/Message/Element.h>
 #include "Observers/MatchAttributeObserver.h"
-
-
-
-
-
 
 namespace Ember::EntityMapping::Matches {
 

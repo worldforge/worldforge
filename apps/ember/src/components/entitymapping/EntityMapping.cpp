@@ -23,9 +23,6 @@
 #include "EntityMapping.h"
 #include <Eris/View.h>
 
-
-
-
 namespace Ember::EntityMapping {
 
 

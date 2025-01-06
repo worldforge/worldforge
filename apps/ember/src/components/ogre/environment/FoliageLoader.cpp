@@ -29,9 +29,6 @@
 #include "../terrain/TerrainLayerDefinition.h"
 #include "../terrain/PlantInstance.h"
 #include "framework/Log.h"
-#include <wfmath/intersect.h>
-
-#include <Ogre.h>
 
 using namespace Ember::OgreView::Terrain;
 

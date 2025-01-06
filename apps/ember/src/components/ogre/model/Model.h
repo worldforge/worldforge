@@ -24,15 +24,12 @@
 #include "ParticleSystem.h"
 #include "ModelAction.h"
 #include "ModelPart.h"
-#include "components/ogre/EmberOgrePrerequisites.h"
 #include "components/ogre/INodeProvider.h"
 #include "components/ogre/EmberEntityUserObject.h"
 
-#include <OgreEntity.h>
 #include <sigc++/signal.h>
 #include <memory>
 #include <unordered_map>
-#include <stack>
 #include <map>
 #include <functional>
 
@@ -103,8 +100,6 @@ public:
 	/**
 	 *    Creates a new Model instance with the specified name.
 	 *    Remember to call create(...) to create the actual meshes.
-	 * @param name
-	 * @return
 	 */
 	Model(Ogre::SceneManager& manager, const ModelDefinitionPtr& definition, std::string name = "");
 

@@ -28,11 +28,6 @@
 #include <Atlas/Message/Element.h>
 #include "AttributeComparers/AttributeComparerWrapper.h"
 
-
-
-
-
-
 namespace Ember::EntityMapping::Matches {
 class AttributeMatch;
 }

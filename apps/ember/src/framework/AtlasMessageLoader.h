@@ -20,7 +20,6 @@
 #define COMMON_ATLAS_FILE_LOADER_H
 
 #include <Atlas/Objects/Decoder.h>
-#include <Atlas/Codec.h>
 
 #include <iostream>
 

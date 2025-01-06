@@ -27,7 +27,6 @@
 
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
-#include <OgreWireBoundingBox.h>
 #include <OgreManualObject.h>
 #include <OgreSubEntity.h>
 #include <OgreMeshManager.h>

@@ -25,7 +25,6 @@
 
 #include "LodDefinition.h"
 #include "XMLLodDefinitionSerializer.h"
-#include "components/ogre/EmberOgrePrerequisites.h"
 #include "framework/Singleton.h"
 
 #include <OgreResourceManager.h>

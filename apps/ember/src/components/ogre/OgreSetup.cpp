@@ -29,15 +29,12 @@
 #include "ScaledPixelCountLodStrategy.h"
 #include <MeshLodGenerator/OgreMeshLodGenerator.h>
 
-#include "services/EmberServices.h"
 #include "services/config/ConfigService.h"
 #include "services/config/ConfigListenerContainer.h"
 #include "services/input/Input.h"
 
-#include "framework/Tokeniser.h"
 #include "framework/ConsoleBackend.h"
 #include "framework/MainLoopController.h"
-//#include "EmberWorkQueue.h"
 #include "Version.h"
 #include <OgreBuildSettings.h>
 
@@ -56,7 +53,6 @@
 #include <Overlay/OgreOverlaySystem.h>
 #include <OgreLogManager.h>
 #include <OgreRoot.h>
-#include <OgreConfigDialog.h>
 #include <OgreLodStrategyManager.h>
 
 #ifdef OGRE_STATIC_LIB
@@ -70,9 +66,9 @@
 #include <SDL.h>
 #include <Ogre.h>
 #include <RTShaderSystem/OgreShaderGenerator.h>
-#include <RTShaderSystem/OgreRTShaderSystem.h>
 #include <filesystem>
 #include <memory>
+#include <framework/Log.h>
 
 namespace Ember::OgreView {
 

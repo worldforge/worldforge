@@ -27,9 +27,6 @@
 #include "components/entitymapping/Definitions/EntityMappingDefinition.h"
 #include "components/entitymapping/EntityMappingManager.h"
 
-#include <vector>
-
-
 namespace Ember::OgreView::Mapping {
 
 /**

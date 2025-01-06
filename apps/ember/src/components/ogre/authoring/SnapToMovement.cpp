@@ -22,7 +22,6 @@
 //
 #include "SnapToMovement.h"
 #include "domain/EmberEntity.h"
-#include "components/ogre/EmberEntityUserObject.h"
 #include "components/ogre/Convert.h"
 
 #include <wfmath/rotbox.h>
@@ -34,8 +33,7 @@
 #include <components/ogre/MousePicker.h>
 
 #include <memory>
-
-
+#include <framework/Log.h>
 
 
 namespace Ember::OgreView::Authoring {

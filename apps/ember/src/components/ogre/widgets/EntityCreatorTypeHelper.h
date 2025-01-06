@@ -24,11 +24,9 @@
 #define EMBEROGRE_EntityCreatorTypeHelper_H
 
 #include "framework/ConsoleCommandWrapper.h"
-#include "framework/ConsoleObject.h"
 #include <sigc++/signal.h>
 #include <sigc++/trackable.h>
 #include <components/ogre/authoring/DetachedEntity.h>
-#include <CEGUI/widgets/Combobox.h>
 
 namespace CEGUI {
 class Tree;

@@ -26,7 +26,6 @@
 #include "EmberOgrePrerequisites.h"
 #include <OgreResource.h>
 #include <OgreColourValue.h>
-#include <OgreTexture.h>
 
 
 namespace Ember::OgreView {

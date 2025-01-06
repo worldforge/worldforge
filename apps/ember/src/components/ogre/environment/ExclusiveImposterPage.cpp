@@ -26,26 +26,26 @@
 namespace Ember::OgreView::Environment {
 
 void ExclusiveImposterPage::addEntity(Ogre::Entity* ent, const Ogre::Vector3& position, const Ogre::Quaternion& rotation, const Ogre::Vector3& scale, const Ogre::ColourValue& color) {
-	Forests::ImpostorPage::addEntity(ent, position, rotation, scale, color);
+	ImpostorPage::addEntity(ent, position, rotation, scale, color);
 	auto* model = Ogre::any_cast<Ember::OgreView::Model::Model*>(ent->getUserObjectBindings().getUserAny("model"));
 	mModels.push_back(model);
 }
 
 void
 ExclusiveImposterPage::addModel(Ember::OgreView::Model::Model* model, const Ogre::Vector3& position, const Ogre::Quaternion& rotation, const Ogre::Vector3& scale, const Ogre::ColourValue& color) {
-	Forests::ImpostorPage::addModel(model, position, rotation, scale, color);
+	ImpostorPage::addModel(model, position, rotation, scale, color);
 	mModels.push_back(model);
 }
 
 void ExclusiveImposterPage::setVisible(bool visible) {
-	Forests::ImpostorPage::setVisible(visible);
+	ImpostorPage::setVisible(visible);
 	for (auto model: mModels) {
 		model->setVisible(!visible);
 	}
 }
 
 void ExclusiveImposterPage::removeEntities() {
-	Forests::ImpostorPage::removeEntities();
+	ImpostorPage::removeEntities();
 	mModels.clear();
 }
 

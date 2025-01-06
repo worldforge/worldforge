@@ -23,7 +23,6 @@
 #include "components/ogre/AvatarTerrainCursor.h"
 
 #include "components/ogre/Convert.h"
-#include "components/ogre/ICameraMotionHandler.h"
 #include "components/ogre/IMovementProvider.h"
 #include "components/ogre/Scene.h"
 
@@ -43,8 +42,6 @@
 #include <OgreCompositor.h>
 #include <OgreCamera.h>
 #include <OgreTechnique.h>
-#include <OgreSceneNode.h>
-#include <OgreInstancedEntity.h>
 
 #include <components/ogre/model/ModelDefinitionManager.h>
 #include <components/ogre/model/Model.h>
@@ -180,7 +177,6 @@ void MainCamera::pickInWorld(Ogre::Real mouseX, Ogre::Real mouseY, const MousePi
 	if (mousePickerArgs.pickType == MPT_PRESS || mousePickerArgs.pickType == MPT_HOVER || mousePickerArgs.pickType == MPT_SELECT) {
 		// First, calculate the ray between camera and screen coordinates
 		Ogre::Ray cameraRay = getCamera().getCameraToViewportRay(mouseX, mouseY);
-		bool continuePicking = true;
 
 		decltype(mPickListeners) participatingListeners;
 		for (auto listener: mPickListeners) {
@@ -193,6 +189,7 @@ void MainCamera::pickInWorld(Ogre::Real mouseX, Ogre::Real mouseY, const MousePi
 
 		//Only perform picking if there are any participating pick listeners.
 		if (!participatingListeners.empty()) {
+			bool continuePicking = true;
 			auto results = pick(cameraRay, mousePickerArgs.distance);
 
 			for (auto& result: results) {

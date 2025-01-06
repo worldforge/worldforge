@@ -23,13 +23,6 @@
 #include "NumericEqualsComparer.h"
 #include <wfmath/const.h>
 
-
-
-
-
-
-
-
 namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 NumericEqualsComparer::NumericEqualsComparer(double value) : NumericValueHolder(value) {

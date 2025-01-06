@@ -25,7 +25,6 @@
 
 #include <utility>
 
-#include "domain/EmberEntity.h"
 #include "components/ogre/model/ModelRepresentation.h"
 
 

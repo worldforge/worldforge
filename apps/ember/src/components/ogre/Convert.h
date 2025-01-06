@@ -28,7 +28,6 @@ for between Ogre and Atlas.
 #include <wfmath/const.h>
 
 #include <OgreVector.h>
-#include <OgreVector.h>
 #include <OgreQuaternion.h>
 #include <OgreAxisAlignedBox.h>
 #include <OgrePrerequisites.h>

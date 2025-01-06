@@ -31,7 +31,6 @@
 #include <OgreMaterialManager.h>
 #include <OgreSceneManager.h>
 #include <OgreRenderWindow.h>
-#include <OgreTechnique.h>
 #include <OgreViewport.h>
 
 namespace Ember::OgreView {

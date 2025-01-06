@@ -23,8 +23,6 @@
 #include "components/ogre/OgreIncludes.h"
 
 
-
-
 namespace Ember::OgreView::Environment {
 
 struct ISun : public ILightning {

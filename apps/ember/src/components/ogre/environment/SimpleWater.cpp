@@ -28,7 +28,6 @@
 #include <OgreMeshManager.h>
 #include <OgreEntity.h>
 #include <OgreRenderTargetListener.h>
-#include <OgreRenderWindow.h>
 #include <OgreControllerManager.h>
 #include <OgreSceneNode.h>
 #include <OgreCamera.h>

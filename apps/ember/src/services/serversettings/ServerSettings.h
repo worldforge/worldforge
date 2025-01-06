@@ -26,7 +26,6 @@
 #include <filesystem>
 #include <string>
 #include <memory>
-#include <map>
 
 namespace varconf {
 class Config;

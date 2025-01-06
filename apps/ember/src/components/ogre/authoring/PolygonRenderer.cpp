@@ -22,13 +22,9 @@
 //
 #include "PolygonRenderer.h"
 
-#include "Polygon.h"
 #include "PolygonPoint.h"
 
 #include <Ogre.h>
-
-
-
 
 namespace Ember::OgreView::Authoring {
 

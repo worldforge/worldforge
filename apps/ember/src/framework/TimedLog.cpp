@@ -17,8 +17,6 @@
  */
 #include "TimedLog.h"
 
-#include <utility>
-
 #include "Log.h"
 
 namespace Ember {

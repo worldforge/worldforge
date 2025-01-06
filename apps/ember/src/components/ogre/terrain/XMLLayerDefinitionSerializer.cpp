@@ -23,7 +23,6 @@
 #include "XMLLayerDefinitionSerializer.h"
 #include "tinyxml/tinyxml.h"
 #include "components/ogre/XMLHelper.h"
-#include "TerrainLayerDefinitionManager.h"
 #include "TerrainLayerDefinition.h"
 
 

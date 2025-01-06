@@ -18,7 +18,6 @@
 
 #include "ShaderDetailManager.h"
 
-#include "components/ogre/GraphicalChangeAdapter.h"
 #include "components/ogre/ShaderManager.h"
 
 #include "framework/Log.h"

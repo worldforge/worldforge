@@ -18,16 +18,16 @@
 #include "components/ogre/EmberOgre.h"
 
 #include "ContainerWidget.h"
+
+#include <Atlas/Objects/RootEntity.h>
+
 #include "components/ogre/GUIManager.h"
 #include "domain/EmberEntity.h"
 #include "EntityIcon.h"
-#include "icons/IconManager.h"
 #include "EntityTooltip.h"
 #include "components/ogre/World.h"
 #include "components/ogre/Avatar.h"
-#include "services/EmberServices.h"
 #include "services/server/ServerService.h"
-#include <CEGUI/widgets/DragContainer.h>
 #include <CEGUI/widgets/FrameWindow.h>
 #include <Eris/Avatar.h>
 #include <Eris/Connection.h>

@@ -37,11 +37,9 @@
 #include "components/navigation/Awareness.h"
 #include "components/navigation/Steering.h"
 
-#include "services/EmberServices.h"
 #include "services/server/ServerService.h"
 
 #include "framework/MainLoopController.h"
-#include "framework/ConsoleBackend.h"
 
 #include <Eris/View.h>
 #include <Eris/Avatar.h>

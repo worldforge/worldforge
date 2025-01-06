@@ -23,8 +23,6 @@
 #ifndef EMBEROGRETERRAINPAGESURFACELAYER_H
 #define EMBEROGRETERRAINPAGESURFACELAYER_H
 
-#include "../EmberOgrePrerequisites.h"
-
 namespace Mercator {
 class Shader;
 

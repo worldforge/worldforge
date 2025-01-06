@@ -41,7 +41,6 @@
 
 #include "fastlz.h"
 
-#include "DetourNavMesh.h"
 #include "DetourNavMeshBuilder.h"
 #include "DetourCommon.h"
 #include "DetourTileCache.h"

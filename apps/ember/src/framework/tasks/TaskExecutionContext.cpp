@@ -17,7 +17,6 @@
  */
 
 #include "TaskExecutionContext.h"
-#include "TaskExecutor.h"
 #include "TaskUnit.h"
 #include "ITask.h"
 

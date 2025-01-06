@@ -23,9 +23,6 @@
 #include "PolygonPointMovement.h"
 #include "PolygonPoint.h"
 
-
-
-
 namespace Ember::OgreView::Authoring {
 
 PolygonPointMovement::PolygonPointMovement(Polygon& polygon, PolygonPoint& point, IMovementListener* movementListener, Camera::MainCamera& camera) :

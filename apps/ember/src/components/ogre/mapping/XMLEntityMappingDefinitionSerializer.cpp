@@ -22,7 +22,6 @@
 //
 #include "XMLEntityMappingDefinitionSerializer.h"
 #include "framework/Log.h"
-//#include "components/ogre/EmberOgrePrerequisites.h"
 using namespace Ember::EntityMapping;
 using namespace Ember::EntityMapping::Definitions;
 

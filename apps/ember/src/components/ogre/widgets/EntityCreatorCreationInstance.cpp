@@ -37,12 +37,13 @@
 #include "EmberEntityMappingManager.h"
 #include "ModelActionCreator.h"
 
-#include <wfmath/atlasconv.h>
 #include <wfmath/MersenneTwister.h>
 
 #include <Eris/Avatar.h>
 #include <Eris/Connection.h>
 #include <Eris/TypeService.h>
+
+#include <Atlas/Objects/RootEntity.h>
 
 #include <OgreSceneManager.h>
 #include <OgreSceneNode.h>

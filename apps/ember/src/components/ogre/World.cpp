@@ -39,7 +39,6 @@
 #include "TerrainPageDataProvider.h"
 #include "terrain/TerrainManager.h"
 #include "terrain/TerrainHandler.h"
-#include "terrain/ITerrainAdapter.h"
 
 #include "camera/MainCamera.h"
 #include "camera/ThirdPersonCameraMount.h"
@@ -48,17 +47,13 @@
 #include "environment/CaelumEnvironment.h"
 #include "environment/SimpleEnvironment.h"
 
-#include "services/EmberServices.h"
 #include "services/config/ConfigService.h"
 
-#include "framework/MainLoopController.h"
 #include "ProjectileRenderingTechnique.h"
 #include "WorldAttachment.h"
-#include "HiddenAttachment.h"
 
 #include <Eris/Avatar.h>
 #include <Eris/View.h>
-#include <Eris/Calendar.h>
 #include <Eris/Connection.h>
 
 #include <OgreSceneManager.h>
@@ -68,7 +63,6 @@
 #include <OgreViewport.h>
 #include <OgreSceneNode.h>
 
-#include <sigc++/bind.h>
 #include <memory>
 #include <utility>
 

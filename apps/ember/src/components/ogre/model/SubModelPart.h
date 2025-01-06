@@ -27,7 +27,6 @@
 #include "components/ogre/EmberOgrePrerequisites.h"
 #include "ModelDefinition.h"
 
-#include <set>
 #include <vector>
 #include <optional>
 

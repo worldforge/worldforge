@@ -24,8 +24,6 @@
 #include "EntityIconSlot.h"
 #include "ContainerView.h"
 
-#include <sigc++/connection.h>
-
 namespace Ember {
 class EmberEntity;
 namespace OgreView {

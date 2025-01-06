@@ -19,10 +19,8 @@
 #ifndef TERRAINPAGECREATIONTASK_H_
 #define TERRAINPAGECREATIONTASK_H_
 
-#include "domain/Types.h"
 #include "framework/tasks/TemplateNamedTask.h"
 #include <wfmath/point.h>
-#include <wfmath/vector.h>
 
 
 namespace Ember::OgreView::Terrain {

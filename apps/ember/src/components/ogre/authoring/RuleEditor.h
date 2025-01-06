@@ -21,14 +21,12 @@
 
 #include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Objects/ObjectsFwd.h>
-#include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/RootOperation.h>
 
 #include <sigc++/signal.h>
 #include <sigc++/trackable.h>
 
 #include <unordered_map>
-#include <string>
 
 namespace Eris {
 class Avatar;

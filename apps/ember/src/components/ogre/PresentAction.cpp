@@ -26,8 +26,6 @@
 #include "components/entitymapping/EntityMapping.h"
 #include "components/ogre/Scene.h"
 
-#include <OgreMeshManager.h>
-
 
 namespace Ember::OgreView {
 

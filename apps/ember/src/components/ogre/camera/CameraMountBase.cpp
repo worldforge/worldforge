@@ -21,8 +21,6 @@
 #include "framework/Exception.h"
 
 #include "components/ogre/ICameraMotionHandler.h"
-#include <wfmath/vector.h>
-#include <wfmath/quaternion.h>
 
 
 namespace Ember::OgreView::Camera {

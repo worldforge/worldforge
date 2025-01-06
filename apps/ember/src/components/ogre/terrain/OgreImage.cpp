@@ -19,7 +19,6 @@
 
 #include "OgreImage.h"
 #include "WFImage.h"
-#include <cassert>
 
 
 namespace Ember::OgreView::Terrain {

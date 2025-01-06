@@ -25,14 +25,10 @@
 #include "EntityCEGUITexture.h"
 #include "components/ogre/model/Model.h"
 #include "components/ogre/model/ModelMount.h"
-#include "components/ogre/model/SubModel.h"
 #include "components/ogre/model/ModelDefinitionManager.h"
 
-#include <OgreSceneManager.h>
 #include <OgreSceneNode.h>
-#include <CEGUI/Window.h>
 
-#include <sigc++/bind.h>
 #include <components/ogre/SceneNodeProvider.h>
 
 

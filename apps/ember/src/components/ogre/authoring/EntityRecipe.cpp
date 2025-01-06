@@ -24,15 +24,10 @@
 #include "EntityRecipe.h"
 #include "services/EmberServices.h"
 
-#include <Atlas/Objects/Operation.h>
 #include <Atlas/Message/QueuedDecoder.h>
 #include <Atlas/Codecs/XML.h>
 
 #include <Eris/TypeService.h>
-#include <Eris/TypeInfo.h>
-
-#include <Atlas/Formatter.h>
-
 
 
 namespace Ember::OgreView::Authoring {

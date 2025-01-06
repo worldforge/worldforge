@@ -24,7 +24,6 @@
 #include <OgreSceneNode.h>
 
 #include <CEGUI/Window.h>
-#include <CEGUI/Image.h>
 
 
 namespace Ember::OgreView::Gui {

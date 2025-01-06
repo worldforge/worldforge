@@ -20,7 +20,6 @@
 #ifndef EMBEROGRETERRAINBUFFER_H_
 #define EMBEROGRETERRAINBUFFER_H_
 
-#include <string>
 #include <vector>
 
 
@@ -36,7 +35,7 @@ public:
 
 	/**
 	 * @brief Ctor.
-	 * @param resolution The size, in pixels, of one side of the square.
+	 * @param width The size, in pixels, of one side of the square.
 	 * @param channels The number of channels.
 	 * @note By using this constructor a data structure owned by this instance will automatically be created.
 	 */

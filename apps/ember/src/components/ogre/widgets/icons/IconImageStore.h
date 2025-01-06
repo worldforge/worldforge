@@ -23,12 +23,9 @@
 #ifndef EMBEROGRE_GUI_ICONSICONIMAGESTORE_H
 #define EMBEROGRE_GUI_ICONSICONIMAGESTORE_H
 
-#include <map>
 #include <string>
 #include <stack>
 #include <vector>
-
-#include <OgreTexture.h>
 
 namespace CEGUI {
 class Image;

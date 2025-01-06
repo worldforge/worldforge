@@ -24,10 +24,6 @@
 
 #include <utility>
 
-
-
-
-
 namespace Ember::EntityMapping::Matches {
 
 AttributeMatch::AttributeMatch(std::string attributeName)

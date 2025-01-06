@@ -26,7 +26,6 @@
 #include "../EmberOgrePrerequisites.h"
 #include "Types.h"
 #include "TerrainPage.h"
-#include <OgreMaterial.h>
 
 #include <map>
 

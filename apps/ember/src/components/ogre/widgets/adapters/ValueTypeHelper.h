@@ -25,7 +25,6 @@
 #include <Atlas/Message/Element.h>
 #include <varconf/variable.h>
 #include <sstream>
-#include <iomanip>
 
 namespace Ember::OgreView::Gui::Adapters {
 

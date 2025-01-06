@@ -23,8 +23,6 @@
 #include "HeightMapFlatSegment.h"
 #include "Buffer.h"
 
-#include "framework/tasks/TaskExecutionContext.h"
-
 #include <wfmath/point.h>
 
 #include <Mercator/Segment.h>

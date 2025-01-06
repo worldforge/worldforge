@@ -21,6 +21,7 @@
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Message/MEncoder.h>
 #include <Atlas/Message/QueuedDecoder.h>
+#include <framework/Log.h>
 
 namespace Ember::OgreView::Authoring {
 GUIAdapterBindings::GUIAdapterBindings() :

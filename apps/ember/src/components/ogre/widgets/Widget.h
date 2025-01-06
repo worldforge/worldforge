@@ -6,8 +6,6 @@
 #include "framework/ConsoleCommandWrapper.h"
 #include "CEGUIUtils.h"
 
-#include <CEGUI/widgets/ListboxTextItem.h>
-
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 

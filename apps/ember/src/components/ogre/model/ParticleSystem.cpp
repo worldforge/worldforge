@@ -27,7 +27,6 @@
 #include "ModelDefinition.h"
 #include <OgreParticleSystem.h>
 #include <OgreParticleEmitter.h>
-#include <OgreSceneManager.h>
 #include <OgreNode.h>
 
 

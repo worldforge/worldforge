@@ -20,11 +20,9 @@
 #define PLANTAREAQUERY_H_
 
 #include <string>
-#include <vector>
 
 #include <OgrePrerequisites.h>
 #include <OgreCommon.h>
-#include <OgreMemoryAllocatorConfig.h>
 #include <OgreVector.h>
 #include "TerrainShader.h"
 

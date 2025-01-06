@@ -20,11 +20,6 @@
 #include "components/entitymapping/Matches/EntityRefMatch.h"
 #include "EntityBaseCase.h"
 
-
-
-
-
-
 namespace Ember::EntityMapping::Cases {
 
 /**

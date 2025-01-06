@@ -21,7 +21,6 @@
 #define EMBER_EMBERSERVICES_H
 
 #include <memory>
-#include "framework/Singleton.h"
 
 namespace Ember {
 struct Session;

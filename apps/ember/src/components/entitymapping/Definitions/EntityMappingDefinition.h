@@ -23,17 +23,8 @@
 #ifndef EMBEROGRE_MODEL_MAPPINGMODELMAPPINGDEFINITION_H
 #define EMBEROGRE_MODEL_MAPPINGMODELMAPPINGDEFINITION_H
 
-
-#include <vector>
-#include <map>
+#include "CaseDefinition.h"
 #include <string>
-
-#include "MatchDefinition.h"
-
-
-
-
-
 
 namespace Ember::EntityMapping::Definitions {
 

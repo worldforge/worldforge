@@ -25,7 +25,8 @@
 #include "CEGUIUtils.h"
 
 #include <CEGUI/widgets/DragContainer.h>
-#include <CEGUI/WindowManager.h>
+
+#include "ActionBarIconSlot.h"
 
 using namespace CEGUI;
 

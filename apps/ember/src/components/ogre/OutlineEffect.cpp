@@ -35,10 +35,7 @@
 
 
 namespace Ember::OgreView {
-
-
-struct StencilOpQueueListener : public Ogre::RenderQueueListener {
-
+struct StencilOpQueueListener : Ogre::RenderQueueListener {
 	~StencilOpQueueListener() override {
 		Ogre::RenderSystem* renderSystem = Ogre::Root::getSingleton().getRenderSystem();
 		static Ogre::StencilState stencilState;
@@ -46,7 +43,8 @@ struct StencilOpQueueListener : public Ogre::RenderQueueListener {
 		renderSystem->setStencilState(stencilState);
 	}
 
-	void renderQueueStarted(Ogre::uint8 queueGroupId, const Ogre::String& invocation, bool& skipThisInvocation) override {
+	void renderQueueStarted(Ogre::uint8 queueGroupId, const Ogre::String& invocation,
+	                        bool& skipThisInvocation) override {
 		if (queueGroupId == RENDER_QUEUE_OUTLINE_OBJECT) {
 			Ogre::RenderSystem* renderSystem = Ogre::Root::getSingleton().getRenderSystem();
 
@@ -69,7 +67,8 @@ struct StencilOpQueueListener : public Ogre::RenderQueueListener {
 		}
 	}
 
-	void renderQueueEnded(Ogre::uint8 queueGroupId, const Ogre::String& invocation, bool& repeatThisInvocation) override {
+	void renderQueueEnded(Ogre::uint8 queueGroupId, const Ogre::String& invocation,
+	                      bool& repeatThisInvocation) override {
 		if (queueGroupId == RENDER_QUEUE_OUTLINE_OBJECT || queueGroupId == RENDER_QUEUE_OUTLINE_BORDER) {
 			Ogre::RenderSystem* renderSystem = Ogre::Root::getSingleton().getRenderSystem();
 			static Ogre::StencilState stencilState;
@@ -77,13 +76,12 @@ struct StencilOpQueueListener : public Ogre::RenderQueueListener {
 			renderSystem->setStencilState(stencilState);
 		}
 	}
-
 };
 
 OutlineEffect::OutlineEffect(Scene& scene, EmberEntityRef entity)
-		: mScene(scene),
-		  mSelectedEntity(entity),
-		  mStencilOpQueueListener(std::make_unique<StencilOpQueueListener>()) {
+	: mScene(scene),
+	  mSelectedEntity(entity),
+	  mStencilOpQueueListener(std::make_unique<StencilOpQueueListener>()) {
 	scene.getSceneManager().addRenderQueueListener(mStencilOpQueueListener.get());
 	auto* modelRep = dynamic_cast<Model::ModelRepresentation*>(entity->getGraphicalRepresentation());
 	if (modelRep && modelRep->getModel().getNodeProvider()) {
@@ -95,14 +93,11 @@ OutlineEffect::OutlineEffect(Scene& scene, EmberEntityRef entity)
 			});
 		}
 
-		auto& submodels = modelRep->getModel().getSubmodels();
-		for (auto& submodel: submodels) {
-			auto ogreEntity = submodel->getEntity();
-			if (ogreEntity) {
+		for (auto& submodels = modelRep->getModel().getSubmodels(); auto& submodel: submodels) {
+			if (const auto ogreEntity = submodel->getEntity()) {
 				mOutline.originalRenderQueueGroups.push_back(ogreEntity->getRenderQueueGroup());
 
 				if (ogreEntity->isVisible()) {
-
 					ogreEntity->setRenderQueueGroup(RENDER_QUEUE_OUTLINE_OBJECT);
 
 					if (!ogreEntity->getParentNode()) {
@@ -117,17 +112,15 @@ OutlineEffect::OutlineEffect(Scene& scene, EmberEntityRef entity)
 						outlineEntity->shareSkeletonInstanceWith(ogreEntity);
 					}
 					for (size_t i = 0; i < ogreEntity->getNumSubEntities(); ++i) {
-						auto outlineSubEntity = outlineEntity->getSubEntity(i);
-						auto subEntity = ogreEntity->getSubEntity(i);
+						const auto outlineSubEntity = outlineEntity->getSubEntity(i);
+						const auto subEntity = ogreEntity->getSubEntity(i);
 
 						outlineSubEntity->setVisible(subEntity->isVisible());
-						Ogre::TexturePtr texture;
 						if (subEntity->isVisible()) {
+							Ogre::TexturePtr texture;
 							auto& material = subEntity->getMaterial();
-							auto tech = material->getBestTechnique();
-							if (tech && tech->getNumPasses() > 0) {
-								auto pass = tech->getPass(0);
-								if (pass->getNumTextureUnitStates() > 0) {
+							if (auto tech = material->getBestTechnique(); tech && tech->getNumPasses() > 0) {
+								if (auto pass = tech->getPass(0); pass->getNumTextureUnitStates() > 0) {
 									texture = pass->getTextureUnitState(0)->_getTexturePtr();
 								}
 							}
@@ -135,7 +128,9 @@ OutlineEffect::OutlineEffect(Scene& scene, EmberEntityRef entity)
 								return;
 							}
 
-							auto outlineMaterial = Ogre::MaterialManager::getSingleton().getByName("/common/base/outline/nonculled")->clone(OgreInfo::createUniqueResourceName("outlineMaterial"));
+							auto outlineMaterial = Ogre::MaterialManager::getSingleton().
+									getByName("/common/base/outline/nonculled")->clone(
+										OgreInfo::createUniqueResourceName("outlineMaterial"));
 							outlineMaterial->load();
 							outlineMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(texture);
 							outlineSubEntity->setMaterial(outlineMaterial);
@@ -144,7 +139,6 @@ OutlineEffect::OutlineEffect(Scene& scene, EmberEntityRef entity)
 					}
 					modelRep->getModel().getNodeProvider()->attachObject(outlineEntity);
 					mOutline.generatedEntities.push_back(outlineEntity);
-
 				}
 			}
 		}
@@ -155,13 +149,12 @@ OutlineEffect::~OutlineEffect() {
 	mScene.getSceneManager().removeRenderQueueListener(mStencilOpQueueListener.get());
 
 	if (mSelectedEntity) {
-		auto& oldEmberEntity = *mSelectedEntity;
-		auto* modelRep = dynamic_cast<Model::ModelRepresentation*>(oldEmberEntity.getGraphicalRepresentation());
+		const auto& oldEmberEntity = *mSelectedEntity;
 
-		if (modelRep) {
-
+		if (auto* modelRep = dynamic_cast<const Model::ModelRepresentation*>(oldEmberEntity.
+			getGraphicalRepresentation())) {
 			auto& model = modelRep->getModel();
-			for (auto& entity: mOutline.generatedEntities) {
+			for (const auto& entity: mOutline.generatedEntities) {
 				if (model.getNodeProvider()) {
 					model.getNodeProvider()->detachObject(entity);
 				}
@@ -180,21 +173,20 @@ OutlineEffect::~OutlineEffect() {
 				//It could be that the entity has been reloaded in the interim, so we need to check that originalRenderQueueGroups size matches.
 				if (i < mOutline.originalRenderQueueGroups.size()) {
 					(*submodelI)->getEntity()->setRenderQueueGroup(mOutline.originalRenderQueueGroups[i]);
-
 				}
 				//If instancing is used we've temporarily attached the Ogre::Entity to the nodes; need to detach it.
 				if (model.useInstancing() && model.getNodeProvider()) {
 					model.getNodeProvider()->detachObject((*submodelI)->getEntity());
 				}
 
-				submodelI++;
+				++submodelI;
 			}
 		}
 	}
-	for (auto& entity: mOutline.generatedEntities) {
+	for (const auto entity: mOutline.generatedEntities) {
 		mScene.getSceneManager().destroyMovableObject(entity);
 	}
-	for (auto& material: mOutline.generatedMaterials) {
+	for (auto material: mOutline.generatedMaterials) {
 		material->getCreator()->remove(material);
 	}
 }

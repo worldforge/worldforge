@@ -21,7 +21,6 @@
 
 #include "components/entitymapping/Actions/Action.h"
 #include <functional>
-#include <memory>
 
 namespace Ember {
 class EmberEntity;

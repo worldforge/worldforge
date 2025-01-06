@@ -23,8 +23,7 @@
 #include "GUICEGUIAdapter.h"
 
 #include <CEGUI/Exceptions.h>
-#include <CEGUI/widgets/Editbox.h>
-#include <CEGUI/widgets/MultiLineEditbox.h>
+#include <framework/Log.h>
 
 
 namespace Ember::OgreView {

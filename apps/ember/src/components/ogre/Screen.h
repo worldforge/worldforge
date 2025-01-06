@@ -19,8 +19,6 @@
 #ifndef SCREEN_H_
 #define SCREEN_H_
 
-#include "components/ogre/OgreIncludes.h"
-
 #include "framework/ConsoleCommandWrapper.h"
 
 #include <OgrePrerequisites.h>

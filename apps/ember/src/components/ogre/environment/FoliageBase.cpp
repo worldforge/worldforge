@@ -26,9 +26,6 @@
 #include "../terrain/TerrainArea.h"
 #include "../terrain/TerrainManager.h"
 #include "../terrain/TerrainHandler.h"
-#include "../terrain/TerrainPageSurfaceLayer.h"
-#include "../terrain/TerrainPageSurface.h"
-#include "../terrain/TerrainLayerDefinitionManager.h"
 
 #include "PagedGeometry.h"
 

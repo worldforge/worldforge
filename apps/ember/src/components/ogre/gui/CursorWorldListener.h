@@ -26,8 +26,6 @@
 #include <CEGUI/Event.h>
 #include <sigc++/trackable.h>
 #include <vector>
-#include <Eris/EntityRef.h>
-#include <domain/EmberEntityRef.h>
 
 namespace CEGUI {
 class Window;
@@ -35,7 +33,7 @@ class Window;
 template<typename>
 class Vector2;
 
-typedef class Vector2<float> Vector2f;
+typedef Vector2<float> Vector2f;
 
 }
 

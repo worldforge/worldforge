@@ -19,7 +19,6 @@
 #ifndef EMBER_STRINGLISTADAPTER_H
 #define EMBER_STRINGLISTADAPTER_H
 
-#include <list>
 #include <vector>
 #include <string>
 

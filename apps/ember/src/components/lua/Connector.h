@@ -27,9 +27,7 @@
 #include "framework/Log.h"
 
 #include <sigc++/signal.h>
-#include <sigc++/trackable.h>
 #include <sigc++/connection.h>
-#include <string>
 #include <memory>
 #include <utility>
 
@@ -37,7 +35,7 @@ namespace Ember::Lua {
 
 
 template<typename ReturnT>
-inline auto make_accessor(ReturnT& v()) {
+auto make_accessor(ReturnT& v()) {
 	return [=]() -> ReturnT* {
 		return &(v());
 	};
@@ -49,7 +47,7 @@ inline auto make_accessor(ReturnT& v()) {
  * In almost all cases when working with accessors we don't want SOL to release the memory of it.
  */
 template<typename T, typename ReturnT>
-inline auto make_accessor(ReturnT& (T::* v)()) {
+auto make_accessor(ReturnT& (T::* v)()) {
 	return [=](T* self) -> ReturnT* {
 		return &(((*self).*v)());
 	};
@@ -61,7 +59,7 @@ inline auto make_accessor(ReturnT& (T::* v)()) {
  * In almost all cases when working with accessors we don't want SOL to release the memory of it.
  */
 template<typename T, typename ReturnT>
-inline auto make_accessor_const(ReturnT& (T::* const v )() const) {
+auto make_accessor_const(ReturnT& (T::* const v )() const) {
 	return [=](const T* self) -> const ReturnT* {
 		return &(((*self).*v)());
 	};
@@ -82,7 +80,7 @@ struct LuaConnection {
 		mConnection.disconnect();
 	}
 
-	inline void disconnect() {
+	void disconnect() {
 		mConnection.disconnect();
 	}
 
@@ -102,23 +100,23 @@ struct LuaConnector {
 	explicit LuaConnector(std::function<sigc::connection(sol::function, sol::object)> connectFn)
 			: mConnectFn(std::move(connectFn)) {}
 
-	inline std::unique_ptr<LuaConnection> connect(sol::function fn) const {
+	std::unique_ptr<LuaConnection> connect(sol::function fn) const {
 		return std::make_unique<LuaConnection>(mConnectFn(std::move(fn), sol::lua_nil));
 	}
 
-	inline std::unique_ptr<LuaConnection> connect(sol::function fn, sol::object self) const {
+	std::unique_ptr<LuaConnection> connect(sol::function fn, sol::object self) const {
 		return std::make_unique<LuaConnection>(mConnectFn(std::move(fn), std::move(self)));
 	}
 
 	template<typename ReturnT, typename... Args>
-	inline static std::unique_ptr<LuaConnector> create(sigc::signal<ReturnT(Args...)>& signal) {
+	static std::unique_ptr<LuaConnector> create(sigc::signal<ReturnT(Args...)>& signal) {
 		return std::make_unique<LuaConnector>([&](const sol::function& function, const sol::object& self) {
 			return signal.connect(buildLuaCaller<ReturnT, Args...>(function, self));
 		});
 	}
 
 	template<typename TReturn, typename... Args>
-	inline static auto buildLuaCaller(const sol::function& function, const sol::object& self) {
+	static auto buildLuaCaller(const sol::function& function, const sol::object& self) {
 		return [=](const Args& ... args) -> TReturn {
 			try {
 				auto result = self != sol::lua_nil ? function(self, args...) : function(args...);
@@ -144,7 +142,7 @@ struct LuaConnector {
 	}
 
 	template<typename T, typename SignalT>
-	inline static auto make_property(SignalT T::* v) {
+	static auto make_property(SignalT T::* v) {
 		return sol::property([=](T* self) {
 			return LuaConnector::create((*self).*v);
 		});

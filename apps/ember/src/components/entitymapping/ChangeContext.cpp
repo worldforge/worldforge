@@ -23,8 +23,6 @@
 #include "ChangeContext.h"
 #include "Cases/CaseBase.h"
 
-
-
 namespace Ember::EntityMapping {
 
 ChangeContext::~ChangeContext() {

@@ -26,14 +26,12 @@
 #include "components/ogre/World.h"
 #include "domain/EmberEntity.h"
 #include "components/ogre/SimpleRenderContext.h"
-#include "components/ogre/model/Model.h"
 #include "components/ogre/model/ModelDefinitionManager.h"
 #include "components/entitymapping/EntityMappingManager.h"
 #include "components/entitymapping/IActionCreator.h"
 #include "EmberEntityMappingManager.h"
 #include "ModelActionCreator.h"
 #include "services/server/ServerService.h"
-#include "services/EmberServices.h"
 #include <Eris/Connection.h>
 #include <Eris/View.h>
 

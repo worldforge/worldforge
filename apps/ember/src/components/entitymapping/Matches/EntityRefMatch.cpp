@@ -19,11 +19,6 @@
 #include <utility>
 #include "Observers/EntityCreationObserver.h"
 
-
-
-
-
-
 namespace Ember::EntityMapping::Matches {
 
 EntityRefMatch::EntityRefMatch(std::string attributeName, Eris::View* view)

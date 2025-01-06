@@ -26,7 +26,6 @@ the basic resources required for the progress bar and will be loaded automatical
 #include "framework/ShutdownException.h"
 #include "framework/MainLoopController.h"
 
-#include <OgreMaterialManager.h>
 #include <OgreFontManager.h>
 #include <OgreRenderWindow.h>
 #include <Ogre.h>

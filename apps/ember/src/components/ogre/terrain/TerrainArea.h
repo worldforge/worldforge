@@ -26,6 +26,7 @@
 #include <sigc++/signal.h>
 #include <Eris/Entity.h>
 #include <wfmath/polygon.h>
+#include <Mercator/Area.h>
 
 namespace Mercator {
 class Area;

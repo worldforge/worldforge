@@ -26,10 +26,7 @@
 #include "../EmberOgrePrerequisites.h"
 #include "Types.h"
 
-#include <OgreMaterial.h>
-
 #include <memory>
-#include <map>
 #include <set>
 
 

@@ -19,24 +19,13 @@
 
 #include "ServerService.h"
 
-#include "LoggedInState.h"
 #include "NonConnectedState.h"
 #include "ConnectingState.h"
 #include "ConnectedState.h"
-#include "AccountAvailableState.h"
-#include "EnteredWorldState.h"
-#include "StateBase.h"
 
 #include "services/config/ConfigService.h"
 
 #include "framework/Session.h"
-
-//Needed for the "access" function.
-#ifdef _WIN32
-#include "platform/platform_windows.h"
-#else
-#endif
-
 #include "framework/FileSystemObserver.h"
 #include "framework/Log.h"
 

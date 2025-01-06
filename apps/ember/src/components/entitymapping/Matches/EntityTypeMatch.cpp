@@ -22,11 +22,6 @@
 //
 #include "EntityTypeMatch.h"
 
-
-
-
-
-
 namespace Ember::EntityMapping::Matches {
 
 void EntityTypeMatch::setEntity(Eris::Entity* entity) {

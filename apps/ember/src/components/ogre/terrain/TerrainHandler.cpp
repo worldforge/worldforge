@@ -43,19 +43,14 @@
 #include "SegmentManager.h"
 
 #include "../Convert.h"
-#include "../ILightning.h"
 
 #include "framework/tasks/TaskQueue.h"
 #include "framework/tasks/TaskExecutionContext.h"
-#include "framework/TimedLog.h"
 
 #include <Eris/EventService.h>
 
-#include <Mercator/Segment.h>
 #include <Mercator/Terrain.h>
 #include <Mercator/AreaShader.h>
-
-#include <sigc++/bind.h>
 
 #include <memory>
 #include <utility>

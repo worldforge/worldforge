@@ -27,11 +27,9 @@
 
 #include "EntityRecipe.h"
 #include "tinyxml/tinyxml.h"
-#include <OgreDataStream.h>
-
-
 
 namespace Ember::OgreView::Authoring {
+class GUIAdapterBindings;
 /**
  * Serialize entity recipe from xml files.
  */

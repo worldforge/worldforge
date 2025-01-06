@@ -26,7 +26,6 @@
 #include "components/ogre/EmberOgrePrerequisites.h"
 #include "ModelDefinition.h"
 #include <OgreVector.h>
-#include <vector>
 #include <OgreMovableObject.h>
 
 

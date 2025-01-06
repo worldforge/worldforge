@@ -27,11 +27,6 @@
 #include <string>
 #include <unordered_map>
 
-
-
-
-
-
 namespace Ember::EntityMapping::Definitions {
 
 

@@ -27,12 +27,6 @@ using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 
 
-
-
-
-
-
-
 namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 CustomAdapter::CustomAdapter(const ::Atlas::Message::Element& element)

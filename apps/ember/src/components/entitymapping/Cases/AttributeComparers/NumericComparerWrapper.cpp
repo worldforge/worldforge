@@ -23,13 +23,6 @@
 #include "NumericComparerWrapper.h"
 #include "NumericComparer.h"
 
-
-
-
-
-
-
-
 namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 NumericComparerWrapper::NumericComparerWrapper(std::unique_ptr<NumericComparer> comparer)

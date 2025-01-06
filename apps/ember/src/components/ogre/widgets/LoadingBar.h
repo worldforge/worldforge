@@ -26,7 +26,6 @@ the basic resources required for the progress bar and will be loaded automatical
 
 #include "../EmberOgrePrerequisites.h"
 #include "CEGUIUtils.h"
-#include <sigc++/trackable.h>
 
 #include <OgreResourceGroupManager.h>
 #include <OgreTimer.h>

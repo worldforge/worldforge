@@ -34,8 +34,6 @@
 
 #include "foliage/Vegetation.h"
 
-#include "framework/TimeFrame.h"
-
 #include "../ShaderManager.h"
 #include "../Scene.h"
 
@@ -47,7 +45,6 @@
 #include <Eris/View.h>
 
 #include <OgreRoot.h>
-#include <OgreGpuProgramManager.h>
 
 #include <sigc++/bind.h>
 

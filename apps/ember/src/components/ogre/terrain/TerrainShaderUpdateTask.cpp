@@ -19,7 +19,6 @@
 #include "TerrainShaderUpdateTask.h"
 #include "TerrainPage.h"
 #include "TerrainPageGeometry.h"
-#include "TerrainPageSurface.h"
 #include "TerrainShader.h"
 #include "TerrainMaterialCompilationTask.h"
 #include "TerrainPageSurfaceCompiler.h"

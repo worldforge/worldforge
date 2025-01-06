@@ -28,7 +28,6 @@
 #include <sigc++/signal.h>
 #include <sigc++/connection.h>
 #include <Eris/Entity.h>
-#include "components/ogre/authoring/EntityRecipe.h"
 
 namespace Eris {
 class TypeService;

@@ -23,7 +23,6 @@
 #ifndef EMBEROGRELISTHOLDER_H
 #define EMBEROGRELISTHOLDER_H
 
-#include "components/ogre/EmberOgrePrerequisites.h"
 #include "Widget.h"
 
 namespace CEGUI {

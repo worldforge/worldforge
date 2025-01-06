@@ -23,11 +23,7 @@
 #ifndef EMBEROGREEMBERENTITYACTIONCREATOR_H
 #define EMBEROGREEMBERENTITYACTIONCREATOR_H
 
-#include "EmberOgrePrerequisites.h"
-
 #include "components/entitymapping/EntityMapping.h"
-#include "components/entitymapping/Definitions/EntityMappingDefinition.h"
-#include "components/entitymapping/EntityMappingManager.h"
 #include "components/entitymapping/IActionCreator.h"
 #include "ModelActionBase.h"
 

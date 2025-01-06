@@ -21,7 +21,6 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "ActionBarIconManager.h"
-#include "services/EmberServices.h"
 #include "../GUIManager.h"
 #include "ActionBarIcon.h"
 
@@ -30,6 +29,8 @@
 #include "services/serversettings/ServerSettingsCredentials.h"
 
 #include <CEGUI/CEGUI.h>
+
+#include "ActionBarIconSlot.h"
 
 
 namespace Ember::OgreView::Gui {

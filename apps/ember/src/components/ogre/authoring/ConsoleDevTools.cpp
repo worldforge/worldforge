@@ -17,7 +17,6 @@
  */
 
 #include "ConsoleDevTools.h"
-#include "services/EmberServices.h"
 #include "services/config/ConfigService.h"
 #include "framework/Tokeniser.h"
 #include "framework/ConsoleBackend.h"
@@ -34,7 +33,6 @@
 #include <CEGUI/widgets/DefaultWindow.h>
 #include <CEGUI/widgets/FrameWindow.h>
 #include "CEGUIOgreRenderer/Renderer.h"
-#include <OgreGpuProgramManager.h>
 #include <OgreTextureManager.h>
 #include <OgreMaterialManager.h>
 #include <Ogre.h>

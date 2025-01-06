@@ -20,7 +20,6 @@
 #include "domain/IGraphicalRepresentation.h"
 #include "domain/EmberEntity.h"
 #include "components/ogre/HiddenAttachment.h"
-#include "components/ogre/SceneNodeProvider.h"
 #include "components/ogre/Convert.h"
 #include "framework/AttributeObserver.h"
 #include "components/ogre/model/Model.h"

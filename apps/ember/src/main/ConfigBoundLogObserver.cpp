@@ -22,8 +22,10 @@
 //
 #include "ConfigBoundLogObserver.h"
 
+
 #include "framework/Log.h"
 #include <spdlog/sinks/sink.h>
+#include <spdlog/spdlog.h>
 
 namespace Ember {
 

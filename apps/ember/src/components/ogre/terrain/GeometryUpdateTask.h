@@ -22,8 +22,6 @@
 #include "framework/tasks/ITask.h"
 #include "framework/tasks/TemplateNamedTask.h"
 #include "Types.h"
-#include <wfmath/vector.h>
-#include <set>
 
 
 namespace Ember::OgreView::Terrain {

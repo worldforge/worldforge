@@ -25,13 +25,11 @@
 
 #include "components/ogre/EmberOgrePrerequisites.h"
 #include "GUIAdapter.h"
-#include "GUIAdapterBindings.h"
 
 #include "tinyxml/tinyxml.h"
 #include <Atlas/Message/Element.h>
 
 #include <map>
-#include <unordered_map>
 
 namespace Eris {
 class TypeService;

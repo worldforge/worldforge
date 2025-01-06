@@ -35,8 +35,6 @@ class View;
 }
 
 
-
-
 namespace Ember::EntityMapping {
 
 namespace Definitions {

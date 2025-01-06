@@ -21,12 +21,10 @@
 
 #include "Recast.h"
 
-#include <wfmath/axisbox.h>
 #include <wfmath/point.h>
 
 #include <sigc++/signal.h>
 #include <sigc++/trackable.h>
-#include <sigc++/connection.h>
 
 #include <list>
 #include <vector>

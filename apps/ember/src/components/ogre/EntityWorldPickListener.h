@@ -23,7 +23,6 @@
 #ifndef EMBEROGREENTITYWORLDPICKLISTENER_H
 #define EMBEROGREENTITYWORLDPICKLISTENER_H
 
-#include "EmberOgrePrerequisites.h"
 #include "IWorldPickListener.h"
 #include "framework/ConsoleCommandWrapper.h"
 #include "domain/EmberEntityRef.h"

@@ -21,10 +21,7 @@
 
 #include "framework/tasks/TemplateNamedTask.h"
 #include "Types.h"
-#include <wfmath/vector.h>
 #include <vector>
-#include <map>
-#include <string>
 #include <sigc++/signal.h>
 
 namespace WFMath {

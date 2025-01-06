@@ -25,7 +25,6 @@
 
 #include "../EmberOgrePrerequisites.h"
 #include "components/ogre/IWorldPickListener.h"
-#include <wfmath/quaternion.h>
 #include <optional>
 
 

@@ -18,7 +18,6 @@
 
 #include "ServerServiceConnectionListener.h"
 #include "ServerServiceSignals.h"
-#include <Atlas/Objects/Root.h>
 
 namespace Ember {
 ServerServiceConnectionListener::ServerServiceConnectionListener(ServerServiceSignals& signals) :

@@ -28,7 +28,6 @@
 
 #include <sigc++/trackable.h>
 
-#include <set>
 #include <vector>
 #include <components/ogre/terrain/TerrainLayerDefinition.h>
 #include <components/ogre/terrain/TerrainShader.h>

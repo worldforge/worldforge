@@ -55,6 +55,7 @@
 #include <OgreSceneManager.h>
 #include <OgreEntity.h>
 #include <OgreSceneNode.h>
+#include <Atlas/Objects/Anonymous.h>
 
 #include <fmt/ostream.h>
 

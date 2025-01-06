@@ -27,6 +27,7 @@
 #include <OgreStringConverter.h>
 #include <OgreResourceGroupManager.h>
 #include <filesystem>
+#include <framework/Log.h>
 
 
 namespace Ember::OgreView::Lod {

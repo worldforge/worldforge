@@ -25,7 +25,6 @@
 
 #include <string>
 #include <memory>
-#include "components/ogre/EmberOgrePrerequisites.h"
 #include <queue>
 #include <OgreFrameListener.h>
 #include <components/ogre/SceneNodeProvider.h>

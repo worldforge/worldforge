@@ -27,14 +27,8 @@
 #include "domain/EmberEntity.h"
 #include "framework/Log.h"
 
-#include <OgreSceneManager.h>
-
 #include <Eris/View.h>
 #include <Eris/Avatar.h>
-
-#include <Mercator/Area.h>
-
-#include <sigc++/bind.h>
 
 
 namespace Ember::OgreView {

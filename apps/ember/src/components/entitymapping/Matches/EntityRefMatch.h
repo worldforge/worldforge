@@ -21,12 +21,6 @@
 #include "AttributeDependentMatch.h"
 #include "components/entitymapping/Cases/EntityRefCase.h"
 #include <Eris/View.h>
-#include <Atlas/Message/Element.h>
-
-
-
-
-
 
 namespace Ember::EntityMapping::Matches {
 

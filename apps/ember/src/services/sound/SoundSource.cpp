@@ -28,6 +28,7 @@
 #include "framework/Log.h"
 #include "framework/Exception.h"
 #include <cassert>
+#include <wfmath/vector.h>
 
 namespace Ember {
 

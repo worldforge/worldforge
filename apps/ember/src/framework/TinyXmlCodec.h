@@ -22,7 +22,6 @@
 #include "tinyxml/tinyxml.h"
 
 #include <Atlas/Codec.h>
-#include <stack>
 #include <Atlas/Message/Element.h>
 
 namespace Ember {

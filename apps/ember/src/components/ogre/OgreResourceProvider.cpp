@@ -22,6 +22,7 @@
 //
 #include "OgreResourceProvider.h"
 #include <OgreResourceGroupManager.h>
+#include <framework/Log.h>
 
 
 namespace Ember::OgreView {

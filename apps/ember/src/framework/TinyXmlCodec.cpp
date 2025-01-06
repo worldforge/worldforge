@@ -18,6 +18,8 @@
 
 #include "TinyXmlCodec.h"
 
+#include <stack>
+
 namespace Ember {
 
 class AtlasXmlVisitor : public TiXmlVisitor {

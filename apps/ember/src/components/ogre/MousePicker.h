@@ -23,13 +23,6 @@
 #ifndef EMBEROGRE_MOUSEPICKER_H
 #define EMBEROGRE_MOUSEPICKER_H
 
-#include <sigc++/signal.h>
-
-
-#include "IWorldPickListener.h"
-#include "EmberOgrePrerequisites.h"
-
-
 namespace Ember::OgreView {
 
 

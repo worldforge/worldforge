@@ -25,7 +25,6 @@
 
 #include "components/ogre/EmberOgrePrerequisites.h"
 #include "TerrainLayerDefinition.h"
-#include <OgreDataStream.h>
 
 
 namespace Ember::OgreView::Terrain {

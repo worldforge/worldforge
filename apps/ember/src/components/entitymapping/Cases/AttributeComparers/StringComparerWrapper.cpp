@@ -22,13 +22,6 @@
 //
 #include "StringComparerWrapper.h"
 
-
-
-
-
-
-
-
 namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 

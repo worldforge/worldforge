@@ -29,7 +29,6 @@ Torus Knot Software Ltd.
 */
 
 #include "EmberOgreFileSystem.h"
-#include <OgreFileSystem.h>
 #include <OgreLogManager.h>
 #include <boost/algorithm/string/replace.hpp>
 

@@ -25,9 +25,6 @@
 
 #include <sigc++/signal.h>
 
-
-
-
 namespace Ember::OgreView::Authoring {
 
 class PolygonPoint;

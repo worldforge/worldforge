@@ -35,7 +35,6 @@
 #include <memory>
 
 #include <OgreFrameListener.h>
-#include <OgreSceneQuery.h>
 
 namespace WFMath {
 template<int>

@@ -35,7 +35,6 @@
 #include "framework/ConsoleBackend.h"
 
 #include <CEGUI/Window.h>
-#include <CEGUI/WindowManager.h>
 #include <CEGUI/widgets/Listbox.h>
 #include <CEGUI/widgets/PushButton.h>
 

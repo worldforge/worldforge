@@ -23,8 +23,6 @@
 #ifndef EMBEROGRE_MODEL_MAPPINGMODELMAPPINGMANAGER_H
 #define EMBEROGRE_MODEL_MAPPINGMODELMAPPINGMANAGER_H
 
-
-#include <vector>
 #include <unordered_map>
 
 #include <Eris/TypeInfo.h>
@@ -33,10 +31,6 @@
 
 #include "Definitions/EntityMappingDefinition.h"
 #include "EntityMapping.h"
-
-
-
-
 
 namespace Ember::EntityMapping {
 

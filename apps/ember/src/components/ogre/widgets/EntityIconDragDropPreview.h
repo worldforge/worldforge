@@ -23,11 +23,9 @@
 #ifndef EMBEROGRE_GUIENTITYICONDRAGDROPPREVIEW_H
 #define EMBEROGRE_GUIENTITYICONDRAGDROPPREVIEW_H
 
-#include "components/entitymapping/IActionCreator.h"
 #include "components/ogre/authoring/MovementAdapter.h"
 #include "components/ogre/authoring/IMovementBridge.h"
 #include "components/ogre/authoring/EntityMoverBase.h"
-#include "components/entitymapping/Actions/Action.h"
 #include <wfmath/point.h>
 #include <wfmath/quaternion.h>
 #include <Atlas/Message/Element.h>

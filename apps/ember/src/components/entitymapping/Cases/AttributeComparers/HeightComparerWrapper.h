@@ -30,14 +30,6 @@ namespace Eris {
 class Entity;
 }
 
-
-
-
-
-
-
-
-
 namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 struct NumericComparer;

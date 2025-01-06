@@ -26,8 +26,6 @@
 #include <memory>
 
 
-
-
 namespace Ember::OgreView::Environment {
 
 const std::string OceanRepresentation::sTypeName("OceanRepresentation");

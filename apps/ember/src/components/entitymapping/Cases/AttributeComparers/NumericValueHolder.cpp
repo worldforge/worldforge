@@ -22,13 +22,6 @@
 //
 #include "NumericValueHolder.h"
 
-
-
-
-
-
-
-
 namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 NumericValueHolder::NumericValueHolder(double value) : mValue(value) {
