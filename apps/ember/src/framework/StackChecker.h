@@ -18,8 +18,8 @@
 #ifndef FRAMEWORK_STACKCHECKER_H_
 #define FRAMEWORK_STACKCHECKER_H_
 
-#include <mutex>
 #include <chrono>
+#include <memory>
 
 namespace Ember {
 
