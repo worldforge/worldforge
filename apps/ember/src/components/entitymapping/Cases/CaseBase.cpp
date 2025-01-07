@@ -25,11 +25,6 @@
 #include "../EntityMapping.h"
 #include "../Actions/Action.h"
 
-
-
-
-
-
 namespace Ember::EntityMapping::Cases {
 
 CaseBase::CaseBase()

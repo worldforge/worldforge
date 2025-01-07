@@ -26,13 +26,6 @@
 #include "NumericComparer.h"
 #include <memory>
 
-
-
-
-
-
-
-
 namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 /**

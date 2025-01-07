@@ -19,10 +19,7 @@
 #ifndef LOITERING_H_
 #define LOITERING_H_
 
-#include <wfmath/vector.h>
 #include <wfmath/axisbox.h>
-#include <wfmath/point.h>
-
 
 #include <sigc++/connection.h>
 

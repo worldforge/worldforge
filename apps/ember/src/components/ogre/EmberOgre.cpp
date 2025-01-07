@@ -81,7 +81,6 @@
 
 #include <Eris/Connection.h>
 #include <Eris/View.h>
-#include <Eris/Avatar.h>
 #include <Eris/Account.h>
 
 #include <Overlay/OgreOverlaySystem.h>

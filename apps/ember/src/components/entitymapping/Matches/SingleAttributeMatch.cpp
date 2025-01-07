@@ -20,10 +20,6 @@
 
 #include <utility>
 
-
-
-
-
 namespace Ember::EntityMapping::Matches {
 
 SingleAttributeMatch::SingleAttributeMatch(std::string attributeName)

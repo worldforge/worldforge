@@ -24,7 +24,7 @@
 #include "components/assets/AssetsUpdater.h"
 
 namespace {
-struct Listener : public Ogre::ResourceGroupListener {
+struct Listener : Ogre::ResourceGroupListener {
 	CEGUI::DefaultWindow* textWindow = nullptr;
 
 	void resourceCreated(const Ogre::ResourcePtr& resource) override {

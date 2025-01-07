@@ -29,9 +29,6 @@
 #include <wfmath/point.h>
 #include <wfmath/axisbox.h>
 
-#include <vector>
-#include <cmath>
-
 namespace WFMath {
 template<int>
 class Vector;

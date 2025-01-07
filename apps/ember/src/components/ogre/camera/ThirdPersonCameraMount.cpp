@@ -26,7 +26,6 @@
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 #include <OgreCamera.h>
-#include <OgreEntity.h>
 
 #include <wfmath/const.h>
 #include <components/ogre/MousePicker.h>

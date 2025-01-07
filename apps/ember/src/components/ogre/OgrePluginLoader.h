@@ -19,10 +19,7 @@
 #ifndef OGREPLUGINLOADER_H
 #define OGREPLUGINLOADER_H
 
-#include "components/ogre/EmberOgrePrerequisites.h"
-
 #include <OgrePlugin.h>
-#include <framework/Singleton.h>
 
 #include <string>
 #include <map>

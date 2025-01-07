@@ -28,9 +28,6 @@
 #include <wfmath/point.h>
 #include <sigc++/trackable.h>
 
-
-
-
 namespace Ember::OgreView::Authoring {
 
 class PolygonPoint;

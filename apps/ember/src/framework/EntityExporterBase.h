@@ -25,11 +25,9 @@
 
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
-#include <sigc++/slot.h>
 
 #include <list>
 #include <vector>
-#include <fstream>
 #include <map>
 #include <unordered_map>
 #include <unordered_set>

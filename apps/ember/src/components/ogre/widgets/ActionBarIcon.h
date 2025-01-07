@@ -27,7 +27,6 @@
 #include "icons/Icon.h"
 #include "ActionBarIconManager.h"
 #include "ActionBarIconDragDropTarget.h"
-#include "ActionBarIconSlot.h"
 #include "GenericIconUserData.h"
 #include "CEGUIUtils.h"
 #include <sigc++/trackable.h>

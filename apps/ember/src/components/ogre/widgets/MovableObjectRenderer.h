@@ -25,7 +25,6 @@
 
 #include "components/ogre/EmberOgrePrerequisites.h"
 #include "components/ogre/SimpleRenderContext.h"
-#include <CEGUI/Event.h>
 #include <OgreFrameListener.h>
 
 

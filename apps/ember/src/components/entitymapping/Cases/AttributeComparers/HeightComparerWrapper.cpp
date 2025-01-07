@@ -24,13 +24,6 @@
 #include "NumericComparer.h"
 #include <Eris/Entity.h>
 
-
-
-
-
-
-
-
 namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 HeightComparerWrapper::HeightComparerWrapper(std::unique_ptr<NumericComparer> comparer, Eris::Entity& entity)

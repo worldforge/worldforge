@@ -29,7 +29,6 @@
 #include <sigc++/trackable.h>
 
 #include <memory>
-#include <map>
 #include <squall/core/Repository.h>
 
 namespace Eris {

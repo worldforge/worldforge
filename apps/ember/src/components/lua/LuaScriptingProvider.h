@@ -24,7 +24,6 @@
 #define EMBEROGRELUASCRIPTINGPROVIDER_H
 
 #include "framework/IScriptingProvider.h"
-#include "sol2/forward.hpp"
 
 struct lua_State;
 

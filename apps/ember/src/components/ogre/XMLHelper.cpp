@@ -22,6 +22,7 @@
 //
 #include "XMLHelper.h"
 #include <OgreVector.h>
+#include <framework/Log.h>
 
 
 namespace Ember::OgreView {

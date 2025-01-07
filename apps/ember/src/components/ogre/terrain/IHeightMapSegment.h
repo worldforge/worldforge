@@ -19,8 +19,6 @@
 #ifndef EMBEROGRETERRAINIHEIGHTMAPSEGMENT_H_
 #define EMBEROGRETERRAINIHEIGHTMAPSEGMENT_H_
 
-#include "Types.h"
-
 namespace WFMath {
 template<int>
 class Vector;

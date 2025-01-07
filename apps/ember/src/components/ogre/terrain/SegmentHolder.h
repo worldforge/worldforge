@@ -19,8 +19,6 @@
 #ifndef EMBEROGRE_TERRAIN_SEGMENTHOLDER_H_
 #define EMBEROGRE_TERRAIN_SEGMENTHOLDER_H_
 
-#include <Mercator/Segment.h>
-#include <mutex>
 #include <memory>
 #include <atomic>
 

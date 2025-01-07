@@ -25,13 +25,6 @@
 
 #include <string>
 
-
-
-
-
-
-
-
 namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 /**

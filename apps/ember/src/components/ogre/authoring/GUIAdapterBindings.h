@@ -19,7 +19,6 @@
 #ifndef EMBEROGRE_GUIADAPTERBINDINGS_H
 #define EMBEROGRE_GUIADAPTERBINDINGS_H
 
-#include "components/ogre/EmberOgrePrerequisites.h"
 #include "tinyxml/tinyxml.h"
 #include <Atlas/Message/Element.h>
 

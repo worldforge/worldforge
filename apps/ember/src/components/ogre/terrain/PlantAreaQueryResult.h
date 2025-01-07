@@ -21,11 +21,6 @@
 
 #include <vector>
 
-#include <OgrePrerequisites.h>
-#include <OgreCommon.h>
-#include <OgreVector.h>
-#include <OgreVector.h>
-#include <OgreColourValue.h>
 #include "PlantAreaQuery.h"
 #include "PlantInstance.h"
 

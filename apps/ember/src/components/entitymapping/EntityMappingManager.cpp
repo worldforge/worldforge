@@ -29,10 +29,7 @@
 #include "EntityMappingCreator.h"
 #include <Eris/View.h>
 
-
-
 namespace Ember::EntityMapping {
-
 using namespace Definitions;
 
 EntityMappingManager::EntityMappingManager() = default;
@@ -45,13 +42,12 @@ void EntityMappingManager::addDefinition(std::unique_ptr<EntityMappingDefinition
 	mDefinitions[name] = std::move(definition);
 }
 
-std::unique_ptr<EntityMapping> EntityMappingManager::createMapping(Eris::Entity& entity, IActionCreator& actionCreator, Eris::TypeService& typeService, Eris::View* view) {
+std::unique_ptr<EntityMapping> EntityMappingManager::createMapping(Eris::Entity& entity, IActionCreator& actionCreator,
+                                                                   Eris::TypeService& typeService, Eris::View* view) {
 	EntityMappingDefinition* definition = nullptr;
 	if (entity.hasProperty("present")) {
-		auto mappingElement = entity.valueOfProperty("present");
-		if (mappingElement.isString()) {
-			auto I = mDefinitions.find(mappingElement.String());
-			if (I != mDefinitions.end()) {
+		if (auto mappingElement = entity.valueOfProperty("present"); mappingElement.isString()) {
+			if (auto I = mDefinitions.find(mappingElement.String()); I != mDefinitions.end()) {
 				definition = I->second.get();
 			}
 		}
@@ -65,7 +61,8 @@ std::unique_ptr<EntityMapping> EntityMappingManager::createMapping(Eris::Entity&
 
 		auto attributeMatch = std::make_unique<Matches::SingleAttributeMatch>("present");
 		auto attributeCase = std::make_unique<Cases::AttributeCase>(
-				std::make_unique<Cases::AttributeComparers::StringComparerWrapper>(std::make_unique<Cases::AttributeComparers::StringNotEmptyComparer>()));
+			std::make_unique<Cases::AttributeComparers::StringComparerWrapper>(
+				std::make_unique<Cases::AttributeComparers::StringNotEmptyComparer>()));
 		auto observer = std::make_unique<Matches::Observers::MatchAttributeObserver>(*attributeMatch, "present");
 		attributeMatch->setMatchAttributeObserver(std::move(observer));
 
@@ -82,7 +79,4 @@ std::unique_ptr<EntityMapping> EntityMappingManager::createMapping(Eris::Entity&
 		return mapping;
 	}
 }
-
 }
-
-

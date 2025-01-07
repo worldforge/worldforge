@@ -28,18 +28,15 @@
 
 #include "../Avatar.h"
 #include "../model/Model.h"
-#include "domain/EmberEntity.h"
 #include "../World.h"
 #include "EmberEntityMappingManager.h"
 
-#include "services/EmberServices.h"
 #include "services/server/ServerService.h"
 
 #include <Eris/Connection.h>
 #include <Eris/Avatar.h>
 #include <Eris/TypeService.h>
 
-#include <CEGUI/widgets/Listbox.h>
 #include <CEGUI/widgets/Editbox.h>
 #include <CEGUI/widgets/PushButton.h>
 #include <CEGUI/widgets/Tree.h>

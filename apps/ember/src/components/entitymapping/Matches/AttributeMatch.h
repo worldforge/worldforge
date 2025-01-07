@@ -26,10 +26,6 @@
 #include "AbstractMatch.h"
 #include "AttributeDependentMatch.h"
 
-
-
-
-
 namespace Ember::EntityMapping::Cases {
 class AttributeCase;
 }

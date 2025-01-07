@@ -30,13 +30,8 @@
 #include "framework/AutoCloseConnection.h"
 #include "services/server/ServerServiceSignals.h"
 
-#include <Eris/ServerInfo.h>
 #include <Eris/Connection.h>
 #include <Eris/Avatar.h>
-#include <Eris/Account.h>
-
-#include <Atlas/Objects/Entity.h>
-#include <Atlas/Message/Element.h>
 
 #include <optional>
 

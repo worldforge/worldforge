@@ -24,10 +24,6 @@
 #define PMINJECTORSIGNALER_H
 
 
-#include "components/ogre/EmberOgrePrerequisites.h"
-#include "framework/Singleton.h"
-
-#include <MeshLodGenerator/OgreLodConfig.h>
 #include <MeshLodGenerator/OgreLodWorkQueueInjectorListener.h>
 
 #include <sigc++/signal.h>

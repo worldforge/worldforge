@@ -25,7 +25,6 @@
 #include "SingleAdapterRepresentationBase.h"
 #include "LayoutHelper.h"
 #include "../adapters/GenericPropertyAdapter.h"
-#include <CEGUI/WindowManager.h>
 #include <CEGUI/widgets/Slider.h>
 
 #include <sigc++/trackable.h>

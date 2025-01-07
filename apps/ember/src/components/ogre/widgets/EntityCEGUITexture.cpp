@@ -21,7 +21,6 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "EntityCEGUITexture.h"
-#include <CEGUI/WindowManager.h>
 #include <CEGUI/ImageManager.h>
 #include <CEGUI/Renderer.h>
 #include <CEGUI/BasicImage.h>

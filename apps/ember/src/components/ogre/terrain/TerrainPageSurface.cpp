@@ -27,7 +27,6 @@
 #include "TerrainLayerDefinition.h"
 #include "../Convert.h"
 #include <OgreMaterialManager.h>
-#include <OgreRoot.h>
 
 
 namespace Ember::OgreView::Terrain {

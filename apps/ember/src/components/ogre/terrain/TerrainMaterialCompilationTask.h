@@ -21,7 +21,6 @@
 
 #include "framework/tasks/TemplateNamedTask.h"
 #include "Types.h"
-#include <wfmath/vector.h>
 #include <sigc++/signal.h>
 #include <vector>
 

@@ -31,7 +31,6 @@
 #include "components/ogre/World.h"
 #include "EntityWorldPickListener.h"
 
-#include "components/ogre/camera/MainCamera.h"
 #include "components/ogre/camera/ThirdPersonCameraMount.h"
 
 #include "components/ogre/model/Model.h"
@@ -51,8 +50,6 @@
 #include <Eris/Avatar.h>
 #include <Eris/Connection.h>
 #include <Eris/TypeInfo.h>
-#include <Eris/TypeService.h>
-#include <Eris/View.h>
 #include <Eris/Task.h>
 #include <Eris/Response.h>
 
@@ -61,8 +58,9 @@
 #include <OgreRoot.h>
 #include <OgreCamera.h>
 #include <OgreTagPoint.h>
+#include <Atlas/Objects/Anonymous.h>
+#include <Atlas/Objects/RootEntity.h>
 
-#include <wfmath/stream.h>
 #include <fmt/ostream.h>
 
 template<>

@@ -24,7 +24,6 @@
 #define EMBERConfigBoundLogObserver_H
 
 #include "services/config/ConfigListenerContainer.h"
-#include <spdlog/spdlog.h>
 
 namespace Ember {
 

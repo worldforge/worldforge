@@ -19,8 +19,6 @@
 #include "AtlasHelper.h"
 #include "framework/Log.h"
 #include "framework/AtlasObjectDecoder.h"
-#include <Atlas/Message/Element.h>
-#include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Message/QueuedDecoder.h>

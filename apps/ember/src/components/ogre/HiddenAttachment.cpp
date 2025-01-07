@@ -17,7 +17,6 @@
  */
 
 #include "HiddenAttachment.h"
-#include "domain/EmberEntity.h"
 
 
 namespace Ember::OgreView {

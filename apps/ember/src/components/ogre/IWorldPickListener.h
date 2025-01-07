@@ -23,10 +23,7 @@
 #ifndef EMBEROGREIWORLDPICKLISTENER_H
 #define EMBEROGREIWORLDPICKLISTENER_H
 
-#include "EmberOgrePrerequisites.h"
-
 #include <wfmath/point.h>
-#include <OgreSceneQuery.h>
 #include <any>
 
 namespace Ogre {

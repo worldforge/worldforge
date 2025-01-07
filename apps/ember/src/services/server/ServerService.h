@@ -24,13 +24,6 @@
 #include "framework/Service.h"
 #include "framework/Singleton.h"
 
-#include <wfmath/vector.h>
-#include <wfmath/point.h>
-#include <wfmath/quaternion.h>
-
-#include <Atlas/Message/Element.h>
-
-
 #include <filesystem>
 #include <memory>
 

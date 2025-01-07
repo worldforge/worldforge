@@ -36,8 +36,6 @@
 #include <Eris/Avatar.h>
 
 
-
-
 namespace Ember::OgreView::Authoring {
 
 EntityMoveInstance::EntityMoveInstance(EmberEntity& entity,

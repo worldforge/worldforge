@@ -24,9 +24,7 @@
 #include "ShadowDetailManager.h"
 #include "framework/Tokeniser.h"
 #include "framework/Log.h"
-#include <OgreRoot.h>
 #include <OgreShadowCameraSetupPSSM.h>
-#include <OgreShadowCameraSetup.h>
 #include <RTShaderSystem/OgreRTShaderSystem.h>
 
 

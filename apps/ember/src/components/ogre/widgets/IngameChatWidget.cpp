@@ -30,7 +30,6 @@
 
 #include "../EmberOgre.h"
 #include "../World.h"
-#include "../Scene.h"
 #include "../Avatar.h"
 
 #include "components/ogre/model/ModelRepresentation.h"
@@ -38,14 +37,11 @@
 #include "components/ogre/camera/MainCamera.h"
 #include "framework/CommandHistory.h"
 
-#include "services/EmberServices.h"
 #include "services/config/ConfigService.h"
 #include "services/server/ServerService.h"
 #include "LabelAction.h"
 
 #include <CEGUI/WindowManager.h>
-#include <CEGUI/Exceptions.h>
-#include <CEGUI/Font.h>
 #include <CEGUI/Window.h>
 #include <CEGUI/widgets/PushButton.h>
 #include <CEGUI/widgets/FrameWindow.h>
@@ -57,7 +53,6 @@
 
 #include <OgreCamera.h>
 #include <OgreSceneNode.h>
-#include <OgreRoot.h>
 #include <boost/algorithm/string.hpp>
 
 using namespace CEGUI;

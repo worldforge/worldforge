@@ -23,11 +23,6 @@
 #include "AttributeCase.h"
 #include "AttributeComparers/StringComparerWrapper.h"
 
-
-
-
-
-
 namespace Ember::EntityMapping::Cases {
 
 AttributeCase::AttributeCase(std::unique_ptr<AttributeComparers::AttributeComparerWrapper> comparerWrapper)

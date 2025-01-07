@@ -23,7 +23,6 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "EntityWorldPickListener.h"
-#include "EmberEntityUserObject.h"
 #include "Scene.h"
 
 #include "domain/EmberEntity.h"
@@ -33,14 +32,11 @@
 #include "EntityCollisionInfo.h"
 
 #include "components/ogre/model/ModelRepresentation.h"
-#include "components/ogre/model/SubModel.h"
 #include "OutlineEffect.h"
 
-#include <OgreSceneQuery.h>
 #include <OgreSceneManager.h>
 
 #include <Eris/View.h>
-#include <Eris/Avatar.h>
 #include <Ogre.h>
 
 

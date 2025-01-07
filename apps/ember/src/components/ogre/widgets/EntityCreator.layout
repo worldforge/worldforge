@@ -5,7 +5,7 @@
 		<Property name="Position" value="{{1.0,-450},{1.0,-520}}"/>
 		<Property name="Size" value="{{0,400},{0,500}}"/>
 		<Property name="Alpha" value="0.6"/>
-		<Property name="Text" value="Entity Creator"/>
+		<Property name="Text" value="Entity Creator "/>
 		<Window name="CharacterTabControl" type="EmberLook/TabControl">
 			<Property name="Size" value="{{1,0},{1,0}}"/>
 			<Property name="InheritsAlpha" value="false"/>

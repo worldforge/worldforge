@@ -25,7 +25,6 @@
 #include "SingleAdapterRepresentationBase.h"
 #include "LayoutHelper.h"
 #include "../adapters/ComboboxAdapter.h"
-#include <CEGUI/WindowManager.h>
 
 
 namespace Ember::OgreView::Gui::Representations {

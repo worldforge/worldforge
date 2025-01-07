@@ -17,6 +17,7 @@
  */
 
 #include "ValueTypeHelper.h"
+#include <iomanip>
 
 namespace Ember::OgreView::Gui::Adapters {
 
@@ -31,8 +32,9 @@ bool CompareHelper<varconf::Variable>::areEqual(const varconf::Variable& one, co
 		return ss_one.str() == ss_two.str();
 	} else if (one.is_bool() && two.is_bool()) {
 		return static_cast<bool>(one) == static_cast<bool>(two);
+	} else {
+		return one == two;
 	}
-	return one == two;
 }
 
 }

@@ -25,19 +25,14 @@
 #include "ExclusiveImposterPage.h"
 
 #include "framework/Log.h"
-#include "services/config/ConfigService.h"
 #include "TreeLoader3D.h"
-#include "BatchPage.h"
-#include "DummyPage.h"
 #include "PassiveEntityPage.h"
 
 #include "../Scene.h"
 #include "../model/ModelRepresentation.h"
 #include "../model/Model.h"
-#include "../terrain/TerrainInfo.h"
 #include "../terrain/TerrainManager.h"
 #include "../terrain/TerrainHandler.h"
-#include "../terrain/ITerrainAdapter.h"
 
 namespace Ember::OgreView::Environment {
 

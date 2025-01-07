@@ -22,7 +22,6 @@
 #include <Eris/EventService.h>
 #include <boost/asio/io_service.hpp>
 #include <boost/noncopyable.hpp>
-#include <memory>
 
 namespace Ember {
 

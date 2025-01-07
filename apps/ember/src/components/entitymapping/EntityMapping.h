@@ -23,25 +23,15 @@
 #ifndef EMBEROGRE_MODEL_MAPPINGMODELMAPPING_H
 #define EMBEROGRE_MODEL_MAPPINGMODELMAPPING_H
 
-
-#include <vector>
-#include <iostream>
-#include <memory>
-
-#include <Atlas/Objects/Entity.h>
-
 #include <Eris/Entity.h>
 
 #include "Matches/EntityTypeMatch.h"
-
 
 namespace Eris {
 class Entity;
 
 class View;
 }
-
-
 
 
 /**

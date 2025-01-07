@@ -22,14 +22,9 @@
 #include "framework/tasks/TemplateNamedTask.h"
 #include "Types.h"
 #include "TerrainHandler.h"
-#include "TerrainLayerDefinitionManager.h"
 #include <Mercator/Area.h>
 
-#include <wfmath/point.h>
 #include <wfmath/axisbox.h>
-
-#include <sigc++/slot.h>
-#include <Mercator/Terrain.h>
 
 
 namespace Ember::OgreView::Terrain {

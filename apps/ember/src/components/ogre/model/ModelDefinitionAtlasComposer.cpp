@@ -45,7 +45,7 @@ using namespace Atlas::Message;
 
 namespace Ember::OgreView::Model {
 
-Atlas::Message::MapType ModelDefinitionAtlasComposer::compose(Model* model, const std::string& typeName, const std::string& parentTypeName, float scale, const std::string& collisionType) {
+MapType ModelDefinitionAtlasComposer::compose(Model* model, const std::string& typeName, const std::string& parentTypeName, float scale, const std::string& collisionType) {
 	MapType mainMap;
 	if (!model) {
 		return mainMap;
@@ -84,13 +84,13 @@ Atlas::Message::MapType ModelDefinitionAtlasComposer::compose(Model* model, cons
 	return mainMap;
 }
 
-Atlas::Message::Element ModelDefinitionAtlasComposer::composeGeometry(Model* model, const std::string& collisionType) const {
-	Atlas::Message::MapType geometryMap;
+Element ModelDefinitionAtlasComposer::composeGeometry(Model* model, const std::string& collisionType) const {
+	MapType geometryMap;
 	geometryMap["type"] = collisionType;
 	if (collisionType == "mesh") {
 
-		std::vector<Atlas::Message::Element> vertices;
-		std::vector<Atlas::Message::Element> indices;
+		std::vector<Element> vertices;
+		std::vector<Element> indices;
 
 		for (auto& submodel: model->getSubmodels()) {
 			auto mesh = submodel->getEntity()->getMesh();
@@ -140,7 +140,7 @@ Atlas::Message::Element ModelDefinitionAtlasComposer::composeGeometry(Model* mod
 }
 
 
-void ModelDefinitionAtlasComposer::copyVertexData(std::vector<Atlas::Message::Element>& vertices, Ogre::VertexData& vertexData) {
+void ModelDefinitionAtlasComposer::copyVertexData(std::vector<Element>& vertices, Ogre::VertexData& vertexData) {
 
 
 	// Locate position element and the buffer to go with it.
@@ -169,11 +169,11 @@ void ModelDefinitionAtlasComposer::copyVertexData(std::vector<Atlas::Message::El
 
 void
 ModelDefinitionAtlasComposer::composeToStream(std::iostream& outstream, Model* model, const std::string& typeName, const std::string& parentTypeName, float scale, const std::string& collisionType) {
-	Atlas::Message::QueuedDecoder decoder;
+	QueuedDecoder decoder;
 
 	Atlas::Codecs::XML codec(outstream, outstream, decoder);
 	Atlas::MultiLineListFormatter formatter(outstream, codec);
-	Atlas::Message::Encoder encoder(formatter);
+	Encoder encoder(formatter);
 	formatter.streamBegin();
 	encoder.streamMessageElement(compose(model, typeName, parentTypeName, scale, collisionType));
 

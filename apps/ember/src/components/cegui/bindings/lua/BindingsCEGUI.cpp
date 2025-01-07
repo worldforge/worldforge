@@ -30,7 +30,7 @@ namespace {
  * @param window
  * @return
  */
-inline float calculateRenderedCentredStringVerticalExtent(CEGUI::Window* window) {
+float calculateRenderedCentredStringVerticalExtent(CEGUI::Window* window) {
 	CEGUI::RenderedStringWordWrapper<CEGUI::CentredRenderedString> wordWrapper(window->getRenderedString());
 	wordWrapper.format(window, window->getPixelSize());
 	return wordWrapper.getVerticalExtent(window);

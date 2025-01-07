@@ -25,13 +25,6 @@
 
 #include <Atlas/Message/Element.h>
 
-
-
-
-
-
-
-
 namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 /**

@@ -25,7 +25,6 @@
 #define ITERRAINADAPTER_H
 
 #include "domain/Types.h"
-#include "../OgreIncludes.h"
 #include <sigc++/slot.h>
 #include <sigc++/connection.h>
 #include <string>

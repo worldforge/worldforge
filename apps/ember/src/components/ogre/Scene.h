@@ -21,6 +21,7 @@
 
 #include "OgreIncludes.h"
 #include "BulletWorld.h"
+#include "terrain/ITerrainAdapter.h"
 #include <map>
 #include <string>
 #include <memory>
@@ -93,7 +94,7 @@ public:
 	 * @brief Creates a terrain adapter which can be used to communicate with the terrain rendering system.
 	 * @return An instance of the terrain adapter
 	 */
-	std::unique_ptr<Terrain::ITerrainAdapter> createTerrainAdapter();
+	std::unique_ptr<Terrain::ITerrainAdapter> createTerrainAdapter() const;
 
 	/**
 	 * @brief Gets the main camera of the scene.

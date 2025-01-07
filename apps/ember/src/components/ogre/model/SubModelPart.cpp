@@ -38,7 +38,6 @@
 #include <OgreInstancedEntity.h>
 #include <OgreTechnique.h>
 #include <OgreHighLevelGpuProgramManager.h>
-#include <OgreHighLevelGpuProgram.h>
 #include <OgreInstanceBatch.h>
 #include <boost/algorithm/string.hpp>
 #include <utility>

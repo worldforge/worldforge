@@ -41,6 +41,7 @@
 
 #include <OgreSceneManager.h>
 #include <OgreSceneNode.h>
+#include <Eris/View.h>
 
 using namespace Ember;
 namespace Ember {

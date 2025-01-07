@@ -19,13 +19,11 @@
 #ifndef OGRETERRAINOBSERVER_H_
 #define OGRETERRAINOBSERVER_H_
 
-#include "../../EmberOgrePrerequisites.h"
 #include "../ITerrainObserver.h"
 
 #include <OgrePrerequisites.h>
 #include <OgreCommon.h>
 #include <sigc++/connection.h>
-#include <memory>
 
 
 namespace Ember::OgreView::Terrain {

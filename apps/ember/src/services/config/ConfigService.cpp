@@ -21,7 +21,6 @@
 #include "ConfigService.h"
 #include "framework/Log.h"
 #include "framework/ConsoleBackend.h"
-#include "framework/Tokeniser.h"
 
 #ifdef _WIN32
 #include "platform/platform_windows.h"
@@ -91,7 +90,6 @@ std::string getAppSupportDirPath()
 
 #endif
 
-#include "Version.h"
 
 namespace Ember {
 

@@ -22,7 +22,6 @@
 //
 #include "AssetsManager.h"
 #include "../EmberOgrePrerequisites.h"
-#include "../EmberOgre.h"
 #include "../GUIManager.h"
 
 #include "components/ogre/model/ModelDefinitionManager.h"

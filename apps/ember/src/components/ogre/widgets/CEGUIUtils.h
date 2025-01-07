@@ -19,7 +19,6 @@
 #ifndef EMBER_CEGUIUTILS_H
 #define EMBER_CEGUIUTILS_H
 
-#include <CEGUI/Window.h>
 #include <CEGUI/WindowManager.h>
 #include <memory>
 

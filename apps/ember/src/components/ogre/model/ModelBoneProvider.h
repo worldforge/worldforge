@@ -49,14 +49,12 @@ public:
 	/**
 	 * @brief Ctor.
 	 * @param parentModel The model to which the bone will be attached.
-	 * @param movableObject An optional movable object to attach. Note that if no object is submitted, no TagPoint will be created.
 	 */
 	ModelBoneProvider(Ogre::Node* parentSceneNode, Model& parentModel, bool deleteMovableWhenDone = false);
 
 	/**
 	 * @brief Ctor.
 	 * @param parentModel The model to which the bone will be attached.
-	 * @param movableObject An optional movable object to attach. Note that if no object is submitted, no TagPoint will be created.
 	 * @param parent The parent provider.
 	 */
 	ModelBoneProvider(Ogre::Node* parentSceneNode, Model& parentModel, ModelBoneProvider* parent);

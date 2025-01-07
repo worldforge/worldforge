@@ -19,9 +19,6 @@
 #ifndef ISTATE_H_
 #define ISTATE_H_
 
-#include <Atlas/Message/Element.h>
-#include <string>
-
 namespace Eris {
 class TransferInfo;
 }

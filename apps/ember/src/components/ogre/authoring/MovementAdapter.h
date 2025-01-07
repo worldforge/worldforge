@@ -26,7 +26,6 @@
 #include "../EmberOgrePrerequisites.h"
 #include "services/input/IInputAdapter.h"
 #include "components/ogre/IWorldPickListener.h"
-#include <OgreFrameListener.h>
 
 
 namespace Ember::OgreView {

@@ -23,7 +23,6 @@
 #include "ParticleSystemBinding.h"
 #include "components/ogre/OgreInfo.h"
 
-#include "framework/TimeFrame.h"
 #include "framework/TimedLog.h"
 
 #include <OgreTagPoint.h>
@@ -32,14 +31,9 @@
 #include <OgreSceneManager.h>
 #include <OgreSubEntity.h>
 #include <OgreParticleSystem.h>
-#include <OgreParticleEmitter.h>
 #include <OgreSkeletonInstance.h>
 #include <OgreMaterialManager.h>
 #include <OgreInstancedEntity.h>
-#include <OgreTechnique.h>
-#include <OgrePass.h>
-#include <OgreInstanceBatch.h>
-#include <OgreHighLevelGpuProgramManager.h>
 
 #include <memory>
 

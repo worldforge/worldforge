@@ -10,7 +10,6 @@
 
 #include "components/ogre/terrain/Types.h"
 #include "PlantPopulator.h"
-#include <cstdlib>
 #include <map>
 
 

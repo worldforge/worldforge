@@ -19,8 +19,6 @@
 #ifndef TEXTUREPAIR_H_
 #define TEXTUREPAIR_H_
 
-#include <OgreTexture.h>
-
 namespace CEGUI {
 
 class Image;

@@ -25,7 +25,6 @@
 
 #include "framework/ConsoleCommandWrapper.h"
 #include "services/config/ConfigListenerContainer.h"
-#include "OgreIncludes.h"
 
 #include <string>
 #include <map>

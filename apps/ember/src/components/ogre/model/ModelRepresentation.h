@@ -26,12 +26,9 @@
 #include "domain/EmberEntity.h"
 #include "services/sound/SoundService.h"
 #include "ModelAction.h"
-#include <OgreMath.h>
 #include <OgreVector.h>
-#include <OgreQuaternion.h>
 #include <sigc++/trackable.h>
 #include <vector>
-#include <list>
 #include <components/ogre/EmberEntityUserObject.h>
 #include <components/ogre/BulletCollisionDetector.h>
 

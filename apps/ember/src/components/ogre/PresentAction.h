@@ -21,8 +21,6 @@
 
 #include "ModelActionBase.h"
 
-
-
 namespace Ember::OgreView {
 
 /**

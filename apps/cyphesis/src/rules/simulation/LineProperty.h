@@ -23,8 +23,6 @@
 
 #include "physics/Vector3D.h"
 
-#include <wfmath/point.h>
-
 /// \brief Class to handle Entity terrain property
 /// \ingroup PropertyClasses
 class LineProperty : public PropertyBase {

@@ -25,9 +25,7 @@
 
 #include "HelpMessage.h"
 #include "framework/Singleton.h"
-#include <string>
 #include <list>
-#include <iterator>
 #include <sigc++/signal.h>
 
 

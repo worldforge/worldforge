@@ -23,11 +23,6 @@
 #ifndef EMBEROGRE_MODEL_MAPPING_MATCHESENTITYTYPEMATCH_H
 #define EMBEROGRE_MODEL_MAPPING_MATCHESENTITYTYPEMATCH_H
 
-
-
-
-
-
 namespace Ember::EntityMapping::Cases {
 class EntityTypeCase;
 }
@@ -41,11 +36,6 @@ namespace Eris {
 class Entity;
 }
 
-
-
-
-
-
 namespace Ember::EntityMapping::Matches {
 
 /**
@@ -58,8 +48,6 @@ public:
 	void testEntity(Eris::Entity* entity);
 
 	void setEntity(Eris::Entity* entity) override;
-
-protected:
 
 };
 

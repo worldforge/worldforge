@@ -19,54 +19,48 @@
 
 #include "GUIManager.h"
 #include "EmberOgre.h"
-#include "domain/EmberEntity.h"
-#include "framework/MainLoopController.h"
-#include "framework/ConsoleBackend.h"
-#include "domain/EntityTalk.h"
 #include "GUICEGUIAdapter.h"
 #include "World.h"
+#include "domain/EmberEntity.h"
+#include "domain/EntityTalk.h"
+#include "framework/ConsoleBackend.h"
+#include "framework/MainLoopController.h"
 
-#include "widgets/EntityTooltip.h"
-#include "widgets/Widget.h"
-#include "widgets/QuickHelp.h"
-#include "widgets/WidgetDefinitions.h"
-#include "widgets/icons/IconManager.h"
-#include "widgets/EntityIconManager.h"
 #include "widgets/ActionBarIconManager.h"
+#include "widgets/EntityIconManager.h"
+#include "widgets/EntityTooltip.h"
+#include "widgets/QuickHelp.h"
+#include "widgets/Widget.h"
+#include "widgets/WidgetDefinitions.h"
 #include "widgets/WorldLoadingScreen.h"
+#include "widgets/icons/IconManager.h"
 
 #include "camera/MainCamera.h"
 #include "gui/ActiveWidgetHandler.h"
 #include "gui/CursorWorldListener.h"
 
 #include "components/cegui/CEGUILogger.h"
+#include "components/cegui/CEGUISetup.h"
 #include "components/cegui/ColouredRenderedStringParser.h"
 #include "components/cegui/SDLNativeClipboardProvider.h"
-#include "components/cegui/CEGUISetup.h"
 #include "components/ogre/widgets/HitDisplayer.h"
 
 
 #include "services/config/ConfigService.h"
 #include "services/server/ServerServiceSignals.h"
-#include "services/sound/SoundService.h"
 #include "services/sound/SoundSample.h"
+#include "services/sound/SoundService.h"
 
-#include "framework/IResourceProvider.h"
-
-#include <Eris/View.h>
 #include <Eris/Avatar.h>
 #include <Eris/TypeInfo.h>
+#include <Eris/View.h>
 
 #include <OgreRoot.h>
 #include <OgreTextureManager.h>
 
 #include <CEGUI/WindowManager.h>
-#include <CEGUI/SchemeManager.h>
-#include "CEGUIOgreRenderer/ResourceProvider.h"
-#include "CEGUIOgreRenderer/ImageCodec.h"
-#include <CEGUI/widgets/MultiLineEditbox.h>
-#include <CEGUI/widgets/Editbox.h>
 #include <fmt/ostream.h>
+#include "CEGUIOgreRenderer/ResourceProvider.h"
 
 #ifdef _WIN32
 #include "platform/platform_windows.h"

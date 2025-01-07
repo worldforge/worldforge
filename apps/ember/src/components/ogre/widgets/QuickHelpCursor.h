@@ -25,8 +25,6 @@
 
 #include <list>
 #include <sigc++/signal.h>
-#include <string>
-
 
 namespace Ember::OgreView::Gui {
 

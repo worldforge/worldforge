@@ -24,8 +24,6 @@
 #define EMBEROGREOGRERESOURCEPROVIDER_H
 
 #include "framework/IResourceProvider.h"
-#include "components/ogre/EmberOgrePrerequisites.h"
-#include <OgreDataStream.h>
 
 
 namespace Ember::OgreView {

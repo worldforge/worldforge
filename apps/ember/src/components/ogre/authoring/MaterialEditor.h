@@ -25,8 +25,6 @@
 
 #include <sigc++/trackable.h>
 
-#include "../EmberOgrePrerequisites.h"
-
 #include "framework/ConsoleCommandWrapper.h"
 
 

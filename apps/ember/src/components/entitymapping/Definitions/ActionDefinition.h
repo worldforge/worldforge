@@ -25,11 +25,6 @@
 
 #include "DefinitionBase.h"
 
-
-
-
-
-
 namespace Ember::EntityMapping::Definitions {
 
 /**

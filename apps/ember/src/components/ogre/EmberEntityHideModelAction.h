@@ -23,7 +23,6 @@
 #ifndef EMBEROGREEMBERENTITYHIDEMODELACTION_H
 #define EMBEROGREEMBERENTITYHIDEMODELACTION_H
 
-#include "EmberOgrePrerequisites.h"
 #include "domain/EmberEntity.h"
 
 #include "components/entitymapping/Actions/Action.h"

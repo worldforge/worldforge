@@ -24,8 +24,6 @@
 #define EMBEROGRE_MANIPULATIONIPOLYGONPOSITIONPROVIDER_H
 
 
-
-
 namespace Ember::OgreView::Authoring {
 
 /**

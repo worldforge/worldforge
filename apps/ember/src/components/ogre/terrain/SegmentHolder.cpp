@@ -21,6 +21,7 @@
 #include "SegmentManager.h"
 
 #include <cassert>
+#include <Mercator/Segment.h>
 
 
 namespace Ember::OgreView::Terrain {

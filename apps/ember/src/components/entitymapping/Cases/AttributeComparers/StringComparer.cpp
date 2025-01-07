@@ -24,13 +24,6 @@
 
 #include <utility>
 
-
-
-
-
-
-
-
 namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 StringValueComparer::StringValueComparer(std::string value)

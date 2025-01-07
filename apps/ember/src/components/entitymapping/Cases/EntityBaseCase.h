@@ -30,13 +30,6 @@ class Entity;
 class TypeInfo;
 }
 
-
-
-
-
-
-
-
 namespace Ember::EntityMapping::Cases {
 
 /**

@@ -21,12 +21,7 @@
 
 #include <Eris/Entity.h>
 #include <Eris/TypeInfo.h>
-#include <Eris/View.h>
-#include <Atlas/Message/Element.h>
 #include <string>
-
-
-
 
 namespace Ember::OgreView::Authoring {
 /**

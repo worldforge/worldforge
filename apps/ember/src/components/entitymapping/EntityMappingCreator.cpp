@@ -64,8 +64,6 @@ findCaseParameter(const std::vector<Ember::EntityMapping::Definitions::CaseDefin
 }
 
 
-
-
 namespace Ember::EntityMapping {
 
 using namespace Definitions;

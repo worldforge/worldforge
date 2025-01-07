@@ -16,11 +16,6 @@
 //
 #include "EntityRefCase.h"
 
-
-
-
-
-
 namespace Ember::EntityMapping::Cases {
 
 void EntityRefCase::_setState(bool state) {

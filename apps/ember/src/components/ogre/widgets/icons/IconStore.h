@@ -25,7 +25,6 @@
 
 #include <unordered_map>
 #include <vector>
-#include <OgreTexture.h>
 
 #include "IconImageStore.h"
 #include "Icon.h"

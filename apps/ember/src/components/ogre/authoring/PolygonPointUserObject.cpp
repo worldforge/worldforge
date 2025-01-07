@@ -26,9 +26,6 @@
 #include <OgreEntity.h>
 #include <OgreSceneNode.h>
 
-
-
-
 namespace Ember::OgreView::Authoring {
 
 PolygonPointUserObject::PolygonPointUserObject(PolygonPoint& point) :

@@ -19,15 +19,12 @@
 #ifndef MovementController_H
 #define MovementController_H
 
-#include "EmberOgrePrerequisites.h"
 #include "EntityWorldPickListener.h"
 #include "components/ogre/IMovementProvider.h"
 
 #include "services/input/Input.h"
 #include "services/input/InputCommandMapper.h"
 #include "framework/ConsoleObject.h"
-#include <OgreVector.h>
-#include <OgreQuaternion.h>
 
 #include <Eris/ActiveMarker.h>
 

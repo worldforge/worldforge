@@ -19,8 +19,6 @@
 #ifndef ICAMERAMOUNT_H_
 #define ICAMERAMOUNT_H_
 
-#include "components/ogre/OgreIncludes.h"
-
 namespace WFMath {
 template<int>
 class Vector;

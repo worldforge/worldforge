@@ -17,7 +17,6 @@
  */
 
 #include "FileResourceProvider.h"
-#include <sstream>
 #include <fstream>
 
 namespace Ember {

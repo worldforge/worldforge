@@ -33,11 +33,7 @@
 #include <wfmath/quaternion.h>
 #include <wfmath/vector.h>
 
-#include <OgreVector.h>
-#include <OgreQuaternion.h>
-
 #include <memory>
-#include <set>
 #include <Eris/Task.h>
 
 namespace Eris {

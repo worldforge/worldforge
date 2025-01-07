@@ -27,7 +27,6 @@
 #include <OgreVector.h>
 #include <OgreQuaternion.h>
 
-#include <sigc++/connection.h>
 #include <components/ogre/model/ModelDefinition.h>
 #include <framework/AutoCloseConnection.h>
 

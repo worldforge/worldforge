@@ -23,13 +23,11 @@
 #ifndef EMBEROGRE_TERRAINMAP_H
 #define EMBEROGRE_TERRAINMAP_H
 
-#include "components/ogre/EmberOgrePrerequisites.h"
 #include <vector>
 #include <OgrePrerequisites.h>
 #include <OgreColourValue.h>
 #include <OgreVector.h>
 #include <OgreCommon.h>
-#include <OgreTexture.h>
 #include <OgreSceneManager.h>
 
 #include <sigc++/signal.h>

@@ -21,7 +21,6 @@
 #include <utility>
 #include "PlantAreaQuery.h"
 #include "foliage/PlantPopulator.h"
-#include "components/ogre/Convert.h"
 
 
 namespace Ember::OgreView::Terrain {

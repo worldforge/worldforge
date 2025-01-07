@@ -22,7 +22,6 @@
 #include <boost/noncopyable.hpp>
 #include <string>
 #include <sigc++/trackable.h>
-#include <sigc++/signal.h>
 
 namespace Ember {
 

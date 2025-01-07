@@ -31,10 +31,6 @@ namespace Eris {
 class Entity;
 }
 
-
-
-
-
 namespace Ember::EntityMapping {
 
 class ChangeContext;

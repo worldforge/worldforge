@@ -28,7 +28,6 @@
 
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
-#include <sigc++/slot.h>
 
 #include <set>
 #include <memory>

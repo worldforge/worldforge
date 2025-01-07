@@ -24,16 +24,11 @@
 #define EMBEROGRE_MODEL_MAPPING_MATCHES_OBSERVERSENTITYCREATIONOBSERVER_H
 
 #include <sigc++/trackable.h>
-#include "components/entitymapping/Matches/EntityRefMatch.h"
-#include "../../EntityMapping.h"
 #include <Eris/View.h>
 
-
-
-
-
-
-
+namespace Ember::EntityMapping::Matches {
+class EntityRefMatch;
+}
 
 namespace Ember::EntityMapping::Matches::Observers {
 

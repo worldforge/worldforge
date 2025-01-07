@@ -25,7 +25,6 @@
 
 #include "components/ogre/authoring/IMovementBridge.h"
 #include "components/ogre/authoring/EntityMoverBase.h"
-#include <wfmath/point.h>
 
 namespace Ogre {
 class SceneNode;

@@ -29,9 +29,6 @@
 #include <OgreSceneNode.h>
 #include <SDL_keyboard.h>
 
-
-
-
 namespace Ember::OgreView::Authoring {
 
 PolygonPointMover::PolygonPointMover(Polygon& polygon, PolygonPoint& point, IMovementListener* listener) :

@@ -23,11 +23,6 @@
 #include "PolygonPointPickListener.h"
 #include "PolygonPointUserObject.h"
 #include "PolygonPoint.h"
-#include <OgreMovableObject.h>
-#include <OgreSceneQuery.h>
-
-
-
 
 namespace Ember::OgreView::Authoring {
 

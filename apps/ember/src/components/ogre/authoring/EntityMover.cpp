@@ -31,7 +31,6 @@
 #include "components/ogre/model/ModelRepresentation.h"
 
 #include "services/server/ServerService.h"
-#include <OgreSceneNode.h>
 #include <Eris/View.h>
 #include <Eris/Avatar.h>
 

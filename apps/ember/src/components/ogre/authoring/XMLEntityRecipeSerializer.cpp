@@ -23,6 +23,7 @@
 
 #include "XMLEntityRecipeSerializer.h"
 #include "EntityRecipeManager.h"
+#include "GUIAdapterBindings.h"
 #include "components/ogre/XMLHelper.h"
 
 namespace Ember::OgreView::Authoring {

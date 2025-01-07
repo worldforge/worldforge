@@ -21,7 +21,6 @@
 
 #include "domain/EmberEntityRef.h"
 #include "components/ogre/model/Model.h"
-#include <OgreVector.h>
 #include <memory>
 
 

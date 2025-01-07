@@ -34,9 +34,6 @@
 
 #include "services/config/ConfigService.h"
 
-#include <Mercator/Segment.h>
-#include <Mercator/Shader.h>
-
 
 namespace Ember::OgreView::Terrain {
 

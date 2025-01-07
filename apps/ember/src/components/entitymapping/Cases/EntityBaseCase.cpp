@@ -24,11 +24,6 @@
 #include <Eris/Entity.h>
 #include <Eris/TypeInfo.h>
 
-
-
-
-
-
 namespace Ember::EntityMapping::Cases {
 
 bool EntityBaseCase::testMatch(Eris::Entity* entity) {

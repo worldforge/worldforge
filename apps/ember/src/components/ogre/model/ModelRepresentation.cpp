@@ -18,10 +18,11 @@
 
 #include "ModelRepresentation.h"
 
+#include <Atlas/Objects/RootEntity.h>
+
 #include "Model.h"
 #include "SubModel.h"
 #include "ParticleSystemBinding.h"
-#include "ModelMount.h"
 #include "ModelPartReactivatorVisitor.h"
 
 #include "EmberEntityMappingManager.h"
@@ -33,12 +34,6 @@
 #include "components/ogre/EntityCollisionInfo.h"
 #include "services/sound/SoundService.h"
 
-#include <OgreSceneNode.h>
-#include <OgreSceneManager.h>
-#include <OgreParticleSystem.h>
-#include "domain/EntityTalk.h"
-
-#include <Eris/Task.h>
 #include "services/sound/SoundSample.h"
 #include "EmberOgre.h"
 

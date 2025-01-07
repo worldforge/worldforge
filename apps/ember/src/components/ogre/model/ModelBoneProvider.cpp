@@ -19,7 +19,6 @@
 #include "ModelBoneProvider.h"
 #include <OgreNode.h>
 #include <OgreTagPoint.h>
-#include <OgreSceneNode.h>
 
 #include <utility>
 

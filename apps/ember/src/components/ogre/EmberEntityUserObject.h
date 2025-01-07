@@ -23,8 +23,6 @@
 #ifndef EMBEROGREEMBERENTITYUSEROBJECT_H
 #define EMBEROGREEMBERENTITYUSEROBJECT_H
 
-#include "EmberOgrePrerequisites.h"
-#include <OgreVector.h>
 #include <memory>
 
 namespace Ogre {

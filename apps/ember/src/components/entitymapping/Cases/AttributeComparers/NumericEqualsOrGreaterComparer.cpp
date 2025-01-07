@@ -22,13 +22,6 @@
 //
 #include "NumericEqualsOrGreaterComparer.h"
 
-
-
-
-
-
-
-
 namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 NumericEqualsOrGreaterComparer::NumericEqualsOrGreaterComparer(double value) :

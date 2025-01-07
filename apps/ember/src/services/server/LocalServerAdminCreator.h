@@ -21,7 +21,6 @@
 
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <sigc++/trackable.h>
-#include <optional>
 #include <memory>
 
 namespace Eris {

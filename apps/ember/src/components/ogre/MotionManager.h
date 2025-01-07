@@ -23,7 +23,6 @@
 #include "framework/Singleton.h"
 
 #include <OgreFrameListener.h>
-#include <unordered_map>
 
 namespace Ember {
 class EmberEntity;

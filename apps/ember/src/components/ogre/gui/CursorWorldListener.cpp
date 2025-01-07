@@ -28,14 +28,9 @@
 #include "components/ogre/Avatar.h"
 #include "components/ogre/EntityWorldPickListener.h"
 #include "components/ogre/model/ModelRepresentation.h"
-#include "components/ogre/model/Model.h"
-#include "components/ogre/model/SubModel.h"
 #include "domain/EmberEntity.h"
 
 #include <CEGUI/Window.h>
-#include <CEGUI/WindowManager.h>
-
-#include <Ogre.h>
 
 
 namespace Ember::OgreView::Gui {

@@ -23,7 +23,6 @@
 #ifndef EMBEROGRECAELUMSUN_H
 #define EMBEROGRECAELUMSUN_H
 
-#include "components/ogre/EmberOgrePrerequisites.h"
 #include "CaelumEnvironment.h"
 #include "services/config/ConfigListenerContainer.h"
 

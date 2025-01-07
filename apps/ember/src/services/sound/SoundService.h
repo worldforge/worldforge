@@ -27,13 +27,8 @@
 
 
 #include <wfmath/vector.h>
-#include <wfmath/quaternion.h>
 #include <wfmath/point.h>
 
-#include <SDL_audio.h>
-
-#include <list>
-#include <unordered_map>
 #include <filesystem>
 #include <thread>
 #include <optional>

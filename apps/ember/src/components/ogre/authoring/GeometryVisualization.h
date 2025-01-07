@@ -22,7 +22,6 @@
 #include <sigc++/trackable.h>
 #include <sigc++/connection.h>
 #include <functional>
-#include <OgreAxisAlignedBox.h>
 #include "components/ogre/OgreIncludes.h"
 
 

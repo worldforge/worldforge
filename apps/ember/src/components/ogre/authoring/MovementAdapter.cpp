@@ -25,8 +25,6 @@
 #include "components/ogre/camera/MainCamera.h"
 #include "../AvatarTerrainCursor.h"
 #include "../Convert.h"
-#include <OgreRoot.h>
-
 #include <utility>
 
 #include <memory>

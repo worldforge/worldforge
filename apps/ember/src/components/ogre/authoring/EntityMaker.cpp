@@ -25,7 +25,6 @@
 #include <Eris/Connection.h>
 #include <Eris/TypeInfo.h>
 #include <Eris/Avatar.h>
-#include <Eris/View.h>
 #include <Eris/Entity.h>
 
 #include <Atlas/Objects/Operation.h>

@@ -29,7 +29,6 @@ struct CaseDefinition;
 
 
 #include "DefinitionBase.h"
-#include "CaseDefinition.h"
 #include <vector>
 
 

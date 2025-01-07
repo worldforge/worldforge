@@ -25,9 +25,6 @@
 
 #include "Definitions/CaseDefinition.h"
 
-
-
-
 namespace Ember::EntityMapping {
 
 namespace Cases {

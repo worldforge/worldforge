@@ -23,7 +23,6 @@
 #ifndef XMLLODDEFINITIONSERIALIZER_H
 #define XMLLODDEFINITIONSERIALIZER_H
 
-#include "OgreDataStream.h"
 #include "LodDefinition.h"
 
 #include <string>

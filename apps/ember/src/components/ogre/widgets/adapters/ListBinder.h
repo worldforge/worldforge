@@ -30,9 +30,6 @@
 #include <string>
 #include <sigc++/signal.h>
 
-#include <CEGUI/EventArgs.h>
-
-
 namespace Ember::OgreView::Gui::Adapters {
 
 /**

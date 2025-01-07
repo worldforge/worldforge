@@ -26,7 +26,6 @@
 #include "framework/Log.h"
 #include "services/config/ConfigService.h"
 #include "framework/FileSystemObserver.h"
-#include "framework/MainLoopController.h"
 
 #include <CEGUI/WindowManager.h>
 
@@ -49,7 +48,7 @@ WidgetDefinitions::WidgetDefinitions() = default;
 
 WidgetDefinitions::~WidgetDefinitions() {
 	auto pluginDirPath = ConfigService::getSingleton().getPluginDirectory();
-	Ember::FileSystemObserver::getSingleton().remove_directory(pluginDirPath);
+	FileSystemObserver::getSingleton().remove_directory(pluginDirPath);
 }
 
 

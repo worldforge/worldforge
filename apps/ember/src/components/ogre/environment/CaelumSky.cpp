@@ -25,8 +25,6 @@
 #include "framework/Tokeniser.h"
 
 
-
-
 namespace Ember::OgreView::Environment {
 
 CaelumSky::CaelumSky(CaelumEnvironment& environment) :

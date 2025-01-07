@@ -23,6 +23,7 @@
 #ifndef LODDEFINITION_H
 #define LODDEFINITION_H
 
+//Need to include this first because of issues with the OGRE headers.
 #include <OgreRenderOperation.h>
 #include <MeshLodGenerator/OgreLodConfig.h>
 #include <MeshLodGenerator/OgreMeshLodGenerator.h>

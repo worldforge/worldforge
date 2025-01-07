@@ -23,7 +23,6 @@
 #ifndef EMBEROGRE_MANIPULATIONPOLYGONRENDERER_H
 #define EMBEROGRE_MANIPULATIONPOLYGONRENDERER_H
 
-#include <wfmath/point.h>
 #include <list>
 
 namespace Ogre {
@@ -31,9 +30,6 @@ class ManualObject;
 
 class SceneNode;
 }
-
-
-
 
 namespace Ember::OgreView::Authoring {
 

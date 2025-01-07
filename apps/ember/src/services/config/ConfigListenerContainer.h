@@ -25,7 +25,6 @@
 #define CONFIGLISTENERCONTAINER_H_
 
 #include "ConfigListener.h"
-#include <sigc++/slot.h>
 #include <vector>
 #include <string>
 #include <memory>

@@ -24,8 +24,6 @@
 #ifndef EMBERSOUNDSOURCE_H
 #define EMBERSOUNDSOURCE_H
 
-#include <wfmath/vector.h>
-#include <wfmath/quaternion.h>
 #include <wfmath/point.h>
 
 #include "al.h"

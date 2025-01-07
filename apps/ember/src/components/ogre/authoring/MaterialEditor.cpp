@@ -25,6 +25,7 @@
 #include <OgreStringConverter.h>
 #include <OgreTechnique.h>
 #include <OgreMaterialManager.h>
+#include <framework/Log.h>
 
 namespace Ember::OgreView::Authoring {
 MaterialEditor::MaterialEditor() :

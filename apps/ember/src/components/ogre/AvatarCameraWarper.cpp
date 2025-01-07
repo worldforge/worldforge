@@ -24,7 +24,6 @@
 #include "framework/Tokeniser.h"
 
 #include <Eris/View.h>
-#include <OgreSceneNode.h>
 
 #include <sstream>
 

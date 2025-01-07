@@ -25,6 +25,7 @@
 #include <OgreHardwarePixelBuffer.h>
 #include <OgreTextureUnitState.h>
 #include <OgrePass.h>
+#include <framework/Log.h>
 
 namespace Ember::OgreView::Terrain::Techniques {
 

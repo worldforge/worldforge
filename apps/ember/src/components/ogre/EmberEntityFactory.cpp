@@ -18,14 +18,15 @@
 
 #include "EmberEntityFactory.h"
 
+#include <Atlas/Objects/RootEntity.h>
+
 #include "domain/EmberEntity.h"
 
-#include "services/EmberServices.h"
 #include "services/config/ConfigService.h"
 
 #include <Eris/View.h>
-#include <Eris/EventService.h>
 #include <Eris/TypeInfo.h>
+#include <framework/Log.h>
 
 namespace Ember::OgreView {
 

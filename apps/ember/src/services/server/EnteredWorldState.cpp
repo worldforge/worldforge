@@ -19,16 +19,10 @@
 #include "EnteredWorldState.h"
 #include "ServerServiceSignals.h"
 
-#include "framework/Tokeniser.h"
 #include "framework/ConsoleBackend.h"
-#include "framework/Log.h"
 
 #include <Eris/Entity.h>
 #include <Eris/Avatar.h>
-#include <Eris/Account.h>
-#include <Eris/Connection.h>
-#include <Eris/View.h>
-#include <Eris/TypeInfo.h>
 
 namespace Ember {
 

@@ -28,6 +28,19 @@
 #include <OgrePrerequisites.h>
 
 namespace Ogre {
+
+#if OGRE_DOUBLE_PRECISION == 1
+/** Software floating point type.
+@note Not valid as a pointer to GPU buffers / parameters
+*/
+typedef double Real;
+#else
+/** Software floating point type.
+@note Not valid as a pointer to GPU buffers / parameters
+*/
+typedef float Real;
+#endif
+
 // Overlay system typedefs
 class Overlay;
 

@@ -20,12 +20,8 @@
 #define ENTEREDWORLDSTATE_H_
 
 #include "StateBase.h"
-#include "framework/ConsoleCommandWrapper.h"
 #include "framework/ConsoleObject.h"
-#include <Atlas/Objects/ObjectsFwd.h>
-#include <Atlas/Message/Element.h>
 #include <wfmath/vector.h>
-#include <wfmath/point.h>
 
 namespace WFMath {
 class Quaternion;

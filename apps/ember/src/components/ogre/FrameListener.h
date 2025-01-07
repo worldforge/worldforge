@@ -23,7 +23,7 @@
 
 
 namespace Ember::OgreView {
-struct FrameListener : public Ogre::FrameListener {
+struct FrameListener : Ogre::FrameListener {
 	FrameListener();
 
 	~FrameListener() override;

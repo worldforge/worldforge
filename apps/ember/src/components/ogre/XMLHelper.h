@@ -23,7 +23,6 @@
 #ifndef EMBEROGREXMLHELPER_H
 #define EMBEROGREXMLHELPER_H
 
-#include "EmberOgrePrerequisites.h"
 #include "tinyxml/tinyxml.h"
 #include <OgreDataStream.h>
 #include <filesystem>

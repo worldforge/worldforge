@@ -32,11 +32,6 @@ namespace Eris {
 class Entity;
 }
 
-
-
-
-
-
 namespace Ember::EntityMapping::Matches {
 
 

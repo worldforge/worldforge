@@ -27,13 +27,6 @@
 #include "../AttributeDependentMatch.h"
 #include "../AttributeMatch.h"
 
-
-
-
-
-
-
-
 namespace Ember::EntityMapping::Matches::Observers {
 
 MatchAttributeObserver::MatchAttributeObserver(Matches::AttributeDependentMatch& match, std::string attributeName)

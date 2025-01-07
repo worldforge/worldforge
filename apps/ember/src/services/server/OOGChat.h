@@ -19,16 +19,13 @@
 #ifndef OOGCHAT_H
 #define OOGCHAT_H
 
-// Included headers from the current project
 #include "framework/ConsoleObject.h"
 
-// Included custom library headers
 #include <Eris/Lobby.h>
 #include <Eris/Room.h>
 #include <Eris/Account.h>
 #include <sigc++/bind.h>
 
-// Included system headers
 
 namespace Ember {
 

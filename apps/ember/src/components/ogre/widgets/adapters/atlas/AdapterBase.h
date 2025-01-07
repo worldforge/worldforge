@@ -24,15 +24,13 @@
 #define EMBEROGRE_GUI_ADAPTERS_ATLASADAPTERBASE_H
 
 #include "../AdapterBase.h"
-#include <CEGUI/CEGUI.h>
 #include <Atlas/Message/Element.h>
-#include <sigc++/signal.h>
 
 
 namespace Ember::OgreView::Gui::Adapters::Atlas {
 
-typedef ::Ember::OgreView::Gui::Adapters::AdapterBase<::Atlas::Message::Element> AdapterBase;
-typedef ::Ember::OgreView::Gui::Adapters::AdapterWrapper<AdapterBase> AdapterWrapper;
+typedef AdapterBase<::Atlas::Message::Element> AdapterBase;
+typedef AdapterWrapper<AdapterBase> AdapterWrapper;
 
 }
 

@@ -21,7 +21,6 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "EmberEntityHideModelAction.h"
-#include "domain/IGraphicalRepresentation.h"
 #include "domain/IEntityAttachment.h"
 
 

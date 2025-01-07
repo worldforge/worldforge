@@ -24,7 +24,6 @@
 #include "components/ogre/Scene.h"
 #include "domain/EmberEntity.h"
 #include "components/ogre/Avatar.h"
-#include "services/config/ConfigService.h"
 #include "services/server/ServerService.h"
 #include "GeometryVisualization.h"
 #include <OgreSceneManager.h>

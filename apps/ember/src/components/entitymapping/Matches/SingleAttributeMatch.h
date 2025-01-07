@@ -21,22 +21,11 @@
 
 #include "AttributeMatch.h"
 
-
-
-
-
 namespace Ember::EntityMapping::Cases {
 class AttributeCase;
 }
 
-
-
 #include "../Cases/AttributeCase.h"
-
-
-
-
-
 
 namespace Ember::EntityMapping::Matches {
 

@@ -28,10 +28,6 @@
 
 #include <Eris/ActiveMarker.h>
 
-#include <OgreResourceBackgroundQueue.h>
-
-#include <memory>
-
 namespace Eris {
 class EventService;
 }
