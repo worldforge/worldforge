@@ -27,13 +27,14 @@
 
 #include "server/EntityFactory_impl.h"
 
-#include "rules/simulation/World.h"
 
 #include "common/ScriptKit.h"
 #include "common/TypeNode_impl.h"
 
 #include <Atlas/Objects/Entity.h>
 #include <cassert>
+#include <rules/simulation/Thing.h>
+
 #include "common/debug.h"
 #include "../TestPropertyManager.h"
 #include "rules/Script_impl.h"

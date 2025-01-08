@@ -78,8 +78,8 @@ void Inheritance::flush() {
 	atlasObjects.clear();
 }
 
-const Root& Inheritance::getClass(const std::string& parent, Visibility visibility) const {
-	auto I = atlasObjects.find(parent);
+const Root& Inheritance::getClass(const std::string& typeName, Visibility visibility) const {
+	auto I = atlasObjects.find(typeName);
 	if (I == atlasObjects.end()) {
 		return noClass;
 	}
@@ -100,8 +100,8 @@ int Inheritance::updateClass(const std::string& parent,
 	return 0;
 }
 
-const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
-	auto I = atlasObjects.find(parent);
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& typeName) const {
+	auto I = atlasObjects.find(typeName);
 	if (I == atlasObjects.end()) {
 		return nullptr;
 	}

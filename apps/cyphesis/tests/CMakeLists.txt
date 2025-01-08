@@ -191,7 +191,7 @@ wf_add_test(rules/ModifierTest.cpp ../src/rules/Modifier.cpp)
 wf_add_test(rules/LocatedEntityTest.cpp common/EntityExerciser.cpp ../src/rules/simulation/LocatedEntity.cpp ../src/rules/simulation/AtlasProperties TestPropertyManager.cpp)
 wf_add_test(rules/EntityTest.cpp ${ENTITYEXERCISE} ../src/rules/simulation/Entity.cpp ../src/rules/simulation/LocatedEntity.cpp)
 wf_add_test(rules/ThingTest.cpp ${ENTITYEXERCISE} ../src/rules/simulation/Thing.cpp)
-wf_add_test(rules/WorldTest.cpp ${ENTITYEXERCISE} ../src/rules/simulation/World.cpp)
+wf_add_test(rules/WorldTest.cpp ${ENTITYEXERCISE})
 wf_add_test(rules/ThingupdatePropertiesTest.cpp ../src/rules/simulation/Thing.cpp ../src/common/Property.cpp ../src/common/PropertyUtil.cpp)
 wf_add_test(rules/TaskTest.cpp ../src/rules/simulation/Task.cpp)
 wf_add_test(rules/simulation/EntityPropertyTest.cpp ../src/rules/simulation/EntityProperty.cpp ../src/common/Property.cpp ../src/common/PropertyUtil.cpp)
@@ -502,7 +502,6 @@ wf_add_test(server/WorldRouterIntegration.cpp ../src/rules/simulation/WorldRoute
         ../src/rules/simulation/LocatedEntity.cpp
         ../src/rules/simulation/Entity.cpp
         ../src/rules/simulation/Thing.cpp
-        ../src/rules/simulation/World.cpp
         ../src/rules/simulation/BaseWorld.cpp
         ../src/rules/Modifier.cpp
 )

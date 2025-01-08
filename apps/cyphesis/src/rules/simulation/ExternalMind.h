@@ -86,9 +86,9 @@ public:
 
 	void operation(const Operation&, OpVector&) override;
 
-	bool isLinked() { return m_link != nullptr; }
+	bool isLinked() const { return m_link != nullptr; }
 
-	bool isLinkedTo(Link* c) { return m_link == c; }
+	bool isLinkedTo(const Link* c) const { return m_link == c; }
 
 	const Ref<LocatedEntity>& getEntity() const;
 

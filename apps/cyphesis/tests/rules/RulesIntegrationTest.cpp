@@ -22,7 +22,7 @@
 #include "common/Monitors.h"
 #include "rules/simulation/Inheritance.h"
 #include "common/operations/Thought.h"
-#include "rules/simulation/World.h"
+#include "rules/simulation/Thing.h"
 #include "../NullEntityCreator.h"
 
 #include <Atlas/Objects/Operation.h>
@@ -70,7 +70,7 @@ struct TestContext
 {
     Atlas::Objects::Factories factories;
     DatabaseNull database;
-    Ref<World> world;
+    Ref<Thing> world;
     Inheritance inheritance;
     WorldRouter testWorld;
     NullEntityCreator entityCreator;
@@ -78,7 +78,7 @@ struct TestContext
     long entityId;
 
     TestContext() :
-            world(new World()),
+            world(new Thing(0)),
             inheritance(),
             testWorld(world, entityCreator, [] { return std::chrono::steady_clock::now().time_since_epoch(); }),
             propertyManager(inheritance),

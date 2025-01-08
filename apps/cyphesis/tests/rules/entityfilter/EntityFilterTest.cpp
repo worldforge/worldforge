@@ -814,8 +814,8 @@ int main() {
 
 }
 
-const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
-	auto I = s_types->find(parent);
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& typeName) const {
+	auto I = s_types->find(typeName);
 	if (I == s_types->end()) {
 		return nullptr;
 	}

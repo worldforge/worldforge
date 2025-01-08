@@ -36,7 +36,7 @@
 #include <cstdlib>
 
 #include <cassert>
-#include <rules/simulation/World.h>
+#include <rules/simulation/Thing.h>
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;

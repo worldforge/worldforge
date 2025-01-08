@@ -18,7 +18,7 @@
 
 #include "EntityFactory_impl.h"
 
-#include "rules/simulation/World.h"
+#include "rules/simulation/Thing.h"
 
 #include "common/TypeNode_impl.h"
 
@@ -39,12 +39,6 @@ EntityFactoryBase::EntityFactoryBase()
 
 EntityFactoryBase::~EntityFactoryBase() = default;
 
-
-template<>
-Ref<Entity> EntityFactory<World>::newEntity(RouterId id,
-											const Atlas::Objects::Entity::RootEntity& attributes) {
-	return nullptr;
-}
 
 void EntityFactoryBase::initializeEntity(Entity& thing,
 										 const Atlas::Objects::Entity::RootEntity& attributes) {
@@ -105,9 +99,6 @@ void EntityFactoryBase::updateProperties(std::map<const TypeNode<LocatedEntity>*
 
 template
 class EntityFactory<Thing>;
-
-template
-class EntityFactory<World>;
 
 void ClassAttribute::combine(Atlas::Message::Element& existing) const {
 	if (!defaultValue.isNone()) {

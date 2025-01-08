@@ -63,13 +63,13 @@ public:
 
 	void UpdateOperation(const Operation& op, OpVector&) override;
 
-	void LookOperation(const Operation& op, OpVector&) override;
+	void LookOperation(const Operation& op, OpVector&) const override;
 
-	void ImaginaryOperation(const Operation& op, OpVector&) override;
+	void ImaginaryOperation(const Operation& op, OpVector&) const override;
 
-	void TalkOperation(const Operation& op, OpVector&) override;
+	void TalkOperation(const Operation& op, OpVector&) const override;
 
-	void CreateOperation(const Operation& op, OpVector& res) override;
+	void CreateOperation(const Operation& op, OpVector& res) const override;
 };
 
 #endif // RULESETS_THING_H

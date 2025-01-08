@@ -19,7 +19,6 @@
 #include "ActionsProperty.h"
 #include "rules/simulation/LocatedEntity.h"
 #include "common/operations/Tick.h"
-#include "common/operations/Update.h"
 
 #include <Atlas/Objects/Entity.h>
 

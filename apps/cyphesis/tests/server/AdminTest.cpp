@@ -1317,16 +1317,16 @@ Inheritance::Inheritance(Atlas::Objects::Factories& factories)
 	atlasObjects["root"].reset(root);
 }
 
-const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
-	auto I = atlasObjects.find(parent);
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& typeName) const {
+	auto I = atlasObjects.find(typeName);
 	if (I == atlasObjects.end()) {
 		return 0;
 	}
 	return I->second.get();
 }
 
-const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Visibility v) const {
-	auto I = atlasObjects.find(parent);
+const Atlas::Objects::Root& Inheritance::getClass(const std::string& typeName, Visibility v) const {
+	auto I = atlasObjects.find(typeName);
 	if (I == atlasObjects.end()) {
 		return noClass;
 	}

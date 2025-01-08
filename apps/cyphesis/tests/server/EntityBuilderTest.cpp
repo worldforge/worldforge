@@ -387,8 +387,8 @@ Inheritance::Inheritance(Atlas::Objects::Factories& factories) : noClass(0), m_f
 }
 
 
-const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
-	auto I = atlasObjects.find(parent);
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& typeName) const {
+	auto I = atlasObjects.find(typeName);
 	if (I == atlasObjects.end()) {
 		return 0;
 	}

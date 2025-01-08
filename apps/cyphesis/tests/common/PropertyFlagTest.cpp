@@ -23,12 +23,13 @@
 #define DEBUG
 #endif
 
+#include <rules/simulation/Thing.h>
+
 #include "../TestWorld.h"
 #include "../TestPropertyManager.h"
 
 #include "common/Property_impl.h"
 
-#include "rules/simulation/World.h"
 
 
 int main(int argc, char** argv) {

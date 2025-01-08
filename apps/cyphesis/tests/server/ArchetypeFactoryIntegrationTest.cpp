@@ -38,13 +38,14 @@
 #include <server/EntityBuilder.h>
 #include <server/ArchetypeFactory.h>
 #include <server/EntityFactory_impl.h>
-#include <rules/simulation/World.h>
 #include <rules/simulation/Inheritance.h>
 
 
 #include <Atlas/Objects/Decoder.h>
 #include <Atlas/Codecs/XML.h>
 #include <common/Monitors.h>
+#include <rules/simulation/Thing.h>
+
 #include "rules/simulation/AtlasProperties.h"
 #include <server/ArchetypeRuleHandler.h>
 #include <server/EntityRuleHandler.h>
@@ -105,7 +106,7 @@ struct Tested : public Cyphesis::TestBase {
 
 	struct TestContext {
 		DatabaseNull database;
-		Ref<World> world;
+		Ref<Thing> world;
 		Inheritance inheritance;
 		TestWorld testWorld;
 
@@ -116,7 +117,7 @@ struct Tested : public Cyphesis::TestBase {
 
 
 		TestContext() :
-				world(new World()),
+				world(new Thing(0)),
 				inheritance(),
 				testWorld(world),
 				eb(),

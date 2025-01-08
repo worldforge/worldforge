@@ -21,7 +21,6 @@
 #include "../TestWorld.h"
 #include "common/Monitors.h"
 #include "rules/simulation/Inheritance.h"
-#include "rules/simulation/World.h"
 #include "rules/EntityLocation_impl.h"
 #include "../NullEntityCreator.h"
 #include "../TestWorldRouter.h"
@@ -41,6 +40,7 @@
 #include <rules/simulation/ContainerAccessProperty.h>
 #include <rules/simulation/ContainersActiveProperty.h>
 #include <rules/BBoxProperty_impl.h>
+#include <rules/simulation/Thing.h>
 
 using Atlas::Objects::Operation::Set;
 using Atlas::Objects::Operation::Wield;
@@ -53,13 +53,13 @@ struct TestContext
     Atlas::Objects::Factories factories;
     DatabaseNull database;
     NullEntityCreator entityCreator;
-    Ref<World> world;
+    Ref<Thing> world;
     Inheritance inheritance;
     TestWorldRouter testWorld;
     CorePropertyManager propertyManager;
 
     TestContext()
-            : world(new World()), inheritance(), testWorld(world, entityCreator), propertyManager(inheritance)
+            : world(new Thing(0)), inheritance(), testWorld(world, entityCreator), propertyManager(inheritance)
     {
     }
 

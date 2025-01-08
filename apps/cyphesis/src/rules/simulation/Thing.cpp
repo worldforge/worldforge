@@ -504,16 +504,14 @@ void Thing::generateSightOp(const LocatedEntity& observingEntity, const Operatio
 
 }
 
-void Thing::LookOperation(const Operation& op, OpVector& res) {
+void Thing::LookOperation(const Operation& op, OpVector& res) const {
 	auto from = BaseWorld::instance().getEntity(op->getFrom());
 	if (!from) {
 		//The entity which sent the look can have disappeared; that's completely normal.
 		return;
 	}
 
-	bool result = lookAtEntity(op, res, *from);
-
-	if (!result) {
+	if (bool result = lookAtEntity(op, res, *from); !result) {
 		Unseen u;
 		u->setTo(op->getFrom());
 		u->setArgs(op->getArgs());
@@ -524,7 +522,7 @@ void Thing::LookOperation(const Operation& op, OpVector& res) {
 	}
 }
 
-void Thing::ImaginaryOperation(const Operation& op, OpVector& res) {
+void Thing::ImaginaryOperation(const Operation& op, OpVector& res) const {
 	Sight s{};
 	if (!op->isDefaultTo()) {
 		s->setTo(op->getTo());
@@ -533,13 +531,13 @@ void Thing::ImaginaryOperation(const Operation& op, OpVector& res) {
 	res.push_back(s);
 }
 
-void Thing::TalkOperation(const Operation& op, OpVector& res) {
+void Thing::TalkOperation(const Operation& op, OpVector& res) const {
 	Sound s{};
 	s->setArgs1(op);
 	res.push_back(s);
 }
 
-void Thing::CreateOperation(const Operation& op, OpVector& res) {
+void Thing::CreateOperation(const Operation& op, OpVector& res) const {
 	createNewEntity(op, res);
 }
 

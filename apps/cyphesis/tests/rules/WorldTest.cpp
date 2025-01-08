@@ -27,7 +27,6 @@
 #include "../allOperations.h"
 #include "../TestWorld.h"
 
-#include "rules/simulation/World.h"
 
 #include "rules/simulation/AtlasProperties.h"
 #include "rules/BBoxProperty_impl.h"
@@ -53,6 +52,8 @@
 #include <cstdlib>
 
 #include <cassert>
+#include <rules/simulation/Thing.h>
+#include <rules/simulation/WorldProperty.h>
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -76,9 +77,10 @@ class PositionProperty<LocatedEntity>;
 
 int main() {
 	Monitors m;
-	Ref<World> e(new World());
+	Ref<Thing> e(new Thing(0));
 	TypeNode<LocatedEntity> type("world");
 	e->setType(&type);
+	e->requirePropertyClassFixed<WorldProperty>();
 
 	IGEntityExerciser ee(e);
 

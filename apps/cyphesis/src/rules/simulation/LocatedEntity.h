@@ -274,7 +274,8 @@ public:
 	const TypeNode<LocatedEntity>* getType() const { return m_type; }
 
 	/// \brief Accessor for properties
-	const std::map<std::string, ModifiableProperty>& getProperties() const { return m_properties; }
+    const std::map<std::string, ModifiableProperty>& getProperties() const { return m_properties; }
+    std::map<std::string, ModifiableProperty>& getProperties() { return m_properties; }
 
 	const std::map<RouterId, std::set<std::pair<std::string, Modifier*>>>& getActiveModifiers() const {
 		return m_activeModifiers;

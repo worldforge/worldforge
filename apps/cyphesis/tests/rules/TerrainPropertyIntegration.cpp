@@ -30,7 +30,6 @@
 #include "common/Monitors.h"
 #include "rules/simulation/Inheritance.h"
 #include "common/operations/Thought.h"
-#include "rules/simulation/World.h"
 #include "../NullEntityCreator.h"
 
 #include <Atlas/Objects/Operation.h>
@@ -45,6 +44,8 @@
 #include <rules/simulation/TerrainProperty.h>
 #include <rules/simulation/TerrainPointsProperty.h>
 #include <rules/simulation/PhysicalDomain.h>
+#include <rules/simulation/Thing.h>
+
 #include "rules/BBoxProperty_impl.h"
 
 using Atlas::Objects::Operation::Set;
@@ -58,14 +59,14 @@ struct TestContext {
 
 	Atlas::Objects::Factories factories;
 	DatabaseNull database;
-	Ref<World> world;
+	Ref<Thing> world;
 	Inheritance inheritance;
 	WorldRouter testWorld;
 	NullEntityCreator entityCreator;
 	CorePropertyManager propertyManager;
 
 	TestContext() :
-			world(new World()),
+			world(new Thing(0)),
 			inheritance(),
 			testWorld(world, entityCreator, [] { return std::chrono::steady_clock::now().time_since_epoch(); }),
 			propertyManager(inheritance) {

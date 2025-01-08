@@ -68,7 +68,8 @@ SynchedState<std::unordered_map<const TypeNode<LocatedEntity>*, int>> Entity::s_
 /// These classes are used to model all in world entities or objects.
 /// \defgroup EntityClasses In World Entity Classes
 
-Entity::Entity(RouterId id) : LocatedEntity(id) {
+Entity::Entity(RouterId id) :
+	LocatedEntity(id) {
 
 }
 
@@ -165,8 +166,7 @@ void Entity::destroy() {
 		//Move all contained entities to the same location as this entity.
 		//TODO: allow this behaviour to be changed for different scenarios.
 		for (auto& child: containsCopy) {
-			auto entity = dynamic_cast<Entity*>(child.get());
-			if (entity) {
+			if (auto entity = dynamic_cast<Entity*>(child.get())) {
 				Atlas::Objects::Operation::Move moveOp;
 				RootEntity ent;
 				ent->setId(entity->getIdAsString());
@@ -233,12 +233,12 @@ void Entity::DeleteOperation(const Operation&, OpVector&) {
 	BaseWorld::instance().delEntity(this);
 }
 
-/// \brief Handle a imaginary operation
-void Entity::ImaginaryOperation(const Operation&, OpVector&) {
+/// \brief Handle an imaginary operation
+void Entity::ImaginaryOperation(const Operation&, OpVector&) const {
 }
 
 /// \brief Handle a look operation
-void Entity::LookOperation(const Operation&, OpVector&) {
+void Entity::LookOperation(const Operation&, OpVector&) const {
 }
 
 /// \brief Handle a move operation
@@ -250,18 +250,14 @@ void Entity::SetOperation(const Operation&, OpVector&) {
 }
 
 /// \brief Handle a talk operation
-void Entity::TalkOperation(const Operation&, OpVector&) {
+void Entity::TalkOperation(const Operation&, OpVector&) const {
 }
 
 /// \brief Handle a update operation
 void Entity::UpdateOperation(const Operation&, OpVector&) {
 }
 
-/// \brief Handle a relay operation
-void Entity::RelayOperation(const Operation& op, OpVector& res) {
-}
-
-void Entity::CreateOperation(const Operation& op, OpVector& res) {
+void Entity::CreateOperation(const Operation& op, OpVector& res) const {
 }
 
 void Entity::addListener(OperationsListener<LocatedEntity>* listener) {
@@ -347,8 +343,8 @@ void Entity::operation(const Operation& op, OpVector& res) {
 }
 
 HandlerResult Entity::callDelegate(const std::string& name,
-								   const Operation& op,
-								   OpVector& res) {
+                                   const Operation& op,
+                                   OpVector& res) {
 	PropertyBase* p = nullptr;
 	auto I = m_properties.find(name);
 	if (I != m_properties.end()) {
@@ -366,8 +362,7 @@ HandlerResult Entity::callDelegate(const std::string& name,
 }
 
 void Entity::callOperation(const Operation& op, OpVector& res) {
-	auto op_no = op->getClassNo();
-	switch (op_no) {
+	switch (auto op_no = op->getClassNo()) {
 		case Atlas::Objects::Operation::DELETE_NO:
 			DeleteOperation(op, res);
 			break;
@@ -392,8 +387,6 @@ void Entity::callOperation(const Operation& op, OpVector& res) {
 		default:
 			if ((op_no) == Atlas::Objects::Operation::UPDATE_NO) {
 				UpdateOperation(op, res);
-			} else if ((op_no) == Atlas::Objects::Operation::RELAY_NO) {
-				RelayOperation(op, res);
 			} else {
 				/* ERROR */
 			}
@@ -409,7 +402,7 @@ void Entity::onUpdated() {
 	updated.emit();
 }
 
-Ref<LocatedEntity> Entity::createNewEntity(const Operation& op, OpVector& res) {
+Ref<LocatedEntity> Entity::createNewEntity(const Operation& op, OpVector& res) const {
 	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
 		return {};
@@ -446,15 +439,14 @@ Ref<LocatedEntity> Entity::createNewEntity(const Operation& op, OpVector& res) {
 		//TODO: perhaps check that we don't send private and protected properties?
 		broadcast(s, res, Visibility::PUBLIC);
 		return obj;
-	}
-	catch (const std::runtime_error& e) {
+	} catch (const std::runtime_error& e) {
 		spdlog::error("Error when trying to create entity: {}", e.what());
 		error(op, fmt::format("Error when trying to create entity: {}", e.what()), res, getIdAsString());
 		return {};
 	}
 }
 
-Ref<LocatedEntity> Entity::createNewEntity(const RootEntity& ent) {
+Ref<LocatedEntity> Entity::createNewEntity(const RootEntity& ent) const {
 	const std::string& type = ent->getParent();
 	if (type.empty()) {
 		throw std::runtime_error("Entity to be created has empty parent.");

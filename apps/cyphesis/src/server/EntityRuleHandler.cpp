@@ -25,7 +25,6 @@
 #include "common/log.h"
 #include "common/debug.h"
 #include "rules/simulation/Thing.h"
-#include "rules/simulation/World.h"
 
 #include <iostream>
 
@@ -43,11 +42,6 @@ static const bool debug_flag = false;
 EntityRuleHandler::EntityRuleHandler(EntityBuilder& eb, const PropertyManager<LocatedEntity>& propertyManager)
 		: m_builder(eb), m_propertyManager(propertyManager) {
 
-	mFactories["world"] = [](EntityFactoryBase* parent) -> std::unique_ptr<EntityFactoryBase> {
-		auto factory = std::make_unique<EntityFactory<World>>();
-		factory->m_parent = parent;
-		return factory;
-	};
 	mFactories["thing"] = [](EntityFactoryBase* parent) -> std::unique_ptr<EntityFactoryBase> {
 		auto factory = std::make_unique<EntityFactory<Thing>>();
 		factory->m_parent = parent;
@@ -67,18 +61,8 @@ int EntityRuleHandler::installEntityClass(const std::string& class_name,
 
 	std::unique_ptr<EntityFactoryBase> factory;
 	if (parent == "game_entity") {
-		auto I = mFactories.find(class_name);
-		if (I != mFactories.end()) {
-			factory = I->second(nullptr);
-		} else {
-			cy_debug_print("class \"" << class_name
-									  << "\" has non existent parent \"" << parent
-									  << "\". Waiting.")
-			dependent = parent;
-			reason = fmt::format("Entity rule \"{}\" has parent 'game_entity' and requires a "
-								 "pre-defined entity factory, which could not be found.", class_name);
-			return 1;
-		}
+		//TODO: remove the "factory" concept altogether along with "Thing" and "Entity".
+		factory = mFactories.begin()->second(nullptr);
 	} else {
 		auto parent_factory = dynamic_cast<EntityFactoryBase*>(m_builder.getClassFactory(parent));
 		// Get the new factory for this rule

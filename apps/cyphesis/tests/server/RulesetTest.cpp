@@ -415,8 +415,8 @@ void AtlasFileLoader::read() {
 }
 
 
-const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Visibility visibility) const {
-	auto I = atlasObjects.find(parent);
+const Atlas::Objects::Root& Inheritance::getClass(const std::string& typeName, Visibility visibility) const {
+	auto I = atlasObjects.find(typeName);
 	if (I == atlasObjects.end()) {
 		return noClass;
 	}

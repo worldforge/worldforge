@@ -30,7 +30,7 @@
 #include "server/EntityBuilder.h"
 
 #include "rules/simulation/Domain.h"
-#include "rules/simulation/World.h"
+#include "rules/simulation/Thing.h"
 
 #include "common/const.h"
 #include "common/globals.h"
@@ -279,8 +279,8 @@ Ref<LocatedEntity> BaseWorld::getEntity(long id) const {
 }
 
 
-const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
-	auto I = atlasObjects.find(parent);
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& typeName) const {
+	auto I = atlasObjects.find(typeName);
 	if (I == atlasObjects.end()) {
 		return 0;
 	}

@@ -36,14 +36,14 @@
 #include <cassert>
 #include <rules/simulation/python/CyPy_Server.h>
 #include "pythonbase/PythonMalloc.h"
-#include "rules/simulation/World.h"
+#include "rules/simulation/Thing.h"
 #include "rules/simulation/python/CyPy_World.h"
 
 int main() {
 	setupPythonMalloc();
 	init_python_api({&CyPy_Server::init});
 	{
-		Ref<World> wrld(new World());
+		Ref<Thing> wrld(new Thing(0));
 		TestWorld tw(wrld);
 
 		Py::Module server("server");

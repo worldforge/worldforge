@@ -127,9 +127,8 @@ void IGEntityExerciser::runOperations() {
 	}
 	{
 		Atlas::Objects::Operation::Delete op;
-		this->dispatchOp(op);
 		OpVector ov;
-		this->m_ent->DeleteOperation(op, ov);
+		m_ent->operation(op, ov);
 		if (!ov.empty()) {
 			assert(ov.front()->getClassNo() == Atlas::Objects::Operation::SIGHT_NO);
 		}

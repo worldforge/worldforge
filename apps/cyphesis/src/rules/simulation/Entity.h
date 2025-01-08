@@ -61,21 +61,19 @@ public:
 
 	virtual void DeleteOperation(const Operation&, OpVector&);
 
-	virtual void ImaginaryOperation(const Operation&, OpVector&);
+	virtual void ImaginaryOperation(const Operation&, OpVector&) const;
 
-	virtual void LookOperation(const Operation&, OpVector&);
+	virtual void LookOperation(const Operation&, OpVector&) const;
 
 	virtual void MoveOperation(const Operation&, OpVector&);
 
 	virtual void SetOperation(const Operation&, OpVector&);
 
-	virtual void TalkOperation(const Operation&, OpVector&);
+	virtual void TalkOperation(const Operation&, OpVector&) const;
 
 	virtual void UpdateOperation(const Operation&, OpVector&);
 
-	virtual void RelayOperation(const Operation&, OpVector&);
-
-	virtual void CreateOperation(const Operation& op, OpVector& res);
+	virtual void CreateOperation(const Operation& op, OpVector& res) const;
 
 	void externalOperation(const Operation& op, Link&) override;
 
@@ -117,9 +115,9 @@ public:
 
 	void removeListener(OperationsListener<LocatedEntity>* listener) override;
 
-	Ref<LocatedEntity> createNewEntity(const Atlas::Objects::Entity::RootEntity& entity);
+	Ref<LocatedEntity> createNewEntity(const Atlas::Objects::Entity::RootEntity& entity) const;
 
-	Ref<LocatedEntity> createNewEntity(const Operation& op, OpVector& res);
+	Ref<LocatedEntity> createNewEntity(const Operation& op, OpVector& res) const;
 };
 
 #endif // RULESETS_ENTITY_H

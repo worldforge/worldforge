@@ -33,7 +33,7 @@
 
 #include "rules/simulation/AtlasProperties.h"
 #include "rules/simulation/Domain.h"
-#include "rules/simulation/World.h"
+#include "rules/simulation/Thing.h"
 
 #include "common/globals.h"
 #include "common/id.h"

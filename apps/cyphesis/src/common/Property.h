@@ -21,7 +21,6 @@
 
 #include "modules/Flags.h"
 #include "OperationRouter.h"
-#include "common/ModifierType.h"
 
 #include <Atlas/Message/Element.h>
 
@@ -141,52 +140,52 @@ public:
 
 /// \brief Flag indicating data has been written to permanent store
 /// \ingroup PropertyFlags
-static const std::uint32_t prop_flag_persistence_clean = 1u << 0u;
+static constexpr std::uint32_t prop_flag_persistence_clean = 1u << 0u;
 /// \brief Flag indicating data should never be persisted
 /// \ingroup PropertyFlags
-static const std::uint32_t prop_flag_persistence_ephem = 1u << 1u;
+static constexpr std::uint32_t prop_flag_persistence_ephem = 1u << 1u;
 /// \brief Flag indicating data has been stored initially
 /// \ingroup PropertyFlags
-static const std::uint32_t prop_flag_persistence_seen = 1u << 2u;
+static constexpr std::uint32_t prop_flag_persistence_seen = 1u << 2u;
 
 /// \brief Flag mask indicating data should not be written to store
 /// \ingroup PropertyFlags
-static const std::uint32_t prop_flag_persistence_mask = prop_flag_persistence_clean | prop_flag_persistence_ephem;
+static constexpr std::uint32_t prop_flag_persistence_mask = prop_flag_persistence_clean | prop_flag_persistence_ephem;
 
 /// \brief Flag indicating property is "private", i.e. only available to the simulation.
 /// \ingroup PropertyFlags
-static const std::uint32_t prop_flag_visibility_private = 1u << 3u;
+static constexpr std::uint32_t prop_flag_visibility_private = 1u << 3u;
 /// \brief Flag indicating property is "protected", i.e. only available to the entity itself.
 /// \ingroup PropertyFlags
-static const std::uint32_t prop_flag_visibility_protected = 1u << 4u;
+static constexpr std::uint32_t prop_flag_visibility_protected = 1u << 4u;
 
 /// \brief Flag mask indicating property is private or protected.
 /// \ingroup PropertyFlags
-static const std::uint32_t prop_flag_visibility_non_public = prop_flag_visibility_private | prop_flag_visibility_protected;
+static constexpr std::uint32_t prop_flag_visibility_non_public = prop_flag_visibility_private | prop_flag_visibility_protected;
 
 /// \brief Flag set to indicate this is a class property, and has no instance
 /// \ingroup PropertyFlags
-static const std::uint32_t prop_flag_class = 1u << 5u;
+static constexpr std::uint32_t prop_flag_class = 1u << 5u;
 
 /// \brief Flag used for boolean properties
 /// \ingroup PropertyFlags
-static const std::uint32_t prop_flag_bool = 1u << 6u;
+static constexpr std::uint32_t prop_flag_bool = 1u << 6u;
 
 /// \brief Flag used to mark properties whose state has not been broadcast
 /// \ingroup PropertyFlags
-static const std::uint32_t prop_flag_unsent = 1u << 7u;
+static constexpr std::uint32_t prop_flag_unsent = 1u << 7u;
 
 /// \brief Flag used to mark properties which must be instance properties
 /// \ingroup PropertyFlags
 /// Typically this will be because they have per-entity state which cannot
 /// be handled on a class property.
-static const std::uint32_t prop_flag_instance = 1u << 8u;
+static constexpr std::uint32_t prop_flag_instance = 1u << 8u;
 
 /**
  * \brief The property won't allow any kind of modifiers to affect it.
  * \ingroup PropertyFlags
  */
-static const std::uint32_t prop_flag_modifiers_not_allowed = 1u << 9u;
+static constexpr std::uint32_t prop_flag_modifiers_not_allowed = 1u << 9u;
 
 
 template <typename T>
@@ -202,7 +201,7 @@ protected:
 	/// \brief Reference to variable holding the value of this Property
 	T m_data;
 
-	Property(const Property<T, EntityT>&) = default;
+	Property(const Property&) = default;
 
 public:
 
@@ -220,7 +219,7 @@ public:
 
 	void add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const override;
 
-	Property<T, EntityT>* copy() const override;
+	Property* copy() const override;
 };
 
 /// \brief Entity property that can store any Atlas value

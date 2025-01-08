@@ -76,7 +76,7 @@ void ExternalMind::purgeEntity(const LocatedEntity& ent, bool forceDelete) {
 }
 
 ExternalMind::ExternalMind(RouterId id, Ref<LocatedEntity> entity)
-		: Router(std::move(id)),
+		: Router(id),
 		  m_link(nullptr),
 		  m_entity(std::move(entity)) {
 	s_numberOfMinds++;

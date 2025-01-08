@@ -188,13 +188,13 @@ int main() {
 
 #include "common/TypeNode_impl.h"
 
-const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Visibility) const {
+const Atlas::Objects::Root& Inheritance::getClass(const std::string& typeName, Visibility) const {
 	return noClass;
 }
 
 
-const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
-	auto I = atlasObjects.find(parent);
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& typeName) const {
+	auto I = atlasObjects.find(typeName);
 	if (I == atlasObjects.end()) {
 		return 0;
 	}
