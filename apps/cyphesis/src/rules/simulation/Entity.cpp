@@ -32,6 +32,7 @@
 
 #include "common/Monitors.h"
 #include "common/Variable.h"
+#include "common/SynchedState_impl.h"
 #include "ModeDataProperty.h"
 #include "rules/simulation/AtlasProperties.h"
 #include "rules/PhysicalProperties.h"
@@ -55,7 +56,7 @@ using Atlas::Objects::smart_dynamic_cast;
 
 static const bool debug_flag = false;
 
-std::unordered_map<const TypeNode<LocatedEntity>*, int> Entity::s_monitorsMap;
+SynchedState<std::unordered_map<const TypeNode<LocatedEntity>*, int>> Entity::s_monitorsMap;
 
 /// \brief Flags used to control entities
 ///
@@ -73,10 +74,12 @@ Entity::Entity(RouterId id) : LocatedEntity(id) {
 
 Entity::~Entity() {
 	if (m_type) {
-		auto I = s_monitorsMap.find(m_type);
-		if (I != s_monitorsMap.end()) {
-			I->second--;
-		}
+		s_monitorsMap.withState([&](auto state) {
+			auto I = state->find(m_type);
+			if (I != state->end()) {
+				--I->second;
+			}
+		});
 	}
 }
 
@@ -89,14 +92,16 @@ void Entity::setType(const TypeNode<LocatedEntity>* t) {
 	LocatedEntity::setType(t);
 
 	if (t) {
-		auto I = s_monitorsMap.find(t);
-		if (I == s_monitorsMap.end()) {
-			auto result = s_monitorsMap.emplace(t, 1);
+		s_monitorsMap.withState([&](auto state) {
+			auto I = state->find(t);
+			if (I == state->end()) {
+				auto result = state->emplace(t, 1);
 
-			Monitors::instance().watch(fmt::format("entity_count{{type=\"{}\"}}", t->name()), std::make_unique<Variable<int>>(result.first->second));
-		} else {
-			I->second++;
-		}
+				Monitors::instance().watch(fmt::format("entity_count{{type=\"{}\"}}", t->name()), std::make_unique<Variable<int>>(result.first->second));
+			} else {
+				++I->second;
+			}
+		});
 	}
 }
 

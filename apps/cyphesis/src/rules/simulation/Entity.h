@@ -20,6 +20,7 @@
 #define RULESETS_ENTITY_H
 
 #include "rules/simulation/LocatedEntity.h"
+#include "common/SynchedState.h"
 
 #include <unordered_map>
 
@@ -41,7 +42,7 @@ protected:
 	/// A static map tracking the number of existing entities per type.
 	/// A monitor by the name of "entity_count{type=*}" will be created
 	/// per type.
-	static std::unordered_map<const TypeNode<LocatedEntity>*, int> s_monitorsMap;
+	static SynchedState<std::unordered_map<const TypeNode<LocatedEntity>*, int>> s_monitorsMap;
 
 	std::unique_ptr<Domain> m_domain;
 
