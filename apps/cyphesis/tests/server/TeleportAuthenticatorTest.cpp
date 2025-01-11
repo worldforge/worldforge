@@ -33,7 +33,7 @@
 #include "common/id.h"
 #include "common/log.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <Atlas/Objects/Operation.h>
 
@@ -119,7 +119,7 @@ void TeleportAuthenticatortest::test_sequence() {
 }
 
 void TeleportAuthenticatortest::test_authenticatePossession() {
-	Ref<Entity> ent(new Entity(100));
+	Ref<LocatedEntity> ent(new LocatedEntity(100));
 	m_world->test_addEntity(ent.get(), 100);
 
 	PossessionAuthenticator::instance().addPossession("100", "test_possess_key");
@@ -139,7 +139,7 @@ void TeleportAuthenticatortest::test_authenticatePossession() {
 }
 
 void TeleportAuthenticatortest::test_authenticatePossession_nonexist() {
-	Ref<Entity> ent(new Entity(100));
+	Ref<LocatedEntity> ent(new LocatedEntity(100));
 	m_world->test_addEntity(ent.get(), 100);
 
 	PossessionAuthenticator::instance().addPossession("101", "test_possess_key");

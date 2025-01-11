@@ -22,7 +22,7 @@
 #include "common/Monitors.h"
 #include "rules/simulation/Inheritance.h"
 #include "common/operations/Thought.h"
-#include "rules/simulation/Thing.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "../NullEntityCreator.h"
 
 #include <Atlas/Objects/Operation.h>
@@ -70,7 +70,7 @@ struct TestContext
 {
     Atlas::Objects::Factories factories;
     DatabaseNull database;
-    Ref<Thing> world;
+    Ref<LocatedEntity> world;
     Inheritance inheritance;
     WorldRouter testWorld;
     NullEntityCreator entityCreator;
@@ -78,7 +78,7 @@ struct TestContext
     long entityId;
 
     TestContext() :
-            world(new Thing(0)),
+            world(new LocatedEntity(0)),
             inheritance(),
             testWorld(world, entityCreator, [] { return std::chrono::steady_clock::now().time_since_epoch(); }),
             propertyManager(inheritance),
@@ -106,7 +106,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
         ADD_TEST(test_setProps);
     }
 
-    static void sendSetOp(const Ref<Thing>& entity, const std::string& propertyName, Atlas::Message::Element value)
+    static void sendSetOp(const Ref<LocatedEntity>& entity, const std::string& propertyName, Atlas::Message::Element value)
     {
         Set set;
 
@@ -145,18 +145,18 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
          *
          */
         {
-            Ref<Thing> t1 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t1 = new LocatedEntity(context.entityId++);
             t1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-512, -10, -512},
                                     {512,  10,  512}};
             t1->setAttrValue("domain", "physical");
             context.testWorld.addEntity(t1, context.world);
-            Ref<Thing> t2 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t2 = new LocatedEntity(context.entityId++);
             t2->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 0, 0};
             t2->requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
             t2->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
                                     {1,  1, 1}};
             context.testWorld.addEntity(t2, t1);
-            Ref<Thing> t3 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t3 = new LocatedEntity(context.entityId++);
             t3->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 0, 0};
             t3->requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
             t3->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
@@ -236,19 +236,19 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
           *          T4       T5
           */
         {
-            Ref<Thing> t1 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t1 = new LocatedEntity(context.entityId++);
             t1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-512, -10, -512},
                                     {512,  10,  512}};
             t1->setAttrValue("domain", "physical");
             context.testWorld.addEntity(t1, context.world);
-            Ref<Thing> t2 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t2 = new LocatedEntity(context.entityId++);
             t2->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 0, 0};
             t2->requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
             t2->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
                                     {1,  1, 1}};
             t2->setAttrValue("domain", "container");
             context.testWorld.addEntity(t2, t1);
-            Ref<Thing> t3 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t3 = new LocatedEntity(context.entityId++);
             t3->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 0, 0};
             t3->requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
             t3->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
@@ -256,12 +256,12 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             t3->setAttrValue("domain", "container");
             context.testWorld.addEntity(t3, t1);
 
-            Ref<Thing> t4 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t4 = new LocatedEntity(context.entityId++);
             t4->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
                                     {1,  1, 1}};
             context.testWorld.addEntity(t4, t2);
 
-            Ref<Thing> t5 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t5 = new LocatedEntity(context.entityId++);
             t5->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
                                     {1,  1, 1}};
             context.testWorld.addEntity(t5, t3);
@@ -329,35 +329,35 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
           *          T4       T5
           */
         {
-            Ref<Thing> t1 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t1 = new LocatedEntity(context.entityId++);
             t1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-512, -10, -512},
                                     {512,  10,  512}};
             t1->setAttrValue("domain", "physical");
             context.testWorld.addEntity(t1, context.world);
-            Ref<Thing> t2 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t2 = new LocatedEntity(context.entityId++);
             t2->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 0, 0};
             t2->requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
             t2->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
                                     {1,  1, 1}};
             t2->setAttrValue("domain", "container");
             context.testWorld.addEntity(t2, t1);
-            Ref<Thing> t3 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t3 = new LocatedEntity(context.entityId++);
             t3->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 0, 0};
             t3->requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
             t3->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
                                     {1,  1, 1}};
             context.testWorld.addEntity(t3, t1);
 
-            Ref<Thing> t4 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t4 = new LocatedEntity(context.entityId++);
             t4->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
                                     {1,  1, 1}};
             context.testWorld.addEntity(t4, t2);
 
-            Ref<Thing> t5 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t5 = new LocatedEntity(context.entityId++);
             t5->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
                                     {1,  1, 1}};
             context.testWorld.addEntity(t5, t3);
-            Ref<Thing> t6 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t6 = new LocatedEntity(context.entityId++);
             t6->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 0, 0};
             t6->requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
             t6->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
@@ -575,12 +575,12 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
         *          T2*      T3
         */
         {
-            Ref<Thing> t1 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t1 = new LocatedEntity(context.entityId++);
             t1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-512, -10, -512},
                                     {512,  10,  512}};
             t1->setAttrValue("domain", "physical");
             context.testWorld.addEntity(t1, context.world);
-            Ref<Thing> t2 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t2 = new LocatedEntity(context.entityId++);
             t2->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 0, 0};
             t2->requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
             t2->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
@@ -590,7 +590,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             t2->setAttrValue(MindsProperty::property_name, {});
             t2->setAttrValue("mover_constraint", "entity.mass = none or entity.mass < 20");
             context.testWorld.addEntity(t2, t1);
-            Ref<Thing> t3 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t3 = new LocatedEntity(context.entityId++);
             t3->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 0, 0};
             t3->requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
             t3->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
@@ -643,27 +643,27 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
          *         T4        T5
          */
         {
-            Ref<Thing> t1 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t1 = new LocatedEntity(context.entityId++);
             t1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-128, -128, -128},
                                     {128,  128,  128}};
             t1->setAttrValue("domain", "physical");
             context.testWorld.addEntity(t1, context.world);
-            Ref<Thing> t2 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t2 = new LocatedEntity(context.entityId++);
             t2->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {10, 0, 20};
             t2->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             t2->requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion(1, 2.0);
             t2->setAttrValue("domain", "container");
             context.testWorld.addEntity(t2, t1);
-            Ref<Thing> t3 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t3 = new LocatedEntity(context.entityId++);
             t3->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {20, 0, 20};
             t3->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             context.testWorld.addEntity(t3, t1);
-            Ref<Thing> t4 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t4 = new LocatedEntity(context.entityId++);
             t4->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t4->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             t4->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {30, 0, 20};
             context.testWorld.addEntity(t4, t2);
-            Ref<Thing> t5 = new Thing(context.entityId++);
+            Ref<LocatedEntity> t5 = new LocatedEntity(context.entityId++);
             t5->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t5->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             t5->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {40, 0, 20};
@@ -686,7 +686,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
 
     void test_setProps(TestContext& context)
     {
-        Ref<Thing> entity(new Thing(context.entityId++));
+        Ref<LocatedEntity> entity(new LocatedEntity(context.entityId++));
 
         ASSERT_FALSE(entity->getAttr("foo"));
 
@@ -707,7 +707,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
 
     void test_setModifySelf(TestContext& context)
     {
-        Ref<Thing> entity(new Thing(context.entityId++));
+        Ref<LocatedEntity> entity(new LocatedEntity(context.entityId++));
         sendSetOp(entity, "modify_self", MapType{{"set_by_test",
                                                          MapType{
                                                                  {"constraint", "true = true"},
@@ -744,8 +744,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
 
     void test_setModify(TestContext& context)
     {
-        Ref<Thing> entity(new Thing(context.entityId++));
-        Ref<Thing> entityChild(new Thing(context.entityId++));
+        Ref<LocatedEntity> entity(new LocatedEntity(context.entityId++));
+        Ref<LocatedEntity> entityChild(new LocatedEntity(context.entityId++));
         entity->addChild(*entityChild);
         sendSetOp(entityChild, "modify", ListType{
                 MapType{
@@ -792,11 +792,11 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
 
     void test_modifyWithAttachConstraints(TestContext& context)
     {
-        Ref<Thing> entity(new Thing(context.entityId++));
+        Ref<LocatedEntity> entity(new LocatedEntity(context.entityId++));
         context.testWorld.addEntity(entity, context.world);
         sendSetOp(entity, "attachments", MapType{{"hand_primary", "contains(actor.contains, child = tool)"}});
 
-        Ref<Thing> entityChild(new Thing(context.entityId++));
+        Ref<LocatedEntity> entityChild(new LocatedEntity(context.entityId++));
         context.testWorld.addEntity(entityChild, entity);
         sendSetOp(entityChild, "modify", ListType{
                 MapType{

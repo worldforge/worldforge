@@ -24,7 +24,7 @@
 #include "TestPropertyManager.h"
 #include "TestWorld.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <Atlas/Message/Element.h>
 
@@ -32,9 +32,9 @@ class IGEntityExerciser : public EntityExerciser {
 protected:
 	TestPropertyManager<LocatedEntity> m_propertyManager;
 	std::unique_ptr<TestWorld> m_testWorld;
-	Ref<Entity> m_ent;
+	Ref<LocatedEntity> m_ent;
 public:
-	explicit IGEntityExerciser(const Ref<Entity>& e);
+	explicit IGEntityExerciser(const Ref<LocatedEntity>& e);
 
 	~IGEntityExerciser() override;
 

@@ -18,7 +18,7 @@
 
 #include "EntityFactory_impl.h"
 
-#include "rules/simulation/Thing.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/TypeNode_impl.h"
 
@@ -40,8 +40,8 @@ EntityFactoryBase::EntityFactoryBase()
 EntityFactoryBase::~EntityFactoryBase() = default;
 
 
-void EntityFactoryBase::initializeEntity(Entity& thing,
-										 const Atlas::Objects::Entity::RootEntity& attributes) {
+void EntityFactoryBase::initializeEntity(LocatedEntity& thing,
+										 const Atlas::Objects::Entity::RootEntity& attributes) const {
 	thing.setType(m_type);
 
 	//Only apply attributes if the supplied attributes is valid.
@@ -98,7 +98,7 @@ void EntityFactoryBase::updateProperties(std::map<const TypeNode<LocatedEntity>*
 }
 
 template
-class EntityFactory<Thing>;
+class EntityFactory<LocatedEntity>;
 
 void ClassAttribute::combine(Atlas::Message::Element& existing) const {
 	if (!defaultValue.isNone()) {

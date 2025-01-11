@@ -20,17 +20,17 @@
 #define CYPHESIS_CYPY_ENTITYPROPS_H
 
 #include "pythonbase/WrapperBase.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_EntityProps : public WrapperBase<Ref<Entity>, CyPy_EntityProps> {
+class CyPy_EntityProps : public WrapperBase<Ref<LocatedEntity>, CyPy_EntityProps> {
 public:
 
 	CyPy_EntityProps(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-	CyPy_EntityProps(Py::PythonClassInstance* self, Ref<Entity> value);
+	CyPy_EntityProps(Py::PythonClassInstance* self, Ref<LocatedEntity> value);
 
 	static void init_type();
 

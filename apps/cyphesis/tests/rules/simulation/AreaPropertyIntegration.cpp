@@ -26,7 +26,7 @@
 #include "../../TestBase.h"
 
 #include "rules/simulation/AreaProperty.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/TypeNode_impl.h"
 #include "common/Property_impl.h"
@@ -43,8 +43,8 @@ class AreaPropertyintegration : public Cyphesis::TestBase {
 private:
 	TypeNode<LocatedEntity>* m_char_type;
 	PropertyBase* m_char_property;
-	Ref<Entity> m_char1;
-	Ref<Entity> m_char2;
+	Ref<LocatedEntity> m_char1;
+	Ref<LocatedEntity> m_char2;
 public:
 	AreaPropertyintegration();
 
@@ -74,13 +74,13 @@ void AreaPropertyintegration::setup() {
 	);
 	m_char_type->injectProperty("char_type", std::unique_ptr<PropertyBase>(m_char_property));
 
-	m_char1 = new Entity(1);
+	m_char1 = new LocatedEntity(1);
 	m_char1->setType(m_char_type);
 	m_char_property->install(*m_char1, "char_prop");
 	m_char_property->apply(*m_char1);
 	m_char1->propertyApplied("char_prop", *m_char_property);
 
-	m_char2 = new Entity(2);
+	m_char2 = new LocatedEntity(2);
 	m_char2->setType(m_char_type);
 	m_char_property->install(*m_char2, "char_prop");
 	m_char_property->apply(*m_char2);

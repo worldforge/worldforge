@@ -43,7 +43,7 @@
 #include <rules/Py_Property.h>
 
 #include "pycxx/CXX/Extensions.hxx"
-#include "rules/simulation/python/CyPy_Entity.h"
+#include "rules/simulation/python/CyPy_LocatedEntity.h"
 
 
 class TestProp : public Py::ExtensionModule<TestProp>

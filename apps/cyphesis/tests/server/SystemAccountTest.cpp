@@ -31,7 +31,7 @@
 #include "server/Connection.h"
 #include "server/ServerRouting.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/CommSocket.h"
 #include "common/Monitors.h"
@@ -69,7 +69,7 @@ SystemAccounttest::SystemAccounttest() : m_id_counter(0L),
 }
 
 void SystemAccounttest::setup() {
-	Ref<Entity> gw = new Entity(m_id_counter++);
+	Ref<LocatedEntity> gw = new LocatedEntity(m_id_counter++);
 	m_world = new TestWorld(gw);
 	m_server = new ServerRouting(*m_world,
 								 *(Persistence*) nullptr,

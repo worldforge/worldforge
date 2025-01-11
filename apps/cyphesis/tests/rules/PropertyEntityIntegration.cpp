@@ -26,7 +26,7 @@
 #include "../TestBaseWithContext.h"
 #include "../TestWorld.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/Property_impl.h"
 #include "common/PropertyManager_impl.h"
@@ -36,7 +36,7 @@
 #include <cstdlib>
 
 #include <cassert>
-#include <rules/simulation/Thing.h>
+#include <rules/simulation/LocatedEntity.h>
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
@@ -130,8 +130,8 @@ std::unique_ptr<PropertyBase> TestPropertyManager::addProperty(const std::string
 	}
 }
 
-struct TestEntity : Entity {
-	explicit TestEntity(RouterId id) : Entity(id) {}
+struct TestEntity : LocatedEntity {
+	explicit TestEntity(RouterId id) : LocatedEntity(id) {}
 
 	std::map<std::string, ModifiableProperty>& modProperties() { return m_properties; }
 

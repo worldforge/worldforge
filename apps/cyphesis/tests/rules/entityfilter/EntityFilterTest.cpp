@@ -17,7 +17,7 @@
 #include "rules/simulation/AtlasProperties.h"
 #include "rules/BBoxProperty_impl.h"
 #include "rules/ScaleProperty_impl.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/Property_impl.h"
 #include "rules/simulation/Inheritance.h"
@@ -29,7 +29,10 @@
 #include <Atlas/Objects/Factories.h>
 
 #include <cassert>
+#include <rules/simulation/BaseWorld.h>
 #include <rules/simulation/ModeDataProperty.h>
+#include "../../TestPropertyManager.h"
+#include "../../TestWorld.h"
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
@@ -68,29 +71,19 @@ static std::map<std::string, std::unique_ptr<TypeNode<LocatedEntity>>>* s_types;
 template
 class EntityFilter::ComparePredicate<LocatedEntity>;
 
-struct TestEntity : Entity {
-	explicit TestEntity(RouterId id) : Entity(id) {
+struct TestEntity : LocatedEntity {
+	explicit TestEntity(RouterId id) : LocatedEntity(id) {
 	}
-
-
-	std::unique_ptr<Domain> m_domain;
 
 	void destroy() override {
 		m_parent = nullptr;
-		Entity::destroy();
+		LocatedEntity::destroy();
 	}
 
 	void test_setDomain(std::unique_ptr<Domain> domain) {
 		m_domain = std::move(domain);
 	}
 
-	Domain* getDomain() override {
-		return m_domain.get();
-	}
-
-	Domain* getDomain() const override {
-		return m_domain.get();
-	}
 };
 
 struct TestDomain : Domain {
@@ -147,20 +140,20 @@ struct TestContext {
 
 	//Barrels
 	Ref<TestEntity> m_b1;
-	Ref<Entity> m_b2;
-	Ref<Entity> m_b3;
+	Ref<LocatedEntity> m_b2;
+	Ref<LocatedEntity> m_b3;
 
 	//Boulder
-	Ref<Entity> m_bl1;
+	Ref<LocatedEntity> m_bl1;
 
-	Ref<Entity> m_ch1; //Character entity
+	Ref<LocatedEntity> m_ch1; //Character entity
 	//Outfit for the character
-	Ref<Entity> m_glovesEntity; //Gloves for the character entity's outfit
-	Ref<Entity> m_bootsEntity;
-	Ref<Entity> m_cloth; //Cloth for gloves' outfit
-	Ref<Entity> m_leather;
+	Ref<LocatedEntity> m_glovesEntity; //Gloves for the character entity's outfit
+	Ref<LocatedEntity> m_bootsEntity;
+	Ref<LocatedEntity> m_cloth; //Cloth for gloves' outfit
+	Ref<LocatedEntity> m_leather;
 
-	Ref<Entity> m_entityOnlyReachableWithPosition; //An entity which can only be reachable if position is specified.
+	Ref<LocatedEntity> m_entityOnlyReachableWithPosition; //An entity which can only be reachable if position is specified.
 
 	std::map<std::string, Ref<LocatedEntity>> m_entities;
 
@@ -311,7 +304,7 @@ struct TestContext {
 		}
 	};
 
-	QueryContext<LocatedEntity> makeContext(const Ref<Entity>& entity) {
+	QueryContext<LocatedEntity> makeContext(const Ref<LocatedEntity>& entity) {
 		QueryContext<LocatedEntity> queryContext{*entity};
 		queryContext.entity_lookup_fn = [&](const std::string& id) { return find_entity(id); };
 		queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
@@ -349,15 +342,15 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 	// are supposed to pass or fail the test for a given query
 	void TestQuery(TestContext& testContext,
 				   const std::string& query,
-				   std::initializer_list<Ref<Entity>> entitiesToPass,
-				   std::initializer_list<Ref<Entity>> entitiesToFail) {
+				   std::initializer_list<Ref<LocatedEntity>> entitiesToPass,
+				   std::initializer_list<Ref<LocatedEntity>> entitiesToFail) {
 		TestQuery(testContext, query, entitiesToPass, entitiesToFail, EntityFilter::ProviderFactory<LocatedEntity>());
 	}
 
 	void TestQuery(TestContext& testContext,
 				   const std::string& query,
-				   std::initializer_list<Ref<Entity>> entitiesToPass,
-				   std::initializer_list<Ref<Entity>> entitiesToFail,
+				   std::initializer_list<Ref<LocatedEntity>> entitiesToPass,
+				   std::initializer_list<Ref<LocatedEntity>> entitiesToFail,
 				   const EntityFilter::ProviderFactory<LocatedEntity>& factory) {
 		EntityFilter::Filter<LocatedEntity> f(query, factory);
 		for (const auto& entity: entitiesToPass) {
@@ -769,11 +762,12 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 	}
 };
 
-
 int main() {
 	Monitors m;
 
 	Tested t;
+	TestPropertyManager<LocatedEntity> pm;
+	TestWorld bw;
 
 	return t.run();
 

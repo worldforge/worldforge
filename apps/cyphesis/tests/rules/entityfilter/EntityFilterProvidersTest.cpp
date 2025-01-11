@@ -20,7 +20,7 @@
 #include "common/log.h"
 #include "rules/simulation/Inheritance.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "common/TypeNode_impl.h"
 
 #include <wfmath/point.h>
@@ -39,14 +39,14 @@ struct ProvidersTest : public Cyphesis::TestBase {
 	ProviderFactory<LocatedEntity> m_factory;
 
 	//Entities for testing
-	Ref<Entity> m_b1;
+	Ref<LocatedEntity> m_b1;
 	LocatedEntitySet* m_b1_container; //Container property for b1
-	Ref<Entity> m_b2;
+	Ref<LocatedEntity> m_b2;
 	LocatedEntitySet* m_b2_container; //Container for b2
 
-	Ref<Entity> m_ch1; //Character type entity
-	Ref<Entity> m_glovesEntity; //Gloves for the character entity's outfit
-	Ref<Entity> m_cloth; //Cloth for gloves' outfit
+	Ref<LocatedEntity> m_ch1; //Character type entity
+	Ref<LocatedEntity> m_glovesEntity; //Gloves for the character entity's outfit
+	Ref<LocatedEntity> m_cloth; //Cloth for gloves' outfit
 
 	//Types for testing
 	TypeNode<LocatedEntity>* m_thingType;
@@ -56,7 +56,7 @@ struct ProvidersTest : public Cyphesis::TestBase {
 
 	///\A helper to create providers. Accepts a list of tokens and assumes that
 	///the delimiter for all but first token is "." (a dot)
-	/// for example, to make entity.type provider, use {"Entity", "type"} argument
+	/// for example, to make entity.type provider, use {"LocatedEntity", "type"} argument
 	std::shared_ptr<Consumer<QueryContext<LocatedEntity>>> CreateProvider(
 			std::initializer_list<
 					std::string> tokens
@@ -80,7 +80,7 @@ struct ProvidersTest : public Cyphesis::TestBase {
 		types["thing"] = m_thingType;
 
 		//Make a barrel with mass and burn speed properties
-		m_b1 = new Entity(1);
+		m_b1 = new LocatedEntity(1);
 		add_entity(m_b1);
 		m_barrelType = new TypeNode<LocatedEntity>("barrel");
 		m_barrelType->setParent(m_thingType);
@@ -100,7 +100,7 @@ struct ProvidersTest : public Cyphesis::TestBase {
 		m_b1->setProperty("string_list", std::unique_ptr<PropertyBase>(list_prop2));
 
 		//Make a second barrel
-		m_b2 = new Entity(2);
+		m_b2 = new LocatedEntity(2);
 		add_entity(m_b2);
 		m_b2->setProperty("mass", std::unique_ptr<PropertyBase>(new SoftProperty<LocatedEntity>(Element(20))));
 		m_b2->setProperty("burn_speed", std::unique_ptr<PropertyBase>(new SoftProperty<LocatedEntity>(0.25)));
@@ -129,12 +129,12 @@ struct ProvidersTest : public Cyphesis::TestBase {
 		m_clothType->setParent(m_thingType);
 		types["cloth"] = m_clothType;
 
-		m_cloth = new Entity(3);
+		m_cloth = new LocatedEntity(3);
 		add_entity(m_cloth);
 		m_cloth->setType(m_clothType);
 		m_cloth->setProperty("color", std::unique_ptr<PropertyBase>(new SoftProperty<LocatedEntity>("green")));
 
-		m_glovesEntity = new Entity(4);
+		m_glovesEntity = new LocatedEntity(4);
 		add_entity(m_glovesEntity);
 		m_glovesEntity->setProperty("color", std::unique_ptr<PropertyBase>(new SoftProperty<LocatedEntity>("brown")));
 
@@ -153,7 +153,7 @@ struct ProvidersTest : public Cyphesis::TestBase {
 		//Create the character for testing
 		m_characterType = new TypeNode<LocatedEntity>("character");
 		types["character"] = m_characterType;
-		m_ch1 = new Entity(5);
+		m_ch1 = new LocatedEntity(5);
 		add_entity(m_ch1);
 		m_ch1->setType(m_characterType);
 
@@ -477,7 +477,7 @@ struct ProvidersTest : public Cyphesis::TestBase {
 	///\In particular, cases of checking for parent type
 	void test_InstanceOf() {
 		//Thing for testing instance_of
-		Entity thingEntity(123);
+		LocatedEntity thingEntity(123);
 		thingEntity.setType(m_thingType);
 
 		//Barrel is also thing but thing is not a barrel

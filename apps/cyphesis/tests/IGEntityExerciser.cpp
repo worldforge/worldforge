@@ -28,7 +28,7 @@
 #include "TestPropertyManager.h"
 #include "TestWorld.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/TypeNode_impl.h"
 
@@ -44,7 +44,7 @@
 #include "rules/simulation/AtlasProperties.h"
 #include "rules/PhysicalProperties.h"
 
-IGEntityExerciser::IGEntityExerciser(const Ref<Entity>& e) :
+IGEntityExerciser::IGEntityExerciser(const Ref<LocatedEntity>& e) :
 		EntityExerciser(e), m_ent(e) {
 	if (e->getIdAsInt() == 0) {
 		m_testWorld = std::make_unique<TestWorld>(e);
@@ -64,7 +64,7 @@ bool IGEntityExerciser::checkProperties(const std::set<std::string>& prop_names)
 	auto Iend = prop_names.end();
 	for (; I != Iend; ++I) {
 		if (this->m_ent->getProperty(*I) == nullptr) {
-			std::cerr << "Entity does not have \"" << *I << "\" property."
+			std::cerr << "LocatedEntity does not have \"" << *I << "\" property."
 					  << std::endl;
 			return false;
 		}

@@ -52,7 +52,7 @@
 #include <cstdlib>
 
 #include <cassert>
-#include <rules/simulation/Thing.h>
+#include <rules/simulation/LocatedEntity.h>
 #include <rules/simulation/WorldProperty.h>
 
 using Atlas::Message::Element;
@@ -77,7 +77,7 @@ class PositionProperty<LocatedEntity>;
 
 int main() {
 	Monitors m;
-	Ref<Thing> e(new Thing(0));
+	Ref<LocatedEntity> e(new LocatedEntity(0));
 	TypeNode<LocatedEntity> type("world");
 	e->setType(&type);
 	e->requirePropertyClassFixed<WorldProperty>();

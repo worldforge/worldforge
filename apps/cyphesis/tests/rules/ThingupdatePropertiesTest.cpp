@@ -26,7 +26,7 @@
 #include "../allOperations.h"
 #include "../TestBase.h"
 
-#include "rules/simulation/Thing.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "common/Property_impl.h"
 #include "rules/PhysicalProperties_impl.h"
 #include <Atlas/Objects/Anonymous.h>
@@ -46,20 +46,20 @@ class PositionProperty<LocatedEntity>;
 template
 class OrientationProperty<LocatedEntity>;
 
-class testThing : public Thing {
+class testThing : public LocatedEntity {
 public:
 	testThing(RouterId id) :
-			Thing(id) {}
+			LocatedEntity(id) {}
 
-	using Thing::updateProperties;
+	using LocatedEntity::updateProperties;
 };
 
 static const std::string testName("bob");
 static const std::string testNewName("fred");
 
-struct TestThing : public Thing {
+struct TestThing : public LocatedEntity {
 	TestThing(RouterId id)
-			: Thing(id) {
+			: LocatedEntity(id) {
 	}
 
 	void test_updateProperties(const Operation& op, OpVector& res) {

@@ -19,7 +19,7 @@
 #pragma once
 
 #include "common/Property.h"
-#include "Entity.h"
+#include "LocatedEntity.h"
 
 class WorldProperty : public Property<Atlas::Message::MapType, LocatedEntity>
 {

@@ -25,7 +25,7 @@
 
 #include "modules/WeakEntityRef_impl.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "rules/Location_impl.h"
 
@@ -45,7 +45,7 @@ void checkSignal() {
 		// Check the assignment operator causes the signal to fire
 		emitted = false;
 
-		Entity e(RouterId{1});
+		LocatedEntity e(RouterId{1});
 		WeakEntityRef<LocatedEntity> ref;
 
 		assert(emitted == false);
@@ -65,7 +65,7 @@ void checkSignal() {
 		// the the pointer is unchanged
 		emitted = false;
 
-		Entity e(RouterId{1});
+		LocatedEntity e(RouterId{1});
 		WeakEntityRef<LocatedEntity> ref(&e);
 
 		assert(emitted == false);
@@ -81,12 +81,12 @@ void checkSignal() {
 	}
 
 	{
-		// Check that destroying the Entity makes the reference null.
+		// Check that destroying the LocatedEntity makes the reference null.
 		emitted = false;
 
-		Entity e(RouterId{1});
+		LocatedEntity e(RouterId{1});
 		e.incRef();
-		Ref<Entity> container = new Entity(RouterId{2});
+		Ref<LocatedEntity> container = new LocatedEntity(RouterId{2});
 
 		container->addChild(e);
 
@@ -145,7 +145,7 @@ int main() {
 
 	{
 		// Check the initialising constructor via get
-		Ref<Entity> e = new Entity(RouterId{1});
+		Ref<LocatedEntity> e = new LocatedEntity(RouterId{1});
 		WeakEntityRef<LocatedEntity> ref(e);
 
 		assert(ref.get() == e.get());
@@ -153,7 +153,7 @@ int main() {
 
 	{
 		// Check the initialising constructor via dereference
-		Ref<Entity> e = new Entity(RouterId{1});
+		Ref<LocatedEntity> e = new LocatedEntity(RouterId{1});
 		WeakEntityRef<LocatedEntity> ref(e);
 
 		assert(&(*ref) == e.get());
@@ -161,7 +161,7 @@ int main() {
 
 	{
 		// Check the initialising constructor via ->
-		Ref<Entity> e = new Entity(RouterId{1});
+		Ref<LocatedEntity> e = new LocatedEntity(RouterId{1});
 		WeakEntityRef<LocatedEntity> ref(e);
 
 		assert(ref.operator->() == e.get());
@@ -169,7 +169,7 @@ int main() {
 
 	{
 		// Check the initialising constructor via ==
-		Ref<Entity> e = new Entity(RouterId{1});
+		Ref<LocatedEntity> e = new LocatedEntity(RouterId{1});
 		WeakEntityRef<LocatedEntity> ref(e);
 
 		assert(ref == e.get());
@@ -177,7 +177,7 @@ int main() {
 
 	{
 		// Check the copy constructor
-		Ref<Entity> e = new Entity(RouterId{1});
+		Ref<LocatedEntity> e = new LocatedEntity(RouterId{1});
 		WeakEntityRef<LocatedEntity> ref(e);
 		WeakEntityRef<LocatedEntity> ref2(ref);
 
@@ -186,7 +186,7 @@ int main() {
 
 	{
 		// Check the comparison operator
-		Ref<Entity> e = new Entity(RouterId{1});
+		Ref<LocatedEntity> e = new LocatedEntity(RouterId{1});
 		WeakEntityRef<LocatedEntity> ref(e);
 		WeakEntityRef<LocatedEntity> ref2(e);
 
@@ -195,8 +195,8 @@ int main() {
 
 	{
 		// Check the comparison operator
-		Ref<Entity> e = new Entity(RouterId{1});
-		Ref<Entity> e2 = new Entity(RouterId{2});
+		Ref<LocatedEntity> e = new LocatedEntity(RouterId{1});
+		Ref<LocatedEntity> e2 = new LocatedEntity(RouterId{2});
 		WeakEntityRef<LocatedEntity> ref(e);
 		WeakEntityRef<LocatedEntity> ref2(e2);
 
@@ -207,7 +207,7 @@ int main() {
 	// These tests should be included should we add operator!=
 	{
 		// Check the comparison operator
-		Entity e(1);
+		LocatedEntity e(1);
 		WeakEntityRef<LocatedEntity> ref(&e);
 		WeakEntityRef<LocatedEntity> ref2(&e);
 
@@ -216,8 +216,8 @@ int main() {
 
 	{
 		// Check the comparison operator
-		Entity e(1);
-		Entity e2(2);
+		LocatedEntity e(1);
+		LocatedEntity e2(2);
 		WeakEntityRef<LocatedEntity> ref(&e);
 		WeakEntityRef<LocatedEntity> ref2(&e2);
 
@@ -227,7 +227,7 @@ int main() {
 
 	{
 		// Check the less than operator
-		Ref<Entity> e = new Entity(RouterId{1});
+		Ref<LocatedEntity> e = new LocatedEntity(RouterId{1});
 		WeakEntityRef<LocatedEntity> ref(e);
 		WeakEntityRef<LocatedEntity> ref2(e);
 
@@ -236,8 +236,8 @@ int main() {
 
 	{
 		// Check the less than operator
-		Ref<Entity> e = new Entity(RouterId{1});
-		Ref<Entity> e2 = new Entity(RouterId{2});
+		Ref<LocatedEntity> e = new LocatedEntity(RouterId{1});
+		Ref<LocatedEntity> e2 = new LocatedEntity(RouterId{2});
 		WeakEntityRef<LocatedEntity> ref(e);
 		WeakEntityRef<LocatedEntity> ref2(e2);
 
@@ -246,7 +246,7 @@ int main() {
 
 	{
 		// Check the assignment operator
-		Ref<Entity> e = new Entity(RouterId{1});
+		Ref<LocatedEntity> e = new LocatedEntity(RouterId{1});
 		WeakEntityRef<LocatedEntity> ref;
 
 		ref = WeakEntityRef<LocatedEntity>(e);
@@ -255,10 +255,10 @@ int main() {
 	}
 
 	{
-		// Check that destroying the Entity makes the reference null.
-		Entity e(RouterId{1});
+		// Check that destroying the LocatedEntity makes the reference null.
+		LocatedEntity e(RouterId{1});
 		e.incRef();
-		Ref<Entity> container = new Entity(RouterId{2});
+		Ref<LocatedEntity> container = new LocatedEntity(RouterId{2});
 
 		container->addChild(e);
 

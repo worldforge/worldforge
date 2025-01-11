@@ -24,7 +24,7 @@
 #include "../TestBase.h"
 #include "../TestWorld.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/SuspendedProperty.h"
 
 #include "rules/simulation/BaseWorld.h"
@@ -46,11 +46,11 @@ std::function<void(bool)> worldSetSuspendedCallback;
 using Atlas::Objects::Operation::Tick;
 
 
-class TestEntity : public Entity
+class TestEntity : public LocatedEntity
 {
     public:
 
-        explicit TestEntity(RouterId id) : Entity(id)
+        explicit TestEntity(RouterId id) : LocatedEntity(id)
         {
         }
 

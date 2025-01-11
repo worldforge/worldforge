@@ -28,7 +28,7 @@
 #include "common/CommAsioClient_impl.h"
 #include "server/CommPeer.h"
 #include "rules/simulation/ExternalMind.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "rules/simulation/BaseWorld.h"
 #include "common/CommSocket.h"
@@ -185,7 +185,7 @@ int main() {
 	{
 		Peer p(*(CommSocket*) 0, *(ServerRouting*) 0, "addr", 6767, RouterId{1});
 
-		Ref<Entity> e(new Entity(RouterId{3}));
+		Ref<LocatedEntity> e(new LocatedEntity(RouterId{3}));
 		int ret = p.teleportEntity(e.get());
 		assert(ret == -1);
 	}
@@ -197,7 +197,7 @@ int main() {
 
 		p.setAuthState(PEER_AUTHENTICATED);
 
-		Ref<Entity> e(new Entity(RouterId{3}));
+		Ref<LocatedEntity> e(new LocatedEntity(RouterId{3}));
 		int ret = p.teleportEntity(e.get());
 		assert(ret == 0);
 		assert(stub_CommClient_sent_op.isValid());
@@ -211,7 +211,7 @@ int main() {
 
 		p.setAuthState(PEER_AUTHENTICATED);
 
-		Ref<Entity> e(new Entity(RouterId{3}));
+		Ref<LocatedEntity> e(new LocatedEntity(RouterId{3}));
 		int ret = p.teleportEntity(e.get());
 		assert(ret == 0);
 		assert(stub_CommClient_sent_op.isValid());
@@ -221,28 +221,28 @@ int main() {
 		assert(ret != 0);
 	}
 
-	// Entity (no mind)
+	// LocatedEntity (no mind)
 	{
 		TestCommSocket client;
 		Peer p(client, *(ServerRouting*) 0, "addr", 6767, RouterId{1});
 
 		p.setAuthState(PEER_AUTHENTICATED);
 
-		Ref<Entity> e(new Entity(RouterId{3}));
+		Ref<LocatedEntity> e(new LocatedEntity(RouterId{3}));
 		int ret = p.teleportEntity(e.get());
 		assert(ret == 0);
 		assert(stub_CommClient_sent_op.isValid());
 		assert(stub_CommClient_sent_op->getArgs().size() == 1);
 	}
 
-	// Entity (external mind, unconnected)
+	// LocatedEntity (external mind, unconnected)
 	{
 		TestCommSocket client;
 		Peer p(client, *(ServerRouting*) 0, "addr", 6767, RouterId{1});
 
 		p.setAuthState(PEER_AUTHENTICATED);
 
-		Ref<Entity> e(new Entity(RouterId{3}));
+		Ref<LocatedEntity> e(new LocatedEntity(RouterId{3}));
 		ExternalMind mind(RouterId{1}, e);
 		auto& mindsProp = e->requirePropertyClassFixed<MindsProperty>();
 		mindsProp.addMind(&mind);
@@ -253,7 +253,7 @@ int main() {
 		assert(stub_CommClient_sent_op->getArgs().size() == 2);
 	}
 
-	// Entity (external mind, connected)
+	// LocatedEntity (external mind, connected)
 	{
 		TestCommSocket client;
 		Peer p(client, *(ServerRouting*) 0, "addr", 6767, RouterId{1});
@@ -261,7 +261,7 @@ int main() {
 		p.setAuthState(PEER_AUTHENTICATED);
 
 
-		Ref<Entity> e(new Entity(RouterId{3}));
+		Ref<LocatedEntity> e(new LocatedEntity(RouterId{3}));
 		ExternalMind mind(RouterId{1}, e);
 		mind.linkUp((Link*) 23);
 		auto& mindsProp = e->requirePropertyClassFixed<MindsProperty>();
@@ -334,7 +334,7 @@ int main() {
 
 		p.setAuthState(PEER_AUTHENTICATED);
 
-		Ref<Entity> e(new Entity(RouterId{23}));
+		Ref<LocatedEntity> e(new LocatedEntity(RouterId{23}));
 		int ret = p.teleportEntity(e.get());
 		assert(ret == 0);
 
@@ -355,7 +355,7 @@ int main() {
 
 		p.setAuthState(PEER_AUTHENTICATED);
 
-		Ref<Entity> e(new Entity(RouterId{23}));
+		Ref<LocatedEntity> e(new LocatedEntity(RouterId{23}));
 		int ret = p.teleportEntity(e.get());
 		assert(ret == 0);
 
@@ -380,7 +380,7 @@ int main() {
 
 		p.setAuthState(PEER_AUTHENTICATED);
 
-		Ref<Entity> e(new Entity(RouterId{23}));
+		Ref<LocatedEntity> e(new LocatedEntity(RouterId{23}));
 		ExternalMind mind(RouterId{1}, e);
 		mind.linkUp((Link*) 23);
 		auto& mindsProp = e->requirePropertyClassFixed<MindsProperty>();
@@ -416,7 +416,7 @@ int main() {
 
 		p.setAuthState(PEER_AUTHENTICATED);
 
-		Ref<Entity> e(new Entity(RouterId{23}));
+		Ref<LocatedEntity> e(new LocatedEntity(RouterId{23}));
 		int ret = p.teleportEntity(e.get());
 		assert(ret == 0);
 

@@ -33,7 +33,7 @@
 #include "server/ServerRouting.h"
 #include "server/Persistence.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/CommSocket.h"
 #include "common/debug.h"
@@ -112,7 +112,7 @@ protected:
 	Connection* m_connection;
 	Admin* m_account;
 	TestWorld* m_world;
-	Ref<Entity> m_gw;
+	Ref<LocatedEntity> m_gw;
 
 	bool m_monitor_flag;
 
@@ -359,7 +359,7 @@ void Admintest::setup() {
 	inheritance = new Inheritance();
 	Atlas::Objects::Operation::MONITOR_NO = m_id_counter++;
 
-	m_gw = new Entity(RouterId{m_id_counter++});
+	m_gw = new LocatedEntity(RouterId{m_id_counter++});
 	m_world = new TestWorld(m_gw);
 
 	m_server = new ServerRouting(*m_world,
@@ -673,7 +673,7 @@ void Admintest::test_GetOperation_obj_OOG() {
 void Admintest::test_GetOperation_obj_IG() {
 	long cid = m_id_counter++;
 	std::string cid_str = std::to_string(cid);
-	Ref<Entity> to = new Entity(RouterId{cid});
+	Ref<LocatedEntity> to = new LocatedEntity(RouterId{cid});
 
 	m_server->m_world.addEntity(to, m_gw);
 
@@ -819,7 +819,7 @@ void Admintest::test_SetOperation_obj_IG() {
 	Account_SetOperation_called = nullptr;
 
 	long cid = m_id_counter++;
-	Ref<Entity> c = new Entity(RouterId{cid});
+	Ref<LocatedEntity> c = new LocatedEntity(RouterId{cid});
 
 	m_account->m_charactersDict.emplace(cid, c);
 
@@ -1292,7 +1292,7 @@ ConnectableRouter* ServerRouting::getObject(RouterId id) const {
 }
 
 
-void Entity::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
+void LocatedEntity::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
 	ent->setId(getIdAsString());
 }
 

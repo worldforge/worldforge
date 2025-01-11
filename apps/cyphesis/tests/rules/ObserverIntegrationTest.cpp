@@ -40,7 +40,7 @@
 #include <rules/simulation/ContainerAccessProperty.h>
 #include <rules/simulation/ContainersActiveProperty.h>
 #include <rules/BBoxProperty_impl.h>
-#include <rules/simulation/Thing.h>
+#include <rules/simulation/LocatedEntity.h>
 
 using Atlas::Objects::Operation::Set;
 using Atlas::Objects::Operation::Wield;
@@ -53,13 +53,13 @@ struct TestContext
     Atlas::Objects::Factories factories;
     DatabaseNull database;
     NullEntityCreator entityCreator;
-    Ref<Thing> world;
+    Ref<LocatedEntity> world;
     Inheritance inheritance;
     TestWorldRouter testWorld;
     CorePropertyManager propertyManager;
 
     TestContext()
-            : world(new Thing(0)), inheritance(), testWorld(world, entityCreator), propertyManager(inheritance)
+            : world(new LocatedEntity(0)), inheritance(), testWorld(world, entityCreator), propertyManager(inheritance)
     {
     }
 
@@ -94,7 +94,7 @@ namespace {
         return list;
     }
 
-    auto moveFn = [](const Ref<Thing>& thing, WFMath::Point<3> pos, Ref<Thing> location = {}) -> OpVector {
+    auto moveFn = [](const Ref<LocatedEntity>& thing, WFMath::Point<3> pos, Ref<LocatedEntity> location = {}) -> OpVector {
         OpVector res;
         Atlas::Objects::Operation::Move move;
 
@@ -126,7 +126,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
         ADD_TEST(test_sendAppearDisappear);
     }
 
-    static void sendSetOp(const Ref<Thing>& entity, const std::string& propertyName, Atlas::Message::Element value)
+    static void sendSetOp(const Ref<LocatedEntity>& entity, const std::string& propertyName, Atlas::Message::Element value)
     {
         Set set;
 
@@ -159,36 +159,36 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
          */
         {
             WFMath::AxisBox<3> bbox(WFMath::Point<3>(-1, -1, -1), WFMath::Point<3>(1, 1, 1));
-            Ref<Thing> t1 = new Thing(1);
+            Ref<LocatedEntity> t1 = new LocatedEntity(1);
             t1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-128, -128, -128},
                                                                     {128,  128,  128}};
             t1->setAttrValue("domain", "physical");
             t1->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             context.testWorld.addEntity(t1, context.world);
-            Ref<Thing> t2 = new Thing(2);
+            Ref<LocatedEntity> t2 = new LocatedEntity(2);
             t2->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t2->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             t2->setAttrValue("perception_sight", 1);
             t2->setAttrValue("reach", 1);
             t2->setAttrValue("domain", "inventory");
             context.testWorld.addEntity(t2, t1);
-            Ref<Thing> t3 = new Thing(3);
+            Ref<LocatedEntity> t3 = new LocatedEntity(3);
             t3->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t3->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             t3->setAttrValue("domain", "container");
             context.testWorld.addEntity(t3, t2);
-            Ref<Thing> t4 = new Thing(4);
+            Ref<LocatedEntity> t4 = new LocatedEntity(4);
             t4->setAttrValue("domain", "container");
             context.testWorld.addEntity(t4, t3);
-            Ref<Thing> t5 = new Thing(5);
+            Ref<LocatedEntity> t5 = new LocatedEntity(5);
             t5->setAttrValue("domain", "container");
             context.testWorld.addEntity(t5, t4);
-            Ref<Thing> t6 = new Thing(6);
+            Ref<LocatedEntity> t6 = new LocatedEntity(6);
             context.testWorld.addEntity(t6, t5);
-            Ref<Thing> t7 = new Thing(7);
+            Ref<LocatedEntity> t7 = new LocatedEntity(7);
             t7->setAttrValue("domain", "container");
             context.testWorld.addEntity(t7, t3);
-            Ref<Thing> t8 = new Thing(8);
+            Ref<LocatedEntity> t8 = new LocatedEntity(8);
             context.testWorld.addEntity(t8, t7);
 
             //Initially only t3 is visible to t2, since it's in its inventory
@@ -269,30 +269,30 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
          */
         {
             WFMath::AxisBox<3> bbox(WFMath::Point<3>(-1, -1, -1), WFMath::Point<3>(1, 1, 1));
-            Ref<Thing> t1 = new Thing(1);
+            Ref<LocatedEntity> t1 = new LocatedEntity(1);
             t1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-128, -128, -128},
                                                                     {128,  128,  128}};
             t1->setAttrValue("domain", "physical");
             t1->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             context.testWorld.addEntity(t1, context.world);
-            Ref<Thing> t2 = new Thing(2);
+            Ref<LocatedEntity> t2 = new LocatedEntity(2);
             t2->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t2->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             t2->setAttrValue("domain", "container");
             context.testWorld.addEntity(t2, t1);
-            Ref<Thing> t3 = new Thing(3);
+            Ref<LocatedEntity> t3 = new LocatedEntity(3);
             t3->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t3->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             t3->setAttrValue("perception_sight", 1);
             t3->setAttrValue("reach", 1);
             context.testWorld.addEntity(t3, t1);
-            Ref<Thing> t4 = new Thing(4);
+            Ref<LocatedEntity> t4 = new LocatedEntity(4);
             t4->setAttrValue("domain", "container");
             context.testWorld.addEntity(t4, t2);
-            Ref<Thing> t5 = new Thing(5);
+            Ref<LocatedEntity> t5 = new LocatedEntity(5);
             t5->setAttrValue("domain", "container");
             context.testWorld.addEntity(t5, t4);
-            Ref<Thing> t6 = new Thing(6);
+            Ref<LocatedEntity> t6 = new LocatedEntity(6);
             context.testWorld.addEntity(t6, t5);
 
             ASSERT_TRUE(t2->isVisibleForOtherEntity(*t3))
@@ -349,43 +349,43 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             auto& queue = opsHandler.getQueue();
 
             WFMath::AxisBox<3> bbox(WFMath::Point<3>(-1, -1, -1), WFMath::Point<3>(1, 1, 1));
-            Ref<Thing> t1 = new Thing(1);
+            Ref<LocatedEntity> t1 = new LocatedEntity(1);
             t1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-128, -128, -128},
                                                                     {128,  128,  128}};
             t1->setAttrValue("domain", "physical");
             t1->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             context.testWorld.addEntity(t1, context.world);
-            Ref<Thing> t2 = new Thing(2);
+            Ref<LocatedEntity> t2 = new LocatedEntity(2);
             t2->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t2->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             t2->setAttrValue("domain", "container");
             context.testWorld.addEntity(t2, t1);
-            Ref<Thing> t3 = new Thing(3);
+            Ref<LocatedEntity> t3 = new LocatedEntity(3);
             t3->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t3->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             t3->setAttrValue("domain", "inventory");
             t3->setAttrValue("perception_sight", 1);
             t3->setAttrValue("reach", 1);
             context.testWorld.addEntity(t3, t1);
-            Ref<Thing> t4 = new Thing(4);
+            Ref<LocatedEntity> t4 = new LocatedEntity(4);
             t4->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t4->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             context.testWorld.addEntity(t4, t2);
-            Ref<Thing> t5 = new Thing(5);
+            Ref<LocatedEntity> t5 = new LocatedEntity(5);
             t5->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t5->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             t5->setAttrValue("domain", "container");
             context.testWorld.addEntity(t5, t2);
-            Ref<Thing> t6 = new Thing(6);
+            Ref<LocatedEntity> t6 = new LocatedEntity(6);
             t6->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t6->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             context.testWorld.addEntity(t6, t5);
-            Ref<Thing> t7 = new Thing(7);
+            Ref<LocatedEntity> t7 = new LocatedEntity(7);
             t7->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t7->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             t7->setAttrValue("domain", "container");
             context.testWorld.addEntity(t7, t3);
-            Ref<Thing> t8 = new Thing(8);
+            Ref<LocatedEntity> t8 = new LocatedEntity(8);
             t8->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t8->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             context.testWorld.addEntity(t8, t7);
@@ -530,7 +530,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
             moveFn(t3, {0, 0, 0});
             t2->setAttrValue(ContainerAccessProperty::property_name, Atlas::Message::ListType{t3->getIdAsString()});
             context.clearQueues();
-            Ref<Thing> t9 = new Thing(9);
+            Ref<LocatedEntity> t9 = new LocatedEntity(9);
             t9->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t9->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             context.testWorld.addEntity(t9, t2);
@@ -555,7 +555,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
         auto& queue = opsHandler.getQueue();
 
         long counter = 1;
-        Ref<Thing> domainPhysical(new Thing(counter++));
+        Ref<LocatedEntity> domainPhysical(new LocatedEntity(counter++));
         context.testWorld.addEntity(domainPhysical, context.world);
         domainPhysical->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-512, -512, -512},
                                                                             {512,  512,  512}};
@@ -565,14 +565,14 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
         context.clearQueues();
 
         // Make an observer, which we'll add to the physical domain
-        Ref<Thing> observer(new Thing(counter++));
+        Ref<LocatedEntity> observer(new LocatedEntity(counter++));
         observer->setAttrValue("mode", "fixed");
         observer->setAttrValue("perception_sight", 1);
         observer->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 0, 0};
         context.testWorld.addEntity(observer, domainPhysical);
 
         // Make an admin observer, which we'll add to the physical domain
-        Ref<Thing> observerAdmin(new Thing(counter++));
+        Ref<LocatedEntity> observerAdmin(new LocatedEntity(counter++));
         observerAdmin->setAttrValue("mode", "fixed");
         observerAdmin->setAttrValue("perception_sight", 1);
         observerAdmin->setAttrValue(AdminProperty::property_name, 1);
@@ -584,7 +584,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
         OpVector res;
 
         // Create a private entity, which should only be seen by observerAdmin
-        Ref<Thing> objectPrivate1(new Thing(counter++));
+        Ref<LocatedEntity> objectPrivate1(new LocatedEntity(counter++));
         objectPrivate1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, -1, -1},
                                                                             {1,  1,  1}};
         objectPrivate1->setAttrValue("mode", "fixed");
@@ -625,13 +625,13 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
         auto& queue = opsHandler.getQueue();
 
         long counter = 1;
-        Ref<Thing> domainPhysical(new Thing(counter++));
+        Ref<LocatedEntity> domainPhysical(new LocatedEntity(counter++));
         context.testWorld.addEntity(domainPhysical, context.world);
         domainPhysical->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-512, -512, -512},
                                                                             {512,  512,  512}};
         domainPhysical->setDomain(std::make_unique<PhysicalDomain>(*domainPhysical));
 
-        Ref<Thing> domainVoid(new Thing(counter++));
+        Ref<LocatedEntity> domainVoid(new LocatedEntity(counter++));
         context.testWorld.addEntity(domainVoid, context.world);
         domainVoid->setDomain(std::make_unique<VoidDomain>(*domainVoid));
 
@@ -652,7 +652,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
         context.clearQueues();
 
         // Make an observer, which we'll add to the physical domain
-        Ref<Thing> observer(new Thing(counter++));
+        Ref<LocatedEntity> observer(new LocatedEntity(counter++));
         observer->setAttrValue("mode", "fixed");
         observer->setAttrValue("perception_sight", 1);
         observer->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 0, 0};
@@ -672,7 +672,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
         context.clearQueues();
 
         // Make another observer, which we'll add to the void domain
-        Ref<Thing> observer_void(new Thing(counter++));
+        Ref<LocatedEntity> observer_void(new LocatedEntity(counter++));
         observer_void->setAttrValue("mode", "fixed");
         observer_void->setAttrValue("perception_sight", 1);
         observer_void->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 0, 0};
@@ -682,7 +682,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
         context.clearQueues();
 
         // Create something we can look at
-        Ref<Thing> object1(new Thing(counter++));
+        Ref<LocatedEntity> object1(new LocatedEntity(counter++));
         object1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, -1, -1},
                                                                      {1,  1,  1}};
         object1->setAttrValue("mode", "fixed");
@@ -806,7 +806,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
         ASSERT_EQUAL(observer->getIdAsString(), res[1]->getTo())
 
         // Create a new object, which we'll then move away beyond visible distance
-        Ref<Thing> object2(new Thing(counter++));
+        Ref<LocatedEntity> object2(new LocatedEntity(counter++));
         object2->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-0.1, -0.1, -0.1},
                                                                      {0.1,  0.1,  0.1}};
         object2->setAttrValue("mode", "fixed");

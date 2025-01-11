@@ -37,7 +37,7 @@
 #include "common/TypeNode_impl.h"
 #include "common/CommSocket.h"
 #include "../DatabaseNull.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Operation.h>
@@ -66,7 +66,7 @@ using Atlas::Objects::smart_dynamic_cast;
 
 class SpawningTestWorld : public TestWorld {
 public:
-	SpawningTestWorld(Ref<Entity> gw) : TestWorld(gw) {}
+	SpawningTestWorld(Ref<LocatedEntity> gw) : TestWorld(gw) {}
 
 	void addEntity(const Ref<LocatedEntity>& ent, const Ref<LocatedEntity>& parent) override {
 		ent->m_parent = parent.get();
@@ -78,7 +78,7 @@ public:
 									const Atlas::Objects::Entity::RootEntity&) override {
 		auto id = newId();
 
-		Ref<Entity> e = new Entity(id);
+		Ref<LocatedEntity> e = new LocatedEntity(id);
 
 		e->setType(new TypeNode<LocatedEntity>(t));
 		addEntity(e, m_gw);
@@ -104,7 +104,7 @@ class AccountConnectionintegration : public Cyphesis::TestBase {
 protected:
 	DatabaseNull m_database;
 	Persistence* m_persistence;
-	Ref<Entity> m_tlve;
+	Ref<LocatedEntity> m_tlve;
 	BaseWorld* m_world;
 	ServerRouting* m_server;
 	Connection* m_connection;
@@ -130,7 +130,7 @@ AccountConnectionintegration::AccountConnectionintegration() {
 
 void AccountConnectionintegration::setup() {
 	m_persistence = new Persistence(m_database);
-	m_tlve = new Entity(0);
+	m_tlve = new LocatedEntity(0);
 	m_world = new SpawningTestWorld(m_tlve);
 	m_server = new ServerRouting(*m_world,
 								 *m_persistence,

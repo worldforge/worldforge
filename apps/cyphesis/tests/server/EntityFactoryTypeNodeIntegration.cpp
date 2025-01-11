@@ -27,7 +27,7 @@
 
 #include "../TestPropertyManager.h"
 
-#include "rules/simulation/Thing.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/TypeNode_impl.h"
 
@@ -38,7 +38,7 @@ int main() {
 	std::map<const TypeNode<LocatedEntity>*, TypeNode<LocatedEntity>::PropertiesUpdate> changes;
 
 	TypeNode<LocatedEntity> typeNode("thing");
-	EntityFactory<Thing> ek;
+	EntityFactory<LocatedEntity> ek;
 
 	ek.m_type = &typeNode;
 
@@ -54,7 +54,7 @@ int main() {
 	assert(ek.m_type->defaults().size() == 1);
 
 	TypeNode<LocatedEntity> subType("subclass");
-	EntityFactory<Thing> subclass_ek;
+	EntityFactory<LocatedEntity> subclass_ek;
 	subclass_ek.m_type = &subType;
 	subclass_ek.m_type->setParent(ek.m_type);
 	ek.m_children.insert(&subclass_ek);

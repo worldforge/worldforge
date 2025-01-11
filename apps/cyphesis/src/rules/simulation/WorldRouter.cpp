@@ -18,7 +18,7 @@
 
 #include "WorldRouter.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/Domain.h"
 
 #include "common/id.h"

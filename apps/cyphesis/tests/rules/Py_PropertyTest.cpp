@@ -36,10 +36,10 @@
 #include "../TestWorld.h"
 
 #include "pythonbase/Python_API.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/LineProperty.h"
 #include "rules/simulation/TerrainProperty.h"
-#include "rules/simulation/python/CyPy_Entity.h"
+#include "rules/simulation/python/CyPy_LocatedEntity.h"
 
 #include "pycxx/CXX/Extensions.hxx"
 
@@ -49,7 +49,7 @@ class TestProp : public Py::ExtensionModule<TestProp>
     public:
         Py::Object add_properties(const Py::Tuple& args)
         {
-            auto ent = CyPy_Entity::value(args.front());
+            auto ent = CyPy_LocatedEntity::value(args.front());
 
             auto p = ent->setProperty("terrain", std::make_unique<TerrainProperty>());
             p->install(*ent, "terrain");
@@ -89,7 +89,7 @@ int main()
                          &CyPy_Common::init});
 
 
-        Ref<Entity> wrld(new Entity(0));
+        Ref<LocatedEntity> wrld(new LocatedEntity(0));
         TestWorld tw(wrld);
 
         run_python_string("from server import *");

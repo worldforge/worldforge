@@ -1,7 +1,5 @@
 add_library(cyphesis-rulessimulation
         BaseWorld.cpp
-        Entity.cpp
-        Thing.cpp
         ExternalMind.cpp
         Movement.cpp
         LineProperty.cpp

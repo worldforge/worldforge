@@ -31,8 +31,7 @@
 #include "server/EntityFactory_impl.h"
 #include "server/ArchetypeFactory.h"
 
-#include "rules/simulation/Thing.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/Script.h"
 #include "rules/simulation/Task.h"
 
@@ -69,7 +68,7 @@ Atlas::Objects::Factories factories;
 }
 class EntityBuildertest : public Cyphesis::TestBase {
 private:
-	Ref<Entity> e;
+	Ref<LocatedEntity> e;
 	BaseWorld* test_world;
 	EntityBuilder* eb;
 public:
@@ -105,11 +104,11 @@ EntityBuildertest::EntityBuildertest() {
 
 void EntityBuildertest::setup() {
 	inheritance = new Inheritance();
-	e = new Entity(1);
+	e = new LocatedEntity(1);
 	test_world = new TestWorld(e);
 	eb = new EntityBuilder();
 
-	eb->installBaseFactory("thing", "game_entity", std::make_unique<EntityFactory<Thing>>());
+	eb->installBaseFactory("thing", "game_entity", std::make_unique<EntityFactory<LocatedEntity>>());
 }
 
 void EntityBuildertest::teardown() {
@@ -136,7 +135,7 @@ void EntityBuildertest::test_sequence1() {
 void EntityBuildertest::test_sequence2() {
 	Anonymous attributes;
 
-	// Create a normal Entity
+	// Create a normal LocatedEntity
 	auto test_ent = eb->newEntity(1, "thing", attributes);
 	assert(test_ent);
 
@@ -206,7 +205,7 @@ void EntityBuildertest::test_sequence4() {
 	assert(factory_dict.find("custom_type") == factory_dict.end());
 
 	// Set up a type description for a new type, and install it
-	EntityFactoryBase* custom_type_factory = new EntityFactory<Entity>();
+	EntityFactoryBase* custom_type_factory = new EntityFactory<LocatedEntity>();
 	custom_type_factory->m_attributes["test_custom_type_attr"] =
 			"test_value";
 	{
@@ -267,7 +266,7 @@ void EntityBuildertest::test_sequence5() {
 	assert(factory_dict.find("custom_scripted_type") == factory_dict.end());
 
 	// Set up a type description for a new type, and install it
-	EntityFactoryBase* custom_type_factory = new EntityFactory<Entity>();
+	EntityFactoryBase* custom_type_factory = new EntityFactory<LocatedEntity>();
 	custom_type_factory->m_attributes["test_custom_type_attr"] =
 			"test_value";
 
@@ -295,7 +294,7 @@ void EntityBuildertest::test_sequence5() {
 void EntityBuildertest::test_installFactory_duplicate() {
 	auto& factory_dict = eb->getFactories();
 
-	EntityFactoryBase* custom_type_factory = new EntityFactory<Entity>();
+	EntityFactoryBase* custom_type_factory = new EntityFactory<LocatedEntity>();
 
 	int ret = eb->installFactory("custom_type",
 								 atlasClass("custom_type", "thing"),
@@ -305,7 +304,7 @@ void EntityBuildertest::test_installFactory_duplicate() {
 	ASSERT_TRUE(factory_dict.find("custom_type") != factory_dict.end());
 	ASSERT_EQUAL(factory_dict.find("custom_type")->second.get(), custom_type_factory);
 
-	EntityFactoryBase* custom_type_factory2 = new EntityFactory<Entity>();
+	EntityFactoryBase* custom_type_factory2 = new EntityFactory<LocatedEntity>();
 
 	ret = eb->installFactory("custom_type",
 							 atlasClass("custom_type", "thing"),
@@ -332,24 +331,18 @@ int main(int argc, char** argv) {
 class World;
 
 template<>
-Ref<Entity> EntityFactory<World>::newEntity(RouterId id,
+Ref<LocatedEntity> EntityFactory<World>::newEntity(RouterId id,
 											const Atlas::Objects::Entity::RootEntity& attributes) {
 	return 0;
 }
 
-class Thing;
+class LocatedEntity;
 
 class Character;
 
 
 template
-class EntityFactory<Entity>;
-
-template
-class EntityFactory<Thing>;
-
-template
-class EntityFactory<World>;
+class EntityFactory<LocatedEntity>;
 
 void LocatedEntity::makeContainer() {
 	if (m_contains == 0) {

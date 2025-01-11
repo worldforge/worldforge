@@ -20,8 +20,8 @@
 #include <rules/python/CyPy_Vector3D.h>
 #include <rules/python/CyPy_Point3D.h>
 #include "CyPy_Domain.h"
-#include "rules/simulation/LocatedEntity.h"
-#include "CyPy_Entity.h"
+
+#include "CyPy_LocatedEntity.h"
 
 CyPy_Domain::CyPy_Domain(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds)
 		: WrapperBase(self, args, kwds) {
@@ -84,7 +84,7 @@ Py::Object CyPy_CollisionEntry::getattro(const Py::String& name) {
 	}
 	if (as_string == "entity") {
 		if (m_value.entity) {
-			return CyPy_Entity::wrap(m_value.entity);
+			return CyPy_LocatedEntity::wrap(m_value.entity);
 		}
 		return Py::None();
 	}

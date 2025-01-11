@@ -28,7 +28,6 @@
 #include "rules/simulation/CorePropertyManager.h"
 
 #include "rules/simulation/Domain.h"
-#include "rules/simulation/Entity.h"
 
 #include "rules/simulation/Inheritance.h"
 #include "common/PropertyFactory_impl.h"
@@ -131,11 +130,11 @@ int main() {
 #include "rules/simulation/TasksProperty.h"
 
 #include "rules/simulation/VisibilityProperty.h"
-#include "rules/simulation/Thing.h"
+#include "rules/simulation/LocatedEntity.h"
 
 
 template
-class EntityFactory<Thing>;
+class EntityFactory<LocatedEntity>;
 
 template
 class PropertyFactory<MinimalProperty, LocatedEntity>;

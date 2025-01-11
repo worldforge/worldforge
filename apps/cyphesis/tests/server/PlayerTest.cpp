@@ -33,7 +33,7 @@
 #include "server/ServerRouting.h"
 #include "rules/simulation/ExternalMind.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/CommSocket.h"
 #include "common/debug.h"
@@ -105,7 +105,7 @@ long Playertest::newId() {
 }
 
 void Playertest::setup() {
-	Ref<Entity> gw = new Entity(RouterId{m_id_counter++});
+	Ref<LocatedEntity> gw = new LocatedEntity(RouterId{m_id_counter++});
 	m_world = new TestWorld(gw);
 
 	m_server = new ServerRouting(*m_world,

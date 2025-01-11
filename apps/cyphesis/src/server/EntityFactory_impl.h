@@ -33,7 +33,7 @@ template<class T>
 EntityFactory<T>::~EntityFactory() = default;
 
 template<class T>
-Ref<Entity> EntityFactory<T>::newEntity(RouterId id,
+Ref<LocatedEntity> EntityFactory<T>::newEntity(RouterId id,
                                                const Atlas::Objects::Entity::RootEntity& attributes)
 {
     ++m_createdCount;

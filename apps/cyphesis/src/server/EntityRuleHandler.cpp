@@ -24,7 +24,7 @@
 
 #include "common/log.h"
 #include "common/debug.h"
-#include "rules/simulation/Thing.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <iostream>
 
@@ -43,7 +43,7 @@ EntityRuleHandler::EntityRuleHandler(EntityBuilder& eb, const PropertyManager<Lo
 		: m_builder(eb), m_propertyManager(propertyManager) {
 
 	mFactories["thing"] = [](EntityFactoryBase* parent) -> std::unique_ptr<EntityFactoryBase> {
-		auto factory = std::make_unique<EntityFactory<Thing>>();
+		auto factory = std::make_unique<EntityFactory<LocatedEntity>>();
 		factory->m_parent = parent;
 		return factory;
 	};

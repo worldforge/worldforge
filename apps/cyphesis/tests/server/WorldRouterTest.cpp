@@ -30,7 +30,7 @@
 #include "server/EntityBuilder.h"
 
 #include "rules/simulation/Domain.h"
-#include "rules/simulation/Thing.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/const.h"
 #include "common/globals.h"
@@ -101,7 +101,7 @@ WorldRoutertest::WorldRoutertest() {
 }
 
 void WorldRoutertest::setup() {
-	m_rootEntity = new Entity(0);
+	m_rootEntity = new LocatedEntity(0);
 	m_inheritance = new Inheritance();
 	m_eb = new EntityBuilder();
 	test_world = new WorldRouter(m_rootEntity, *m_eb, []() { return std::chrono::milliseconds(0); });
@@ -134,7 +134,7 @@ void WorldRoutertest::test_addNewEntity_thing() {
 void WorldRoutertest::test_addEntity() {
 	auto id = newId();
 
-	auto ent2 = new Entity(id);
+	auto ent2 = new LocatedEntity(id);
 	ent2->incRef();
 	assert(ent2 != 0);
 	m_rootEntity->addChild(*ent2);
@@ -144,7 +144,7 @@ void WorldRoutertest::test_addEntity() {
 void WorldRoutertest::test_addEntity_tick() {
 	auto id = newId();
 
-	auto ent2 = new Entity(id);
+	auto ent2 = new LocatedEntity(id);
 	assert(ent2 != 0);
 	m_rootEntity->addChild(*ent2);
 	test_world->addEntity(ent2, m_rootEntity);
@@ -159,7 +159,7 @@ void WorldRoutertest::test_addEntity_tick() {
 void WorldRoutertest::test_addEntity_tick_get() {
 	auto id = newId();
 
-	auto ent2 = new Entity(id);
+	auto ent2 = new LocatedEntity(id);
 	assert(ent2 != 0);
 	m_rootEntity->addChild(*ent2);
 	test_world->addEntity(ent2, m_rootEntity);
@@ -175,7 +175,7 @@ void WorldRoutertest::test_addEntity_tick_get() {
 void WorldRoutertest::test_delEntity() {
 	auto id = newId();
 
-	auto ent2 = new Entity(id);
+	auto ent2 = new LocatedEntity(id);
 	assert(ent2 != 0);
 	m_rootEntity->addChild(*ent2);
 	test_world->addEntity(ent2, m_rootEntity);
@@ -288,11 +288,11 @@ const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& typeName)
 }
 
 
-Ref<Entity> EntityBuilder::newEntity(RouterId id,
+Ref<LocatedEntity> EntityBuilder::newEntity(RouterId id,
 									 const std::string& type,
 									 const RootEntity& attributes) const {
 	if (type == "thing") {
-		auto e = new Entity(id);
+		auto e = new LocatedEntity(id);
 		return e;
 	}
 	return 0;

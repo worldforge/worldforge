@@ -25,7 +25,7 @@
 
 #include "../TestBase.h"
 #include "../TestWorld.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "server/ServerAccount.h"
 
 #include "server/Connection.h"
@@ -59,7 +59,7 @@ protected:
 	TestWorld* m_world;
 
 
-	static Ref<Entity> TestWorld_addNewEntity_ret_value;
+	static Ref<LocatedEntity> TestWorld_addNewEntity_ret_value;
 public:
 	ServerAccounttest();
 
@@ -70,12 +70,12 @@ public:
 	void test_getType();
 
 
-	static Ref<Entity> get_TestWorld_addNewEntity_ret_value();
+	static Ref<LocatedEntity> get_TestWorld_addNewEntity_ret_value();
 };
 
-Ref<Entity> ServerAccounttest::TestWorld_addNewEntity_ret_value;
+Ref<LocatedEntity> ServerAccounttest::TestWorld_addNewEntity_ret_value;
 
-Ref<Entity> ServerAccounttest::get_TestWorld_addNewEntity_ret_value() {
+Ref<LocatedEntity> ServerAccounttest::get_TestWorld_addNewEntity_ret_value() {
 	return TestWorld_addNewEntity_ret_value;
 }
 
@@ -89,7 +89,7 @@ ServerAccounttest::ServerAccounttest() : m_id_counter(0L),
 
 void ServerAccounttest::setup() {
 
-	Ref<Entity> gw = new Entity(m_id_counter++);
+	Ref<LocatedEntity> gw = new LocatedEntity(m_id_counter++);
 	TestWorld::extension.addNewEntityFn = [&, gw](const std::string&,
 												  const Atlas::Objects::Entity::RootEntity&) {
 		auto ne = ServerAccounttest::get_TestWorld_addNewEntity_ret_value();

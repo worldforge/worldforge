@@ -29,25 +29,19 @@
 #include "server/Ruleset.h"
 #include "server/ServerRouting.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/debug.h"
 
-#include <Atlas/Objects/Anonymous.h>
-#include <Atlas/Objects/Operation.h>
-#include <Atlas/Objects/SmartPtr.h>
-
-#include <cassert>
 #include <rules/simulation/PhysicalDomain.h>
+#include "common/TypeNode.h"
 #include <common/TypeNode_impl.h>
 #include <rules/simulation/ModeProperty.h>
 #include <rules/simulation/TerrainProperty.h>
 #include <Mercator/BasePoint.h>
 #include <Mercator/Terrain.h>
 #include <rules/simulation/PropelProperty.h>
-#include <rules/simulation/AngularFactorProperty.h>
 #include <chrono>
-#include <rules/simulation/VisibilityProperty.h>
 #include <rules/BBoxProperty_impl.h>
 
 
@@ -70,9 +64,9 @@ public:
 
 	static long newId();
 
-	void setup();
+	void setup() override;
 
-	void teardown();
+	void teardown() override;
 
 	void test_static_entities_no_move();
 
@@ -104,40 +98,40 @@ void PhysicalDomainBenchmark::teardown() {
 
 void PhysicalDomainBenchmark::test_static_entities_no_move() {
 
-	double tickSize = 1.0 / 15.0;
+	std::chrono::milliseconds tickSize{static_cast<long>((1.0 / 15.0) * 1000)};
 
-	TypeNode* rockType = new TypeNode("rock");
-	ModeProperty* modePlantedProperty = new ModeProperty();
+	auto* rockType = new TypeNode<LocatedEntity>("rock");
+	auto* modePlantedProperty = new ModeProperty();
 	modePlantedProperty->set("planted");
 
-	Entity* rootEntity = new Entity(newId());
-	TerrainProperty* terrainProperty = new TerrainProperty();
+	auto* rootEntity = new LocatedEntity(newId());
+	auto terrainProperty = new TerrainProperty();
 	rootEntity->setProperty("terrain", std::unique_ptr<PropertyBase>(terrainProperty));
-	Mercator::Terrain& terrain = terrainProperty->getData(*rootEntity);
+	Mercator::Terrain& terrain = TerrainProperty::getData(*rootEntity);
 	terrain.setBasePoint(0, 0, Mercator::BasePoint(40));
 	terrain.setBasePoint(0, 1, Mercator::BasePoint(40));
 	terrain.setBasePoint(1, 0, Mercator::BasePoint(10));
 	terrain.setBasePoint(1, 1, Mercator::BasePoint(10));
-	rootEntity->requirePropertyClassFixed<PositionProperty>().data() = WFMath::Point<3>::ZERO();
-	rootEntity->requirePropertyClassFixed<BBoxProperty>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(0, -64, 0), WFMath::Point<3>(64, 64, 64));
-	PhysicalDomain* domain = new PhysicalDomain(*rootEntity);
+	rootEntity->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
+	rootEntity->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(0, -64, 0), WFMath::Point<3>(64, 64, 64));
+	auto* domain = new PhysicalDomain(*rootEntity);
 
-	Property<double>* massProp = new Property<double>();
+	auto* massProp = new Property<double, LocatedEntity>();
 	massProp->data() = 100;
 
-	std::vector<Entity*> entities;
+	std::vector<LocatedEntity*> entities;
 
 	for (size_t i = 0; i < 60; ++i) {
 		for (size_t j = 0; j < 60; ++j) {
 			long id = newId();
 			std::stringstream ss;
 			ss << "planted" << id;
-			Entity* entity = new Entity(id);
+			auto* entity = new LocatedEntity(id);
 			entity->setProperty("mass", std::unique_ptr<PropertyBase>(massProp));
 			entity->setType(rockType);
 			entity->setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty));
-			entity->requirePropertyClassFixed<PositionProperty>().data() = WFMath::Point<3>(i, j, i + j);
-			entity->requirePropertyClassFixed<BBoxProperty>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-0.25f, 0, -0.25f), WFMath::Point<3>(-0.25f, 0.5f, -0.25f));
+			entity->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(i, j, i + j);
+			entity->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-0.25f, 0, -0.25f), WFMath::Point<3>(-0.25f, 0.5f, -0.25f));
 			domain->addEntity(*entity);
 			entities.push_back(entity);
 		}
@@ -165,11 +159,11 @@ void PhysicalDomainBenchmark::test_static_entities_no_move() {
 
 void PhysicalDomainBenchmark::test_determinism() {
 
-	double tickSize = 1.0 / 15.0;
+	std::chrono::milliseconds tickSize{static_cast<long>((1.0 / 15.0) * 1000)};
 
-	TypeNode* rockType = new TypeNode("rock");
+	TypeNode<LocatedEntity>* rockType = new TypeNode<LocatedEntity>("rock");
 
-	Entity* rootEntity = new Entity(newId());
+	LocatedEntity* rootEntity = new LocatedEntity(newId());
 	TerrainProperty* terrainProperty = new TerrainProperty();
 	rootEntity->setProperty("terrain", std::unique_ptr<PropertyBase>(terrainProperty));
 	Mercator::Terrain& terrain = terrainProperty->getData(*rootEntity);
@@ -177,25 +171,25 @@ void PhysicalDomainBenchmark::test_determinism() {
 	terrain.setBasePoint(0, 1, Mercator::BasePoint(40));
 	terrain.setBasePoint(1, 0, Mercator::BasePoint(10));
 	terrain.setBasePoint(1, 1, Mercator::BasePoint(10));
-	rootEntity->requirePropertyClassFixed<PositionProperty>().data() = WFMath::Point<3>::ZERO();
-	rootEntity->requirePropertyClassFixed<BBoxProperty>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(0, -64, 0), WFMath::Point<3>(64, 64, 64));
+	rootEntity->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
+	rootEntity->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(0, -64, 0), WFMath::Point<3>(64, 64, 64));
 	PhysicalDomain* domain = new PhysicalDomain(*rootEntity);
 
-	Property<double>* massProp = new Property<double>();
+	Property<double, LocatedEntity>* massProp = new Property<double, LocatedEntity>();
 	massProp->data() = 100;
 
-	std::vector<Entity*> entities;
+	std::vector<LocatedEntity*> entities;
 
 	for (size_t i = 0; i < 10; ++i) {
 		for (size_t j = 0; j < 10; ++j) {
 			long id = newId();
 			std::stringstream ss;
 			ss << "free" << id;
-			Entity* freeEntity = new Entity(id);
+			LocatedEntity* freeEntity = new LocatedEntity(id);
 			freeEntity->setProperty("mass", std::unique_ptr<PropertyBase>(massProp));
 			freeEntity->setType(rockType);
-			freeEntity->requirePropertyClassFixed<PositionProperty>().data() = WFMath::Point<3>(i, j, i + j);
-			freeEntity->requirePropertyClassFixed<BBoxProperty>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-0.25f, 0, -0.25f), WFMath::Point<3>(-0.25f, 0.5f, -0.25f));
+			freeEntity->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(i, j, i + j);
+			freeEntity->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-0.25f, 0, -0.25f), WFMath::Point<3>(-0.25f, 0.5f, -0.25f));
 			domain->addEntity(*freeEntity);
 			entities.push_back(freeEntity);
 		}
@@ -221,22 +215,22 @@ void PhysicalDomainBenchmark::test_determinism() {
 
 void PhysicalDomainBenchmark::test_visibilityPerformance() {
 
-	double tickSize = 1.0 / 15.0;
+	std::chrono::milliseconds tickSize{static_cast<long>((1.0 / 15.0) * 1000)};
 
-	TypeNode* rockType = new TypeNode("rock");
-	TypeNode* humanType = new TypeNode("human");
+	TypeNode<LocatedEntity>* rockType = new TypeNode<LocatedEntity>("rock");
+	TypeNode<LocatedEntity>* humanType = new TypeNode<LocatedEntity>("human");
 
 	PropelProperty* propelProperty = new PropelProperty();
 	////Move diagonally up
 	propelProperty->data() = WFMath::Vector<3>(5, 0, 5);
 
-	Property<double>* massProp = new Property<double>();
+	Property<double, LocatedEntity>* massProp = new Property<double, LocatedEntity>();
 	massProp->data() = 10000;
 
-	Ref<Entity> rootEntity = new Entity(newId());
-	rootEntity->requirePropertyClassFixed<PositionProperty>().data() = WFMath::Point<3>::ZERO();
+	Ref<LocatedEntity> rootEntity = new LocatedEntity(newId());
+	rootEntity->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
 	WFMath::AxisBox<3> aabb(WFMath::Point<3>(-512, 0, -512), WFMath::Point<3>(512, 64, 512));
-	rootEntity->requirePropertyClassFixed<BBoxProperty>().data() = aabb;
+	rootEntity->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = aabb;
 	PhysicalDomain* domain = new PhysicalDomain(*rootEntity);
 
 	TestWorld testWorld(rootEntity);
@@ -244,7 +238,7 @@ void PhysicalDomainBenchmark::test_visibilityPerformance() {
 	ModeProperty* modePlantedProperty = new ModeProperty();
 	modePlantedProperty->set("planted");
 
-	std::vector<Entity*> entities;
+	std::vector<LocatedEntity*> entities;
 
 	int counter = 0;
 
@@ -256,11 +250,11 @@ void PhysicalDomainBenchmark::test_visibilityPerformance() {
 			long id = newId();
 			std::stringstream ss;
 			ss << "planted" << id;
-			Entity* plantedEntity = new Entity(id);
+			LocatedEntity* plantedEntity = new LocatedEntity(id);
 			plantedEntity->setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty));
 			plantedEntity->setType(rockType);
-			plantedEntity->requirePropertyClassFixed<PositionProperty>().data() = WFMath::Point<3>(i, 0, j);
-			plantedEntity->requirePropertyClassFixed<BBoxProperty>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-0.25f, 0, -0.25f), WFMath::Point<3>(-0.25f, .2f, -0.25f));
+			plantedEntity->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(i, 0, j);
+			plantedEntity->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-0.25f, 0, -0.25f), WFMath::Point<3>(-0.25f, .2f, -0.25f));
 			domain->addEntity(*plantedEntity);
 			entities.push_back(plantedEntity);
 		}
@@ -274,17 +268,17 @@ void PhysicalDomainBenchmark::test_visibilityPerformance() {
 
 	int numberOfObservers = 200;
 
-	std::vector<Entity*> observers;
+	std::vector<LocatedEntity*> observers;
 	for (int i = 0; i < numberOfObservers; ++i) {
 		long id = newId();
 		std::stringstream ss;
 		ss << "observer" << id;
-		Entity* observerEntity = new Entity(id);
+		LocatedEntity* observerEntity = new LocatedEntity(id);
 		observers.push_back(observerEntity);
-		observerEntity->requirePropertyClassFixed<SolidProperty>().set(0);
+		observerEntity->requirePropertyClassFixed<SolidProperty<LocatedEntity>>().set(0);
 		observerEntity->setType(humanType);
-		observerEntity->requirePropertyClassFixed<PositionProperty>().data() = WFMath::Point<3>(aabb.lowCorner().x() + (i * 4), 0, aabb.lowCorner().z());
-		observerEntity->requirePropertyClassFixed<BBoxProperty>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-0.1f, 0, -0.1f), WFMath::Point<3>(0.1, 2, 0.1));
+		observerEntity->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(aabb.lowCorner().x() + (i * 4), 0, aabb.lowCorner().z());
+		observerEntity->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-0.1f, 0, -0.1f), WFMath::Point<3>(0.1, 2, 0.1));
 		observerEntity->setProperty(PropelProperty::property_name, std::unique_ptr<PropertyBase>(propelProperty));
 		observerEntity->addFlags(entity_perceptive);
 		observerEntity->setProperty("mass", std::unique_ptr<PropertyBase>(massProp));
@@ -295,7 +289,7 @@ void PhysicalDomainBenchmark::test_visibilityPerformance() {
 	OpVector res;
 
 	//First tick is setup, so we'll exclude that from time measurement
-	domain->tick(2, res);
+	domain->tick(std::chrono::seconds{2}, res);
 	{
 		auto start = std::chrono::high_resolution_clock::now();
 		//Inject ticks for 20 seconds
@@ -312,11 +306,11 @@ void PhysicalDomainBenchmark::test_visibilityPerformance() {
 	}
 	std::set<LocatedEntity*> transformedEntities;
 	//Now stop the observers from moving, and measure again
-	for (Entity* observer: observers) {
+	for (LocatedEntity* observer: observers) {
 		Domain::TransformData transformData{WFMath::Quaternion(), WFMath::Point<3>(), nullptr, WFMath::Vector<3>::ZERO()};
 		domain->applyTransform(*observer, transformData, transformedEntities);
 	}
-	domain->tick(10, res);
+	domain->tick(std::chrono::seconds{10}, res);
 	{
 		auto start = std::chrono::high_resolution_clock::now();
 		//Inject ticks for 1 seconds
@@ -340,4 +334,3 @@ int main() {
 
 	return t.run();
 }
-

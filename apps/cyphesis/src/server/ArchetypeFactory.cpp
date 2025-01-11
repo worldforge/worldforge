@@ -18,7 +18,7 @@
 #include "ArchetypeFactory.h"
 #include "EntityBuilder.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/TypeNode_impl.h"
 #include "common/id.h"
@@ -58,7 +58,7 @@ ArchetypeFactory::ArchetypeFactory(ArchetypeFactory& o)
 
 ArchetypeFactory::~ArchetypeFactory() = default;
 
-Ref<Entity> ArchetypeFactory::createEntity(RouterId id,
+Ref<LocatedEntity> ArchetypeFactory::createEntity(RouterId id,
 										   EntityCreation& entityCreation,
 										   std::map<std::string, EntityCreation>& entities) {
 	auto& attributes = entityCreation.definition;
@@ -147,7 +147,7 @@ bool ArchetypeFactory::parseEntities(const std::map<std::string, MapType>& entit
 	return true;
 }
 
-Ref<Entity> ArchetypeFactory::newEntity(RouterId id, const RootEntity& attributes) {
+Ref<LocatedEntity> ArchetypeFactory::newEntity(RouterId id, const RootEntity& attributes) {
 	//parse entities into RootEntity instances first
 	std::map<std::string, EntityCreation> entities;
 	std::vector<Atlas::Message::Element> extraThoughts;

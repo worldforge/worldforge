@@ -31,19 +31,17 @@
 
 #include "pythonbase/Python_API.h"
 
-#include "rules/simulation/Entity.h"
-
 #include <cassert>
 #include <rules/simulation/python/CyPy_Server.h>
 #include "pythonbase/PythonMalloc.h"
-#include "rules/simulation/Thing.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/python/CyPy_World.h"
 
 int main() {
 	setupPythonMalloc();
 	init_python_api({&CyPy_Server::init});
 	{
-		Ref<Thing> wrld(new Thing(0));
+		Ref<LocatedEntity> wrld(new LocatedEntity(0));
 		TestWorld tw(wrld);
 
 		Py::Module server("server");

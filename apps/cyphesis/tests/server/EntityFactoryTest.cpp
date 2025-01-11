@@ -33,7 +33,7 @@
 
 #include <Atlas/Objects/Entity.h>
 #include <cassert>
-#include <rules/simulation/Thing.h>
+#include <rules/simulation/LocatedEntity.h>
 
 #include "common/debug.h"
 #include "../TestPropertyManager.h"
@@ -69,7 +69,7 @@ struct EntityFactorytest : public Cyphesis::TestBase {
 	}
 
 	void setup() override {
-		m_ek = new EntityFactory<Thing>;
+		m_ek = new EntityFactory<LocatedEntity>;
 		m_ek->m_type = new TypeNode<LocatedEntity>("foo");
 	}
 
@@ -321,7 +321,7 @@ struct EntityFactorytest : public Cyphesis::TestBase {
 
 	void test_updateProperties_child() {
 		TestPropertyManager<LocatedEntity> propertyManager{};
-		EntityFactory<Thing> ekc{};
+		EntityFactory<LocatedEntity> ekc{};
 		ekc.m_type = m_ek->m_type;
 		ekc.m_classAttributes.emplace("foo", ClassAttribute{"value"});
 

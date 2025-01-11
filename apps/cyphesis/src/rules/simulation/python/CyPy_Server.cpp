@@ -18,7 +18,7 @@
 
 #include "CyPy_Server.h"
 
-#include "CyPy_Entity.h"
+#include "CyPy_LocatedEntity.h"
 #include "CyPy_Task.h"
 #include "CyPy_World.h"
 #include "CyPy_TerrainProperty.h"
@@ -47,7 +47,7 @@ CyPy_Server::CyPy_Server() : ExtensionModule("server") {
 	add_varargs_method("get_alias_entity", &CyPy_Server::get_alias_entity, "Gets an entity registered by an alias, if available.");
 
 
-	CyPy_Entity::init_type();
+	CyPy_LocatedEntity::init_type();
 	CyPy_EntityProps::init_type();
 	CyPy_Task::init_type();
 	CyPy_World::init_type();
@@ -61,7 +61,7 @@ CyPy_Server::CyPy_Server() : ExtensionModule("server") {
 	initialize("Python bindings for code related to the simulation of the world.");
 
 	Py::Dict d(moduleDictionary());
-	d["Thing"] = CyPy_Entity::type();
+	d["Thing"] = CyPy_LocatedEntity::type();
 	d["Task"] = CyPy_Task::type();
 
 	d["EntityProps"] = CyPy_EntityProps::type();

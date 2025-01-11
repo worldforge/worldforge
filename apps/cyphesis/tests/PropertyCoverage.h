@@ -25,16 +25,16 @@
 #include <modules/Ref.h>
 #include <cassert>
 
-class Entity;
+class LocatedEntity;
 
 class BaseWorld;
 
 class PropertyCoverage {
 protected:
 	PropertyBase& m_prop;
-	Ref<Entity> m_tlve;
+	Ref<LocatedEntity> m_tlve;
 	BaseWorld* const m_wrld;
-	Ref<Entity> m_ent;
+	Ref<LocatedEntity> m_ent;
 
 	Atlas::Message::ListType m_testData;
 
@@ -48,11 +48,11 @@ public:
 
 	void basicCoverage();
 
-	Ref<Entity> createCharacterEntity();
+	Ref<LocatedEntity> createCharacterEntity();
 
 	void testDataAppend(const Atlas::Message::Element&);
 
-	Ref<Entity>& tlve() { return m_tlve; }
+	Ref<LocatedEntity>& tlve() { return m_tlve; }
 };
 
 template<class PropertyT>

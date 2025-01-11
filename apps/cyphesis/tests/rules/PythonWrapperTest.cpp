@@ -27,7 +27,7 @@
 #include "../python_testers.h"
 
 #include "rules/Script.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/BaseWorld.h"
 #include "rules/simulation/python/CyPy_Server.h"
 #include "pythonbase/Python_API.h"
@@ -101,7 +101,7 @@ int main() {
 		PythonScriptFactory<LocatedEntity, LocatedEntity> psf("testmod", "TestEntity");
 		int ret = psf.setup();
 		assert(ret == 0);
-		Ref<Entity> e = new Entity(1);
+		Ref<LocatedEntity> e = new LocatedEntity(1);
 		new TestWorld(e);
 		auto wrapper = psf.createScriptWrapper(*e);
 		assert(wrapper);

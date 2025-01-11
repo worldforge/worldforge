@@ -24,8 +24,6 @@
 #include "common/log.h"
 #include "rules/simulation/Inheritance.h"
 
-#include "rules/simulation/Entity.h"
-#include "common/TypeNode_impl.h"
 
 #include <wfmath/point.h>
 #include <Atlas/Objects/Anonymous.h>

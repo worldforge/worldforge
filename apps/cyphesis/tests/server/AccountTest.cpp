@@ -31,7 +31,7 @@
 #include "server/Connection.h"
 #include "server/Lobby.h"
 #include "server/ServerRouting.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/CommSocket.h"
 #include "common/debug.h"
@@ -127,15 +127,15 @@ protected:
 	long m_id_counter;
 
 	DatabaseNull m_database;
-	Ref<Entity> m_gw;
+	Ref<LocatedEntity> m_gw;
 	Persistence* m_persistence;
 	TestWorld* m_world;
 	ServerRouting* m_server;
 	Connection* m_connection;
 	TestAccount* m_account;
 
-	static Ref<Entity> TestWorld_addNewEntity_ret_value;
-	static Ref<Entity> TeleportAuthenticator_ret_value;
+	static Ref<LocatedEntity> TestWorld_addNewEntity_ret_value;
+	static Ref<LocatedEntity> TeleportAuthenticator_ret_value;
 	static OpVector Link_send_sent;
 	static int characterError_ret_value;
 	static int Lobby_operation_called;
@@ -254,9 +254,9 @@ public:
 	void test_createObject_Character();
 
 
-	static Ref<Entity> get_TestWorld_addNewEntity_ret_value();
+	static Ref<LocatedEntity> get_TestWorld_addNewEntity_ret_value();
 
-	static Ref<Entity> get_TeleportAuthenticator_ret_value();
+	static Ref<LocatedEntity> get_TeleportAuthenticator_ret_value();
 
 	static void append_Link_send_sent(const RootOperation&);
 
@@ -268,19 +268,19 @@ public:
 											 LocatedEntity&);
 };
 
-Ref<Entity> Accounttest::TestWorld_addNewEntity_ret_value;
-Ref<Entity> Accounttest::TeleportAuthenticator_ret_value;
+Ref<LocatedEntity> Accounttest::TestWorld_addNewEntity_ret_value;
+Ref<LocatedEntity> Accounttest::TeleportAuthenticator_ret_value;
 OpVector Accounttest::Link_send_sent;
 int Accounttest::characterError_ret_value;
 int Accounttest::Lobby_operation_called;
 std::list<std::pair<RootOperation, LocatedEntity*> >
 		Accounttest::TestWorld_message_called;
 
-Ref<Entity> Accounttest::get_TestWorld_addNewEntity_ret_value() {
+Ref<LocatedEntity> Accounttest::get_TestWorld_addNewEntity_ret_value() {
 	return TestWorld_addNewEntity_ret_value;
 }
 
-Ref<Entity> Accounttest::get_TeleportAuthenticator_ret_value() {
+Ref<LocatedEntity> Accounttest::get_TeleportAuthenticator_ret_value() {
 	return TeleportAuthenticator_ret_value;
 }
 
@@ -378,11 +378,11 @@ void Accounttest::setup() {
 
 
 	m_persistence = new Persistence(m_database);
-	m_gw = new Entity(RouterId{m_id_counter++});
+	m_gw = new LocatedEntity(RouterId{m_id_counter++});
 	TestWorld::extension.messageFn = &Accounttest::set_TestWorld_message_called;
 	TestWorld::extension.addNewEntityFn = [&](const std::string&,
 											  const Atlas::Objects::Entity::RootEntity&) {
-		Ref<Entity> ne = Accounttest::get_TestWorld_addNewEntity_ret_value();
+		Ref<LocatedEntity> ne = Accounttest::get_TestWorld_addNewEntity_ret_value();
 		if (ne != nullptr) {
 			ne->m_parent = m_gw.get();
 			ne->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = Point3D(0, 0, 0);
@@ -420,7 +420,7 @@ void Accounttest::test_null() {
 
 void Accounttest::test_characterDestroyed() {
 	long cid = m_id_counter++;
-	Ref<LocatedEntity> c = new Entity(RouterId{cid});
+	Ref<LocatedEntity> c = new LocatedEntity(RouterId{cid});
 
 	ASSERT_TRUE(m_account->m_charactersDict.empty());
 
@@ -455,7 +455,7 @@ void Accounttest::test_connectCharacter_raw_Entity() {
 
 	OpVector res;
 	long cid = m_id_counter++;
-	Ref<Entity> c = new Entity(RouterId{cid});
+	Ref<LocatedEntity> c = new LocatedEntity(RouterId{cid});
 
 	m_account->connectCharacter(c.get(), res);
 
@@ -467,7 +467,7 @@ void Accounttest::test_connectCharacter_raw_Entity() {
 
 void Accounttest::test_addCharacter_raw_Entity() {
 	long cid = m_id_counter++;
-	Ref<Entity> c = new Entity(RouterId{cid});
+	Ref<LocatedEntity> c = new LocatedEntity(RouterId{cid});
 
 	ASSERT_TRUE(m_account->m_charactersDict.empty());
 
@@ -564,7 +564,7 @@ void Accounttest::test_store() {
 
 void Accounttest::test_addToEntity() {
 	long cid = m_id_counter++;
-	Ref<Entity> c = new Entity(RouterId{cid});
+	Ref<LocatedEntity> c = new LocatedEntity(RouterId{cid});
 	m_account->m_charactersDict.emplace(c->getIdAsInt(), c);
 
 	Anonymous data;
@@ -684,7 +684,7 @@ void Accounttest::test_CreateOperation_good() {
 //
 //    // Set up the creation so it succeeds
 //    characterError_ret_value = 0;
-//    TestWorld_addNewEntity_ret_value = new Entity(RouterId{cid});
+//    TestWorld_addNewEntity_ret_value = new LocatedEntity(RouterId{cid});
 //
 //    Atlas::Objects::Operation::Create op;
 //    OpVector res;
@@ -831,7 +831,7 @@ void Accounttest::test_LookOperation_no_id() {
 
 void Accounttest::test_LookOperation_known_character() {
 	long cid = m_id_counter++;
-	Ref<Entity> c = new Entity(RouterId{cid});
+	Ref<LocatedEntity> c = new LocatedEntity(RouterId{cid});
 	m_account->m_charactersDict.emplace(c->getIdAsInt(), c);
 
 	Atlas::Objects::Operation::Look op;
@@ -937,7 +937,7 @@ void Accounttest::test_LookOperation_possess_invalid() {
 
 void Accounttest::test_LookOperation_possess_Entity() {
 	long cid = m_id_counter++;
-	Ref<Entity> c = new Entity(RouterId{cid});
+	Ref<LocatedEntity> c = new LocatedEntity(RouterId{cid});
 	TeleportAuthenticator_ret_value = c;
 
 	Atlas::Objects::Operation::Look op;
@@ -963,7 +963,7 @@ void Accounttest::test_LookOperation_possess_Entity() {
 
 void Accounttest::test_LookOperation_possess_Character() {
 //    long cid = m_id_counter++;
-//    Ref<Entity>  c = new Entity(RouterId{cid});
+//    Ref<LocatedEntity>  c = new LocatedEntity(RouterId{cid});
 //    TeleportAuthenticator_ret_value = c;
 //
 //    Atlas::Objects::Operation::Look op;
@@ -1044,7 +1044,7 @@ void Accounttest::test_SetOperation_empty() {
 
 	long cid = m_id_counter++;
 
-	Ref<Entity> c = new Entity(RouterId{cid});
+	Ref<LocatedEntity> c = new LocatedEntity(RouterId{cid});
 	m_account->m_charactersDict.emplace(c->getIdAsInt(), c);
 
 	Atlas::Objects::Operation::Set op;
@@ -1205,7 +1205,7 @@ ServerRouting::ServerRouting(BaseWorld& wrld,
 
 Ref<LocatedEntity> PossessionAuthenticator::authenticatePossession(const std::string& entity_id,
 																   const std::string& possess_key) {
-	Ref<Entity> ne = Accounttest::get_TeleportAuthenticator_ret_value();
+	Ref<LocatedEntity> ne = Accounttest::get_TeleportAuthenticator_ret_value();
 	return ne;
 }
 
@@ -1235,7 +1235,7 @@ void Lobby::operation(const Operation& op, OpVector& res) {
 }
 
 
-void Entity::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
+void LocatedEntity::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
 	ent->setId(getIdAsString());
 }
 

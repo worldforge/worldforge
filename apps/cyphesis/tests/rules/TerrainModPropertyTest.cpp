@@ -26,7 +26,7 @@
 #include "../PropertyCoverage.h"
 
 #include "common/TypeNode_impl.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/TerrainModProperty.h"
 #include "rules/simulation/TerrainProperty.h"
 

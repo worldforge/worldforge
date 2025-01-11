@@ -32,7 +32,7 @@
 #include "server/ServerRouting.h"
 
 #include "rules/simulation/AdminMind.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/MindsProperty.h"
 
 #include "common/const.h"
@@ -90,8 +90,8 @@ protected:
 	StubSocket* m_commSocket;
 	ServerRouting* m_server;
 	Connection* m_connection;
-	Ref<Entity> m_gw;
-	Ref<Entity> m_creator;
+	Ref<LocatedEntity> m_gw;
+	Ref<LocatedEntity> m_creator;
 	TypeNode<LocatedEntity>* m_creatorType;
 	std::unique_ptr<TestWorld> m_world;
 
@@ -141,7 +141,7 @@ void TrustedConnectionCreatorintegration::setup() {
 
 	TestWorld::extension.messageFn = &TrustedConnectionCreatorintegration::BaseWorld_message_called;
 
-	m_gw = new Entity(m_id_counter++);
+	m_gw = new LocatedEntity(m_id_counter++);
 	m_world = std::make_unique<TestWorld>(m_gw);
 	m_server = new ServerRouting(*m_world,
 								 *(Persistence*) nullptr,
@@ -153,7 +153,7 @@ void TrustedConnectionCreatorintegration::setup() {
 								  *m_server,
 								  "25251955-7e8c-4043-8a5e-adfb8a1e76f7",
 								  m_id_counter++);
-	m_creator = new Entity(m_id_counter++);
+	m_creator = new LocatedEntity(m_id_counter++);
 	m_creatorType = new TypeNode<LocatedEntity>("test_avatar");
 	m_creator->setType(m_creatorType);
 
@@ -222,7 +222,7 @@ void TrustedConnectionCreatorintegration::test_external_op_override() {
 	m_connection->externalOperation(op, *m_connection);
 	m_connection->dispatch(1);
 
-	// The operation should have been passed to Entity::callOperation for
+	// The operation should have been passed to LocatedEntity::callOperation for
 	// dispatch, completely unfiltered.
 	ASSERT_TRUE(m_BaseWorld_message_called.isValid());
 	ASSERT_EQUAL(m_BaseWorld_message_called->getClassNo(),
@@ -241,7 +241,7 @@ void TrustedConnectionCreatorintegration::test_external_op_puppet() {
 	m_creator->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
 	mind.linkUp(m_connection);
 
-	Ref<Entity> other = new Entity(m_id_counter++);
+	Ref<LocatedEntity> other = new LocatedEntity(m_id_counter++);
 	other->setType(m_creatorType);
 	m_server->m_world.addEntity(other, m_gw);
 
@@ -252,7 +252,7 @@ void TrustedConnectionCreatorintegration::test_external_op_puppet() {
 	m_connection->externalOperation(op, *m_connection);
 	m_connection->dispatch(1);
 
-	// Operation should be via world dispatch, as if it was from the Entity
+	// Operation should be via world dispatch, as if it was from the LocatedEntity
 	// we are puppeting.
 	ASSERT_TRUE(m_BaseWorld_message_called.isValid());
 	ASSERT_EQUAL(m_BaseWorld_message_called->getClassNo(),
@@ -273,7 +273,7 @@ void TrustedConnectionCreatorintegration::test_external_op_puppet_nonexistant() 
 	m_creator->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
 	mind.linkUp(m_connection);
 
-	Ref<Entity> other = new Entity(m_id_counter++);
+	Ref<LocatedEntity> other = new LocatedEntity(m_id_counter++);
 	other->setType(m_creatorType);
 	m_server->m_world.addEntity(other, m_gw);
 
@@ -288,7 +288,7 @@ void TrustedConnectionCreatorintegration::test_external_op_puppet_nonexistant() 
 	m_connection->externalOperation(op, *m_connection);
 	m_connection->dispatch(1);
 
-	// Operation should be via world dispatch, as if it was from the Entity
+	// Operation should be via world dispatch, as if it was from the LocatedEntity
 	// we are puppeting.
 	ASSERT_TRUE(decoder.m_obj.isValid());
 	ASSERT_EQUAL(decoder.m_obj->getParent(), "unseen");

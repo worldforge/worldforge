@@ -31,6 +31,7 @@
 #include "common/log.h"
 #include "common/Visibility.h"
 #include "common/PropertyUtil.h"
+#include "common/SynchedState.h"
 
 #include <Atlas/Objects/Operation.h>
 
@@ -183,7 +184,7 @@ struct EntityState {
 /// which lists other entities which specify their location with reference to
 /// this one. It also provides the script interface for handling operations
 /// in scripts rather than in the C++ code.
-class LocatedEntity : public Router, public ReferenceCounted, public AtlasDescribable {
+class LocatedEntity : public Router, public ReferenceCounted, public AtlasDescribable, public ExternalRouter {
 private:
 	static std::set<std::string> s_immutable;
 
@@ -202,14 +203,45 @@ protected:
 	const TypeNode<LocatedEntity>* m_type;
 
 
+    /// Map of delegate properties.
+    std::multimap<int, std::string> m_delegates;
+
+    /// A static map tracking the number of existing entities per type.
+    /// A monitor by the name of "entity_count{type=*}" will be created
+    /// per type.
+    static SynchedState<std::map<const TypeNode<LocatedEntity>*, int>> s_monitorsMap;
+
+    std::unique_ptr<Domain> m_domain;
+
+	//"virtual" for testing, see if we can remove it
+    virtual std::unique_ptr<PropertyBase> createProperty(const std::string& propertyName) const;
+
+    void updateProperties(const Operation& op, OpVector& res);
+
+    bool lookAtEntity(const Operation& op,
+                      OpVector& res,
+                      const LocatedEntity& watcher) const;
+
+    void generateSightOp(const LocatedEntity& observingEntity,
+                         const Operation& originalLookOp,
+                         OpVector& res) const;
+
+    void moveToNewLocation(Ref<LocatedEntity>& new_loc,
+                           OpVector& res,
+                           Domain* existingDomain,
+                           const Point3D& newPos,
+                           const Quaternion& newOrientation,
+                           const Vector3D& newImpulseVelocity);
+
+    void moveOurselves(const Operation& op, const Atlas::Objects::Entity::RootEntity& ent, OpVector& res);
+
+    void moveOtherEntity(const Operation& op, const Atlas::Objects::Entity::RootEntity& ent, OpVector& res);
 	/**
 	 * Collects all observers of the child, i.e. all entities that are currently observing it.
 	 * This method will walk upwards the entity chain.
 	 * @param child The child entity that's being observed.
 	 */
 	void collectObserversForChild(const LocatedEntity& child, std::set<const LocatedEntity*>& receivers) const;
-
-	virtual std::unique_ptr<PropertyBase> createProperty(const std::string& propertyName) const = 0;
 
 public:
 
@@ -232,6 +264,43 @@ public:
 	// A representation of this instance used by the scripting system. This is opaque to this class.
 	std::any m_scriptEntity;
 
+	std::vector<OperationsListener<LocatedEntity>*> m_listeners;
+
+	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override;
+
+	virtual void DeleteOperation(const Operation&, OpVector&);
+
+	virtual void ImaginaryOperation(const Operation&, OpVector&) const;
+
+	virtual void LookOperation(const Operation&, OpVector&) const;
+
+	virtual void MoveOperation(const Operation&, OpVector&);
+
+	virtual void SetOperation(const Operation&, OpVector&);
+
+	virtual void TalkOperation(const Operation&, OpVector&) const;
+
+	virtual void UpdateOperation(const Operation&, OpVector&);
+
+	virtual void CreateOperation(const Operation& op, OpVector& res) const;
+
+	void externalOperation(const Operation& op, Link&) override;
+
+	void operation(const Operation&, OpVector&) override;
+
+	HandlerResult callDelegate(const std::string&,
+							   const Operation&,
+							   OpVector&);
+
+	/// \brief Find and call the handler for an operation
+	///
+	/// @param op The operation to be processed.
+	/// @param res The result of the operation is returned here.
+	void callOperation(const Operation&, OpVector&);
+
+	Ref<LocatedEntity> createNewEntity(const Atlas::Objects::Entity::RootEntity& entity) const;
+
+	Ref<LocatedEntity> createNewEntity(const Operation& op, OpVector& res) const;
 	explicit LocatedEntity(RouterId id);
 
 	~LocatedEntity() override;
@@ -343,21 +412,22 @@ public:
 	/// @param prop the property object to be used
 	PropertyBase* setProperty(const std::string& name, std::unique_ptr<PropertyBase> prop);
 
-	virtual void installDelegate(int, const std::string&);
+	 void installDelegate(int, const std::string&);
 
-	virtual void removeDelegate(int, const std::string&);
+	 void removeDelegate(int, const std::string&);
 
-	virtual void onContainered(const Ref<LocatedEntity>& oldLocation);
+	 void onContainered(const Ref<LocatedEntity>& oldLocation);
 
-	virtual void onUpdated();
+	 void onUpdated();
 
-	virtual void destroy();
+	 //"virtual" for testing, see if we can remove it
+	 virtual void destroy();
 
-	virtual Domain* getDomain();
+	 Domain* getDomain();
 
-	virtual const Domain* getDomain() const;
+	 const Domain* getDomain() const;
 
-	virtual void setDomain(std::unique_ptr<Domain> domain);
+	 void setDomain(std::unique_ptr<Domain> domain);
 
 
 	/// \brief Send an operation to the world for dispatch.
@@ -365,6 +435,7 @@ public:
 	/// sendWorld() bypasses serialno assignment, so you must ensure
 	/// that serialno is sorted. This allows client serialnos to get
 	/// in, so that client gets correct useful refnos back.
+	//"virtual" for testing, see if we can remove it
 	virtual void sendWorld(Operation op);
 
 
@@ -375,7 +446,7 @@ public:
 	/// in, so that client gets correct useful refnos back.
 	void sendWorld(OpVector& res);
 
-	virtual void setScript(std::unique_ptr<Script<LocatedEntity>> script);
+	 void setScript(std::unique_ptr<Script<LocatedEntity>> script);
 
 	void makeContainer();
 
@@ -384,14 +455,14 @@ public:
 	void merge(const Atlas::Message::MapType&);
 
 	/// \brief Adds a child to this entity.
-	virtual void addChild(LocatedEntity& childEntity);
+	 void addChild(LocatedEntity& childEntity);
 
 	/// \brief Removes a child from this entity.
-	virtual void removeChild(LocatedEntity& childEntity);
+	 void removeChild(LocatedEntity& childEntity);
 
-	virtual void addListener(OperationsListener<LocatedEntity>* listener);
+	 void addListener(OperationsListener<LocatedEntity>* listener);
 
-	virtual void removeListener(OperationsListener<LocatedEntity>* listener);
+	 void removeListener(OperationsListener<LocatedEntity>* listener);
 
 	/**
 	 * Applies the property and set flags on both the property and the entity to mark them as unclean.

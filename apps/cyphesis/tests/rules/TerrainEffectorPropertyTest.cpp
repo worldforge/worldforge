@@ -25,7 +25,7 @@
 
 #include "../TestBase.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/TerrainEffectorProperty.h"
 #include "rules/simulation/TerrainProperty.h"
 #include "rules/Location_impl.h"
@@ -36,8 +36,8 @@ class TerrainEffectorPropertytest : public Cyphesis::TestBase
 {
   private:
     TerrainEffectorProperty * m_property;
-    Ref<Entity> m_entity;
-    Ref<Entity> m_world;
+    Ref<LocatedEntity> m_entity;
+    Ref<LocatedEntity> m_world;
   public:
     TerrainEffectorPropertytest();
 
@@ -59,8 +59,8 @@ TerrainEffectorPropertytest::TerrainEffectorPropertytest() : m_property(0)
 void TerrainEffectorPropertytest::setup()
 {
     m_property = new TerrainEffectorProperty;
-    m_world = new Entity(0);
-    m_entity = new Entity(1);
+    m_world = new LocatedEntity(0);
+    m_entity = new LocatedEntity(1);
     m_entity->m_parent = m_world.get();
 }
 

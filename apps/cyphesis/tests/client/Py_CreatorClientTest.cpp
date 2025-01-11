@@ -34,7 +34,6 @@
 #include <cassert>
 #include <client/cyclient/CyPy_CreatorClient.h>
 #include <client/cyclient/ClientConnection.h>
-#include <rules/simulation/Entity.h>
 #include <rules/simulation/python/CyPy_Server.h>
 #include <rules/python/CyPy_Atlas.h>
 #include <rules/ai/python/CyPy_Ai.h>

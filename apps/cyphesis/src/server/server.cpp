@@ -90,14 +90,11 @@
 #include <rules/simulation/ScriptsProperty.h>
 #include "saf/saf.hpp"
 
-#include <Atlas/Objects/RootEntity.h>
-
 #include <varconf/config.h>
 #include <filesystem>
 
 #include <thread>
 #include <fstream>
-#include <rules/simulation/Thing.h>
 #include <rules/simulation/WorldProperty.h>
 
 using namespace boost::asio;
@@ -492,7 +489,7 @@ int run() {
 
 		ExternalMindsManager externalMindsManager(possessionAuthenticator);
 
-		Ref<LocatedEntity> baseEntity = new Thing(RouterId{consts::rootWorldIntId});
+		Ref<LocatedEntity> baseEntity = new LocatedEntity(RouterId{consts::rootWorldIntId});
 		baseEntity->setType(inheritance.getType("world"));
 		baseEntity->requirePropertyClassFixed<WorldProperty>();
 		WorldRouter worldRouter(baseEntity, entityBuilder, timeProviderFn);
