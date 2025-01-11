@@ -23,7 +23,6 @@
 #include "common/PropertyFactory.h"
 #include "common/PropertyManager.h"
 #include "common/Property.h"
-#include "common/custom.h"
 #include "rules/simulation/LocatedEntity.h"
 #include "common/type_utils.h"
 

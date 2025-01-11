@@ -15,13 +15,6 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-
-#ifdef HAVE_CONFIG_H
-
-#include "config.h"
-
-#endif
-
 #include "Ruleset.h"
 
 #include "EntityBuilder.h"
@@ -40,14 +33,12 @@
 #include "common/AssetsManager.h"
 #include "Remotery.h"
 
-#include <Atlas/Objects/Anonymous.h>
 
 #include <filesystem>
 
 #include <iostream>
 #include <chrono>
 #include <boost/asio/steady_timer.hpp>
-#include <Atlas/Objects/Factories.h>
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
@@ -57,7 +48,7 @@ using Atlas::Objects::Root;
 
 typedef std::map<std::string, Root> RootDict;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 Ruleset::Ruleset(EntityBuilder& eb, boost::asio::io_context& io_context, PropertyManager<LocatedEntity>& propertyManager) :
 		m_entityHandler(new EntityRuleHandler(eb, propertyManager)),

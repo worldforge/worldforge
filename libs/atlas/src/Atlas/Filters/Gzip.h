@@ -10,6 +10,7 @@
 #include <Atlas/Filter.h>
 
 #include <zlib.h>
+#include <array>
 
 
 namespace Atlas::Filters {
@@ -17,9 +18,11 @@ namespace Atlas::Filters {
 class Gzip : public Filter {
 	z_stream incoming;
 	z_stream outgoing;
-	unsigned char buf[4096];
+	std::array<unsigned char, 4096> buf;
 
 public:
+
+	Gzip();
 
 	void begin() override;
 

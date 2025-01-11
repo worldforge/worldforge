@@ -153,7 +153,7 @@ std::shared_ptr<BBoxProvider<EntityT>> ProviderFactory<EntityT>::createBBoxProvi
 	auto& segment = segments.front();
 	auto attr = segment.attribute;
 
-	auto measurement_extractor = [&]() -> BBoxProvider<EntityT>::Measurement {
+	auto measurement_extractor = [&]() -> typename BBoxProvider<EntityT>::Measurement {
 		if (attr == "width") {
 			return BBoxProvider<EntityT>::Measurement::WIDTH;
 		} else if (attr == "depth") {

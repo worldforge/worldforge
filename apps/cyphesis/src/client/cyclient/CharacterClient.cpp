@@ -28,7 +28,7 @@ using Atlas::Objects::Entity::RootEntity;
 
 using Atlas::Objects::smart_dynamic_cast;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 /// \brief CharacterClient constructor
 ///

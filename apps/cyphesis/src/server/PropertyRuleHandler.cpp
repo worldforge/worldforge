@@ -32,7 +32,7 @@ using Atlas::Message::ListType;
 using Atlas::Objects::Root;
 
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 PropertyRuleHandler::PropertyRuleHandler(PropertyManager<LocatedEntity>& propertyManager)
         : m_propertyManager(propertyManager)

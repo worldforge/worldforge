@@ -51,7 +51,7 @@ public:
 
 	void removeEntity(LocatedEntity& entity) override;
 
-	bool isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
+	bool isEntityReachable(const LocatedEntity& reachingEntity, double reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
 
 	void installDelegates(LocatedEntity& entity, const std::string& propertyName) override;
 

@@ -35,7 +35,7 @@
 
 #include <Atlas/Objects/Anonymous.h>
 
-#include <iostream>
+#include "common/globals.h"
 
 #include <cassert>
 #include <server/Persistence.h>

@@ -37,7 +37,7 @@ public:
 
 	void removeEntity(LocatedEntity& entity) override;
 
-	bool isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
+	bool isEntityReachable(const LocatedEntity& reachingEntity, double reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
 
 	std::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override;
 

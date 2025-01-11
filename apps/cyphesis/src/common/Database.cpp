@@ -38,7 +38,7 @@ using Atlas::Objects::Root;
 
 typedef Atlas::Codecs::Packed Serialiser;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 Database::Database() : m_queryInProgress(false) {
 }

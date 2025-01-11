@@ -25,19 +25,14 @@
 #include "rules/BBoxProperty_impl.h"
 #include "rules/simulation/LocatedEntity.h"
 #include "rules/ScaleProperty_impl.h"
-#include "rules/simulation/AtlasProperties.h"
-#include "rules/entityfilter/Providers_impl.h"
 #include "rules/entityfilter/Filter_impl.h"
-#include "rules/EntityLocation_impl.h"
 
 #include "Inheritance.h"
 #include "common/Router.h"
 #include "common/debug.h"
 #include "common/custom.h"
-#include "common/Property_impl.h"
 
 #include "common/operations/Tick.h"
-#include "common/operations/Think.h"
 #include "common/operations/Thought.h"
 
 #include <Atlas/Objects/RootEntity.h>
@@ -66,39 +61,39 @@ using Atlas::Objects::Entity::RootEntity;
 
 using Atlas::Objects::smart_dynamic_cast;
 
-static const bool debug_flag = false;
+static constexpr bool debug_flag = false;
 
 MindsProperty::MindsProperty()
-		: PropertyBase(prop_flag_persistence_ephem | prop_flag_instance) {
+	: PropertyBase(prop_flag_persistence_ephem | prop_flag_instance) {
 }
 
 MindsProperty::~MindsProperty() = default;
 
-void MindsProperty::set(const Atlas::Message::Element& val) {
+void MindsProperty::set(const Element& val) {
 	//Don't allow setting.
 }
 
-int MindsProperty::get(Atlas::Message::Element& val) const {
-	Atlas::Message::ListType list;
+int MindsProperty::get(Element& val) const {
+	ListType list;
 	for (auto& mind: m_data) {
-		list.push_back(mind->getIdAsString());
+		list.emplace_back(mind->getIdAsString());
 	}
 	val = list;
 	return 0;
 }
 
-void MindsProperty::add(const std::string& val, Atlas::Message::MapType& map) const {
-	Atlas::Message::ListType list;
+void MindsProperty::add(const std::string& val, MapType& map) const {
+	ListType list;
 	for (auto& mind: m_data) {
-		list.push_back(mind->getIdAsString());
+		list.emplace_back(mind->getIdAsString());
 	}
 	map[val] = list;
 }
 
-void MindsProperty::add(const std::string& val, const Atlas::Objects::Entity::RootEntity& ent) const {
-	Atlas::Message::ListType list;
+void MindsProperty::add(const std::string& val, const RootEntity& ent) const {
+	ListType list;
 	for (auto& mind: m_data) {
-		list.push_back(mind->getIdAsString());
+		list.emplace_back(mind->getIdAsString());
 	}
 	ent->setAttr(val, list);
 }
@@ -147,7 +142,7 @@ void MindsProperty::sendToMinds(const Operation& op, OpVector& res) const {
 }
 
 
-HandlerResult MindsProperty::RelayOperation(LocatedEntity& ent, const Operation& op, OpVector& res) {
+HandlerResult MindsProperty::RelayOperation(const LocatedEntity& ent, const Operation& op, OpVector& res) {
 	if (op->isDefaultTo()) {
 		ent.error(op, "A relay op must have a 'to'.", res, ent.getIdAsString());
 		return OPERATION_BLOCKED;
@@ -184,8 +179,7 @@ HandlerResult MindsProperty::RelayOperation(LocatedEntity& ent, const Operation&
 
 HandlerResult MindsProperty::ThoughtOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	for (auto& arg: op->getArgs()) {
-		auto innerOp = smart_dynamic_cast<Operation>(arg);
-		if (innerOp) {
+		if (auto innerOp = smart_dynamic_cast<Operation>(arg)) {
 			OpVector mres;
 			mind2body(ent, innerOp, mres);
 
@@ -209,9 +203,10 @@ HandlerResult MindsProperty::ThoughtOperation(LocatedEntity& ent, const Operatio
 
 /// \brief Filter a Use operation coming from the mind
 ///
+/// @param ent Active entity.
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
-void MindsProperty::mindUseOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
+void MindsProperty::mindUseOperation(const LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	cy_debug_print("Got Use op from mind")
 
 	//Make sure that the first contained arg is another Use operation,
@@ -262,9 +257,10 @@ void MindsProperty::mindUseOperation(LocatedEntity& ent, const Operation& op, Op
 
 /// \brief Filter a Wield operation coming from the mind
 ///
+/// @param ent Active entity.
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
-void MindsProperty::mindWieldOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
+void MindsProperty::mindWieldOperation(const LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	cy_debug_print("Got Wield op from mind")
 	op->setTo(ent.getIdAsString());
 	res.push_back(op);
@@ -272,6 +268,7 @@ void MindsProperty::mindWieldOperation(LocatedEntity& ent, const Operation& op, 
 
 /// \brief Filter a Move operation coming from the mind
 ///
+/// @param ent Active entity.
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
 void MindsProperty::mindMoveOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
@@ -281,7 +278,7 @@ void MindsProperty::mindMoveOperation(LocatedEntity& ent, const Operation& op, O
 		spdlog::error("mindMoveOperation: move op has no argument. " + ent.describeEntity());
 		return;
 	}
-	const RootEntity arg = smart_dynamic_cast<RootEntity>(args.front());
+	const auto arg = smart_dynamic_cast<RootEntity>(args.front());
 	if (!arg.isValid()) {
 		spdlog::error("mindMoveOperation: Arg is not an entity. " + ent.describeEntity());
 		return;
@@ -317,7 +314,7 @@ void MindsProperty::moveOtherEntity(LocatedEntity& ent, const Operation& op, OpV
 	auto moverConstraint = ent.getPropertyClass<FilterProperty>("mover_constraint");
 	if (moverConstraint && moverConstraint->getData()) {
 		std::vector<std::string> errorMessages;
-		EntityFilter::QueryContext queryContext{EntityFilter::QueryEntityLocation{*other}, &ent};
+		EntityFilter::QueryContext queryContext{.entityLoc = EntityFilter::QueryEntityLocation{*other}, .actor = &ent};
 		queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
 		queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
 		queryContext.report_error_fn = [&errorMessages](const std::string& message) { errorMessages.emplace_back(message); };
@@ -331,7 +328,7 @@ void MindsProperty::moveOtherEntity(LocatedEntity& ent, const Operation& op, OpV
 	auto moveConstraint = other->getPropertyClass<FilterProperty>("move_constraint");
 	if (moveConstraint && moveConstraint->getData()) {
 		std::vector<std::string> errorMessages;
-		EntityFilter::QueryContext queryContext{EntityFilter::QueryEntityLocation{*other}, &ent};
+		EntityFilter::QueryContext queryContext{.entityLoc = EntityFilter::QueryEntityLocation{*other}, .actor = &ent};
 		queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
 		queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
 		queryContext.report_error_fn = [&errorMessages](const std::string& message) { errorMessages.emplace_back(message); };
@@ -346,7 +343,7 @@ void MindsProperty::moveOtherEntity(LocatedEntity& ent, const Operation& op, OpV
 		auto containConstraint = other->m_parent->getPropertyClass<FilterProperty>("contain_constraint");
 		if (containConstraint && containConstraint->getData()) {
 			std::vector<std::string> errorMessages;
-			EntityFilter::QueryContext queryContext{EntityFilter::QueryEntityLocation{*other}, &ent, other->m_parent};
+			EntityFilter::QueryContext queryContext{.entityLoc = EntityFilter::QueryEntityLocation{*other}, .actor = &ent, .tool = other->m_parent};
 			queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
 			queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
 			queryContext.report_error_fn = [&errorMessages](const std::string& message) { errorMessages.emplace_back(message); };
@@ -381,7 +378,7 @@ void MindsProperty::moveOtherEntity(LocatedEntity& ent, const Operation& op, OpV
 		auto destinationConstraint = targetLoc->getPropertyClass<FilterProperty>("destination_constraint");
 		if (destinationConstraint && destinationConstraint->getData()) {
 			std::vector<std::string> errorMessages;
-			EntityFilter::QueryContext queryContext{EntityFilter::QueryEntityLocation{*other}, &ent, targetLoc.get()};
+			EntityFilter::QueryContext queryContext{.entityLoc = EntityFilter::QueryEntityLocation{*other}, .actor = &ent, .tool = targetLoc.get()};
 			queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
 			queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
 			queryContext.report_error_fn = [&errorMessages](const std::string& message) { errorMessages.emplace_back(message); };
@@ -401,7 +398,7 @@ void MindsProperty::moveOtherEntity(LocatedEntity& ent, const Operation& op, OpV
 		auto bbox = ScaleProperty<LocatedEntity>::scaledBbox(*other);
 		auto radius = bbox.isValid() ? bbox.boundingSphere().radius() : 0;
 		//Check that we can reach the edge of the entity if it's placed in its new location.
-		if (!ent.canReach({targetLoc, targetPos}, (float) radius)) {
+		if (!ent.canReach({targetLoc, targetPos}, (float)radius)) {
 			ent.clientError(op, "Target is too far away.", res, op->getFrom());
 			return;
 		}
@@ -429,9 +426,10 @@ void MindsProperty::moveOtherEntity(LocatedEntity& ent, const Operation& op, OpV
 /// Currently any Set op is permitted. In the future this will be locked
 /// down to only allow mutable things to be changed. For example, for
 /// inventory items with no name can have their name set from the client.
+/// @param ent Active entity.
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
-void MindsProperty::mindSetOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
+void MindsProperty::mindSetOperation(const LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
 		spdlog::error("mindSetOperation: set op has no argument. " + ent.describeEntity());
@@ -448,11 +446,10 @@ void MindsProperty::mindSetOperation(LocatedEntity& ent, const Operation& op, Op
 	}
 	Anonymous cleanedArg;
 	cleanedArg->setId(ent.getIdAsString());
-	auto attrs = arg->asMessage();
-	for (auto entry: attrs) {
+	for (auto attrs = arg->asMessage(); auto entry: attrs) {
 		if (entry.first == "_propel") {
-			Vector3D new_propel;
 			try {
+				Vector3D new_propel;
 				new_propel.fromAtlas(entry.second);
 				if (new_propel.isValid()) {
 					auto mag = new_propel.mag();
@@ -475,7 +472,8 @@ void MindsProperty::mindSetOperation(LocatedEntity& ent, const Operation& op, Op
 			//no-op
 		} else {
 			spdlog::error("mindSetOperation: set op tried to set non-allowed property '{}' on entity {}. ",
-						  entry.first, ent.describeEntity());
+				entry.first,
+				ent.describeEntity());
 		}
 	}
 	setOp->setArgs1(std::move(cleanedArg));
@@ -485,36 +483,40 @@ void MindsProperty::mindSetOperation(LocatedEntity& ent, const Operation& op, Op
 
 /// \brief Filter a Create operation coming from the mind
 ///
+/// @param ent Active entity.
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
-void MindsProperty::mindCreateOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
+void MindsProperty::mindCreateOperation(const LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
 
 /// \brief Filter a Delete operation coming from the mind
 ///
+/// @param ent Active entity.
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
-void MindsProperty::mindDeleteOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
+void MindsProperty::mindDeleteOperation(const LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
 
 /// \brief Filter a Imaginary operation coming from the mind
 ///
+/// @param ent Active entity.
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
-void MindsProperty::mindImaginaryOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
+void MindsProperty::mindImaginaryOperation(const LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
 
 /// \brief Filter a Talk operation coming from the mind
 ///
+/// @param ent Active entity.
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
-void MindsProperty::mindTalkOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
+void MindsProperty::mindTalkOperation(const LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	cy_debug_print("MindsProperty::mindTalkOperation")
 	op->setTo(ent.getIdAsString());
 	res.push_back(op);
@@ -524,7 +526,7 @@ void MindsProperty::mindTalkOperation(LocatedEntity& ent, const Operation& op, O
 ///
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
-void MindsProperty::mindLookOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
+void MindsProperty::mindLookOperation(const LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	cy_debug_print("Got look up from mind from [" << op->getFrom() << "] to [" << op->getTo() << "]")
 
 	const std::vector<Root>& args = op->getArgs();
@@ -550,18 +552,20 @@ void MindsProperty::mindLookOperation(LocatedEntity& ent, const Operation& op, O
 
 /// \brief Filter a GoalInfo operation coming from the mind
 ///
+/// @param ent Active entity.
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
-void MindsProperty::mindGoalInfoOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
+void MindsProperty::mindGoalInfoOperation(const LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
 
 /// \brief Filter a Touch operation coming from the mind
 ///
+/// @param ent Active entity.
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
-void MindsProperty::mindTouchOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
+void MindsProperty::mindTouchOperation(const LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	// Work out what is being touched.
 	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
@@ -599,9 +603,10 @@ void MindsProperty::mindTouchOperation(LocatedEntity& ent, const Operation& op, 
 
 /// \brief Filter any other operation coming from the mind
 ///
+/// @param ent Active entity.
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
-void MindsProperty::mindOtherOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
+void MindsProperty::mindOtherOperation(const LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	spdlog::warn("Passing '{}' op from mind through to world. {}", op->getParent(), ent.describeEntity());
 	op->setTo(ent.getIdAsString());
 	res.push_back(op);
@@ -609,18 +614,20 @@ void MindsProperty::mindOtherOperation(LocatedEntity& ent, const Operation& op, 
 
 /// \brief Filter a Thought operation coming from the mind
 ///
+/// @param ent Active entity.
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
-void MindsProperty::mindThoughtOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
+void MindsProperty::mindThoughtOperation(const LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
 
 /// \brief Filter a Think operation coming from the mind
 ///
+/// @param ent Active entity.
 /// @param op The operation to be filtered.
 /// @param res The filtered result is returned here.
-void MindsProperty::mindThinkOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const {
+void MindsProperty::mindThinkOperation(const LocatedEntity& ent, const Operation& op, OpVector& res) const {
 	op->setTo(ent.getIdAsString());
 	res.push_back(op);
 }
@@ -633,6 +640,7 @@ void MindsProperty::mindThinkOperation(LocatedEntity& ent, const Operation& op, 
 /// may be modified and re-used so operations passed to this function have
 /// their ownership passed in, and caller should not modify the operation,
 /// make assumptions that it has not been modified after calling mind2body.
+/// @param ent Active entity.
 /// @param op The operation to be processed.
 /// @param res The result of the operation is returned here.
 void MindsProperty::mind2body(LocatedEntity& ent, const Operation& op, OpVector& res) const {
@@ -644,51 +652,52 @@ void MindsProperty::mind2body(LocatedEntity& ent, const Operation& op, OpVector&
 	}
 	if (!op->isDefaultFutureMilliseconds() && op->getClassNo() != Atlas::Objects::Operation::TICK_NO) {
 		spdlog::error("Operation \"{}\" from mind with "
-					  "FUTURE_MILLISECONDS set. {}", op->getParent(), ent.describeEntity());
+			"FUTURE_MILLISECONDS set. {}",
+			op->getParent(),
+			ent.describeEntity());
 	}
-	auto op_no = op->getClassNo();
-	switch (op_no) {
-		case Atlas::Objects::Operation::CREATE_NO:
-			mindCreateOperation(ent, op, res);
-			break;
-		case Atlas::Objects::Operation::DELETE_NO:
-			mindDeleteOperation(ent, op, res);
-			break;
-		case Atlas::Objects::Operation::IMAGINARY_NO:
-			mindImaginaryOperation(ent, op, res);
-			break;
-		case Atlas::Objects::Operation::LOOK_NO:
-			mindLookOperation(ent, op, res);
-			break;
-		case Atlas::Objects::Operation::MOVE_NO:
-			mindMoveOperation(ent, op, res);
-			break;
-		case Atlas::Objects::Operation::SET_NO:
-			mindSetOperation(ent, op, res);
-			break;
-		case Atlas::Objects::Operation::TALK_NO:
-			mindTalkOperation(ent, op, res);
-			break;
-		case Atlas::Objects::Operation::TOUCH_NO:
-			mindTouchOperation(ent, op, res);
-			break;
-		case Atlas::Objects::Operation::USE_NO:
-			mindUseOperation(ent, op, res);
-			break;
-		case Atlas::Objects::Operation::WIELD_NO:
-			mindWieldOperation(ent, op, res);
-			break;
-		default:
-			if (op_no == Atlas::Objects::Operation::THOUGHT_NO) {
-				mindThoughtOperation(ent, op, res);
-			} else if (op_no == Atlas::Objects::Operation::GOAL_INFO_NO) {
-				mindGoalInfoOperation(ent, op, res);
-			} else if (op_no == Atlas::Objects::Operation::THINK_NO) {
-				mindThinkOperation(ent, op, res);
-			} else {
-				mindOtherOperation(ent, op, res);
-			}
-			break;
+	switch (auto op_no = op->getClassNo()) {
+	case Atlas::Objects::Operation::CREATE_NO:
+		mindCreateOperation(ent, op, res);
+		break;
+	case Atlas::Objects::Operation::DELETE_NO:
+		mindDeleteOperation(ent, op, res);
+		break;
+	case Atlas::Objects::Operation::IMAGINARY_NO:
+		mindImaginaryOperation(ent, op, res);
+		break;
+	case Atlas::Objects::Operation::LOOK_NO:
+		mindLookOperation(ent, op, res);
+		break;
+	case Atlas::Objects::Operation::MOVE_NO:
+		mindMoveOperation(ent, op, res);
+		break;
+	case Atlas::Objects::Operation::SET_NO:
+		mindSetOperation(ent, op, res);
+		break;
+	case Atlas::Objects::Operation::TALK_NO:
+		mindTalkOperation(ent, op, res);
+		break;
+	case Atlas::Objects::Operation::TOUCH_NO:
+		mindTouchOperation(ent, op, res);
+		break;
+	case Atlas::Objects::Operation::USE_NO:
+		mindUseOperation(ent, op, res);
+		break;
+	case Atlas::Objects::Operation::WIELD_NO:
+		mindWieldOperation(ent, op, res);
+		break;
+	default:
+		if (op_no == Atlas::Objects::Operation::THOUGHT_NO) {
+			mindThoughtOperation(ent, op, res);
+		} else if (op_no == Atlas::Objects::Operation::GOAL_INFO_NO) {
+			mindGoalInfoOperation(ent, op, res);
+		} else if (op_no == Atlas::Objects::Operation::THINK_NO) {
+			mindThinkOperation(ent, op, res);
+		} else {
+			mindOtherOperation(ent, op, res);
+		}
+		break;
 	}
 }
 
@@ -707,7 +716,7 @@ void MindsProperty::addMind(Router* mind) {
 	m_data.push_back(mind);
 }
 
-void MindsProperty::removeMind(Router* mind, LocatedEntity& entity) {
+void MindsProperty::removeMind(const Router* mind, LocatedEntity& entity) {
 	auto I = std::find(m_data.begin(), m_data.end(), mind);
 	if (I != m_data.end()) {
 		m_data.erase(I);
@@ -716,11 +725,11 @@ void MindsProperty::removeMind(Router* mind, LocatedEntity& entity) {
 	//If there are no more minds controlling we should stop all propelling movement.
 	if (m_data.empty()) {
 		// Send a move op stopping the current movement
-		Atlas::Objects::Entity::Anonymous move_arg;
+		Anonymous move_arg;
 		move_arg->setId(entity.getIdAsString());
 		move_arg->setAttr("_propel", Vector3D::ZERO().toAtlas());
 
-		Atlas::Objects::Operation::Set setOp;
+		Set setOp;
 		setOp->setFrom(entity.getIdAsString());
 		setOp->setTo(entity.getIdAsString());
 		setOp->setArgs1(std::move(move_arg));
@@ -731,4 +740,3 @@ void MindsProperty::removeMind(Router* mind, LocatedEntity& entity) {
 const std::vector<Router*>& MindsProperty::getMinds() const {
 	return m_data;
 }
-

@@ -33,7 +33,7 @@
 #include "pythonbase/Python_API.h"
 #include "common/AtlasFactories.h"
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;

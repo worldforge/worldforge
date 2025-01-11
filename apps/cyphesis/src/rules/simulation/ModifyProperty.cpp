@@ -28,51 +28,57 @@ PropertyInstanceState<ModifyProperty::State> ModifyProperty::sInstanceState;
 
 ModifyEntry ModifyEntry::parseEntry(const Atlas::Message::MapType& entryMap) {
 	ModifyEntry modifyEntry;
-	AtlasQuery::find<std::string>(entryMap, "constraint", [&](const std::string& constraintEntry) {
-		modifyEntry.constraint = std::make_unique<EntityFilter::Filter<LocatedEntity>>(constraintEntry, EntityFilter::ProviderFactory<LocatedEntity>());
-	});
-	AtlasQuery::find<Atlas::Message::ListType>(entryMap, "observed_properties", [&](const Atlas::Message::ListType& observedPropertiesEntry) {
-		for (auto& propertyEntry: observedPropertiesEntry) {
-			if (propertyEntry.isString()) {
-				modifyEntry.observedProperties.emplace(propertyEntry.String());
+	AtlasQuery::find<std::string>(entryMap,
+		"constraint",
+		[&](const std::string& constraintEntry) {
+			modifyEntry.constraint = std::make_unique<EntityFilter::Filter<LocatedEntity>>(constraintEntry, EntityFilter::ProviderFactory<LocatedEntity>());
+		});
+	AtlasQuery::find<Atlas::Message::ListType>(entryMap,
+		"observed_properties",
+		[&](const Atlas::Message::ListType& observedPropertiesEntry) {
+			for (auto& propertyEntry: observedPropertiesEntry) {
+				if (propertyEntry.isString()) {
+					modifyEntry.observedProperties.emplace(propertyEntry.String());
+				}
 			}
-		}
-	});
+		});
 
-	AtlasQuery::find<Atlas::Message::MapType>(entryMap, "modifiers", [&](const Atlas::Message::MapType& modifiersMap) {
-		for (auto& modifierEntry: modifiersMap) {
-			if (modifierEntry.second.isMap()) {
-				auto& valueMap = modifierEntry.second.Map();
-				auto I = valueMap.find("default");
-				if (I != valueMap.end()) {
-					modifyEntry.modifiers.emplace(modifierEntry.first, std::make_unique<DefaultModifier>(I->second));
-				}
-				I = valueMap.find("append");
-				if (I != valueMap.end()) {
-					modifyEntry.modifiers.emplace(modifierEntry.first, std::make_unique<AppendModifier>(I->second));
-				}
-				I = valueMap.find("prepend");
-				if (I != valueMap.end()) {
-					modifyEntry.modifiers.emplace(modifierEntry.first, std::make_unique<PrependModifier>(I->second));
-				}
-				I = valueMap.find("subtract");
-				if (I != valueMap.end()) {
-					modifyEntry.modifiers.emplace(modifierEntry.first, std::make_unique<SubtractModifier>(I->second));
-				}
-				I = valueMap.find("add_fraction");
-				if (I != valueMap.end()) {
-					modifyEntry.modifiers.emplace(modifierEntry.first, std::make_unique<AddFractionModifier>(I->second));
+	AtlasQuery::find<Atlas::Message::MapType>(entryMap,
+		"modifiers",
+		[&](const Atlas::Message::MapType& modifiersMap) {
+			for (auto& modifierEntry: modifiersMap) {
+				if (modifierEntry.second.isMap()) {
+					auto& valueMap = modifierEntry.second.Map();
+					auto I = valueMap.find("default");
+					if (I != valueMap.end()) {
+						modifyEntry.modifiers.emplace(modifierEntry.first, std::make_unique<DefaultModifier>(I->second));
+					}
+					I = valueMap.find("append");
+					if (I != valueMap.end()) {
+						modifyEntry.modifiers.emplace(modifierEntry.first, std::make_unique<AppendModifier>(I->second));
+					}
+					I = valueMap.find("prepend");
+					if (I != valueMap.end()) {
+						modifyEntry.modifiers.emplace(modifierEntry.first, std::make_unique<PrependModifier>(I->second));
+					}
+					I = valueMap.find("subtract");
+					if (I != valueMap.end()) {
+						modifyEntry.modifiers.emplace(modifierEntry.first, std::make_unique<SubtractModifier>(I->second));
+					}
+					I = valueMap.find("add_fraction");
+					if (I != valueMap.end()) {
+						modifyEntry.modifiers.emplace(modifierEntry.first, std::make_unique<AddFractionModifier>(I->second));
+					}
 				}
 			}
-		}
-	});
+		});
 	return modifyEntry;
 }
 
 ModifyProperty::ModifyProperty() = default;
 
 ModifyProperty::ModifyProperty(const ModifyProperty& rhs)
-		: PropertyBase(rhs) {
+	: PropertyBase(rhs) {
 	setData(rhs.m_data);
 }
 
@@ -131,8 +137,7 @@ int ModifyProperty::get(Atlas::Message::Element& val) const {
 }
 
 void ModifyProperty::remove(LocatedEntity& owner, const std::string& name) {
-	auto* state = sInstanceState.getState(owner);
-	if (state) {
+	if (auto* state = sInstanceState.getState(owner)) {
 		newLocation(*state, owner, nullptr);
 		state->containeredConnection.disconnect();
 	}
@@ -174,14 +179,14 @@ void ModifyProperty::newLocation(State& state, LocatedEntity& entity, LocatedEnt
 	state.parentEntityPropertyUpdateConnection.disconnect();
 	if (state.parentEntity) {
 		state.parentEntityPropertyUpdateConnection = state.parentEntity->propertyApplied.connect(
-				[&](const std::string& propertyName, const PropertyBase&) {
-					for (auto& modifyEntry: m_modifyEntries) {
-						if (modifyEntry.observedProperties.find(propertyName) != modifyEntry.observedProperties.end()) {
-							checkIfActive(state, entity);
-							return;
-						}
+			[&](const std::string& propertyName, const PropertyBase&) {
+				for (auto& modifyEntry: m_modifyEntries) {
+					if (modifyEntry.observedProperties.contains(propertyName)) {
+						checkIfActive(state, entity);
+						return;
 					}
-				});
+				}
+			});
 	}
 }
 
@@ -194,7 +199,7 @@ void ModifyProperty::checkIfActive(State& state, LocatedEntity& entity) {
 			if (!modifyEntry.constraint) {
 				apply = true;
 			} else {
-				EntityFilter::QueryContext<LocatedEntity> queryContext{entity, state.parentEntity};
+				EntityFilter::QueryContext<LocatedEntity> queryContext{.entityLoc = entity, .actor = state.parentEntity};
 				queryContext.entity_lookup_fn = [&entity, &state](const std::string& id) {
 					// This might be applied before the entity or its parent has been added to the world.
 					if (id == entity.getIdAsString()) {
@@ -215,24 +220,24 @@ void ModifyProperty::checkIfActive(State& state, LocatedEntity& entity) {
 				}
 			}
 
-//
-//            if (apply) {
-//                if (state.activeModifiers.find(&modifyEntry) == state.activeModifiers.end()) {
-//                    for (auto& appliedModifierEntry : modifyEntry.modifiers) {
-//                        state.parentEntity->addModifier(appliedModifierEntry.first, appliedModifierEntry.second.get(), &entity);
-//                    }
-//                    state.activeModifiers.insert(&modifyEntry);
-//                    state.parentEntity->requirePropertyClassFixed<ModifiersProperty>()->addFlags(prop_flag_unsent);
-//                }
-//            } else {
-//                if (state.activeModifiers.find(&modifyEntry) != state.activeModifiers.end()) {
-//                    for (auto& appliedModifierEntry : modifyEntry.modifiers) {
-//                        state.parentEntity->removeModifier(appliedModifierEntry.first, appliedModifierEntry.second.get());
-//                    }
-//                    state.activeModifiers.erase(&modifyEntry);
-//                    state.parentEntity->requirePropertyClassFixed<ModifiersProperty>()->addFlags(prop_flag_unsent);
-//                }
-//            }
+			//
+			//            if (apply) {
+			//                if (state.activeModifiers.find(&modifyEntry) == state.activeModifiers.end()) {
+			//                    for (auto& appliedModifierEntry : modifyEntry.modifiers) {
+			//                        state.parentEntity->addModifier(appliedModifierEntry.first, appliedModifierEntry.second.get(), &entity);
+			//                    }
+			//                    state.activeModifiers.insert(&modifyEntry);
+			//                    state.parentEntity->requirePropertyClassFixed<ModifiersProperty>()->addFlags(prop_flag_unsent);
+			//                }
+			//            } else {
+			//                if (state.activeModifiers.find(&modifyEntry) != state.activeModifiers.end()) {
+			//                    for (auto& appliedModifierEntry : modifyEntry.modifiers) {
+			//                        state.parentEntity->removeModifier(appliedModifierEntry.first, appliedModifierEntry.second.get());
+			//                    }
+			//                    state.activeModifiers.erase(&modifyEntry);
+			//                    state.parentEntity->requirePropertyClassFixed<ModifiersProperty>()->addFlags(prop_flag_unsent);
+			//                }
+			//            }
 		}
 
 		auto& activeModifiers = state.parentEntity->getActiveModifiers();
@@ -243,7 +248,7 @@ void ModifyProperty::checkIfActive(State& state, LocatedEntity& entity) {
 			auto modifiersCopy = I->second;
 			for (auto& appliedModifierEntry: activatedModifiers) {
 				auto pair = std::make_pair(appliedModifierEntry.first, appliedModifierEntry.second);
-				if (modifiersCopy.find(pair) == modifiersCopy.end()) {
+				if (!modifiersCopy.contains(pair)) {
 					state.parentEntity->addModifier(appliedModifierEntry.first, appliedModifierEntry.second, &entity);
 					state.parentEntity->requirePropertyClassFixed<ModifiersProperty>().addFlags(prop_flag_unsent);
 				} else {

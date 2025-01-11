@@ -24,7 +24,7 @@
 #include <iostream>
 
 using Atlas::Objects::Operation::RootOperation;
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 JunctureContext::JunctureContext(Interactive& i,
 								 const std::string& id) : IdContext(i, id) {

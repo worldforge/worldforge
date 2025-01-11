@@ -16,8 +16,6 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 
-#ifdef HAVE_CONFIG_H
-#endif
 
 /*
  * Imported MetaServer API implementation.
@@ -37,7 +35,7 @@
 
 
 using namespace boost::asio;
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 
 /// \brief Constructor for metaserver communication socket object.

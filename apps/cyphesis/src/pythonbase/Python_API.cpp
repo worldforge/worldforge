@@ -45,7 +45,7 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Operation::RootOperation;
 using Atlas::Objects::Entity::Anonymous;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 /// \defgroup PythonWrappers Python Wrapper Types
 ///

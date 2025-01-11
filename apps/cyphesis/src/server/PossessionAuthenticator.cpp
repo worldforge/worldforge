@@ -25,7 +25,7 @@
 
 #include <iostream>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 /// \brief Checks if there is a pending possession on an account
 ///

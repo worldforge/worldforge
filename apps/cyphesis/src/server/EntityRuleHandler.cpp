@@ -36,7 +36,7 @@ using Atlas::Objects::Root;
 
 class Entity;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 
 EntityRuleHandler::EntityRuleHandler(EntityBuilder& eb, const PropertyManager<LocatedEntity>& propertyManager)

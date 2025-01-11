@@ -14,12 +14,10 @@
 
 #include <cassert>
 
-static const bool debug_flag = false;
-
 
 namespace Atlas::Message {
 
-DecoderBase::DecoderBase() : m_state(), m_maps(), m_lists(), m_names() {
+DecoderBase::DecoderBase() {
 }
 
 void DecoderBase::streamBegin() {

@@ -226,16 +226,16 @@ protected:
                          const Operation& originalLookOp,
                          OpVector& res) const;
 
-    void moveToNewLocation(Ref<LocatedEntity>& new_loc,
+    void moveToNewLocation(const Ref<LocatedEntity>& new_loc,
                            OpVector& res,
-                           Domain* existingDomain,
+                           const Domain* existingDomain,
                            const Point3D& newPos,
                            const Quaternion& newOrientation,
                            const Vector3D& newImpulseVelocity);
 
     void moveOurselves(const Operation& op, const Atlas::Objects::Entity::RootEntity& ent, OpVector& res);
 
-    void moveOtherEntity(const Operation& op, const Atlas::Objects::Entity::RootEntity& ent, OpVector& res);
+    void moveOtherEntity(const Operation& op, const Atlas::Objects::Entity::RootEntity& ent, OpVector& res) const;
 	/**
 	 * Collects all observers of the child, i.e. all entities that are currently observing it.
 	 * This method will walk upwards the entity chain.
@@ -462,7 +462,7 @@ public:
 
 	 void addListener(OperationsListener<LocatedEntity>* listener);
 
-	 void removeListener(OperationsListener<LocatedEntity>* listener);
+	 void removeListener(const OperationsListener<LocatedEntity>* listener);
 
 	/**
 	 * Applies the property and set flags on both the property and the entity to mark them as unclean.

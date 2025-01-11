@@ -23,12 +23,6 @@
 #define DEBUG
 #endif
 
-#ifdef HAVE_CONFIG_H
-
-#include "config.h"
-
-#endif
-
 #include "server/CommMDNSPublisher.h"
 #include "server/ServerRouting.h"
 

@@ -232,7 +232,7 @@ std::vector<LocatedEntity*> StackableDomain::getObservingEntitiesFor(const Locat
 	return {};
 }
 
-bool StackableDomain::isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const {
+bool StackableDomain::isEntityReachable(const LocatedEntity& reachingEntity, double reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const {
 	//If it can reach the stackable entity, it can reach any children
 	return true;
 }

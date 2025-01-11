@@ -21,7 +21,7 @@
 #include "rules/python/CyPy_Oplist.h"
 #include "common/debug.h"
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 
 HandlerResult ScriptUtils::processScriptResult(const std::string& scriptName, const Py::Object& ret, OpVector& res, LocatedEntity& e) {

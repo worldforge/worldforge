@@ -29,7 +29,7 @@
 
 #include <iostream>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 int EntityProperty::get(Atlas::Message::Element& val) const {
 	if (m_data.get() != nullptr) {
@@ -51,8 +51,7 @@ void EntityProperty::set(const Atlas::Message::Element& val) {
 			if (id.empty()) {
 				m_data = WeakEntityRef<LocatedEntity>(nullptr);
 			} else {
-				auto e = BaseWorld::instance().getEntity(id);
-				if (e) {
+				if (auto e = BaseWorld::instance().getEntity(id)) {
 					cy_debug_print("Assigned")
 					m_data = WeakEntityRef(e);
 				}

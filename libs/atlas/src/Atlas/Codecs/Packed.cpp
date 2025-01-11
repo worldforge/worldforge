@@ -8,9 +8,6 @@
 
 #include <iostream>
 
-#include <cstdlib>
-
-
 namespace Atlas::Codecs {
 
 Packed::Packed(std::istream& in, std::ostream& out, Atlas::Bridge& b)

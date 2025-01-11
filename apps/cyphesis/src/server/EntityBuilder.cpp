@@ -35,7 +35,7 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 EntityBuilder::EntityBuilder() {
 	installBaseFactory("archetype", "root_entity", std::make_unique<ArchetypeFactory>(*this));

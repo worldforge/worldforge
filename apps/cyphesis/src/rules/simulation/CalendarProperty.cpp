@@ -21,8 +21,6 @@
 #include "common/Property_impl.h"
 #include "modules/DateTime.h"
 
-#include "common/debug.h"
-
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;

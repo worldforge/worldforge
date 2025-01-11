@@ -17,8 +17,12 @@
 
 using Atlas::Filters::Bzip2;
 
-const int BS100K = 6;
-const int WORKFACTOR = 30;
+constexpr auto BS100K = 6;
+constexpr auto WORKFACTOR = 30;
+
+Bzip2::Bzip2(): incoming{}, outgoing{}, buf{} {
+}
+
 
 void Bzip2::begin() {
 	incoming.next_in = nullptr;
@@ -42,23 +46,22 @@ void Bzip2::end() {
 
 std::string Bzip2::encode(const std::string& data) {
 	std::string out_string;
-	int status;
 
 	buf[0] = 0;
 
 	outgoing.next_in = const_cast<char*>(data.data());
-	outgoing.avail_in = (unsigned int) data.size();
+	outgoing.avail_in = (unsigned int)data.size();
 
 	do {
-		outgoing.next_out = buf;
+		outgoing.next_out = buf.data();
 		outgoing.avail_out = sizeof(buf);
 
-		status = BZ2_bzCompress(&outgoing, BZ_FLUSH);
+		int status = BZ2_bzCompress(&outgoing, BZ_FLUSH);
 
 		ASSERT(status != BZ_SEQUENCE_ERROR);
 
 		if (status != BZ_SEQUENCE_ERROR) {
-			out_string.append((char*) buf, sizeof(buf) - outgoing.avail_out);
+			out_string.append((char*)buf.data(), sizeof(buf) - outgoing.avail_out);
 		}
 		// FIXME do something else in case of error?
 	} while (outgoing.avail_out == 0);
@@ -72,10 +75,10 @@ std::string Bzip2::decode(const std::string& data) {
 	buf[0] = 0;
 
 	incoming.next_in = const_cast<char*>(data.data());
-	incoming.avail_in = (unsigned int) data.size();
+	incoming.avail_in = (unsigned int)data.size();
 
 	do {
-		incoming.next_out = buf;
+		incoming.next_out = buf.data();
 		incoming.avail_out = sizeof(buf);
 
 		int status = BZ2_bzDecompress(&incoming);
@@ -83,7 +86,7 @@ std::string Bzip2::decode(const std::string& data) {
 		ASSERT(status == BZ_OK);
 
 		if (status != BZ_SEQUENCE_ERROR) {
-			out_string.append((char*) buf, sizeof(buf) - incoming.avail_out);
+			out_string.append((char*)buf.data(), sizeof(buf) - incoming.avail_out);
 		}
 
 	} while (incoming.avail_out == 0);

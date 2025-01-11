@@ -42,7 +42,7 @@ using Atlas::Objects::Operation::Appearance;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Entity::Anonymous;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 template
 class OperationsDispatcher<LocatedEntity>;

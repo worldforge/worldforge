@@ -27,7 +27,7 @@ void Domain::installDelegates(LocatedEntity& entity, const std::string& property
 }
 
 HandlerResult Domain::operation(LocatedEntity& e, const Operation& op, OpVector& res) {
-	return HandlerResult::OPERATION_IGNORED;
+	return OPERATION_IGNORED;
 }
 
 

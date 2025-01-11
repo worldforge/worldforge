@@ -30,7 +30,7 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 EntityFactoryBase::EntityFactoryBase()
 		: m_parent(nullptr) {

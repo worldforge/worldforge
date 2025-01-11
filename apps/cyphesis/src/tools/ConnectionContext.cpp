@@ -23,7 +23,7 @@
 
 #include <iostream>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 using Atlas::Objects::Operation::RootOperation;
 

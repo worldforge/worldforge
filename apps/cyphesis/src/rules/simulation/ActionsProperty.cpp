@@ -150,7 +150,7 @@ void ActionsProperty::set(const Atlas::Message::Element& val) {
 
 }
 
-void ActionsProperty::addAction(LocatedEntity& entity, OpVector& res, std::string actionName, ActionsProperty::Action action) {
+void ActionsProperty::addAction(LocatedEntity& entity, OpVector& res, const std::string& actionName, const Action& action) {
 	m_data[actionName] = action;
 
 	enqueueTickOp(entity, res);
@@ -159,9 +159,8 @@ void ActionsProperty::addAction(LocatedEntity& entity, OpVector& res, std::strin
 	entity.enqueueUpdateOp(res);
 }
 
-void ActionsProperty::removeAction(LocatedEntity& entity, OpVector& res, std::string actionName) {
-	auto result = m_data.erase(actionName);
-	if (result) {
+void ActionsProperty::removeAction(LocatedEntity& entity, OpVector& res, const std::string& actionName) {
+	if (m_data.erase(actionName)) {
 		entity.applyProperty(*this);
 		entity.enqueueUpdateOp(res);
 	}

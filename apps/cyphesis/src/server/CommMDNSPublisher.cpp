@@ -42,7 +42,7 @@
 
 #include <avahi-common/error.h>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 static void client_callback(AvahiClient * s,
                             AvahiClientState state,

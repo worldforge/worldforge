@@ -134,9 +134,8 @@ protected:
 	inline std::string hexEncode(std::string data) {
 
 		for (size_t i = 0; i < data.size(); i++) {
-			char currentChar = data[i];
 
-			switch (currentChar) {
+			switch (char currentChar = data[i]) {
 				case '+':
 				case '[':
 				case ']':

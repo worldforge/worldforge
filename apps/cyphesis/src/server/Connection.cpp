@@ -46,7 +46,7 @@ using Atlas::Objects::Operation::Info;
 using Atlas::Objects::Entity::Anonymous;
 
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 Connection::Connection(CommSocket& socket,
 					   ServerRouting& svr,

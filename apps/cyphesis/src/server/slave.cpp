@@ -36,7 +36,7 @@
 
 class SlaveClientConnection;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 int main(int argc, char** argv) {
 	interactive_signals();

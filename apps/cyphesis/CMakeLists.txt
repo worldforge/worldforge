@@ -162,7 +162,6 @@ find_package(spdlog REQUIRED)
 #add_custom_target(benchmark COMMAND ${CMAKE_CTEST_COMMAND} -R Benchmark)
 
 configure_file(tools/Version.tmpl.h generated/Version.h @ONLY)
-configure_file(tools/config.tmpl.h generated/config.h @ONLY)
 
 
 add_subdirectory(src)

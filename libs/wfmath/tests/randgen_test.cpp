@@ -28,10 +28,6 @@
 #include <cstdio>
 #include <iostream>
 
-#ifdef HAVE_CONFIG_H
-	#include "config.h"
-#endif
-
 using WFMath::MTRand;
 
 bool test_known_sequence()

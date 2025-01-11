@@ -28,7 +28,7 @@ using Atlas::Objects::Entity::RootEntity;
 
 template<>
 int Property<IdList, LocatedEntity>::get(Element& e) const {
-	e = Atlas::Message::ListType();
+	e = ListType();
 	idListasObject(m_data, e.asList());
 	return 0;
 }

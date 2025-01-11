@@ -39,7 +39,7 @@
 
 #include <sstream>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 INT_OPTION(http_port_num,
 6780, CYPHESIS, "httpport",

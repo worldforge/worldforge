@@ -15,47 +15,18 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+#pragma once
 
 #include "pythonbase/WrapperBase.h"
 #include "CyPy_Element.h"
 #include <Atlas/Message/Element.h>
 
-#ifndef WORLDFORGE_ENTITYHELPER_H
-#define WORLDFORGE_ENTITYHELPER_H
-
 template<typename EntityT>
 Py::Object wrapEntity(Ref<EntityT> le);
 
 
-//template<typename EntityT, typename PythonClassT>
-//Py::Object wrapEntity(Ref<EntityT> le) {
-//	//If there's already a script entity use that (as a cache mechanism)
-//	if (le->m_scriptEntity.has_value()) {
-//		auto wrapper = std::any_cast<Py::Object>(le->m_scriptEntity);
-//		if (!wrapper.isNone()) {
-//			auto object = PyWeakref_GetObject(wrapper.ptr());
-//			if (object) {
-//				Py::Object pythonObj(object);
-//				if (!pythonObj.isNone()) {
-//					return pythonObj;
-//				}
-//			}
-//		}
-//	}
-//	auto wrapped = WrapperBase<Ref<EntityT>, PythonClassT, Py::PythonClassInstanceWeak>::wrap(le);
-//	if (!wrapped.isNone()) {
-//
-//		auto weakPtr = PyWeakref_NewRef(wrapped.ptr(), nullptr);
-//		le->m_scriptEntity = std::any(Py::Object(weakPtr, true));
-//
-//		return wrapped;
-//	}
-//
-//}
-
-
 template<typename TValue>
-inline Py::Object getPropertyFromFirstArg(TValue& value, const Py::Tuple& args, const std::function<Py::Object(const Atlas::Message::Element&, Py::Object)>& checkFn) {
+Py::Object getPropertyFromFirstArg(TValue& value, const Py::Tuple& args, const std::function<Py::Object(const Atlas::Message::Element&, Py::Object)>& checkFn) {
 	args.verify_length(1, 2);
 	Py::Object defaultValue = Py::None();
 	if (args.length() > 1) {
@@ -220,5 +191,3 @@ Py::Object has_prop_list(TValue& value, const Py::Tuple& args) {
 		return element.isList();
 	});
 }
-
-#endif //WORLDFORGE_ENTITYHELPER_H

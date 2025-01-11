@@ -68,10 +68,8 @@
 #include "FilterProperty.h"
 #include "AliasProperty.h"
 
-#include <Atlas/Objects/Operation.h>
 
 #include <iostream>
-#include "rules/simulation/AtlasProperties.h"
 #include "rules/PhysicalProperties_impl.h"
 #include "common/PropertyManager_impl.h"
 
@@ -81,7 +79,7 @@ using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 
 CorePropertyManager::CorePropertyManager(Inheritance& inheritance)

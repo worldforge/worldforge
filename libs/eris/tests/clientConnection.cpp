@@ -1,8 +1,4 @@
 
-#ifdef HAVE_CONFIG_H
-    #include "config.h"
-#endif
-
 #include "clientConnection.h"
 #include "stubServer.h"
 #include "objectSummary.h"

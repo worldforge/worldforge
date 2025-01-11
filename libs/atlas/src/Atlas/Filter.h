@@ -10,6 +10,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <array>
 
 namespace Atlas {
 
@@ -65,26 +66,24 @@ public:
 
 	filterbuf(std::streambuf& buffer,
 			  Filter& filter)
-			: m_streamBuffer(buffer), m_filter(filter) {
-		setp(m_outBuffer, m_outBuffer + (m_outBufferSize - 1));
-		setg(m_inBuffer + m_inPutback, m_inBuffer + m_inPutback,
-			 m_inBuffer + m_inPutback);
+			: m_outBuffer(), m_inBuffer(), m_streamBuffer(buffer), m_filter(filter) {
+		setp(m_outBuffer.data(), m_outBuffer.data() + (m_outBuffer.size() - 1));
+		setg(m_inBuffer.data() + m_inPutback, m_inBuffer.data() + m_inPutback,
+			 m_inBuffer.data() + m_inPutback);
 	}
 
 	~filterbuf() override;
 
 protected:
-	static const int m_outBufferSize = 10;
-	char m_outBuffer[m_outBufferSize];
+	std::array<char, 10> m_outBuffer;
 
-	static const int m_inBufferSize = 10;
-	static const int m_inPutback = 4;
-	char m_inBuffer[m_inBufferSize];
+	static constexpr auto m_inPutback = 4;
+	std::array<char, 10> m_inBuffer;
 
 	int flushOutBuffer() {
-		auto num = (int) (pptr() - pbase());
+		auto num = static_cast<int>(pptr() - pbase());
 		std::string encoded = m_filter.encode(std::string(pbase(), pptr()));
-		m_streamBuffer.sputn(encoded.c_str(), (long) encoded.size());
+		m_streamBuffer.sputn(encoded.c_str(), static_cast<std::streamsize>(encoded.size()));
 		pbump(-num);
 		return num;
 	}

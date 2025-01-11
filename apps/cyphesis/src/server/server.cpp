@@ -15,12 +15,6 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#ifdef HAVE_CONFIG_H
-
-#include "config.h"
-
-#endif
-
 #include <spdlog/spdlog.h>
 #include <spdlog/common.h>
 
@@ -55,6 +49,7 @@
 #include "common/const.h"
 #include "common/AtlasFactories.h"
 #include "rules/simulation/Inheritance.h"
+#include "common/globals.h"
 #include "common/system.h"
 #include "common/sockets.h"
 #include "common/Monitors.h"
@@ -105,7 +100,6 @@ class Peer;
 
 
 namespace {
-const bool debug_flag = false;
 
 INT_OPTION(http_port_num, 6780, CYPHESIS, "httpport",
 		   "Network listen port for http connection to the server")

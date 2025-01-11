@@ -20,12 +20,9 @@
 
 #include "common/log.h"
 #include "common/TypeNode_impl.h"
-#include "common/AtlasFactories.h"
 #include "common/custom_impl.h"
 
 #include <Atlas/Objects/Entity.h>
-#include <Atlas/Objects/RootOperation.h>
-#include <Atlas/Objects/Operation.h>
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;

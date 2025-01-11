@@ -110,7 +110,7 @@ struct TestDomain : Domain {
 	 */
 	void getVisibleEntitiesFor(const LocatedEntity& observingEntity, std::list<LocatedEntity*>& entityList) const override {}
 
-	bool isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override {
+	bool isEntityReachable(const LocatedEntity& reachingEntity, double reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override {
 		//For tests we'll return false if reach is zero
 		if (reach > 0.f) {
 			return false;

@@ -22,7 +22,7 @@
 
 #include <iostream>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 CommPythonClient::CommPythonClient(const std::string& name,
                                    boost::asio::io_context& io_context) :

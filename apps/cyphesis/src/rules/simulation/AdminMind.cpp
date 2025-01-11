@@ -38,7 +38,7 @@ using Atlas::Objects::Operation::Delete;
 using Atlas::Objects::Operation::Unseen;
 using Atlas::Objects::Entity::Anonymous;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 AdminMind::AdminMind(RouterId id, Ref<LocatedEntity> entity)
 		: ExternalMind(std::move(id), std::move(entity)) {
@@ -64,8 +64,7 @@ void AdminMind::externalOperation(const Operation& op, Link& link) {
 		m_entity->operation(op, lres);
 	} else {
 		//Otherwise we're sending something to someone else.
-		auto to = BaseWorld::instance().getEntity(op->getTo());
-		if (to) {
+		if (auto to = BaseWorld::instance().getEntity(op->getTo())) {
 			//If it's a relay op we should send it as if it came from ourselves,
 			// so the receiving entity knows where to return it.
 			if (op->getClassNo() == Atlas::Objects::Operation::RELAY_NO) {

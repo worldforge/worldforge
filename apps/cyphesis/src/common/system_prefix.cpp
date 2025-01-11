@@ -16,9 +16,6 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 
-#ifdef HAVE_CONFIG_H
-#endif
-
 #include "binreloc.h"
 #include "globals.h"
 #include "system.h"

@@ -46,7 +46,7 @@ using Atlas::Objects::Operation::Info;
 using Atlas::Objects::Operation::Login;
 
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 
 void Juncture::onSocketConnected() {

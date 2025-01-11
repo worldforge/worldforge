@@ -39,7 +39,7 @@ using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::smart_dynamic_cast;
 
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 BaseClientLegacy::BaseClientLegacy(boost::asio::io_context& io_context,
 					   Atlas::Objects::Factories& factories,

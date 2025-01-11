@@ -24,7 +24,7 @@
 
 #include <iostream>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 /// Interval between database vacuum jobs.
 const int CommPSQLSocket::vacFreq = 25 * 60;

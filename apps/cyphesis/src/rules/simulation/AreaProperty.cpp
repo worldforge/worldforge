@@ -57,9 +57,7 @@ AreaProperty::AreaProperty(const AreaProperty& other)
 }
 
 /// \brief AreaProperty constructor
-///
-/// @param flags Flags used to persist this property
-AreaProperty::AreaProperty() : TerrainEffectorProperty() {
+AreaProperty::AreaProperty() : TerrainEffectorProperty(), mState() {
 }
 
 AreaProperty::~AreaProperty() = default;

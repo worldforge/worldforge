@@ -24,7 +24,6 @@
 #include "rules/python/EntityHelper.h"
 #include "common/log.h"
 #include "common/operations/Tick.h"
-#include "common/debug.h"
 #include "pythonbase/Python_API.h"
 #include "Remotery.h"
 #include <Atlas/Objects/Operation.h>

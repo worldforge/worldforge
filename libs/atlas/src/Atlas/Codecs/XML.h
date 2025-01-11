@@ -12,8 +12,7 @@
 #include <iosfwd>
 #include <stack>
 
-namespace Atlas {
-namespace Codecs {
+namespace Atlas::Codecs {
 
 /*
 
@@ -139,6 +138,6 @@ protected:
 };
 
 }
-} // namespace Atlas::Codecs
+// namespace Atlas::Codecs
 
 #endif // ATLAS_CODECS_XML_H

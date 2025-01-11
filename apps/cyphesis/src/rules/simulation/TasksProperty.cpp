@@ -39,7 +39,7 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 using Atlas::Objects::Operation::Update;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 static const std::string SERIALNO = "serialno";
 

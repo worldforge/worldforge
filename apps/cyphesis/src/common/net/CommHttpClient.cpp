@@ -17,7 +17,7 @@
 
 #include "CommHttpClient.h"
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 CommHttpClient::CommHttpClient(const std::string& name,
 							   boost::asio::thread_pool& io_context,

@@ -42,7 +42,7 @@
 #include "common/Property_impl.h"
 #include "common/TypeNode_impl.h"
 #include "common/Variable.h"
-#include "common/ScriptKit.h"
+#include "common/custom.h"
 
 
 #include "rules/Location_impl.h"

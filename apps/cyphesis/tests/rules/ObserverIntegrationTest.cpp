@@ -20,6 +20,7 @@
 #include "../DatabaseNull.h"
 #include "../TestWorld.h"
 #include "common/Monitors.h"
+#include "common/custom.h"
 #include "rules/simulation/Inheritance.h"
 #include "rules/EntityLocation_impl.h"
 #include "../NullEntityCreator.h"

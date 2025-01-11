@@ -52,9 +52,9 @@ public:
 
 	void enqueueTickOp(const LocatedEntity& entity, OpVector& res);
 
-	void addAction(LocatedEntity& entity, OpVector& res, std::string actionName, Action action);
+	void addAction(LocatedEntity& entity, OpVector& res, const std::string& actionName, const Action& action);
 
-	void removeAction(LocatedEntity& entity, OpVector& res, std::string actionName);
+	void removeAction(LocatedEntity& entity, OpVector& res, const std::string& actionName);
 
 protected:
 

@@ -17,7 +17,6 @@
  */
 
 #include "ModeDataProperty.h"
-#include "common/Property_impl.h"
 #include "BaseWorld.h"
 #include "rules/simulation/LocatedEntity.h"
 
@@ -32,8 +31,7 @@ void ModeDataProperty::set(const Atlas::Message::Element& val) {
 		const auto& map = val.Map();
 		auto modeI = map.find("mode");
 		if (modeI != map.end() && modeI->second.isString()) {
-			auto mode = ModeProperty::parseMode(modeI->second.String());
-			switch (mode) {
+			switch (ModeProperty::parseMode(modeI->second.String())) {
 				case ModeProperty::Mode::Planted: {
 					setPlantedData(map);
 					return;

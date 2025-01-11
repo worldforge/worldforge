@@ -23,11 +23,6 @@
 #define DEBUG
 #endif
 
-#ifdef HAVE_CONFIG_H
-
-#include "config.h"
-
-#endif
 
 #include "common/globals.h"
 #include "common/system.h"

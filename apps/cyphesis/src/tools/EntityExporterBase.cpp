@@ -35,7 +35,7 @@
 #include "common/log.h"
 #include "common/debug.h"
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 #define S_LOG_VERBOSE(message) \
     { cy_debug(std::stringstream ss;\
     ss << message;\

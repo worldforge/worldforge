@@ -45,7 +45,7 @@ using Atlas::Objects::Operation::Login;
 using Atlas::Objects::Operation::Info;
 using Atlas::Objects::Operation::Error;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 /// \brief AdminClient constructor
 AdminClient::AdminClient(Atlas::Objects::Factories& factories, boost::asio::io_context& io_context)

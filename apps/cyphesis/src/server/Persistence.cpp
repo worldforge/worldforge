@@ -32,7 +32,7 @@
 using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 Persistence::Persistence(Database& database)
 		: m_db(database) {

@@ -19,20 +19,12 @@
 #ifndef COMMASIOCLIENT_IMPL_H_
 #define COMMASIOCLIENT_IMPL_H_
 
-#ifdef HAVE_CONFIG_H
-
-#include "config.h"
-
-#endif
-
 #include "common/log.h"
-#include "common/debug.h"
 
 #include "CommAsioClient.h"
 #include "Remotery.h"
 
 #include <Atlas/Objects/Encoder.h>
-#include <Atlas/Objects/RootOperation.h>
 #include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Net/Stream.h>
 

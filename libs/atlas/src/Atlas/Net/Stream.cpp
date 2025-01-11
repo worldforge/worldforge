@@ -15,7 +15,7 @@
 
 #define Debug(prg) { if (debug_flag) { prg } }
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 static std::string get_line(std::string& s, char ch) {
 	std::string out;
@@ -40,12 +40,12 @@ NegotiateHelper::NegotiateHelper(std::list<std::string>& names) :
 		m_names(names) {
 }
 
-bool NegotiateHelper::get(std::string& buf, const std::string& header) {
+bool NegotiateHelper::get(std::string& buf, const std::string& header) const {
 	std::string s, h;
 
 	while (!buf.empty()) {
 		// check for end condition
-		if (buf.find('\n') == 0) {
+		if (buf.starts_with('\n')) {
 			buf.erase(0, 1);
 			return true;
 		}
@@ -92,8 +92,6 @@ StreamConnect::StreamConnect(std::string name, std::istream& inStream, std::ostr
 void StreamConnect::poll() {
 	Debug(std::cout << "** Client(" << m_state << ") : " << m_inStream.rdbuf()->in_avail() << std::endl;)
 
-	std::string out;
-
 	std::streamsize count;
 	while ((count = m_inStream.rdbuf()->in_avail()) > 0) {
 		for (int i = 0; i < count; ++i) {
@@ -118,6 +116,7 @@ void StreamConnect::poll() {
 	}
 
 	if (m_state == CLIENT_CODECS) {
+		std::string out;
 		//processClientCodecs();
 		m_codecHelper.put(out, "ICAN");
 		m_outStream << out << std::flush;

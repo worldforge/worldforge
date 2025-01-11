@@ -76,8 +76,7 @@ HandlerResult AttachmentsProperty::operation(LocatedEntity& entity, const Operat
 
 				auto resetExistingEntityPlantedOn = [&]() {
 					if (existing_entity) {
-						auto existing_entity_mode_data_prop = existing_entity->modPropertyClassFixed<ModeDataProperty>();
-						if (existing_entity_mode_data_prop) {
+						if (auto existing_entity_mode_data_prop = existing_entity->modPropertyClassFixed<ModeDataProperty>()) {
 							existing_entity_mode_data_prop->clearData();
 							existing_entity->applyProperty(*existing_entity_mode_data_prop);
 							existing_entity->enqueueUpdateOp();

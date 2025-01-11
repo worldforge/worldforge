@@ -26,7 +26,7 @@
 #include <cassert>
 #include <utility>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 /// \brief BaseWorld constructor.
 ///

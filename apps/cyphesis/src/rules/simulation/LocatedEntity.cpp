@@ -76,7 +76,7 @@ std::set<std::string> LocatedEntity::s_immutable = {"id", "parent", "loc", "cont
 
 SynchedState<std::map<const TypeNode<LocatedEntity>*, int>> LocatedEntity::s_monitorsMap;
 
-static const auto debug_flag = false;
+static constexpr auto debug_flag = false;
 
 
 /// \brief Singleton accessor for immutables
@@ -89,12 +89,12 @@ const std::set<std::string>& LocatedEntity::immutables() {
 
 /// \brief LocatedEntity constructor
 LocatedEntity::LocatedEntity(RouterId id) :
-		Router(id),
-		m_seq(0),
-		m_type(nullptr),
-		m_flags(0),
-		m_parent(nullptr),
-		m_contains(nullptr) {
+	Router(id),
+	m_seq(0),
+	m_type(nullptr),
+	m_flags(0),
+	m_parent(nullptr),
+	m_contains(nullptr) {
 	m_properties[LocationProperty::property_name].property = std::make_unique<LocationProperty>(*this);
 	m_properties[IdProperty::property_name].property = std::make_unique<IdProperty>(m_id);
 }
@@ -161,12 +161,12 @@ void LocatedEntity::DeleteOperation(const Operation& op, OpVector& res) {
 void LocatedEntity::MoveOperation(const Operation& op, OpVector& res) {
 	cy_debug_print("Entity::move_operation")
 
-//    if (m_parent == nullptr) {
-//        spdlog::error("Moving {}({}) when it is not in the world.",
-//                                   getType(), getId());
-//        assert(m_parent != nullptr);
-//        return;
-//    }
+	//    if (m_parent == nullptr) {
+	//        spdlog::error("Moving {}({}) when it is not in the world.",
+	//                                   getType(), getId());
+	//        assert(m_parent != nullptr);
+	//        return;
+	//    }
 
 	// Check the validity of the operation.
 	const std::vector<Root>& args = op->getArgs();
@@ -186,52 +186,52 @@ void LocatedEntity::MoveOperation(const Operation& op, OpVector& res) {
 	}
 
 
-//    if (getId() != ent->getId()) {
-//        error(op, "Move op does not have correct id in argument", res, getId());
-//        return;
-//    }
+	//    if (getId() != ent->getId()) {
+	//        error(op, "Move op does not have correct id in argument", res, getId());
+	//        return;
+	//    }
 
 }
 
-void LocatedEntity::moveToNewLocation(Ref<LocatedEntity>& new_loc,
-							  OpVector& res,
-							  Domain* existingDomain,
-							  const Point3D& newPos,
-							  const Quaternion& newOrientation,
-							  const Vector3D& newImpulseVelocity) {
+void LocatedEntity::moveToNewLocation(const Ref<LocatedEntity>& new_loc,
+									  OpVector& res,
+									  const Domain* existingDomain,
+									  const Point3D& newPos,
+									  const Quaternion& newOrientation,
+									  const Vector3D& newImpulseVelocity) {
 	// new_loc should only be non-null if the LOC specified is
 	// different from the current LOC
 	assert(m_parent != new_loc.get());
-//            // Check for pickup, ie if the new LOC is the actor, and the
-//            // previous LOC is the actor's LOC.
-//            if (new_loc->getId() == op->getFrom() &&
-//                m_parent == new_loc->m_parent) {
-//
-//                //Send Pickup to those entities which are currently observing
-//                if (m_parent) {
-//
-//                    Pickup p;
-//                    p->setFrom(op->getFrom());
-//                    p->setTo(getId());
-//
-//                    Sight s;
-//                    s->setArgs1(p);
-//                    m_parent->broadcast(s, res, Visibility::PUBLIC);
-//                }
-//
-//            }
-//            // Check for drop, ie if the old LOC is the actor, and the
-//            // new LOC is the actor's LOC.
-//            if (m_parent->getId() == op->getFrom() &&
-//                new_loc == m_parent->m_parent) {
-//
-//                Drop d;
-//                d->setFrom(op->getFrom());
-//                d->setTo(getId());
-//                Sight s;
-//                s->setArgs1(d);
-//                m_parent->broadcast(s, res, Visibility::PUBLIC);
-//            }
+	//            // Check for pickup, ie if the new LOC is the actor, and the
+	//            // previous LOC is the actor's LOC.
+	//            if (new_loc->getId() == op->getFrom() &&
+	//                m_parent == new_loc->m_parent) {
+	//
+	//                //Send Pickup to those entities which are currently observing
+	//                if (m_parent) {
+	//
+	//                    Pickup p;
+	//                    p->setFrom(op->getFrom());
+	//                    p->setTo(getId());
+	//
+	//                    Sight s;
+	//                    s->setArgs1(p);
+	//                    m_parent->broadcast(s, res, Visibility::PUBLIC);
+	//                }
+	//
+	//            }
+	//            // Check for drop, ie if the old LOC is the actor, and the
+	//            // new LOC is the actor's LOC.
+	//            if (m_parent->getId() == op->getFrom() &&
+	//                new_loc == m_parent->m_parent) {
+	//
+	//                Drop d;
+	//                d->setFrom(op->getFrom());
+	//                d->setTo(getId());
+	//                Sight s;
+	//                s->setArgs1(d);
+	//                m_parent->broadcast(s, res, Visibility::PUBLIC);
+	//            }
 
 	// Update loc
 
@@ -308,7 +308,7 @@ void LocatedEntity::moveToNewLocation(Ref<LocatedEntity>& new_loc,
 	}
 	if (newDomain) {
 		if (newImpulseVelocity.isValid()) {
-			Domain::TransformData transformData{{}, {}, nullptr, newImpulseVelocity};
+			Domain::TransformData transformData{.orientation = {}, .pos = {}, .plantedOnEntity = nullptr, .impulseVelocity = newImpulseVelocity};
 			std::set<LocatedEntity*> transformedEntities;
 			//We can ignore the transformedEntities, since we only are applying an impulse velocity
 			newDomain->applyTransform(*this, transformData, transformedEntities);
@@ -342,7 +342,7 @@ void LocatedEntity::SetOperation(const Operation& op, OpVector& res) {
 ///
 /// When another operation causes the properties of an entity to be changed,
 /// it can trigger propagation of this change by sending an Update operation
-/// nameing the attributes or properties that need to be updated. This
+/// naming the attributes or properties that need to be updated. This
 /// member function handles the Operation, sending a Sight(Set) for
 /// any perceptible changes, and will in future handle persisting those
 /// changes. Should this also handle side effects?
@@ -382,13 +382,13 @@ void LocatedEntity::updateProperties(const Operation& op, OpVector& res) {
 		}
 	}
 
-//    //TODO: only send changed location properties
-//    if (m_flags.hasFlags(entity_dirty_location)) {
-//        m_location.addToEntity(set_arg);
-//        removeFlags(entity_dirty_location);
-//        hadChanges = true;
-//        hadPublicChanges = true;
-//    }
+	//    //TODO: only send changed location properties
+	//    if (m_flags.hasFlags(entity_dirty_location)) {
+	//        m_location.addToEntity(set_arg);
+	//        removeFlags(entity_dirty_location);
+	//        hadChanges = true;
+	//        hadPublicChanges = true;
+	//    }
 
 	if (hadChanges) {
 		//Mark that entity needs to be written to storage.
@@ -482,8 +482,7 @@ void LocatedEntity::generateSightOp(const LocatedEntity& observingEntity, const 
 
 		//If the observed entity has a domain, let it decide child visibility.
 		//Otherwise, show all children.
-		const Domain* observedEntityDomain = getDomain();
-		if (observedEntityDomain) {
+		if (const Domain* observedEntityDomain = getDomain()) {
 			auto& contlist = sarg->modifyContains();
 			contlist.clear();
 			std::list<LocatedEntity*> entityList;
@@ -532,7 +531,7 @@ void LocatedEntity::generateSightOp(const LocatedEntity& observingEntity, const 
 	if (m_type) {
 		sarg->setParent(m_type->name());
 	}
-//    m_location.addToEntity(sarg);
+	//    m_location.addToEntity(sarg);
 	sarg->setObjtype("obj");
 
 	s->setArgs1(sarg);
@@ -664,18 +663,18 @@ void LocatedEntity::moveOurselves(const Operation& op, const RootEntity& ent, Op
 	Operation m = op.copy();
 	auto marg = smart_dynamic_cast<RootEntity>(m->getArgs().front());
 	assert(marg.isValid());
-//        m_location.addToEntity(marg);
-//        {
-//            auto modeDataProp = getPropertyClassFixed<ModeDataProperty>();
-//            if (modeDataProp) {
-//                if (modeDataProp->hasFlags(prop_flag_unsent)) {
-//                    Element modeDataElem;
-//                    if (modeDataProp->get(modeDataElem) == 0) {
-//                        marg->setAttrValue(ModeDataProperty::property_name, modeDataElem);
-//                    }
-//                }
-//            }
-//        }
+	//        m_location.addToEntity(marg);
+	//        {
+	//            auto modeDataProp = getPropertyClassFixed<ModeDataProperty>();
+	//            if (modeDataProp) {
+	//                if (modeDataProp->hasFlags(prop_flag_unsent)) {
+	//                    Element modeDataElem;
+	//                    if (modeDataProp->get(modeDataElem) == 0) {
+	//                        marg->setAttrValue(ModeDataProperty::property_name, modeDataElem);
+	//                    }
+	//                }
+	//            }
+	//        }
 
 	if (!m->hasAttrFlag(Atlas::Objects::STAMP_FLAG)) {
 		m->setStamp(current_time.count());
@@ -737,47 +736,47 @@ void LocatedEntity::moveOurselves(const Operation& op, const RootEntity& ent, Op
 				}
 			}
 
-			Domain::TransformData transformData{newOrientation, newPos, plantedOnEntity, newImpulseVelocity};
+			Domain::TransformData transformData{.orientation=newOrientation, .pos=newPos, .plantedOnEntity=plantedOnEntity, .impulseVelocity=newImpulseVelocity};
 			domain->applyTransform(*this, transformData, transformedEntities);
 		}
 	}
 
 
-//    m_location.update(current_time);
+	//    m_location.update(current_time);
 	removeFlags(entity_clean);
 
 	// At this point the Location data for this entity has been updated.
 
 	//TODO: handle any transformed entities inside the domain instead
-//    //Check if there are any other transformed entities, and send move ops for those.
-//    if (transformedEntities.size() > 1) {
-//        for (auto& transformedEntity : transformedEntities) {
-//            if (transformedEntity != this) {
-//
-//                Atlas::Objects::Entity::Anonymous setArgs;
-//                setArgs->setId(transformedEntity->getId());
-//                transformedEntity->m_location.addToEntity(setArgs);
-//
-//                auto modeDataProp = transformedEntity->getPropertyClassFixed<ModeDataProperty>();
-//                if (modeDataProp) {
-//                    if (modeDataProp->hasFlags(prop_flag_unsent)) {
-//                        Element modeDataElem;
-//                        if (modeDataProp->get(modeDataElem) == 0) {
-//                            setArgs->setAttr(ModeDataProperty::property_name, modeDataElem);
-//                        }
-//                    }
-//                }
-//
-//                Set setOp;
-//                setOp->setArgs1(setArgs);
-//
-//                Sight sight;
-//                sight->setArgs1(setOp);
-//                transformedEntity->broadcast(sight, res, Visibility::PUBLIC);
-//
-//            }
-//        }
-//    }
+	//    //Check if there are any other transformed entities, and send move ops for those.
+	//    if (transformedEntities.size() > 1) {
+	//        for (auto& transformedEntity : transformedEntities) {
+	//            if (transformedEntity != this) {
+	//
+	//                Atlas::Objects::Entity::Anonymous setArgs;
+	//                setArgs->setId(transformedEntity->getId());
+	//                transformedEntity->m_location.addToEntity(setArgs);
+	//
+	//                auto modeDataProp = transformedEntity->getPropertyClassFixed<ModeDataProperty>();
+	//                if (modeDataProp) {
+	//                    if (modeDataProp->hasFlags(prop_flag_unsent)) {
+	//                        Element modeDataElem;
+	//                        if (modeDataProp->get(modeDataElem) == 0) {
+	//                            setArgs->setAttr(ModeDataProperty::property_name, modeDataElem);
+	//                        }
+	//                    }
+	//                }
+	//
+	//                Set setOp;
+	//                setOp->setArgs1(setArgs);
+	//
+	//                Sight sight;
+	//                sight->setArgs1(setOp);
+	//                transformedEntity->broadcast(sight, res, Visibility::PUBLIC);
+	//
+	//            }
+	//        }
+	//    }
 
 
 	m_seq++;
@@ -786,12 +785,11 @@ void LocatedEntity::moveOurselves(const Operation& op, const RootEntity& ent, Op
 }
 
 
-void LocatedEntity::moveOtherEntity(const Operation& op, const RootEntity& ent, OpVector& res) {
-	auto otherEntity = BaseWorld::instance().getEntity(ent->getId());
-	if (otherEntity) {
+void LocatedEntity::moveOtherEntity(const Operation& op, const RootEntity& ent, OpVector& res) const {
+	if (auto otherEntity = BaseWorld::instance().getEntity(ent->getId())) {
 
 		//All movement checks needs to know if the entity is a child of us, so we'll do that check here.
-		bool isChildOfUs = m_contains && m_contains->find(otherEntity) != m_contains->end();
+		bool isChildOfUs = m_contains && m_contains->contains(otherEntity);
 
 
 		//Only allow movement if the entity is being moved either into, within or out of us.
@@ -832,7 +830,6 @@ void LocatedEntity::moveOtherEntity(const Operation& op, const RootEntity& ent, 
 	}
 
 }
-
 
 
 std::unique_ptr<PropertyBase> LocatedEntity::createProperty(const std::string& propertyName) const {
@@ -977,7 +974,7 @@ void LocatedEntity::addListener(OperationsListener<LocatedEntity>* listener) {
 	}
 }
 
-void LocatedEntity::removeListener(OperationsListener<LocatedEntity>* listener) {
+void LocatedEntity::removeListener(const OperationsListener<LocatedEntity>* listener) {
 	auto I = std::find(m_listeners.begin(), m_listeners.end(), listener);
 	if (I != m_listeners.end()) {
 		m_listeners.erase(I);
@@ -1054,8 +1051,8 @@ void LocatedEntity::operation(const Operation& op, OpVector& res) {
 }
 
 HandlerResult LocatedEntity::callDelegate(const std::string& name,
-                                   const Operation& op,
-                                   OpVector& res) {
+										  const Operation& op,
+										  OpVector& res) {
 	PropertyBase* p = nullptr;
 	auto I = m_properties.find(name);
 	if (I != m_properties.end()) {
@@ -1074,34 +1071,34 @@ HandlerResult LocatedEntity::callDelegate(const std::string& name,
 
 void LocatedEntity::callOperation(const Operation& op, OpVector& res) {
 	switch (auto op_no = op->getClassNo()) {
-		case Atlas::Objects::Operation::DELETE_NO:
-			DeleteOperation(op, res);
-			break;
-		case Atlas::Objects::Operation::IMAGINARY_NO:
-			ImaginaryOperation(op, res);
-			break;
-		case Atlas::Objects::Operation::LOOK_NO:
-			LookOperation(op, res);
-			break;
-		case Atlas::Objects::Operation::MOVE_NO:
-			MoveOperation(op, res);
-			break;
-		case Atlas::Objects::Operation::SET_NO:
-			SetOperation(op, res);
-			break;
-		case Atlas::Objects::Operation::TALK_NO:
-			TalkOperation(op, res);
-			break;
-		case Atlas::Objects::Operation::CREATE_NO:
-			CreateOperation(op, res);
-			break;
-		default:
-			if ((op_no) == Atlas::Objects::Operation::UPDATE_NO) {
-				UpdateOperation(op, res);
-			} else {
-				/* ERROR */
-			}
-			break;
+	case Atlas::Objects::Operation::DELETE_NO:
+		DeleteOperation(op, res);
+		break;
+	case Atlas::Objects::Operation::IMAGINARY_NO:
+		ImaginaryOperation(op, res);
+		break;
+	case Atlas::Objects::Operation::LOOK_NO:
+		LookOperation(op, res);
+		break;
+	case Atlas::Objects::Operation::MOVE_NO:
+		MoveOperation(op, res);
+		break;
+	case Atlas::Objects::Operation::SET_NO:
+		SetOperation(op, res);
+		break;
+	case Atlas::Objects::Operation::TALK_NO:
+		TalkOperation(op, res);
+		break;
+	case Atlas::Objects::Operation::CREATE_NO:
+		CreateOperation(op, res);
+		break;
+	default:
+		if ((op_no) == Atlas::Objects::Operation::UPDATE_NO) {
+			UpdateOperation(op, res);
+		} else {
+			/* ERROR */
+		}
+		break;
 	}
 }
 
@@ -1174,13 +1171,11 @@ Ref<LocatedEntity> LocatedEntity::createNewEntity(const RootEntity& ent) const {
 }
 
 
-
-
 void LocatedEntity::clearProperties() {
 	if (m_type) {
 		for (auto& entry: m_type->defaults()) {
 			//Only remove if there's no instance specific property.
-			if (m_properties.find(entry.first) == m_properties.end()) {
+			if (!m_properties.contains(entry.first)) {
 				entry.second->remove(*this, entry.first);
 			}
 		}
@@ -1542,8 +1537,7 @@ void LocatedEntity::collectObservers(std::set<const LocatedEntity*>& receivers) 
 	if (isPerceptive()) {
 		receivers.insert(this);
 	}
-	const Domain* domain = getDomain();
-	if (domain) {
+	if (const auto* domain = getDomain()) {
 		auto observingEntities = domain->getObservingEntitiesFor(*this);
 		receivers.insert(observingEntities.begin(), observingEntities.end());
 	}
@@ -1553,8 +1547,7 @@ void LocatedEntity::collectObservers(std::set<const LocatedEntity*>& receivers) 
 }
 
 void LocatedEntity::collectObserved(std::set<const LocatedEntity*>& observed) const {
-	const Domain* domain = getDomain();
-	if (domain) {
+	if (const Domain* domain = getDomain()) {
 		std::list<LocatedEntity*> observedEntities;
 		domain->getVisibleEntitiesFor(*this, observedEntities);
 		observed.insert(observedEntities.begin(), observedEntities.end());
@@ -1634,7 +1627,7 @@ void LocatedEntity::addChild(LocatedEntity& childEntity) {
 void LocatedEntity::removeChild(LocatedEntity& childEntity) {
 	assert(checkRef() > 0);
 	assert(m_contains != nullptr);
-	assert(m_contains->count(&childEntity));
+	assert(m_contains->contains(&childEntity));
 
 	if (getDomain()) {
 		getDomain()->removeEntity(childEntity);
@@ -1785,7 +1778,7 @@ bool LocatedEntity::canReach(const EntityLocation<LocatedEntity>& entityLocation
 	auto ancestorEntity = entityLocation.m_parent;
 
 	while (true) {
-		if (ancestorEntity == reacherDomainEntity) {
+		if (reacherDomainEntity && ancestorEntity == reacherDomainEntity) {
 			if (ancestorEntity == entityLocation.m_parent) {
 				//We're trying to reach our containing domain entity, handle separately
 				return !(reacherParentDomain && !reacherParentDomain->isEntityReachable(*reachingEntity, reachDistance, *reacherDomainEntity, entityLocation.m_pos));
@@ -1840,7 +1833,7 @@ void LocatedEntity::merge(const MapType& ent) {
 		auto parsedPropertyName = PropertyUtil::parsePropertyModification(key);
 		auto modifier = Modifier::createModifier(parsedPropertyName.first, entry.second);
 
-		if (s_immutable.find(parsedPropertyName.second) != s_immutable.end()) {
+		if (s_immutable.contains(parsedPropertyName.second)) {
 			continue;
 		}
 		if (modifier->getType() == ModifierType::Default) {

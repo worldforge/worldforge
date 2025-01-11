@@ -16,10 +16,6 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-
-#endif
-
 #include "DomainProperty.h"
 #include "PhysicalDomain.h"
 #include "VoidDomain.h"
@@ -29,7 +25,6 @@
 #include "ContainerDomain.h"
 
 
-#include <Atlas/Objects/Anonymous.h>
 #include <rules/simulation/BaseWorld.h>
 
 
