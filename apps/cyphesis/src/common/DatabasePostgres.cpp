@@ -39,7 +39,7 @@ using Atlas::Objects::Root;
 
 typedef Atlas::Codecs::XML Serialiser;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 static void databaseNotice(void*, const char* message) {
 	spdlog::debug("Notice from database: {}", message);

@@ -31,7 +31,7 @@
 
 #include "pythonbase/Python_API.h"
 #include "rules/simulation/Task.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <cassert>
 #include <rules/simulation/python/CyPy_Task.h>
@@ -45,7 +45,7 @@ int main() {
 	setupPythonMalloc();
 	init_python_api({&CyPy_Server::init});
 	{
-		Ref<Entity> entity(new Entity(1));
+		Ref<LocatedEntity> entity(new LocatedEntity(1));
 		UsageInstance usageInstance;
 		usageInstance.actor = entity;
 		Py::Module module("server");

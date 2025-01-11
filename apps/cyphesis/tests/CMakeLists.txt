@@ -117,6 +117,37 @@ macro(wf_add_benchmark TEST_FILE)
     #If Python has been built statically (as with Conan) we need to enable exports so the dynamic loading works.
     set_property(TARGET ${TEST_NAME} PROPERTY ENABLE_EXPORTS 1)
 
+    target_link_libraries(${TEST_NAME} PUBLIC
+            cyphesis-rulesai_python
+            cyphesis-rulessimulation_python
+            cyphesis-physics_python
+            cyphesis-atlas_python
+            cyphesis-common_python
+            cyphesis-pythonbase
+
+            cyphesis-server
+            cyphesis-rulessimulation_python
+            cyphesis-rulessimulation
+            cyphesis-rulesbase
+            cyphesis-rulesai_python
+            cyphesis-rulesai
+            cyphesis-atlas_python
+            cyphesis-common_python
+            cyphesis-physics_python
+            cyphesis-modules
+            cyphesis-common
+            cyphesis-db
+            cyphesis-physics
+            cyphesis-comm
+
+            cyphesis-cyaiclient
+            cyphesis-cyclient
+            cyphesis-client
+            cyphesis-navigation
+            cyphesis-physics
+            #Need to include again to get symbols that were references from libs. Perhaps redesign this?
+            cyphesis-rulessimulation_python
+    )
 endmacro()
 
 #### Common tests #####
@@ -189,10 +220,10 @@ set(ENTITYEXERCISE TestPropertyManager.cpp IGEntityExerciser.cpp common/EntityEx
 wf_add_test(rules/OgreMeshDeserializerTest.cpp ../src/rules/simulation/OgreMeshDeserializer.cpp)
 wf_add_test(rules/ModifierTest.cpp ../src/rules/Modifier.cpp)
 wf_add_test(rules/LocatedEntityTest.cpp common/EntityExerciser.cpp ../src/rules/simulation/LocatedEntity.cpp ../src/rules/simulation/AtlasProperties TestPropertyManager.cpp)
-wf_add_test(rules/EntityTest.cpp ${ENTITYEXERCISE} ../src/rules/simulation/Entity.cpp ../src/rules/simulation/LocatedEntity.cpp)
-wf_add_test(rules/ThingTest.cpp ${ENTITYEXERCISE} ../src/rules/simulation/Thing.cpp)
-wf_add_test(rules/WorldTest.cpp ${ENTITYEXERCISE} ../src/rules/simulation/World.cpp)
-wf_add_test(rules/ThingupdatePropertiesTest.cpp ../src/rules/simulation/Thing.cpp ../src/common/Property.cpp ../src/common/PropertyUtil.cpp)
+wf_add_test(rules/EntityTest.cpp ${ENTITYEXERCISE} ../src/rules/simulation/LocatedEntity.cpp ../src/rules/simulation/LocatedEntity.cpp)
+wf_add_test(rules/ThingTest.cpp ${ENTITYEXERCISE} ../src/rules/simulation/LocatedEntity.cpp)
+wf_add_test(rules/WorldTest.cpp ${ENTITYEXERCISE})
+wf_add_test(rules/ThingupdatePropertiesTest.cpp ../src/rules/simulation/LocatedEntity.cpp ../src/common/Property.cpp ../src/common/PropertyUtil.cpp)
 wf_add_test(rules/TaskTest.cpp ../src/rules/simulation/Task.cpp)
 wf_add_test(rules/simulation/EntityPropertyTest.cpp ../src/rules/simulation/EntityProperty.cpp ../src/common/Property.cpp ../src/common/PropertyUtil.cpp)
 wf_add_test(rules/simulation/AllPropertyTest.cpp PropertyExerciser.cpp ../src/rules/simulation/AreaProperty.cpp
@@ -330,7 +361,6 @@ wf_add_test(rules/PythonWrapperTest.cpp python_testers.cpp)
 
 wf_add_test(rules/entityfilter/EntityFilterTest.cpp
         ../src/rules/simulation/EntityProperty.cpp
-        ../src/rules/simulation/Entity.cpp
         ../src/rules/simulation/LocatedEntity.cpp
         ../src/rules/simulation/ModeDataProperty.cpp
         ../src/common/PropertyUtil.cpp
@@ -340,14 +370,12 @@ target_compile_definitions(EntityFilterTest PRIVATE -DBOOST_SPIRIT_DEBUG)
 
 wf_add_test(rules/entityfilter/EntityFilterParserTest.cpp
         ../src/rules/simulation/EntityProperty.cpp
-        ../src/rules/simulation/Entity.cpp
         ../src/rules/simulation/LocatedEntity.cpp
         ../src/common/PropertyUtil.cpp
         ../src/common/Property.cpp
 )
 
 wf_add_test(rules/entityfilter/EntityFilterProvidersTest.cpp ../src/rules/simulation/EntityProperty.cpp
-        ../src/rules/simulation/Entity.cpp
         ../src/rules/simulation/LocatedEntity.cpp
         ../src/rules/simulation/ModeDataProperty.cpp
         ../src/common/PropertyUtil.cpp
@@ -363,13 +391,13 @@ wf_add_benchmark(server/PhysicalDomainBenchmark.cpp ../src/rules/simulation/Phys
 
 wf_add_test(server/PhysicalDomainIntegrationTest.cpp ../src/rules/simulation/PhysicalDomain.cpp)
 
-wf_add_test(rules/PropertyEntityIntegration.cpp ../src/rules/simulation/Entity.cpp
+wf_add_test(rules/PropertyEntityIntegration.cpp
         ../src/rules/simulation/LocatedEntity.cpp
         ../src/common/PropertyUtil.cpp
         ../src/common/Property.cpp
         ../src/rules/Modifier.cpp
 )
-wf_add_test(rules/TerrainModPropertyIntegration.cpp ../src/rules/simulation/Entity.cpp
+wf_add_test(rules/TerrainModPropertyIntegration.cpp
         ../src/rules/simulation/LocatedEntity.cpp
         ../src/rules/simulation/TerrainEffectorProperty.cpp
         ../src/rules/simulation/TerrainModProperty.cpp
@@ -379,7 +407,6 @@ wf_add_test(rules/TerrainModPropertyIntegration.cpp ../src/rules/simulation/Enti
         ../src/common/Property.cpp
 )
 wf_add_test(rules/simulation/ContainedVisibilityPropertyIntegration.cpp ../src/rules/simulation/ContainedVisibilityProperty.cpp
-        ../src/rules/simulation/Entity.cpp
         ../src/rules/simulation/LocatedEntity.cpp
         ../src/common/PropertyUtil.cpp
 )
@@ -393,14 +420,12 @@ wf_add_test(rules/ai/BaseMindMapEntityIntegration.cpp
         ../src/client/ClientPropertyManager.cpp
 )
 wf_add_test(rules/simulation/AreaPropertyIntegration.cpp ../src/rules/simulation/AreaProperty.cpp
-        ../src/rules/simulation/Entity.cpp
         ../src/rules/simulation/LocatedEntity.cpp
         ../src/common/PropertyUtil.cpp
         ../src/physics/Course.cpp
         ../src/physics/Shape.cpp
 )
 wf_add_test(rules/SuspendedPropertyIntegration.cpp ../src/rules/simulation/SuspendedProperty.cpp
-        ../src/rules/simulation/Entity.cpp
         ../src/rules/simulation/LocatedEntity.cpp
         ../src/common/PropertyUtil.cpp
 )
@@ -442,8 +467,6 @@ wf_add_test(server/RulesetTest.cpp ../src/server/Ruleset.cpp)
 wf_add_test(server/EntityBuilderTest.cpp ../src/server/EntityBuilder.cpp)
 wf_add_test(common/PropertyFlagTest.cpp
         TestPropertyManager.cpp
-        ../src/rules/simulation/Thing.cpp
-        ../src/rules/simulation/Entity.cpp
         ../src/rules/simulation/LocatedEntity.cpp
         ../src/common/PropertyUtil.cpp
         ../src/common/Property.cpp)
@@ -500,9 +523,6 @@ wf_add_test(server/WorldRouterIntegration.cpp ../src/rules/simulation/WorldRoute
         ../src/server/EntityRuleHandler.cpp
         ../src/rules/simulation/Domain.cpp
         ../src/rules/simulation/LocatedEntity.cpp
-        ../src/rules/simulation/Entity.cpp
-        ../src/rules/simulation/Thing.cpp
-        ../src/rules/simulation/World.cpp
         ../src/rules/simulation/BaseWorld.cpp
         ../src/rules/Modifier.cpp
 )

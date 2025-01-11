@@ -11,7 +11,7 @@
 
 namespace Atlas::Message {
 
-Encoder::Encoder(Atlas::Bridge& b)
+Encoder::Encoder(Bridge& b)
 		: EncoderBase(b) {
 }
 

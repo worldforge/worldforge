@@ -34,7 +34,7 @@ using Atlas::Message::ListType;
 using Atlas::Objects::Root;
 
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 int OpRuleHandler::installOpDefinition(const std::string& class_name,
 									   const std::string& parent,

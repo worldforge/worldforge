@@ -30,7 +30,7 @@
 #include "server/Account.h"
 #include "rules/simulation/ExternalMind.h"
 #include "rules/simulation/MindsProperty.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "server/Lobby.h"
 #include "server/Player.h"
 #include "server/ServerRouting.h"
@@ -410,7 +410,7 @@ void Connectiontest::test_disconnectObject_unused_Entity() {
 	auto I = m_connection->m_connectableRouters.find(ac.getIdAsInt());
 	assert(I != m_connection->m_connectableRouters.end());
 
-	Ref<Entity> avatar(new Entity(5));
+	Ref<LocatedEntity> avatar(new LocatedEntity(5));
 	m_connection->m_routers[avatar->getIdAsInt()].router = avatar.get();
 	ac.addCharacter(avatar);
 
@@ -438,7 +438,7 @@ void Connectiontest::test_disconnectObject_used_Entity() {
 	auto I = m_connection->m_connectableRouters.find(ac.getIdAsInt());
 	assert(I != m_connection->m_connectableRouters.end());
 
-	Ref<Entity> avatar(new Entity(5));
+	Ref<LocatedEntity> avatar(new LocatedEntity(5));
 	ExternalMind mind(6, avatar);
 	avatar->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
 	mind.linkUp(m_connection);
@@ -450,7 +450,7 @@ void Connectiontest::test_disconnectObject_used_Entity() {
 	ASSERT_TRUE(m_connection->m_routers.find(ac.getIdAsInt()) ==
 				m_connection->m_routers.end());
 
-	// The Entity was in use, so it stays connected
+	// The LocatedEntity was in use, so it stays connected
 	ASSERT_TRUE(m_connection->m_routers.find(avatar->getIdAsInt()) !=
 				m_connection->m_routers.end());
 }
@@ -472,7 +472,7 @@ void Connectiontest::test_disconnectObject_others_used_Entity() {
 	TestCommSocket otcc{};
 	Connection conn(otcc, *m_server, "addr", 6);
 
-	Ref<Entity> avatar(new Entity(5));
+	Ref<LocatedEntity> avatar(new LocatedEntity(5));
 	ExternalMind mind(6, avatar);
 	avatar->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
 	mind.linkUp(m_connection);
@@ -484,7 +484,7 @@ void Connectiontest::test_disconnectObject_others_used_Entity() {
 	ASSERT_TRUE(m_connection->m_routers.find(ac.getIdAsInt()) ==
 				m_connection->m_routers.end());
 
-	// The Entity was in use by another connection, so it is removed
+	// The LocatedEntity was in use by another connection, so it is removed
 	// from this one.
 	//TODO: Needs to be an integration test.
 
@@ -506,7 +506,7 @@ void Connectiontest::test_disconnectObject_unlinked_Entity() {
 	auto I = m_connection->m_connectableRouters.find(ac.getIdAsInt());
 	assert(I != m_connection->m_connectableRouters.end());
 
-	Ref<Entity> avatar(new Entity(5));
+	Ref<LocatedEntity> avatar(new LocatedEntity(5));
 	ExternalMind mind(6, avatar);
 	avatar->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
 	m_connection->m_routers[avatar->getIdAsInt()].router = avatar.get();
@@ -537,7 +537,7 @@ void Connectiontest::test_disconnectObject_non_Entity() {
 	auto I = m_connection->m_connectableRouters.find(ac.getIdAsInt());
 	assert(I != m_connection->m_connectableRouters.end());
 
-	Ref<Entity> avatar(new Entity(5));
+	Ref<LocatedEntity> avatar(new LocatedEntity(5));
 	m_connection->m_routers[avatar->getIdAsInt()].router = avatar.get();
 	ac.addCharacter(avatar.get());
 
@@ -604,12 +604,12 @@ void Router::clientError(const Operation& op,
 #include "common/TypeNode_impl.h"
 #include "rules/Location_impl.h"
 
-const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Visibility) const {
+const Atlas::Objects::Root& Inheritance::getClass(const std::string& typeName, Visibility) const {
 	return noClass;
 }
 
-const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
-	auto I = atlasObjects.find(parent);
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& typeName) const {
+	auto I = atlasObjects.find(typeName);
 	if (I == atlasObjects.end()) {
 		return 0;
 	}

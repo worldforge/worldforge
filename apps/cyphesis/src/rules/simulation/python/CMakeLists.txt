@@ -1,5 +1,4 @@
 add_library(cyphesis-rulessimulation_python
-        CyPy_Entity.cpp
         CyPy_Server.cpp
         CyPy_Task.cpp
         CyPy_World.cpp

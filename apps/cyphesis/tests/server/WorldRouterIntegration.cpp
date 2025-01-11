@@ -33,7 +33,7 @@
 
 #include "rules/simulation/AtlasProperties.h"
 #include "rules/simulation/Domain.h"
-#include "rules/simulation/World.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/globals.h"
 #include "common/id.h"
@@ -76,7 +76,7 @@ struct WorldRouterintegration : public Cyphesis::TestBase {
 
 	void test_creationAndDeletion() {
 		{
-			Ref<LocatedEntity> base = new Entity(0);
+			Ref<LocatedEntity> base = new LocatedEntity(0);
 			WorldRouter test_world(base, *m_eb, timeProviderFn);
 
 			Anonymous ent;
@@ -93,7 +93,7 @@ struct WorldRouterintegration : public Cyphesis::TestBase {
 		}
 
 		{
-			Ref<LocatedEntity> base = new Entity(0);
+			Ref<LocatedEntity> base = new LocatedEntity(0);
 			WorldRouter test_world(base, *m_eb, timeProviderFn);
 
 			Anonymous ent;
@@ -171,11 +171,11 @@ void WorldRouterintegration::setup() {
 	std::string dependent, reason;
 	{
 		auto decl = composeDeclaration("thing", "game_entity", {});
-		entityRuleHandler.test_installEntityClass(decl->getId(), decl->getParent(), decl, dependent, reason, std::make_unique<EntityFactory<Thing>>());
+		entityRuleHandler.test_installEntityClass(decl->getId(), decl->getParent(), decl, dependent, reason, std::make_unique<EntityFactory<LocatedEntity>>());
 	}
 	{
 		auto decl = composeDeclaration("character", "thing", {});
-		entityRuleHandler.test_installEntityClass(decl->getId(), decl->getParent(), decl, dependent, reason, std::make_unique<EntityFactory<Thing>>());
+		entityRuleHandler.test_installEntityClass(decl->getId(), decl->getParent(), decl, dependent, reason, std::make_unique<EntityFactory<LocatedEntity>>());
 	}
 }
 
@@ -185,7 +185,7 @@ void WorldRouterintegration::teardown() {
 }
 
 void WorldRouterintegration::test_sequence() {
-	Ref<Entity> base = new Entity(0);
+	Ref<LocatedEntity> base = new LocatedEntity(0);
 	WorldRouter test_world(base, *m_eb, timeProviderFn);
 
 	auto ent1 = test_world.addNewEntity("__no_such_type__",
@@ -199,7 +199,7 @@ void WorldRouterintegration::test_sequence() {
 
 	auto id = newId();
 
-	Ref<Entity> ent2 = new Thing(id);
+	Ref<LocatedEntity> ent2 = new LocatedEntity(id);
 	assert(ent2 != 0);
 	ent2->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = Point3D(0, 0, 0);
 	test_world.addEntity(ent2, base);

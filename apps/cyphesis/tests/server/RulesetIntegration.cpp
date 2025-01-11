@@ -26,7 +26,6 @@
 #include "../TestBase.h"
 #include "../TestWorld.h"
 
-#include "rules/simulation/World.h"
 #include "pythonbase/Python_API.h"
 
 #include "server/Ruleset.h"
@@ -43,6 +42,7 @@
 #include <Atlas/Objects/Operation.h>
 
 #include <cassert>
+#include <rules/simulation/LocatedEntity.h>
 
 using Atlas::Message::MapType;
 using Atlas::Objects::Entity::Anonymous;
@@ -65,7 +65,7 @@ public:
 /// builders and factories. Creation of entity has all the right things.
 /// Installation of rules via Admin. Persistence calls from Ruleset.
 struct Rulesetintegration : public Cyphesis::TestBase {
-	Ref<World> m_entity;
+	Ref<LocatedEntity> m_entity;
 	TestWorld* m_test_world;
 	ExposedEntityBuilder* m_entity_builder;
 
@@ -77,7 +77,7 @@ struct Rulesetintegration : public Cyphesis::TestBase {
 
 	void setup() {
 		m_inheritance = new Inheritance();
-		m_entity = new World();
+		m_entity = new LocatedEntity(0);
 		m_test_world = new TestWorld(m_entity);
 		m_entity_builder = new ExposedEntityBuilder();
 	}

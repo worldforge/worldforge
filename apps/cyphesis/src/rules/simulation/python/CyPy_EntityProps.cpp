@@ -28,7 +28,7 @@ CyPy_EntityProps::CyPy_EntityProps(Py::PythonClassInstance* self, Py::Tuple& arg
 }
 
 
-CyPy_EntityProps::CyPy_EntityProps(Py::PythonClassInstance* self, Ref<Entity> value)
+CyPy_EntityProps::CyPy_EntityProps(Py::PythonClassInstance* self, Ref<LocatedEntity> value)
 		: WrapperBase(self, std::move(value)) {
 }
 

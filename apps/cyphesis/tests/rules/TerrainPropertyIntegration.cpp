@@ -30,7 +30,6 @@
 #include "common/Monitors.h"
 #include "rules/simulation/Inheritance.h"
 #include "common/operations/Thought.h"
-#include "rules/simulation/World.h"
 #include "../NullEntityCreator.h"
 
 #include <Atlas/Objects/Operation.h>
@@ -45,6 +44,8 @@
 #include <rules/simulation/TerrainProperty.h>
 #include <rules/simulation/TerrainPointsProperty.h>
 #include <rules/simulation/PhysicalDomain.h>
+#include <rules/simulation/LocatedEntity.h>
+
 #include "rules/BBoxProperty_impl.h"
 
 using Atlas::Objects::Operation::Set;
@@ -58,14 +59,14 @@ struct TestContext {
 
 	Atlas::Objects::Factories factories;
 	DatabaseNull database;
-	Ref<World> world;
+	Ref<LocatedEntity> world;
 	Inheritance inheritance;
 	WorldRouter testWorld;
 	NullEntityCreator entityCreator;
 	CorePropertyManager propertyManager;
 
 	TestContext() :
-			world(new World()),
+			world(new LocatedEntity(0)),
 			inheritance(),
 			testWorld(world, entityCreator, [] { return std::chrono::steady_clock::now().time_since_epoch(); }),
 			propertyManager(inheritance) {
@@ -84,7 +85,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 
 	void test_set_terrain(TestContext& context) {
-		Ref<Thing> t1 = new Thing(1);
+		Ref<LocatedEntity> t1 = new LocatedEntity(1);
 		t1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-64, -10, -64},
 																			   {64,  10,  64}};
 		t1->setAttrValue("domain", "physical");
@@ -147,7 +148,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 	}
 
 	void test_adjust_entities_when_terrain_changes(TestContext& context) {
-		Ref<Thing> t1 = new Thing(1);
+		Ref<LocatedEntity> t1 = new LocatedEntity(1);
 		t1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-64, -10, -64},
 																			   {64,  10,  64}};
 		t1->setAttrValue("domain", "physical");
@@ -170,7 +171,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		auto terrainProp = t1->getPropertyClassFixed<TerrainProperty>();
 
-		Ref<Thing> tPlanted = new Thing(2);
+		Ref<LocatedEntity> tPlanted = new LocatedEntity(2);
 		tPlanted->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
 																					 {1,  2, 1}};
 		tPlanted->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {10, 100, 10};
@@ -178,7 +179,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		context.testWorld.addEntity(tPlanted, t1);
 
 
-		Ref<Thing> tFixed = new Thing(3);
+		Ref<LocatedEntity> tFixed = new LocatedEntity(3);
 		tFixed->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, 0, -1},
 																				   {1,  2, 1}};
 		tFixed->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {20, 100, 10};

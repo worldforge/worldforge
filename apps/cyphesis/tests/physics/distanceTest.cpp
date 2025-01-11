@@ -23,7 +23,6 @@
 #define DEBUG
 #endif
 
-#include "rules/simulation/Entity.h"
 
 #include "rules/Location_impl.h"
 

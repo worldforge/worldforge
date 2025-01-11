@@ -26,7 +26,7 @@
 
 #include <iostream>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 Storage::Storage(Database& database) : m_connection(database) {
 	if (m_connection.initConnection() != 0) {

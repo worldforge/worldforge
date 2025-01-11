@@ -21,15 +21,12 @@
 
 #include "common/debug.h"
 
-#include <Atlas/Objects/Anonymous.h>
-
-#include <iostream>
 #include <rules/BBoxProperty.h>
 
 using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::Operation::Set;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 
 void DensityProperty::apply(LocatedEntity& entity) {

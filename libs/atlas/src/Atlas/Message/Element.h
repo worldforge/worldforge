@@ -19,9 +19,9 @@
 namespace Atlas::Message {
 
 /// An exception class issued when the wrong type is requested in as().
-class WrongTypeException : public Atlas::Exception {
+class WrongTypeException : public Exception {
 public:
-	WrongTypeException() noexcept: Atlas::Exception("Wrong Message::Element type") {}
+	WrongTypeException() noexcept: Exception("Wrong Message::Element type") {}
 };
 
 class Element;

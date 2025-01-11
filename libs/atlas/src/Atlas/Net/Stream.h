@@ -39,7 +39,7 @@ public:
 
 	explicit NegotiateHelper(std::list<std::string>& names);
 
-	bool get(std::string& buf, const std::string& header);
+	bool get(std::string& buf, const std::string& header) const;
 
 	void put(std::string& buf, const std::string& header);
 

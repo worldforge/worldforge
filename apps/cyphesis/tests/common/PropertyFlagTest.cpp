@@ -23,19 +23,20 @@
 #define DEBUG
 #endif
 
+#include <rules/simulation/LocatedEntity.h>
+
 #include "../TestWorld.h"
 #include "../TestPropertyManager.h"
 
 #include "common/Property_impl.h"
 
-#include "rules/simulation/World.h"
 
 
 int main(int argc, char** argv) {
 	TestPropertyManager<LocatedEntity> tpm;
 	// database_flag = false;
 
-	Ref<Entity> thing(new Thing(1));
+	Ref<LocatedEntity> thing(new LocatedEntity(1));
 
 	// Check no flags are set
 	assert(thing->flags().m_flags == 0);

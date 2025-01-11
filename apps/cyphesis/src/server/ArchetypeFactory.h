@@ -68,7 +68,7 @@ protected:
 
 	ArchetypeFactory(ArchetypeFactory& o);
 
-	Ref<Entity> createEntity(RouterId id,
+	Ref<LocatedEntity> createEntity(RouterId id,
 							 EntityCreation& entityCreation,
 							 std::map<std::string, EntityCreation>& entities);
 
@@ -158,7 +158,7 @@ public:
 
 	~ArchetypeFactory() override;
 
-	Ref<Entity> newEntity(RouterId id,
+	Ref<LocatedEntity> newEntity(RouterId id,
 						  const Atlas::Objects::Entity::RootEntity& attributes) override;
 
 	virtual std::unique_ptr<ArchetypeFactory> duplicateFactory();

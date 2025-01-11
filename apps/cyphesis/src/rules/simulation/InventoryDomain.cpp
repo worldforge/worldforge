@@ -23,12 +23,6 @@
 #include "StackableDomain.h"
 #include "ModeDataProperty.h"
 
-#include <Atlas/Objects/Anonymous.h>
-
-#include <unordered_set>
-
-static const bool debug_flag = true;
-
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 using Atlas::Objects::Root;
@@ -140,13 +134,13 @@ std::vector<LocatedEntity*> InventoryDomain::getObservingEntitiesFor(const Locat
 	return list;
 }
 
-bool InventoryDomain::isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const {
+bool InventoryDomain::isEntityReachable(const LocatedEntity& reachingEntity, double, const LocatedEntity&, const WFMath::Point<3>&) const {
 	//Only the entity to which the inventory belongs is allowed to reach things in the inventory.
 	return &reachingEntity == &m_entity;
 }
 
 std::vector<Domain::CollisionEntry> InventoryDomain::queryCollision(const WFMath::Ball<3>& sphere) const {
-	std::vector<Domain::CollisionEntry> entries;
+	std::vector<CollisionEntry> entries;
 	if (m_entity.m_contains) {
 		entries.reserve(m_entity.m_contains->size());
 		for (auto& child: *m_entity.m_contains) {

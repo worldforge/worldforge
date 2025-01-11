@@ -9,9 +9,6 @@
 
 #include <iostream>
 
-#include <cstdlib>
-
-
 namespace Atlas::Codecs {
 
 XML::XML(std::istream& in, std::ostream& out, Atlas::Bridge& b)

@@ -30,10 +30,8 @@
 
 #include <map>
 #include <unordered_map>
-#include <tuple>
 #include <array>
 #include <set>
-#include <unordered_set>
 #include <chrono>
 
 namespace Mercator {
@@ -99,11 +97,11 @@ public:
 
 	void toggleChildPerception(LocatedEntity& entity) override;
 
-	bool isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
+	bool isEntityReachable(const LocatedEntity& reachingEntity, double reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
 
 	void installDelegates(LocatedEntity& entity, const std::string& propertyName) override;
 
-	HandlerResult operation(LocatedEntity& e, const Operation& op, OpVector& res) override;
+	HandlerResult operation(LocatedEntity& entity, const Operation& op, OpVector& res) override;
 
 	void tick(std::chrono::milliseconds t, OpVector& res);
 
@@ -124,10 +122,10 @@ protected:
 	struct ClosenessObserverEntry;
 
 	struct PhysicalData {
-		Point3D pos;
-		Vector3D velocity;
-		Vector3D angularVelocity;
-		Quaternion orientation;
+		Point3D pos{};
+		Vector3D velocity{};
+		Vector3D angularVelocity{};
+		Quaternion orientation{};
 	};
 
 	struct BulletEntry {
@@ -267,28 +265,28 @@ protected:
 		 * Contains references to properties that control the entity, if they exists.
 		 */
 		struct {
-			const PropelProperty* propelProperty;
-			const QuaternionProperty<LocatedEntity>* directionProperty;
-			const Vector3Property<LocatedEntity>* destinationProperty;
+			const PropelProperty* propelProperty{};
+			const QuaternionProperty<LocatedEntity>* directionProperty{};
+			const Vector3Property<LocatedEntity>* destinationProperty{};
 		} control;
 
 	};
 
 	struct TerrainEntry {
-		std::unique_ptr<std::array<btScalar, 65 * 65>> data;
-		std::unique_ptr<btRigidBody> rigidBody;
-		std::unique_ptr<btCollisionShape> shape;
+		std::unique_ptr<std::array<btScalar, 65 * 65>> data{};
+		std::unique_ptr<btRigidBody> rigidBody{};
+		std::unique_ptr<btCollisionShape> shape{};
 	};
 
 
 	struct ClosenessObserverEntry {
-		BulletEntry* reacher;
-		BulletEntry* target;
-		double reach;
+		BulletEntry* reacher{};
+		BulletEntry* target{};
+		double reach{};
 		/**
 		 * Callback to call when entries no longer are close.
 		 */
-		std::function<void()> callback;
+		std::function<void()> callback{};
 	};
 
 	std::map<ClosenessObserverEntry*, std::unique_ptr<ClosenessObserverEntry>> m_closenessObservations;
@@ -316,18 +314,18 @@ protected:
 	std::vector<WFMath::AxisBox<2>> m_dirtyTerrainSurfaceAreas;
 
 	struct TerrainModEntry {
-		WFMath::Point<3> modPos;
-		WFMath::Quaternion modOrientation;
-		WFMath::AxisBox<2> area;
+		WFMath::Point<3> modPos{};
+		WFMath::Quaternion modOrientation{};
+		WFMath::AxisBox<2> area{};
 	};
 	std::map<long, TerrainModEntry> m_terrainMods;
 
 
 	struct PropelEntry {
-		btRigidBody* rigidBody;
-		BulletEntry* bulletEntry;
+		btRigidBody* rigidBody{};
+		BulletEntry* bulletEntry{};
 		btVector3 velocity;
-		float stepHeight;
+		float stepHeight{};
 	};
 	/**
 	 * @brief A map of all entities that currently are self-propelling.
@@ -360,8 +358,8 @@ protected:
 	 * Struct used to pass information on to the tick callbacks.
 	 */
 	struct WorldInfo {
-		std::map<long, PropelEntry>* propellingEntries;
-		std::set<BulletEntry*>* steppingEntries;
+		std::map<long, PropelEntry>* propellingEntries{};
+		std::set<BulletEntry*>* steppingEntries{};
 	};
 
 	WorldInfo mWorldInfo;
@@ -382,10 +380,10 @@ protected:
 	double m_visibilityCheckCountdown;
 
 	struct {
-		PositionProperty<LocatedEntity> positionProperty;
-		VelocityProperty<LocatedEntity> velocityProperty;
-		AngularVelocityProperty<LocatedEntity> angularVelocityProperty;
-		OrientationProperty<LocatedEntity> orientationProperty;
+		PositionProperty<LocatedEntity> positionProperty{};
+		VelocityProperty<LocatedEntity> velocityProperty{};
+		AngularVelocityProperty<LocatedEntity> angularVelocityProperty{};
+		OrientationProperty<LocatedEntity> orientationProperty{};
 	} mFakeProperties;
 
 
@@ -443,7 +441,6 @@ protected:
 	 * Listener method for changes to properties on the entity to which the property belongs.
 	 * @param name
 	 * @param prop
-	 * @param bulletEntry
 	 */
 	void entityPropertyApplied(const std::string& name, const PropertyBase& prop);
 
@@ -457,9 +454,9 @@ protected:
 
 	void updateVisibilityOfDirtyEntities(OpVector& res);
 
-	void updateObservedEntry(BulletEntry& entry, OpVector& res, bool generateOps = true);
+	void updateObservedEntry(BulletEntry& entry, OpVector& res, bool generateOps = true) const;
 
-	void updateObserverEntry(BulletEntry& bulletEntry, OpVector& res);
+	void updateObserverEntry(BulletEntry& bulletEntry, OpVector& res) const;
 
 	void applyNewPositionForEntity(BulletEntry& entry, const WFMath::Point<3>& pos, bool calculatePosition = true);
 
@@ -484,7 +481,7 @@ protected:
 	 */
 	void processWaterBodies();
 
-	static std::shared_ptr<btCollisionShape> createCollisionShapeForEntry(LocatedEntity& entity,
+	static std::shared_ptr<btCollisionShape> createCollisionShapeForEntry(const LocatedEntity& entity,
 																   const WFMath::AxisBox<3>& bbox,
 																   float mass,
 																   btVector3& centerOfMassOffset);
@@ -493,11 +490,8 @@ protected:
 	 * Transform any entities that are resting on the supplied entity.
 	 *
 	 * I.e. those that are "free" or "submerged" and are on top of the entity.
-	 * @param entry
-	 * @param posTransform
-	 * @param transformedEntities
 	 */
-	void transformRestingEntities(BulletEntry& entry,
+	void transformRestingEntities(const BulletEntry& entry,
 								  const WFMath::Vector<3>& posTransform,
 								  const WFMath::Quaternion& orientationChange,
 								  std::set<LocatedEntity*>& transformedEntities);
@@ -511,9 +505,9 @@ protected:
 								std::set<LocatedEntity*>& transformedEntities,
 								bool calculatePosition);
 
-	static Atlas::Objects::Operation::RootOperation scheduleTick(LocatedEntity& entity);
+	static Atlas::Objects::Operation::RootOperation scheduleTick(const LocatedEntity& entity);
 
-	HandlerResult tick_handler(LocatedEntity& entity, const Operation& op, OpVector& res);
+	HandlerResult tick_handler(const LocatedEntity& entity, const Operation& op, OpVector& res);
 
 	static bool isWithinReach(BulletEntry& reacherEntry, BulletEntry& targetEntry, float reach, const WFMath::Point<3>& positionOnQueriedEntity) ;
 
@@ -521,8 +515,6 @@ protected:
 	/**
 	 * Calculate the radius of a visibility sphere, taking both any "vis_dist" property as
 	 * well as the entity's size into account.
-	 * @param entity
-	 * @return
 	 */
 	static float calculateVisibilitySphereRadius(const BulletEntry& entry) ;
 };

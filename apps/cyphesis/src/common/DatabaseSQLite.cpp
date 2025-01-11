@@ -42,7 +42,7 @@ using namespace sqlite3pp;
 
 typedef Atlas::Codecs::Packed Serialiser;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 
 DatabaseSQLite::DatabaseSQLite() :

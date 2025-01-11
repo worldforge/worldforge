@@ -20,7 +20,6 @@
 #define RULESETS_PYTHON_SCRIPT_FACTORY_IMPL_H
 
 #include "PythonScriptFactory.h"
-#include "rules/simulation/python/CyPy_Task.h"
 
 #include "PythonWrapper_impl.h"
 #include "pythonbase/Python_Script_Utils.h"

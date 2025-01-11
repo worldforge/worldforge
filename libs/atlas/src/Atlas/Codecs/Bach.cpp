@@ -10,11 +10,6 @@
 
 #include <iostream>
 
-#include <cstdlib>
-
-static const bool debug_flag = false;
-
-
 namespace Atlas::Codecs {
 
 Bach::Bach(std::istream& in, std::ostream& out, Atlas::Bridge& b)

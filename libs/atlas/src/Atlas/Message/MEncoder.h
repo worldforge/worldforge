@@ -31,9 +31,9 @@ typedef std::vector<Element> ListType;
  * @see Atlas::EncoderBase
  * @author Stefanus Du Toit <sdt@gmx.net>
  */
-class Encoder : public Atlas::EncoderBase {
+class Encoder : public EncoderBase {
 public:
-	explicit Encoder(Atlas::Bridge&);
+	explicit Encoder(Bridge&);
 
 	~Encoder() override = default;
 

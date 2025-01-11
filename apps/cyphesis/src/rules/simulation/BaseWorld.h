@@ -19,19 +19,15 @@
 #ifndef RULESETS_BASE_WORLD_H
 #define RULESETS_BASE_WORLD_H
 
-#include "common/globals.h"
 #include "common/Singleton.h"
 
 #include "modules/Ref.h"
 
 #include "rules/simulation/LocatedEntity.h"
 
-#include <Atlas/Message/Element.h>
 #include <Atlas/Objects/ObjectsFwd.h>
 
 #include <sigc++/signal.h>
-#include <ctime>
-#include <boost/noncopyable.hpp>
 
 #include <chrono>
 #include <set>

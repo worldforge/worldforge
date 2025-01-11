@@ -16,8 +16,6 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#endif
 
 #include "PossessionClient.h"
 #include "PossessionAccount.h"
@@ -25,7 +23,6 @@
 #include "Remotery.h"
 #include "common/operations/Possess.h"
 #include "common/id.h"
-#include "common/custom.h"
 
 #include "common/debug.h"
 #include "common/CommSocket.h"
@@ -34,7 +31,7 @@
 
 #include <chrono>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 using Atlas::Message::Element;
 using Atlas::Objects::Root;

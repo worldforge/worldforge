@@ -22,8 +22,6 @@
 #include "EntityKit.h"
 #include "rules/simulation/EntityCreator.h"
 
-#include <Atlas/Objects/Root.h>
-#include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Objects/ObjectsFwd.h>
 
 #include <memory>
@@ -45,7 +43,7 @@ protected:
 public:
 	explicit EntityBuilder();
 
-	virtual ~EntityBuilder();
+    ~EntityBuilder() override;
 
 	int installFactory(const std::string& class_name,
 					   const Atlas::Objects::Root& class_desc,
@@ -53,11 +51,11 @@ public:
 
 	EntityKit* getClassFactory(const std::string& class_name) const;
 
-	Ref<Entity> newEntity(RouterId id,
+	Ref<LocatedEntity> newEntity(RouterId id,
 						  const std::string& type,
 						  const Atlas::Objects::Entity::RootEntity& attrs) const override;
 
-	Ref<Entity> newChildEntity(RouterId id,
+	Ref<LocatedEntity> newChildEntity(RouterId id,
 							   const std::string& type,
 							   const Atlas::Objects::Entity::RootEntity& attrs) const;
 

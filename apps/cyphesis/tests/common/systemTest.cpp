@@ -23,23 +23,14 @@
 #define DEBUG
 #endif
 
-#ifdef HAVE_CONFIG_H
-
-#include "config.h"
-
-#endif
 
 #include "common/globals.h"
 #include "common/system.h"
 #include "common/log.h"
 
-#include <iostream>
-
 #include <cassert>
 
-#include <sys/types.h>
 #include <unistd.h>
-#include <stdlib.h>
 #include <signal.h>
 
 int main() {

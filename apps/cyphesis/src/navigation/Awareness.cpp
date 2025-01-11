@@ -94,7 +94,7 @@
 #include <rules/PhysicalProperties.h>
 #include <rules/ScaleProperty.h>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 #define MAX_PATHPOLY      256 // max number of polygons in a path
 #define MAX_PATHVERT      512 // most verts in a path

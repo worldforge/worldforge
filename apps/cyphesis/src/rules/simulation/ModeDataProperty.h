@@ -19,11 +19,11 @@
 #ifndef CYPHESIS_MODEDATAPROPERTY_H
 #define CYPHESIS_MODEDATAPROPERTY_H
 
-#include <boost/variant.hpp>
 #include <modules/WeakEntityRef.h>
-#include <optional>
 #include "PropertyBase.h"
 #include "ModeProperty.h"
+#include <boost/variant.hpp>
+#include <optional>
 
 /**
  * Contains extra data for the "mode" of the entity.

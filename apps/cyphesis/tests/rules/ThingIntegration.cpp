@@ -19,7 +19,7 @@
 
 #include "common/TypeNode_impl.h"
 #include "rules/simulation/Domain.h"
-#include "rules/simulation/Thing.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/VoidDomain.h"
 #include "rules/simulation/PhysicalDomain.h"
 #include "rules/simulation/InventoryDomain.h"
@@ -47,16 +47,14 @@ struct ThingExt;
 //This might be removed if we instead store "parent" as a simple pointer.
 static std::vector<Ref<ThingExt>> things;
 
-struct ThingExt : public Thing
+struct ThingExt : LocatedEntity
 {
-    std::unique_ptr<Domain> domain;
-
     explicit ThingExt(RouterId id)
-            : Thing::Thing(id)
+            : LocatedEntity(id)
     {
         m_type = new TypeNode<LocatedEntity>(id.asString());
         addFlags(entity_perceptive);
-        things.emplace_back(Ref<ThingExt>(this));
+        things.emplace_back(this);
     }
 
     ~ThingExt()
@@ -74,16 +72,6 @@ struct ThingExt : public Thing
     bool test_lookAtEntity(const Operation& op, OpVector& res, const Ref<LocatedEntity>& watcher) const
     {
         return lookAtEntity(op, res, *watcher);
-    }
-
-    Domain* getDomain() override
-    {
-        return domain.get();
-    }
-
-    const Domain* getDomain() const override
-    {
-        return domain.get();
     }
 
     void sendWorld(Operation op) override
@@ -221,7 +209,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             Ref<ThingExt> t1(new ThingExt(1));
             t1->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-128, -128, -128},
                                                                     {128,  128,  128}};
-            t1->domain = std::make_unique<PhysicalDomain>(*t1);
+            t1->setDomain(std::make_unique<PhysicalDomain>(*t1));
             t1->addFlags(entity_domain);
             Ref<ThingExt> t2(new ThingExt(2));
             t2->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
@@ -240,7 +228,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             Ref<ThingExt> t6(new ThingExt(6));
             t6->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
             t6->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
-            t6->domain = std::make_unique<InventoryDomain>(*t6);
+            t6->setDomain(std::make_unique<InventoryDomain>(*t6));
             t6->addFlags(entity_domain);
             Ref<ThingExt> t7(new ThingExt(7));
             t7->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
@@ -401,7 +389,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t1->addChild(*t2);
             t2->addChild(*t3);
 
-            t2->domain = std::make_unique<VoidDomain>(*t2);
+            t2->setDomain(std::make_unique<VoidDomain>(*t2));
             t2->addFlags(entity_domain);
 
             Operation sightOp;
@@ -464,7 +452,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t8->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             t8->removeFlags(entity_perceptive);
 
-            t2->domain = std::make_unique<PhysicalDomain>(*t2);
+            t2->setDomain(std::make_unique<PhysicalDomain>(*t2));
             t2->addFlags(entity_domain);
 
             t1->addChild(*t2);
@@ -544,7 +532,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t2->addChild(*t5);
             t3->addChild(*t4);
 
-            t2->domain = std::make_unique<InventoryDomain>(*t2);
+            t2->setDomain(std::make_unique<InventoryDomain>(*t2));
             t2->addFlags(entity_domain);
 
             auto modeDataProp = std::make_unique<ModeDataProperty>();
@@ -608,10 +596,10 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t5->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             Ref<ThingExt> t6(new ThingExt(6));
 
-            t2->domain = std::make_unique<PhysicalDomain>(*t2);
+            t2->setDomain(std::make_unique<PhysicalDomain>(*t2));
             t2->addFlags(entity_domain);
 
-            t3->domain = std::make_unique<InventoryDomain>(*t3);
+            t3->setDomain(std::make_unique<InventoryDomain>(*t3));
             t3->addFlags(entity_domain);
 
             t1->addChild(*t2);
@@ -683,10 +671,10 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             Ref<ThingExt> t4(new ThingExt(4));
             Ref<ThingExt> t5(new ThingExt(5));
 
-            t1->domain = std::make_unique<PhysicalDomain>(*t1);
+            t1->setDomain(std::make_unique<PhysicalDomain>(*t1));
             t1->addFlags(entity_domain);
 
-            t2->domain = std::make_unique<InventoryDomain>(*t2);
+            t2->setDomain(std::make_unique<InventoryDomain>(*t2));
             t2->addFlags(entity_domain);
 
             t1->addChild(*t2);
@@ -783,7 +771,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t1->addChild(*t2);
             t2->addChild(*t3);
 
-            t2->domain = std::make_unique<VoidDomain>(*t2);
+            t2->setDomain(std::make_unique<VoidDomain>(*t2));
             t2->addFlags(entity_domain);
 
             // T1 can reach itself
@@ -840,7 +828,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t8->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = bbox;
             t8->removeFlags(entity_perceptive);
 
-            t2->domain = std::make_unique<PhysicalDomain>(*t2);
+            t2->setDomain(std::make_unique<PhysicalDomain>(*t2));
             t2->addFlags(entity_domain);
 
             t1->addChild(*t2);
@@ -908,7 +896,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t2->addChild(*t5);
             t3->addChild(*t4);
 
-            t2->domain = std::make_unique<InventoryDomain>(*t2);
+            t2->setDomain(std::make_unique<InventoryDomain>(*t2));
             t2->addFlags(entity_domain);
             auto entityProp = new EntityProperty();
             entityProp->data() = WeakEntityRef<LocatedEntity>(t3);
@@ -963,10 +951,10 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t5->setProperty("reach", createReachPropFn(10));
             Ref<ThingExt> t6(new ThingExt(6));
 
-            t2->domain = std::make_unique<PhysicalDomain>(*t2);
+            t2->setDomain(std::make_unique<PhysicalDomain>(*t2));
             t2->addFlags(entity_domain);
 
-            t3->domain = std::make_unique<InventoryDomain>(*t3);
+            t3->setDomain(std::make_unique<InventoryDomain>(*t3));
             t3->addFlags(entity_domain);
 
             t1->addChild(*t2);
@@ -1028,10 +1016,10 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             Ref<ThingExt> t4(new ThingExt(4));
             Ref<ThingExt> t5(new ThingExt(5));
 
-            t1->domain = std::make_unique<PhysicalDomain>(*t1);
+            t1->setDomain(std::make_unique<PhysicalDomain>(*t1));
             t1->addFlags(entity_domain);
 
-            t2->domain = std::make_unique<InventoryDomain>(*t2);
+            t2->setDomain(std::make_unique<InventoryDomain>(*t2));
             t2->addFlags(entity_domain);
 
             t1->addChild(*t2);
@@ -1086,7 +1074,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             t4->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {100, 0, 100};
             t4->requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = smallBbox;
 
-            t1->domain = std::make_unique<PhysicalDomain>(*t1);
+            t1->setDomain(std::make_unique<PhysicalDomain>(*t1));
             t1->addFlags(entity_domain);
 
             t1->addChild(*t2);

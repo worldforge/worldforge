@@ -25,7 +25,6 @@
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/SmartPtr.h>
 
-#include <iostream>
 #include <map>
 #include <set>
 #include <string>
@@ -75,13 +74,13 @@ public:
 	~TypeNode();
 
 	/// \brief injects a new property and updated the m_description
-	TypeNode::PropertiesUpdate injectProperty(const std::string&, std::unique_ptr<PropertyCore<EntityT>>);
+	PropertiesUpdate injectProperty(const std::string&, std::unique_ptr<PropertyCore<EntityT>>);
 
 	/// \brief add the class properties for this type from Atlas attributes
 	void addProperties(const Atlas::Message::MapType& attributes, const PropertyManager<EntityT>& propertyManager);
 
 	/// \brief update the class properties for this type from Atlas attributes
-	TypeNode::PropertiesUpdate updateProperties(const Atlas::Message::MapType& attributes, const PropertyManager<EntityT>& propertyManager);
+	PropertiesUpdate updateProperties(const Atlas::Message::MapType& attributes, const PropertyManager<EntityT>& propertyManager);
 
 	/// \brief check if this type inherits from another
 	bool isTypeOf(const std::string& base_type) const;

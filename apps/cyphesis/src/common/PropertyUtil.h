@@ -20,6 +20,7 @@
 #define WORLDFORGE_PROPERTYUTIL_H
 
 #include "Property.h"
+#include "common/ModifierType.h"
 #include <string>
 
 

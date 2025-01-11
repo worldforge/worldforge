@@ -16,8 +16,6 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#endif
 
 #include "PossessionAccount.h"
 #include "PossessionClient.h"
@@ -28,14 +26,12 @@
 #include "pythonbase/Python_API.h"
 
 #include "common/operations/Possess.h"
-#include "common/custom.h"
-#include "common/debug.h"
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
 
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 
 using Atlas::Message::Element;

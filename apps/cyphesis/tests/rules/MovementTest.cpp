@@ -25,7 +25,7 @@
 
 #include "rules/simulation/Movement.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/Location_impl.h"
 
 #include "common/const.h"
@@ -37,7 +37,7 @@
 
 class TestMovement : public Movement {
 public:
-	TestMovement(Entity& body) : Movement(body) {}
+	TestMovement(LocatedEntity& body) : Movement(body) {}
 
 	virtual double getTickAddition(const Point3D& coordinates,
 								   const Vector3D& velocity) const {
@@ -55,7 +55,7 @@ public:
 };
 
 int main() {
-	TestMovement* m = new TestMovement(*(Entity*) 0);
+	TestMovement* m = new TestMovement(*(LocatedEntity*) 0);
 
 	Location<LocatedEntity> loc;
 	m->updateNeeded(loc);

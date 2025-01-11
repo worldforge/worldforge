@@ -20,9 +20,9 @@
 #define CYPHESIS_CYPY_LOCATEDENTITY_H
 
 
-#include <optional>
 #include "rules/simulation/LocatedEntity.h"
 #include "pythonbase/WrapperBase.h"
+#include <optional>
 
 
 /**
@@ -158,30 +158,66 @@ struct LocatedEntityScriptProvider {
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_LocatedEntity {
+class CyPy_LocatedEntity : public CyPy_LocatedEntityBase<Ref<LocatedEntity>, CyPy_LocatedEntity> {
 public:
-
-	typedef Ref<LocatedEntity> value_type;
-	struct type_def {
-		std::string tp_name = "LocatedEntity";
-	};
-
-	static type_def* type_object() {
-		static type_def type;
-		return &type;
-	}
-
-	static bool check(PyObject* object);
-
-	static bool check(const Py::Object& object);
 
 	static Py::Object wrap(Ref<LocatedEntity> value);
 
-	static Ref<LocatedEntity>& value(const Py::Object& object);
+    CyPy_LocatedEntity(Py::PythonClassInstanceWeak* self, Py::Tuple& args, Py::Dict& kwds);
 
-	static std::vector<LocatedEntityScriptProvider> entityPythonProviders;
+    CyPy_LocatedEntity(Py::PythonClassInstanceWeak* self, Ref<LocatedEntity> value);
 
+	~CyPy_LocatedEntity() override;
 
+	static void init_type();
+
+	static Py::Object send_world(const Ref<LocatedEntity>& entity, const Py::Tuple& args);
+
+	static Py::Object start_task(const Ref<LocatedEntity>& entity, const Py::Tuple& args);
+
+	static Py::Object update_task(const Ref<LocatedEntity>& entity);
+
+	static Py::Object start_action(const Ref<LocatedEntity>& entity, const Py::Tuple& args);
+
+	static Py::Object mod_property(const Ref<LocatedEntity>& entity, const Py::Tuple& args);
+
+	Py::Object getattro(const Py::String&) override;
+
+	int setattro(const Py::String& name, const Py::Object& attr) override;
+
+protected:
+
+	Py::Object send_world(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_LocatedEntity, send_world);
+
+	Py::Object start_task(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_LocatedEntity, start_task);
+
+	Py::Object start_action(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_LocatedEntity, start_action);
+
+	Py::Object update_task();
+
+	PYCXX_NOARGS_METHOD_DECL(CyPy_LocatedEntity, update_task);
+
+	Py::Object mod_property(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_LocatedEntity, mod_property);
+
+	Py::Object find_in_contains(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_LocatedEntity, find_in_contains);
+
+	Py::Object get_parent_domain();
+
+	PYCXX_NOARGS_METHOD_DECL(CyPy_LocatedEntity, get_parent_domain);
+
+	Py::Object create_new_entity(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_LocatedEntity, create_new_entity);
 };
 
 

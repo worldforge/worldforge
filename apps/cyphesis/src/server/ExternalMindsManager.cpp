@@ -16,8 +16,6 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#endif
 
 #include "ExternalMindsManager.h"
 #include "PossessionAuthenticator.h"
@@ -36,7 +34,7 @@
 
 #include <iostream>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 ExternalMindsManager::ExternalMindsManager(PossessionAuthenticator& possessionAuthenticator)
         : m_possessionAuthenticator(possessionAuthenticator)

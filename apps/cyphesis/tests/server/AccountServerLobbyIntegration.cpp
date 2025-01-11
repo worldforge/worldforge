@@ -31,7 +31,7 @@
 #include "server/Lobby.h"
 #include "server/ServerRouting.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "../DatabaseNull.h"
 
@@ -104,7 +104,7 @@ AccountServerLobbyintegration::AccountServerLobbyintegration() :
 void AccountServerLobbyintegration::setup() {
 	m_persistence = new Persistence(m_database);
 
-	Ref<LocatedEntity> gw = new Entity(m_id_counter++);
+	Ref<LocatedEntity> gw = new LocatedEntity(m_id_counter++);
 	m_world.reset();
 	m_world.reset(new TestWorld(gw));
 	m_server = new ServerRouting(*m_world, *m_persistence,

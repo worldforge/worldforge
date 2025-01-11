@@ -19,7 +19,6 @@
 #define INVENTORYDOMAIN_H_
 
 #include "rules/simulation/Domain.h"
-#include <set>
 #include <string>
 #include <map>
 
@@ -44,9 +43,9 @@ public:
 
 	void removeEntity(LocatedEntity& entity) override;
 
-	bool isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
+	bool isEntityReachable(const LocatedEntity& reachingEntity, double reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
 
-	std::vector<Domain::CollisionEntry> queryCollision(const WFMath::Ball<3>& sphere) const override;
+	std::vector<CollisionEntry> queryCollision(const WFMath::Ball<3>& sphere) const override;
 
 	std::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override;
 

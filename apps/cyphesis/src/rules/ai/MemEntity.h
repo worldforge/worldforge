@@ -90,7 +90,8 @@ public:
 		}
 	}
 
-	void destroy();
+	//"virtual" only for testing, look into if this can be changed.
+	virtual void destroy();
 
 	void merge(const Atlas::Message::MapType& ent);
 
@@ -138,7 +139,7 @@ public:
 	/// @return zero if this entity has an attribute with the name given
 	/// nonzero otherwise
 	int getAttr(const std::string& name,
-				Atlas::Message::Element&) const;
+				Atlas::Message::Element& attr) const;
 
 	/// \brief Get the value of an attribute
 	///
@@ -153,7 +154,7 @@ public:
 	/// @return zero if this entity has an attribute with the name given
 	/// nonzero otherwise
 	int getAttrType(const std::string& name,
-					Atlas::Message::Element&,
+					Atlas::Message::Element& attr,
 					int type) const;
 
 	/// \brief Get the value of an attribute if it is the right type

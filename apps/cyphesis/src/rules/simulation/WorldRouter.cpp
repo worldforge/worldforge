@@ -18,7 +18,7 @@
 
 #include "WorldRouter.h"
 
-#include "rules/simulation/World.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/Domain.h"
 
 #include "common/id.h"
@@ -42,7 +42,7 @@ using Atlas::Objects::Operation::Appearance;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Entity::Anonymous;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 template
 class OperationsDispatcher<LocatedEntity>;

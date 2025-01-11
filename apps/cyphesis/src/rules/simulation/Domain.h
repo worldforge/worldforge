@@ -21,7 +21,6 @@
 
 #include "common/OperationRouter.h"
 
-#include <wfmath/vector.h>
 #include <wfmath/point.h>
 
 #include <string>
@@ -48,17 +47,15 @@ class Location;
 /// Motion objects interact with the movement domain.
 class Domain {
 protected:
-
 	/**
 	 * @brief The entity to which this domain belongs.
 	 */
 	LocatedEntity& m_entity;
 
 public:
-
 	/**
 	 * A struct containing a collection of transformation that might be carried out on an entity contained in a Domain.
-	 * Each domain can handle these requests at it's own discretion.
+	 * Each domain can handle these requests at its own discretion.
 	 */
 	struct TransformData {
 		/**
@@ -80,9 +77,9 @@ public:
 	};
 
 	struct CollisionEntry {
-		LocatedEntity* entity;
+		LocatedEntity* entity{};
 		WFMath::Point<3> collisionPoint;
-		float distance;
+		float distance{};
 	};
 
 	explicit Domain(LocatedEntity& entity);
@@ -136,14 +133,12 @@ public:
 	 * Note that different domains handle this differently. Some will ignore some or all of the transformations.
 	 *
 	 * @param entity The child entity.
-	 * @param orientation New orientation, applied if valid.
-	 * @param pos New position, applied if valid.
-	 * @param velocity New velocity, applied if valid. This is pseudo-normalized,
-	 * in the sense that a normalized value means "max speed". The final velocity is calculated by the domain.
+	 * @param transformData All transformations.
 	 * @param transformedEntities A list of entities that were transformed by this action. In most cases only the moved entity,
 	 * but there are cases where other are affected too.
 	 */
-	virtual void applyTransform(LocatedEntity& entity, const TransformData& transformData,
+	virtual void applyTransform(LocatedEntity& entity,
+								const TransformData& transformData,
 								std::set<LocatedEntity*>& transformedEntities) {
 	}
 
@@ -175,7 +170,7 @@ public:
 	 *                                  This only makes sense in some situation (such as reaching for a place in the terrain) and will be ignored by some domains.
 	 * @return True if the reaching entity can reach the queried entity.
 	 */
-	virtual bool isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const {
+	virtual bool isEntityReachable(const LocatedEntity& reachingEntity, double reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const {
 		return false;
 	}
 
@@ -193,7 +188,8 @@ public:
 	/**
 	 * Called when the domain is removed from an entity.
 	 */
-	virtual void removed() {}
+	virtual void removed() {
+	}
 };
 
 #endif // RULESETS_DOMAIN_H

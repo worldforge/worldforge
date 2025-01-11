@@ -26,7 +26,7 @@
 #include "../IGEntityExerciser.h"
 #include "../allOperations.h"
 
-#include "rules/simulation/Thing.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "rules/simulation/Domain.h"
 
@@ -56,7 +56,7 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Entity::RootEntity;
 
 int main() {
-	Ref<Thing> e(new Thing(1));
+	Ref<LocatedEntity> e(new LocatedEntity(1));
 	TypeNode<LocatedEntity> type("thing");
 	e->setType(&type);
 

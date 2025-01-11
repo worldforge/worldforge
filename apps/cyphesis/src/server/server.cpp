@@ -15,12 +15,6 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#ifdef HAVE_CONFIG_H
-
-#include "config.h"
-
-#endif
-
 #include <spdlog/spdlog.h>
 #include <spdlog/common.h>
 
@@ -43,7 +37,6 @@
 
 #include "pythonbase/Python_API.h"
 #include "rules/simulation/LocatedEntity.h"
-#include "rules/simulation/World.h"
 
 #ifdef CYPHESIS_USE_POSTGRES
 
@@ -56,6 +49,7 @@
 #include "common/const.h"
 #include "common/AtlasFactories.h"
 #include "rules/simulation/Inheritance.h"
+#include "common/globals.h"
 #include "common/system.h"
 #include "common/sockets.h"
 #include "common/Monitors.h"
@@ -91,13 +85,12 @@
 #include <rules/simulation/ScriptsProperty.h>
 #include "saf/saf.hpp"
 
-#include <Atlas/Objects/RootEntity.h>
-
 #include <varconf/config.h>
 #include <filesystem>
 
 #include <thread>
 #include <fstream>
+#include <rules/simulation/WorldProperty.h>
 
 using namespace boost::asio;
 
@@ -107,7 +100,6 @@ class Peer;
 
 
 namespace {
-const bool debug_flag = false;
 
 INT_OPTION(http_port_num, 6780, CYPHESIS, "httpport",
 		   "Network listen port for http connection to the server")
@@ -491,14 +483,15 @@ int run() {
 
 		ExternalMindsManager externalMindsManager(possessionAuthenticator);
 
-		Ref<LocatedEntity> baseEntity = new World();
+		Ref<LocatedEntity> baseEntity = new LocatedEntity(RouterId{consts::rootWorldIntId});
 		baseEntity->setType(inheritance.getType("world"));
-		WorldRouter world(baseEntity, entityBuilder, timeProviderFn);
+		baseEntity->requirePropertyClassFixed<WorldProperty>();
+		WorldRouter worldRouter(baseEntity, entityBuilder, timeProviderFn);
 		baseEntity.reset();
 
 		std::map<int, int> operationsMap;
-		monitors.watch("operations_processed", std::make_unique<Variable<int>>(world.m_operationsCount));
-		world.Dispatching.connect([&](const Operation& op) {
+		monitors.watch("operations_processed", std::make_unique<Variable<int>>(worldRouter.m_operationsCount));
+		worldRouter.Dispatching.connect([&](const Operation& op) {
 			auto I = operationsMap.find(op->getClassNo());
 			if (I == operationsMap.end()) {
 				auto result = operationsMap.emplace(op->getClassNo(), 1);
@@ -508,9 +501,9 @@ int run() {
 			}
 		});
 
-		CyPy_Server::registerWorld(&world);
+		CyPy_Server::registerWorld(&worldRouter);
 
-		StorageManager store(world, serverDatabase->database(), entityBuilder, propertyManager);
+		StorageManager store(worldRouter, serverDatabase->database(), entityBuilder, propertyManager);
 
 		//Instantiate at startup
 		HttpHandling httpCache(monitors, *io_context);
@@ -527,7 +520,7 @@ int run() {
 
 		// Create the core serverRouting object, which stores central data,
 		// and track objects
-		ServerRouting serverRouting(world,
+		ServerRouting serverRouting(worldRouter,
 									persistence,
 									ruleset_name,
 									server_name,
@@ -562,19 +555,19 @@ int run() {
 		TeleportProperty::s_serverRouting = &serverRouting;
 		AccountProperty::s_serverRouting = &serverRouting;
 
-		TypeUpdateCoordinator typeUpdateCoordinator(inheritance, world, serverRouting);
+		TypeUpdateCoordinator typeUpdateCoordinator(inheritance, worldRouter, serverRouting);
 
-		ScriptReloader scriptReloader(world);
+		ScriptReloader scriptReloader(worldRouter);
 
 		run_user_scripts("cyphesis");
 
 		spdlog::info("Restoring world from database...");
 
-		store.restoreWorld(world.getBaseEntity());
+		store.restoreWorld(worldRouter.getBaseEntity());
 		// Read the world entity if any from the database, or set it up.
 		// If it was there, make sure it did not get any of the wrong
 		// position or orientation data.
-		store.initWorld(world.getBaseEntity());
+		store.initWorld(worldRouter.getBaseEntity());
 
 		spdlog::info("Restored world.");
 
@@ -602,8 +595,8 @@ int run() {
 				file.close();
 				//We should only try to import if the world isn't populated.
 				bool isPopulated = false;
-				if (world.getBaseEntity()->m_contains) {
-					for (const auto& entity: *world.getBaseEntity()->m_contains) {
+				if (worldRouter.getBaseEntity()->m_contains) {
+					for (const auto& entity: *worldRouter.getBaseEntity()->m_contains) {
 						//if there's any entity that's not transient we consider it populated
 						if (!entity->hasAttr("transient")) {
 							isPopulated = true;
@@ -658,9 +651,9 @@ int run() {
 
 
 		//Initially there are a couple of pent-up operations we need to run to get up to speed. 10 seconds is a suitable large number.
-		world.getOperationsHandler().processUntil(time, std::chrono::seconds(10));
+		worldRouter.getOperationsHandler().processUntil(time, std::chrono::seconds(10));
 		//Report to the log when time diff between when an operation should have been handled and when it actually was
-		world.getOperationsHandler().m_time_diff_report = std::chrono::milliseconds(200);
+		worldRouter.getOperationsHandler().m_time_diff_report = std::chrono::milliseconds(200);
 
 		//Inner loop, where listeners are active.
 		{
@@ -675,7 +668,7 @@ int run() {
 			spdlog::info("Running and accepting connections");
 			logEvent(START, "- - - Standalone server startup");
 
-			MainLoop::run(daemon_flag, *io_context, world.getOperationsHandler(), {softExitStart, softExitPoll, softExitTimeout, dispatchOperationsFn}, time);
+			MainLoop::run(daemon_flag, *io_context, worldRouter.getOperationsHandler(), {softExitStart, softExitPoll, softExitTimeout, dispatchOperationsFn}, time);
 			if (metaClient) {
 				metaClient->metaserverTerminate();
 			}
@@ -689,7 +682,7 @@ int run() {
 		//tell it it is shutting down so that it can do some housekeeping.
 		try {
 			exit_flag = false;
-			if (store.shutdown(exit_flag, world.getEntities()) != 0) {
+			if (store.shutdown(exit_flag, worldRouter.getEntities()) != 0) {
 				//Ignore this error and carry on with shutting down.
 				spdlog::error("Error when shutting down");
 			}
@@ -704,7 +697,7 @@ int run() {
 		serverRouting.disconnectAllConnections();
 
 		//Clear out reference
-		world.shutdown();
+		worldRouter.shutdown();
 
 		//Run outstanding tasks from the shut down connections and listeners.
 		io_context->run();

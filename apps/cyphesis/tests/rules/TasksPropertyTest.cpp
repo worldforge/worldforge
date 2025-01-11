@@ -26,7 +26,7 @@
 #include "../PropertyCoverage.h"
 #include "../TestWorld.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/TasksProperty.h"
 #include "rules/simulation/Task.h"
 
@@ -51,7 +51,7 @@ int main()
 
     Py::Dict fake;
     OpVector res;
-    Ref<Entity> actor = pc.createCharacterEntity();
+    Ref<LocatedEntity> actor = pc.createCharacterEntity();
     UsageInstance usageInstance;
     usageInstance.actor = actor;
     usageInstance.op = Atlas::Objects::Operation::Action();

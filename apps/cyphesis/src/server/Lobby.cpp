@@ -38,7 +38,7 @@ using Atlas::Objects::Operation::Appearance;
 using Atlas::Objects::Operation::Disappearance;
 using Atlas::Objects::Entity::Anonymous;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 Lobby::Lobby(ServerRouting& s, RouterId id) :
 		Router(std::move(id)),

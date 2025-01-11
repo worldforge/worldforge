@@ -37,7 +37,7 @@ using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::smart_dynamic_cast;
 
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 int ArchetypeRuleHandler::installArchetypeClass(const std::string& class_name,
                                                 const std::string& parent, const Root& class_desc,

@@ -144,7 +144,7 @@ protected:
 		try {
 			o->m_pycxx_object = new TPythonClass(o, args, kwds);
 			TClassInstance::_new(o);
-		} catch (const Py::BaseException& e) {
+		} catch (const Py::BaseException&) {
 			spdlog::warn("Error when creating Python class {}.", subtype->tp_name);
 			subtype->tp_free(o);
 			return nullptr;

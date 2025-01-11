@@ -34,7 +34,7 @@
 #include "rules/simulation/WorldRouter.h"
 
 #include "rules/simulation/Domain.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/ExternalMind.h"
 #include "rules/simulation/MindsProperty.h"
 
@@ -147,7 +147,7 @@ public:
 	void test_connectCharacter_character();
 
 	Inheritance* m_inheritance;
-	Ref<Entity> m_rootEntity;
+	Ref<LocatedEntity> m_rootEntity;
 	EntityBuilder* m_eb;
 	PropertyManager<LocatedEntity>* m_propertyManager;
 };
@@ -187,7 +187,7 @@ Atlas::Objects::Root composeDeclaration(std::string class_name, std::string pare
 
 
 void Accountintegration::setup() {
-	m_rootEntity = new Entity(0);
+	m_rootEntity = new LocatedEntity(0);
 	m_persistence = new Persistence(m_database);
 	m_inheritance = new Inheritance();
 	m_eb = new EntityBuilder();
@@ -379,14 +379,14 @@ void Accountintegration::test_LogoutOperation() {
 
 void Accountintegration::test_connectCharacter_entity() {
 	OpVector res;
-	Ref<Entity> e = new Entity(7);
+	Ref<LocatedEntity> e = new LocatedEntity(7);
 
 	int ret = m_ac->connectCharacter(e.get(), res);
 	ASSERT_EQUAL(ret, 0);
 }
 
 void Accountintegration::test_connectCharacter_character() {
-	Ref<Entity> e = new Entity(8);
+	Ref<LocatedEntity> e = new LocatedEntity(8);
 	OpVector res;
 	int ret = m_ac->connectCharacter(e.get(), res);
 	ASSERT_EQUAL(ret, 0);

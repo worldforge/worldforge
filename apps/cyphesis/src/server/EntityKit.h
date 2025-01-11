@@ -23,11 +23,10 @@
 
 #include <Atlas/Objects/ObjectsFwd.h>
 
-#include <set>
 #include <map>
 #include <string>
 #include "modules/Ref.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 namespace Atlas {
 namespace Message {
@@ -36,8 +35,6 @@ class Element;
 typedef std::map<std::string, Element> MapType;
 }
 }
-
-class Entity;
 
 template<typename, typename>
 class ScriptKit;
@@ -66,7 +63,7 @@ public:
 	/// @param id an identifier of the Entity.
 	/// @param attributes custom attributes set for the new instance
 	/// @param attributes the location of the entity
-	virtual Ref<Entity> newEntity(RouterId id,
+	virtual Ref<LocatedEntity> newEntity(RouterId id,
 								  const Atlas::Objects::Entity::RootEntity& attributes) = 0;
 
 	virtual void addProperties(const PropertyManager<LocatedEntity>& propertyManager) = 0;

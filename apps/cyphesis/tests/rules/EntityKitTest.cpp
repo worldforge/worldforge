@@ -42,7 +42,7 @@ class TestEntityKit : public EntityKit {
 public:
 	virtual ~TestEntityKit() {}
 
-	Ref<Entity> newEntity(RouterId id,
+	Ref<LocatedEntity> newEntity(RouterId id,
 						  const Atlas::Objects::Entity::RootEntity& attributes) override { return nullptr; }
 
 	static EntityKit* duplicateFactory() { return nullptr; }

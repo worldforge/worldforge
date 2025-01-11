@@ -20,8 +20,8 @@
 #define RULESETS_EXTERNAL_MIND_H
 
 #include "common/Router.h"
+#include "modules/Ref.h"
 #include <Atlas/Objects/Operation.h>
-#include <modules/Ref.h>
 
 class Link;
 
@@ -66,7 +66,7 @@ protected:
 	 */
 	std::map<long, Relay> m_relays;
 
-	void deleteEntity(const std::string& id, bool forceDelete);
+	void deleteEntity(const std::string& id, bool forceDelete) const;
 
 	void purgeEntity(const LocatedEntity& ent, bool forceDelete = false);
 
@@ -86,9 +86,9 @@ public:
 
 	void operation(const Operation&, OpVector&) override;
 
-	bool isLinked() { return m_link != nullptr; }
+	bool isLinked() const { return m_link != nullptr; }
 
-	bool isLinkedTo(Link* c) { return m_link == c; }
+	bool isLinkedTo(const Link* c) const { return m_link == c; }
 
 	const Ref<LocatedEntity>& getEntity() const;
 

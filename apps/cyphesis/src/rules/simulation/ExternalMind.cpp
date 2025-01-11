@@ -50,13 +50,13 @@ ExternalMind::~ExternalMind() {
 	s_numberOfMinds--;
 }
 
-void ExternalMind::deleteEntity(const std::string& id, bool forceDelete) {
+void ExternalMind::deleteEntity(const std::string& id, bool forceDelete) const {
 	Delete d;
 	Anonymous del_arg;
 	del_arg->setId(id);
 	d->setArgs1(del_arg);
 	if (forceDelete) {
-		//We can force a delete by directing the Delete op to the world;
+		//We can force a deletion by directing the Delete op to the world;
 		//this bypasses any property which might prevent the deletion.
 		d->setTo("0");
 	} else {
@@ -76,7 +76,7 @@ void ExternalMind::purgeEntity(const LocatedEntity& ent, bool forceDelete) {
 }
 
 ExternalMind::ExternalMind(RouterId id, Ref<LocatedEntity> entity)
-		: Router(std::move(id)),
+		: Router(id),
 		  m_link(nullptr),
 		  m_entity(std::move(entity)) {
 	s_numberOfMinds++;
@@ -196,7 +196,7 @@ void ExternalMind::RelayOperation(const Operation& op, OpVector& res) {
 				return;
 			}
 
-			Operation relayedOp = Atlas::Objects::smart_dynamic_cast<Operation>(op->getArgs().front());
+			auto relayedOp = Atlas::Objects::smart_dynamic_cast<Operation>(op->getArgs().front());
 
 			if (!relayedOp.isValid()) {
 				spdlog::error("ExternalMind::RelayOperation first arg is not an operation. " + m_entity->describeEntity());
@@ -204,7 +204,7 @@ void ExternalMind::RelayOperation(const Operation& op, OpVector& res) {
 			}
 
 
-			Relay relay{op, from_id.String()};
+			Relay relay{.op=op, .from_id=from_id.String()};
 			//Generate a local serial number which we'll register in m_relays. When a response is received
 			//we'll check the refno and match it against what we've stored
 			long int serialNo = ++s_serialNumberNext;

@@ -36,8 +36,7 @@ int main(int argc, char** argv) {
 	op->setRefno(23);
 	op->setFrom("jim");
 	op->setTo("bob");
-	op->setSeconds(10800);
-	op->setFutureSeconds(1);
+	op->setStamp(10800);
 	op->setArgs(std::vector<Atlas::Objects::Root>(1, Atlas::Objects::Operation::RootOperation()));
 
 	TIME_ON;

@@ -28,7 +28,7 @@ class PositionProperty : public Point3Property<EntityT> {
 public:
 	static constexpr const char* property_name = "pos";
 
-	PositionProperty<EntityT>* copy() const override;
+	PositionProperty* copy() const override;
 
 	static WFMath::Point<3> extractPosition(const EntityT& entity);
 
@@ -39,7 +39,7 @@ class VelocityProperty : public Vector3Property<EntityT> {
 public:
 	static constexpr const char* property_name = "velocity";
 
-	VelocityProperty<EntityT>* copy() const override;
+	VelocityProperty* copy() const override;
 
 };
 
@@ -48,7 +48,7 @@ class AngularVelocityProperty : public Vector3Property<EntityT> {
 public:
 	static constexpr const char* property_name = "angular";
 
-	AngularVelocityProperty<EntityT>* copy() const override;
+	AngularVelocityProperty* copy() const override;
 
 };
 
@@ -57,7 +57,7 @@ class OrientationProperty : public QuaternionProperty<EntityT> {
 public:
 	static constexpr const char* property_name = "orientation";
 
-	OrientationProperty<EntityT>* copy() const override;
+	OrientationProperty* copy() const override;
 
 };
 

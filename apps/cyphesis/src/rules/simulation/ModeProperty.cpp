@@ -18,15 +18,12 @@
 #include "ModeProperty.h"
 #include "rules/simulation/LocatedEntity.h"
 
-#include "rules/QuaternionProperty_impl.h"
-
 #include "rules/simulation/BaseWorld.h"
 #include "ModeDataProperty.h"
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
 #include <wfmath/atlasconv.h>
-#include "rules/simulation/AtlasProperties.h"
 #include "rules/PhysicalProperties_impl.h"
 
 
@@ -35,8 +32,7 @@ ModeProperty::ModeProperty()
 }
 
 void ModeProperty::apply(LocatedEntity& entity) {
-	auto modeDataProp = entity.getPropertyClassFixed<ModeDataProperty>();
-	if (modeDataProp) {
+	if (auto modeDataProp = entity.getPropertyClassFixed<ModeDataProperty>()) {
 		if (modeDataProp->getMode() != m_mode && modeDataProp->getMode() != Mode::Unknown) {
 			auto mutableModeDataProp = entity.modPropertyClassFixed<ModeDataProperty>();
 			mutableModeDataProp->clearData();

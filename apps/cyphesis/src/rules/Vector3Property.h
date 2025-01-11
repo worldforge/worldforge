@@ -48,7 +48,7 @@ public:
 
 	WFMath::Vector<3>& data() { return m_data; }
 
-	Vector3Property<EntityT>* copy() const override;
+	Vector3Property* copy() const override;
 
 protected:
 	WFMath::Vector<3> m_data;

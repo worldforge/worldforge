@@ -25,7 +25,7 @@
 
 #include "../TestBase.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/TerrainModProperty.h"
 #include "rules/simulation/TerrainProperty.h"
 
@@ -49,8 +49,8 @@ using Atlas::Objects::Operation::Move;
 
 class TerrainModPropertyintegration : public Cyphesis::TestBase {
 private:
-	Ref<Entity> m_rootEntity;
-	Ref<Entity> m_entity;
+	Ref<LocatedEntity> m_rootEntity;
+	Ref<LocatedEntity> m_entity;
 	std::unique_ptr<TestWorld> m_world;
 public:
 	TerrainModPropertyintegration();
@@ -70,12 +70,12 @@ TerrainModPropertyintegration::TerrainModPropertyintegration() {
 }
 
 void TerrainModPropertyintegration::setup() {
-	m_rootEntity = new Entity(0);
+	m_rootEntity = new LocatedEntity(0);
 
 	m_world.reset();
 	m_world.reset(new TestWorld(m_rootEntity));
 
-	m_entity = new Entity(1);
+	m_entity = new LocatedEntity(1);
 	m_entity->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = Point3D(5.f, 5.f, 5.f);
 	m_entity->m_parent = m_rootEntity.get();
 

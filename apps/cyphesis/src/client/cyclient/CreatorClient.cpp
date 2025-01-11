@@ -21,7 +21,7 @@
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 using Atlas::Objects::Root;
 using Atlas::Objects::Operation::Set;

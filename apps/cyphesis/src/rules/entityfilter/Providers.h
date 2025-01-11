@@ -22,7 +22,6 @@
 #include "Predicates.h"
 
 #include "modules/Ref.h"
-#include "modules/ReferenceCounted.h"
 #include "common/Router.h"
 #include "common/TypeNode.h"
 
@@ -32,7 +31,6 @@
 #include <wfmath/point.h>
 
 
-#include <list>
 #include <map>
 #include <functional>
 #include <string>
@@ -56,9 +54,11 @@ struct QueryEntityLocation {
 
 	QueryEntityLocation() = delete;
 
-	QueryEntityLocation(EntityT& entity_in) : entity(entity_in) {}
+	QueryEntityLocation(EntityT& entity_in) : entity(entity_in) {
+	}
 
-	QueryEntityLocation(EntityT& entity_in, const WFMath::Point<3>* pos_in) : entity(entity_in), pos(pos_in) {}
+	QueryEntityLocation(EntityT& entity_in, const WFMath::Point<3>* pos_in) : entity(entity_in), pos(pos_in) {
+	}
 };
 
 template<typename EntityT>
@@ -170,7 +170,7 @@ protected:
 
 template<typename T>
 inline ProviderBase<T>::ProviderBase(std::shared_ptr<Consumer<T>> consumer)
-		: m_consumer(std::move(consumer)) {
+	: m_consumer(std::move(consumer)) {
 }
 
 template<typename T>
@@ -188,7 +188,7 @@ public:
 
 template<typename TProviding, typename TConsuming>
 inline ConsumingProviderBase<TProviding, TConsuming>::ConsumingProviderBase(std::shared_ptr<Consumer<TProviding>> consumer)
-		: ProviderBase<TProviding>(consumer) {
+	: ProviderBase<TProviding>(consumer) {
 }
 
 template<typename TProviding, typename TConsuming>
@@ -211,7 +211,7 @@ protected:
 
 template<typename T>
 inline NamedAttributeProviderBase<T>::NamedAttributeProviderBase(std::shared_ptr<Consumer<T>> consumer, std::string attribute_name)
-		: ProviderBase<T>(consumer), m_attribute_name(std::move(attribute_name)) {
+	: ProviderBase<T>(consumer), m_attribute_name(std::move(attribute_name)) {
 }
 
 template<typename TProviding, typename TConsuming>
@@ -226,7 +226,7 @@ public:
 
 template<typename TProviding, typename TConsuming>
 inline ConsumingNamedAttributeProviderBase<TProviding, TConsuming>::ConsumingNamedAttributeProviderBase(std::shared_ptr<Consumer<TProviding>> consumer, const std::string& attribute_name)
-		: NamedAttributeProviderBase<TProviding>(std::move(consumer), attribute_name) {
+	: NamedAttributeProviderBase<TProviding>(std::move(consumer), attribute_name) {
 }
 
 template<typename TProviding, typename TConsuming>
@@ -251,7 +251,6 @@ public:
 template<typename EntityT>
 class DynamicTypeNodeProvider : public ConsumingProviderBase<TypeNode<EntityT>, QueryContext<EntityT>> {
 public:
-
 	DynamicTypeNodeProvider(std::shared_ptr<Consumer<TypeNode<EntityT>>> consumer, std::string type);
 
 	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const
@@ -268,7 +267,6 @@ public:
 template<typename EntityT>
 class FixedTypeNodeProvider : public ConsumingProviderBase<TypeNode<EntityT>, QueryContext<EntityT>> {
 public:
-
 	FixedTypeNodeProvider(std::shared_ptr<Consumer<TypeNode<EntityT>>> consumer, const TypeNode<EntityT>& type);
 
 	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const override;
@@ -281,7 +279,6 @@ public:
 template<typename EntityT>
 class MemoryProvider : public ConsumingProviderBase<Atlas::Message::Element, QueryContext<EntityT>> {
 public:
-
 	explicit MemoryProvider(std::shared_ptr<Consumer<Atlas::Message::Element>> consumer);
 
 	void value(Atlas::Message::Element& value, const QueryContext<EntityT>&) const override;
@@ -290,7 +287,6 @@ public:
 template<typename EntityT>
 class EntityProvider : public ConsumingProviderBase<EntityT, QueryContext<EntityT>> {
 public:
-
 	explicit EntityProvider(std::shared_ptr<Consumer<EntityT>> consumer);
 
 	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const override;
@@ -301,7 +297,6 @@ public:
 template<typename EntityT>
 class EntityLocationProvider : public ConsumingProviderBase<EntityT, QueryContext<EntityT>> {
 public:
-
 	explicit EntityLocationProvider(std::shared_ptr<Consumer<EntityT>> consumer);
 
 	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const override;
@@ -339,7 +334,6 @@ public:
 template<typename EntityT>
 class SelfEntityProvider : public ConsumingProviderBase<EntityT, QueryContext<EntityT>> {
 public:
-
 	explicit SelfEntityProvider(std::shared_ptr<Consumer<EntityT>> consumer);
 
 	void value(Atlas::Message::Element& value, const QueryContext<EntityT>& context) const override;
@@ -394,18 +388,18 @@ class PropertyProvider : public ConsumingNamedAttributeProviderBase<TProperty, E
 public:
 	PropertyProvider(std::shared_ptr<Consumer<TProperty>> consumer, const std::string& attribute_name);
 
-	virtual ~PropertyProvider() = default;
+	~PropertyProvider() override = default;
 
-	virtual void value(Atlas::Message::Element& value, const EntityT& entity) const;
+	void value(Atlas::Message::Element& value, const EntityT& entity) const override;
 };
 
 template<typename TProperty, typename EntityT>
-inline PropertyProvider<TProperty, EntityT>::PropertyProvider(std::shared_ptr<Consumer<TProperty>> consumer, const std::string& attribute_name)
-		:        ConsumingNamedAttributeProviderBase<TProperty, EntityT>(consumer, attribute_name) {
+PropertyProvider<TProperty, EntityT>::PropertyProvider(std::shared_ptr<Consumer<TProperty>> consumer, const std::string& attribute_name)
+	: ConsumingNamedAttributeProviderBase<TProperty, EntityT>(consumer, attribute_name) {
 }
 
 template<typename TProperty, typename EntityT>
-inline void PropertyProvider<TProperty, EntityT>::value(Atlas::Message::Element& value, const EntityT& entity) const {
+void PropertyProvider<TProperty, EntityT>::value(Atlas::Message::Element& value, const EntityT& entity) const {
 	auto* prop = entity.template getPropertyClass<TProperty>(this->m_attribute_name);
 	if (!prop) {
 		return;
@@ -414,7 +408,7 @@ inline void PropertyProvider<TProperty, EntityT>::value(Atlas::Message::Element&
 	if (this->m_consumer) {
 		this->m_consumer->value(value, *prop);
 	} else {
-		value = (void*) prop;
+		value = (void*)prop;
 	}
 }
 
@@ -429,7 +423,7 @@ public:
 
 class MapProvider : public ConsumingNamedAttributeProviderBase<Atlas::Message::Element, Atlas::Message::Element> {
 public:
-	MapProvider(std::shared_ptr<Consumer<Atlas::Message::Element>> consumer, const std::string& attribute_name);
+	MapProvider(std::shared_ptr<Consumer> consumer, const std::string& attribute_name);
 
 	void value(Atlas::Message::Element& value, const Atlas::Message::Element& parent_element) const override;
 };
@@ -449,7 +443,6 @@ public:
 template<typename EntityT>
 class ContainsRecursiveFunctionProvider : public Consumer<QueryContext<EntityT>> {
 public:
-
 	ContainsRecursiveFunctionProvider(std::shared_ptr<Consumer<QueryContext<EntityT>>> container,
 									  std::shared_ptr<Predicate<EntityT>> condition,
 									  bool recursive
@@ -461,9 +454,9 @@ public:
 	override;
 
 private:
-///\brief Condition used to match entities within the container
+	///\brief Condition used to match entities within the container
 	std::shared_ptr<Predicate<EntityT>> m_condition;
-///\brief A Consumer which must return std::set<Ref<EntityT>>* i.e. entity.contains
+	///\brief A Consumer which must return std::set<Ref<EntityT>>* i.e. entity.contains
 	std::shared_ptr<Consumer<QueryContext<EntityT>>> m_consumer;
 
 	bool m_recursive;
@@ -477,7 +470,6 @@ private:
 template<typename EntityT>
 class GetEntityFunctionProvider : public ConsumingProviderBase<EntityT, QueryContext<EntityT>> {
 public:
-
 	explicit GetEntityFunctionProvider(std::shared_ptr<Consumer<QueryContext<EntityT>>> entity_provider,
 									   std::shared_ptr<Consumer<EntityT>>
 									   consumer);
@@ -488,7 +480,7 @@ public:
 
 private:
 	std::shared_ptr<Consumer<QueryContext<EntityT>>>
-			m_entity_provider;
+	m_entity_provider;
 };
 
 

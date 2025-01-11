@@ -29,7 +29,7 @@
 
 #include <iostream>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 ServerRouting* TeleportProperty::s_serverRouting = nullptr;
 
 void TeleportProperty::install(LocatedEntity& owner, const std::string& name)

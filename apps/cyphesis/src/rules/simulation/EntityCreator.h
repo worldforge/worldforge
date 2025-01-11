@@ -21,12 +21,13 @@
 
 #include "common/RouterId.h"
 
-class Entity;
+class LocatedEntity;
 
 struct EntityCreator {
-	virtual Ref<Entity> newEntity(RouterId id,
-								  const std::string& type,
-								  const Atlas::Objects::Entity::RootEntity& attrs) const = 0;
+    virtual ~EntityCreator() = default;
+    virtual Ref<LocatedEntity> newEntity(RouterId id,
+                                         const std::string& type,
+                                         const Atlas::Objects::Entity::RootEntity& attrs) const = 0;
 };
 
 #endif //CYPHESIS_ENTITYCREATOR_H

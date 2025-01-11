@@ -31,7 +31,7 @@
 
 #include "../TestWorld.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "pythonbase/Python_API.h"
 
 #include <cassert>
@@ -54,7 +54,7 @@ int main() {
 						 &CyPy_Ai::init,
 						 &CyPy_Common::init});
 
-		Ref<Entity> wrld(new Entity(0));
+		Ref<LocatedEntity> wrld(new LocatedEntity(0));
 		TestWorld tw(wrld);
 
 		run_python_string("import atlas");

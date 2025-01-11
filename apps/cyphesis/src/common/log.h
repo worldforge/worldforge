@@ -20,7 +20,6 @@
 #define COMMON_LOG_H
 
 #include <string>
-#include <functional>
 #include <spdlog/spdlog.h>
 
 

@@ -26,7 +26,7 @@
 #include "../allOperations.h"
 #include "../TestBase.h"
 
-#include "rules/simulation/Thing.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "common/Property_impl.h"
 #include "rules/PhysicalProperties_impl.h"
 #include <Atlas/Objects/Anonymous.h>
@@ -46,20 +46,20 @@ class PositionProperty<LocatedEntity>;
 template
 class OrientationProperty<LocatedEntity>;
 
-class testThing : public Thing {
+class testThing : public LocatedEntity {
 public:
 	testThing(RouterId id) :
-			Thing(id) {}
+			LocatedEntity(id) {}
 
-	using Thing::updateProperties;
+	using LocatedEntity::updateProperties;
 };
 
 static const std::string testName("bob");
 static const std::string testNewName("fred");
 
-struct TestThing : public Thing {
+struct TestThing : LocatedEntity {
 	TestThing(RouterId id)
-			: Thing(id) {
+			: LocatedEntity(id) {
 	}
 
 	void test_updateProperties(const Operation& op, OpVector& res) {
@@ -92,6 +92,7 @@ void ThingupdatePropertiestest::setup() {
 	m_name->data() = testName;
 
 	m_thing = new TestThing(1);
+	m_thing->flags().addFlags(entity_perceptive);
 	m_thing->setProperty("name", std::unique_ptr<PropertyBase>(m_name));
 }
 
@@ -150,7 +151,6 @@ int main() {
 #include "rules/simulation/Domain.h"
 
 #include "rules/simulation/BaseWorld.h"
-#include "common/const.h"
 #include "common/log.h"
 #include "rules/Location_impl.h"
 
@@ -183,15 +183,6 @@ void LocatedEntity::changeContainer(const Ref<LocatedEntity>& new_loc) {
 
 	onContainered(oldLoc);
 }
-
-
-void LocatedEntity::broadcast(const Atlas::Objects::Operation::RootOperation& op, OpVector& res, Visibility visibility) const {
-	auto copy = op.copy();
-	copy->setTo(getIdAsString());
-	res.push_back(copy);
-}
-
-
 
 void addToEntity(const Point3D& p, std::vector<double>& vd) {
 	vd.resize(3);

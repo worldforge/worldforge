@@ -27,7 +27,7 @@ class Domain;
  * @brief Specifies that an entity contains a "Domain".
  *
  * This makes the entity responsible for physics and sight checking, effectively giving the entity
- * it's own space.
+ * its own space.
  * Normally you wouldn't use nested domains, since the effects (currently) are undefined.
  *
  * The data defines the kind of domain. The available options are:

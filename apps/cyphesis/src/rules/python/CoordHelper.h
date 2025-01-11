@@ -22,7 +22,6 @@
 #include "pycxx/CXX/Objects.hxx"
 #include "pycxx/CXX/Extensions.hxx"
 #include "CyPy_Element.h"
-#include <wfmath/vector.h>
 #include <wfmath/atlasconv.h>
 #include <pythonbase/PythonDebug.h>
 

@@ -63,12 +63,12 @@ public:
 		return atlasObjects.size();
 	}
 
-	const Atlas::Objects::Root& getClass(const std::string& parent, Visibility visibility) const;
+	const Atlas::Objects::Root& getClass(const std::string& typeName, Visibility visibility) const;
 
 	int updateClass(const std::string& name,
 					const Atlas::Objects::Root& obj);
 
-	const TypeNode<LocatedEntity>* getType(const std::string& parent) const override;
+	const TypeNode<LocatedEntity>* getType(const std::string& typeName) const override;
 
 	bool hasClass(const std::string& parent);
 

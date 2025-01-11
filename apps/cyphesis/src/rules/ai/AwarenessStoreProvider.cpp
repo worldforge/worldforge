@@ -16,8 +16,6 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#endif
 
 #include "AwarenessStoreProvider.h"
 #include "common/TypeNode.h"
@@ -27,7 +25,7 @@
 #include <wfmath/ball.h>
 #include <wfmath/atlasconv.h>
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 
 AwarenessStoreProvider::AwarenessStoreProvider(IHeightProvider& heightProvider)

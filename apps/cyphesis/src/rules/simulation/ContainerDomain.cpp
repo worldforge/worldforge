@@ -32,12 +32,11 @@
 #include <unordered_set>
 #include <common/operations/Update.h>
 #include <algorithm>
-#include "rules/simulation/AtlasProperties.h"
 #include "rules/PhysicalProperties_impl.h"
 
 ContainerDomain::ContainerDomain(LocatedEntity& entity) :
-		Domain(entity),
-		mContainerAccessProperty(new ContainerAccessProperty(*this)) {
+	Domain(entity),
+	mContainerAccessProperty(new ContainerAccessProperty(*this)) {
 	entity.makeContainer();
 	entity.setProperty(ContainerAccessProperty::property_name, std::unique_ptr<ContainerAccessProperty>(mContainerAccessProperty));
 }
@@ -136,7 +135,7 @@ std::vector<LocatedEntity*> ContainerDomain::getObservingEntitiesFor(const Locat
 	return list;
 }
 
-bool ContainerDomain::isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const {
+bool ContainerDomain::isEntityReachable(const LocatedEntity& reachingEntity, double, const LocatedEntity&, const WFMath::Point<3>&) const {
 	return hasObserverRegistered(reachingEntity);
 }
 
@@ -161,7 +160,7 @@ std::optional<std::function<void()>> ContainerDomain::observeCloseness(LocatedEn
 
 				auto obs = new ClosenessObserverEntry{reacher.getIdAsString(), target, callback};
 				observerI->second.closenessObservations.insert(obs);
-//                targetEntry->closenessObservations.insert(obs);
+				//                targetEntry->closenessObservations.insert(obs);
 				m_closenessObservations.emplace(obs, std::unique_ptr<ClosenessObserverEntry>(obs));
 				return std::optional<std::function<void()>>([this, obs]() {
 					auto J = m_closenessObservations.find(obs);
@@ -170,7 +169,7 @@ std::optional<std::function<void()>> ContainerDomain::observeCloseness(LocatedEn
 						if (reacherI != m_reachingEntities.end()) {
 							reacherI->second.closenessObservations.erase(obs);
 						}
-//                    targetEntry->closenessObservations.erase(obs);
+						//                    targetEntry->closenessObservations.erase(obs);
 						m_closenessObservations.erase(obs);
 					}
 				});
@@ -404,13 +403,13 @@ void ContainerDomain::removed() {
 	while (!m_reachingEntities.empty()) {
 		removeObserver(m_reachingEntities.rbegin()->first);
 	}
-//    //Copy to allow modifications to the field during callbacks.
-//    auto entities = std::move(m_reachingEntities);
-//    for (auto& entry : entities) {
-//        for (auto& disconnectFn : entry.second.disconnectFunctions) {
-//            if (disconnectFn) {
-//                disconnectFn();
-//            }
-//        }
-//    }
+	//    //Copy to allow modifications to the field during callbacks.
+	//    auto entities = std::move(m_reachingEntities);
+	//    for (auto& entry : entities) {
+	//        for (auto& disconnectFn : entry.second.disconnectFunctions) {
+	//            if (disconnectFn) {
+	//                disconnectFn();
+	//            }
+	//        }
+	//    }
 }

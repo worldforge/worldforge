@@ -25,11 +25,8 @@
 #include "ProviderFactory.h"
 
 #include <boost/spirit/include/qi.hpp>
-#include <boost/spirit/include/qi_real.hpp>
 
-
-namespace EntityFilter {
-namespace parser {
+namespace EntityFilter::parser {
 
 namespace qi = boost::spirit::qi;
 
@@ -77,5 +74,5 @@ struct query_parser : qi::grammar<Iterator, std::shared_ptr<Predicate<EntityT>>(
 };
 
 }
-}
+
 #endif

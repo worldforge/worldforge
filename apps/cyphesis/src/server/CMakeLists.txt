@@ -16,6 +16,7 @@ if (AVAHI_FOUND)
     target_link_libraries(cyphesis-comm PUBLIC
             ${AVAHI_LIBRARIES}
             -lavahi-common)
+    add_compile_definitions(HAVE_AVAHI=1)
 endif (AVAHI_FOUND)
 
 set(server_files

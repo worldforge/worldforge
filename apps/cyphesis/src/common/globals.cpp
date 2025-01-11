@@ -16,9 +16,6 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 
-#ifdef HAVE_CONFIG_H
-#endif
-
 #include "globals.h"
 
 #include "const.h"
@@ -29,7 +26,6 @@
 
 #include <algorithm>
 
-#include <cstring>
 #include <memory>
 
 
@@ -467,7 +463,8 @@ void set_config_from_environment() {
 }
 }
 
-int loadConfig(int argc, char** argv, int usage) {
+int loadConfig(const int argc, char** argv, const int usage) {
+
 	global_conf = varconf::Config::inst();
 
 	//Listen for errors from Varconf and write to the log.
@@ -489,10 +486,9 @@ int loadConfig(int argc, char** argv, int usage) {
 
 	// See if the user has set the install directory on the command line
 	std::filesystem::path homeConfigPath{};
-	const auto* configHome = xdgConfigHome(nullptr);
 
 	// Read in only the users settings, and the commandline settings.
-	if (configHome) {
+	if (auto* configHome = xdgConfigHome(nullptr)) {
 		homeConfigPath = std::filesystem::path(configHome) / "cyphesis.vconf";
 		if (std::filesystem::exists(homeConfigPath)) {
 			spdlog::info("Reading settings from {}", homeConfigPath.string());
@@ -502,13 +498,14 @@ int loadConfig(int argc, char** argv, int usage) {
 				return CONFIG_ERROR;
 			}
 		}
+		std::free((void*)configHome);
 	}
 
 	//Set the var_directory by default to the XDG Data Home directory.
 	//This can be overridden either by setting the $XDG_DATA_HOME environment variable, or the "vardir" config option.
-	const auto* dataHome = xdgDataHome(nullptr);
-	if (dataHome) {
+	if (auto* dataHome = xdgDataHome(nullptr)) {
 		var_directory = std::string(dataHome) + "/cyphesis";
+		std::free((void*)dataHome);
 	}
 
 
@@ -612,15 +609,15 @@ int loadConfig(int argc, char** argv, int usage) {
 }
 
 void updateUserConfiguration() {
-	const auto* configHome = xdgConfigHome(nullptr);
 
 	// Write out any changes that have been overridden at user scope. It
 	// may be a good idea to do this at shutdown.
-	if (configHome != nullptr) {
+	if (const auto* configHome = xdgConfigHome(nullptr); configHome != nullptr) {
 		std::filesystem::path configHomePath(configHome);
 		//Make sure directory exists.
 		create_directories(configHomePath);
 		global_conf->writeToFile((std::filesystem::path(configHome) / "cyphesis.vconf").string(), varconf::USER);
+		free((void*)configHome);
 	}
 
 }

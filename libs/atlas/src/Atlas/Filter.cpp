@@ -37,7 +37,7 @@ int_type filterbuf::underflow() {
 
 	if (numPutback > m_inPutback) numPutback = m_inPutback;
 
-	std::memcpy(m_outBuffer + (m_inPutback - numPutback),
+	std::memcpy(m_outBuffer.data() + (m_inPutback - numPutback),
 				gptr() - numPutback,
 				(unsigned long) numPutback);
 
@@ -52,13 +52,13 @@ int_type filterbuf::underflow() {
 	// The problem is the limited size of the buffer with the
 	// Filter::decode operation not having any kind of size
 	// limitation.
-	auto num = m_streamBuffer.sgetn(m_inBuffer + m_inPutback,
-							   m_inBufferSize - m_inPutback);
+	auto num = m_streamBuffer.sgetn(m_inBuffer.data() + m_inPutback,
+							   m_inBuffer.size() - m_inPutback);
 	if (num <= 0) return traits_type::eof();
 
-	setg(m_inBuffer + (m_inPutback - numPutback),
-		 m_inBuffer + m_inPutback,
-		 m_inBuffer + m_inPutback + num);
+	setg(m_inBuffer.data() + (m_inPutback - numPutback),
+		 m_inBuffer.data() + m_inPutback,
+		 m_inBuffer.data() + m_inPutback + num);
 
 	return *gptr();
 }

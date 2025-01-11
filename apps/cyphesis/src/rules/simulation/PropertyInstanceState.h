@@ -18,10 +18,8 @@
 #ifndef RULESETS_PROPERTYINSTANCESTATE_H_
 #define RULESETS_PROPERTYINSTANCESTATE_H_
 
-#include "common/log.h"
-
-#include <unordered_map>
-#include <cassert>
+#include <iostream>
+#include <map>
 #include <memory>
 
 class LocatedEntity;
@@ -39,16 +37,16 @@ class LocatedEntity;
 template<typename T>
 class PropertyInstanceState {
 private:
-	std::unordered_map<const LocatedEntity*, std::unique_ptr<T>> mStates;
+	std::map<const LocatedEntity*, std::unique_ptr<T>> mStates;
 
 public:
 
 	~PropertyInstanceState() {
 		//When an instance of this is destroyed, all entities should already have deregistered themselves from it.
 		if (!mStates.empty()) {
-			spdlog::warn("Property instance state wasn't empty as is should be at shutdown.");
+			//Can't use spdlog here since this is called as a static destructor, which means spdlog might be shut down.
+			std::cerr << "Property instance state wasn't empty as is should be at shutdown." << std::endl;
 		}
-		//assert(mStates.empty());
 	}
 
 	/**

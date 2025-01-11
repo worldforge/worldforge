@@ -31,7 +31,7 @@
 #include "server/ServerRouting.h"
 
 #include "rules/simulation/ExternalMind.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/simulation/MindsProperty.h"
 
 #include "common/const.h"
@@ -64,7 +64,7 @@ protected:
 	ServerRouting* m_server;
 	Connection* m_connection;
 	Account* m_account;
-	Ref<Entity> m_character;
+	Ref<LocatedEntity> m_character;
 	TypeNode<LocatedEntity>* m_characterType;
 	std::unique_ptr<TestWorld> m_world;
 public:
@@ -101,7 +101,7 @@ AccountConnectionCharacterintegration::AccountConnectionCharacterintegration() :
 void AccountConnectionCharacterintegration::setup() {
 	m_persistence = new Persistence(m_database);
 
-	Ref<Entity> gw = new Entity(m_id_counter++);
+	Ref<LocatedEntity> gw = new LocatedEntity(m_id_counter++);
 	m_world.reset();
 	m_world.reset(new TestWorld(gw));
 	m_server = new ServerRouting(*m_world,
@@ -117,7 +117,7 @@ void AccountConnectionCharacterintegration::setup() {
 						   "fred",
 						   "25846125-f1bb-4963-852e-856a8be45515",
 						   m_id_counter++);
-	m_character = new Entity(m_id_counter++);
+	m_character = new LocatedEntity(m_id_counter++);
 	m_characterType = new TypeNode<LocatedEntity>("test_avatar");
 	m_character->setType(m_characterType);
 
@@ -279,9 +279,5 @@ int main() {
 #include "common/Property_impl.h"
 #include "common/PropertyManager.h"
 
-using Atlas::Message::Element;
-using Atlas::Message::MapType;
-using Atlas::Objects::Root;
-using Atlas::Objects::Entity::RootEntity;
 
 bool restricted_flag;

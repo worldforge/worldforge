@@ -44,7 +44,7 @@ using Atlas::Objects::Entity::Anonymous;
 
 using Atlas::Objects::smart_dynamic_cast;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 
 BaseMind::BaseMind(RouterId mindId, std::string entityId, TypeStore<MemEntity>& typeStore) :

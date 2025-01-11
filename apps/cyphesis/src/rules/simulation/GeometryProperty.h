@@ -21,7 +21,6 @@
 #include "common/Property.h"
 #include "rules/simulation/LocatedEntity.h"
 #include <wfmath/axisbox.h>
-#include <wfmath/point.h>
 #include <wfmath/vector.h>
 #include <bullet/LinearMath/btVector3.h>
 #include <functional>
@@ -65,7 +64,6 @@ class OgreMeshDeserializer;
  */
 class GeometryProperty : public Property<Atlas::Message::MapType, LocatedEntity> {
 public:
-
 	static constexpr const char* property_name = "geometry";
 
 	GeometryProperty() = default;
@@ -82,12 +80,14 @@ public:
 	 * Creates a new shape instance for the supplied bounding box, and setting the center of mass offset.
 	 * @param bbox The bounding box of the entity for which the shape will be used.
 	 * @param centerOfMassOffset Out parameter for the center of mass offset.
+	 * @param mass The mass, in Kg.
 	 * @return A pair containing at least a collision shape as first entry. Ownership of this shape is passed to the caller.
 	 * Optionally there can also be as a second entry a shared pointer to a "backing" shape. Such a shape is shared between multiple instances, and deleted only
 	 * when all instances are deleted. Calling code needs to retain the shared pointer as long as the first collision shape is in use.
 	 */
 	std::shared_ptr<btCollisionShape> createShape(const WFMath::AxisBox<3>& bbox,
-												  btVector3& centerOfMassOffset, float mass) const;
+												  btVector3& centerOfMassOffset,
+												  float mass) const;
 
 protected:
 	GeometryProperty(const GeometryProperty& rhs) = default;
@@ -130,13 +130,13 @@ protected:
 													btVector3& centerOfMassOffset,
 													float mass)> mShapeCreator;
 
-	void buildMeshCreator(std::shared_ptr<OgreMeshDeserializer> meshDeserializer);
+	void buildMeshCreator(const std::shared_ptr<OgreMeshDeserializer>& meshDeserializer);
 
 	void buildCompoundCreator();
 
-	GeometryProperty::ScalerType parseScalerType();
+	ScalerType parseScalerType();
 
-	void parseData(std::shared_ptr<OgreMeshDeserializer> deserializer);
+	void parseData(const std::shared_ptr<OgreMeshDeserializer>& deserializer);
 
 };
 

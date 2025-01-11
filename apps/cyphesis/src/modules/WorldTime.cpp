@@ -27,7 +27,7 @@
 
 // time2importance=time2type;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 static inline double minutes(const double & n) { return 60.0*n; }
 static inline double hours(const double & n) { return minutes(60)*n; }

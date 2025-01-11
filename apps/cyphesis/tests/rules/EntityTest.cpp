@@ -27,7 +27,7 @@
 #include "../IGEntityExerciser.h"
 #include "../allOperations.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "rules/simulation/AtlasProperties.h"
 #include "rules/simulation/Domain.h"
@@ -59,7 +59,7 @@ class Entitytest : public Cyphesis::TestBase {
 private:
 	TestPropertyManager<LocatedEntity>* m_pm;
 	TypeNode<LocatedEntity>* m_type;
-	Ref<Entity> m_entity;
+	Ref<LocatedEntity> m_entity;
 
 	static bool m_TestProperty_install_called;
 	static bool m_TestProperty_apply_called;
@@ -122,7 +122,7 @@ void Entitytest::setup() {
 	m_pm = new TestPropertyManager<LocatedEntity>;
 	m_pm->installPropertyFactory("test_int_property", std::make_unique<PropertyFactory<TestProperty, LocatedEntity>>());
 	m_type = new TypeNode<LocatedEntity>("test_type");
-	m_entity = new Entity(1);
+	m_entity = new LocatedEntity(1);
 	m_entity->setType(m_type);
 
 	m_TestProperty_install_called = false;

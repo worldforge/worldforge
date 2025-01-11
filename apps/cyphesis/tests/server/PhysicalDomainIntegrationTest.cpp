@@ -26,7 +26,7 @@
 #include "../TestBaseWithContext.h"
 #include "../TestWorld.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/TypeNode_impl.h"
 
@@ -176,14 +176,14 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		ModeProperty freeProperty{};
 		freeProperty.set("free");
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		rootEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
 		rootEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-64, 0, -64), WFMath::Point<3>(64, 64, 64));
 		std::unique_ptr<TestPhysicalDomain> domain(new TestPhysicalDomain(rootEntity));
 
 
-		Entity plantedEntity(context.newId());
+		LocatedEntity plantedEntity(context.newId());
 		plantedEntity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(plantedProperty.copy()));
 		plantedEntity.setType(&rockType);
 		plantedEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(0, 0, 0);
@@ -208,7 +208,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		ASSERT_FUZZY_EQUAL(1.0f, callback.m_hitPointWorld.y(), 0.1f);
 
 		//Add a box and let it fall on the planted entity
-		Entity freeEntity(context.newId());
+		LocatedEntity freeEntity(context.newId());
 		freeEntity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(freeProperty.copy()));
 		freeEntity.setType(&rockType);
 		freeEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(0, 10, 0);
@@ -264,7 +264,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		//Now first delete the third box from the bottom. The top box should now be placed on the second box.
 		//Then delete the first box. The second box should now be placed on the ground, and the top box should be on top of it.
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		rootEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
 		rootEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-64, 0,  -64},
@@ -278,7 +278,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		OpVector res;
 
-		Entity planted1(context.newId());
+		LocatedEntity planted1(context.newId());
 		planted1.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {1, 1, 0};
 		planted1.requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
 		planted1.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-2, 0, -2},
@@ -291,7 +291,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		ASSERT_EQUAL(rootEntity.getIdAsInt(), *planted1.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 
-		Entity planted2(context.newId());
+		LocatedEntity planted2(context.newId());
 		planted2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 2, 1};
 		planted2.requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
 		planted2.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-2, 0, -2},
@@ -305,7 +305,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		ASSERT_EQUAL(planted1.getIdAsInt(), *planted2.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 		ASSERT_FUZZY_EQUAL(1.0f, planted2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), 0.1f);
 
-		Entity planted3(context.newId());
+		LocatedEntity planted3(context.newId());
 		planted3.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 4, 1};
 		planted3.requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
 		planted3.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-2, 0, -2},
@@ -319,7 +319,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		ASSERT_EQUAL(planted2.getIdAsInt(), *planted3.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 		ASSERT_FUZZY_EQUAL(2.0f, planted3.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), 0.1f);
 
-		Entity planted4(context.newId());
+		LocatedEntity planted4(context.newId());
 		planted4.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 6, 1};
 		planted4.requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
 		planted4.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-2, 0, -2},
@@ -408,7 +408,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		//Place a box, "planted". On top of that, place another box, also "planted". And on top of that, place a box which is "free".
 		//Then move the first box. The two boxes on top should move along with it.
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		rootEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
 		rootEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-64, 0,  -64},
@@ -425,7 +425,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		Property<double, LocatedEntity> massProp{};
 		massProp.data() = 10000;
 
-		Entity fixed1(context.newId());
+		LocatedEntity fixed1(context.newId());
 		fixed1.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 0, 0};
 		fixed1.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-2, -1, -2},
 																   {2,  1,  2}};
@@ -440,7 +440,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		ASSERT_EQUAL(0, fixed1.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y());
 
 
-		Entity planted1(context.newId());
+		LocatedEntity planted1(context.newId());
 		planted1.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {1, 1, 0};
 		planted1.requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
 		planted1.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-2, -1, -2},
@@ -451,7 +451,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->tick(0ms, res);
 
-		Entity planted2(context.newId());
+		LocatedEntity planted2(context.newId());
 		planted2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 2, 1};
 		planted2.requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
 		planted2.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-2, -1, -2},
@@ -464,7 +464,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		ASSERT_FUZZY_EQUAL(2.0f, planted2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data().y(), 0.1f);
 
-		Entity freeEntity(context.newId());
+		LocatedEntity freeEntity(context.newId());
 		freeEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {1, 4, 0};
 		freeEntity.requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
 		freeEntity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(freeProperty.copy()));
@@ -553,7 +553,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 			for (auto plantedOnTopShape: shapes) {
 
 				auto id = context.newId();
-				Entity rootEntity{id};
+				LocatedEntity rootEntity{id};
 				rootEntity.incRef();
 				TerrainProperty terrainProperty{};
 				rootEntity.setProperty("terrain", std::unique_ptr<PropertyBase>(terrainProperty.copy()));
@@ -568,7 +568,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 				TestPhysicalDomain domain{rootEntity};
 
 
-				Entity planted1(context.newId());
+				LocatedEntity planted1(context.newId());
 				planted1.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(0, 10, 0);
 				planted1.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, -1, -1},
 																			 {1,  1,  1}};
@@ -600,7 +600,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 				}
 
-				Entity planted2(context.newId());
+				LocatedEntity planted2(context.newId());
 				planted2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(0, 15, 0);
 				planted2.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = {{-1, -1, -1},
 																			 {1,  1,  1}};
@@ -632,7 +632,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 				}
 
 
-				Entity plantedOn(context.newId());
+				LocatedEntity plantedOn(context.newId());
 				plantedOn.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = {0, 15, 0};
 				{
 					ModeProperty modeProperty{};
@@ -675,7 +675,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 	void test_terrainMods(TestContext& context) {
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		TerrainProperty terrainProperty{};
 		rootEntity.setProperty("terrain", std::unique_ptr<PropertyBase>(terrainProperty.copy()));
@@ -691,7 +691,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		ModeProperty modePropertyBase{};
 		modePropertyBase.set("planted");
 
-		Entity terrainModEntity(context.newId());
+		LocatedEntity terrainModEntity(context.newId());
 		terrainModEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(32, 10, 32);
 		auto modeProperty = terrainModEntity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePropertyBase.copy()));
 		TerrainModProperty terrainModProperty{};
@@ -781,11 +781,11 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 
 	void test_lake_rotated(TestContext& context) {
-		struct TestEntity : public Entity {
-			explicit TestEntity(long intId) : Entity(intId) {
+		struct TestEntity : public LocatedEntity {
+			explicit TestEntity(long intId) : LocatedEntity(intId) {
 			}
 
-			explicit TestEntity(RouterId id) : Entity(id) {
+			explicit TestEntity(RouterId id) : LocatedEntity(id) {
 			}
 
 			decltype(LocatedEntity::propertyApplied)& test_propertyApplied() {
@@ -810,7 +810,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		modeFixedProperty.set("fixed");
 
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		rootEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
 		rootEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-64, 0, -64), WFMath::Point<3>(64, 64, 64));
@@ -827,7 +827,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->addEntity(lake);
 
 		//Should be in water
-		Entity freeEntity(RouterId(context.newId()));
+		LocatedEntity freeEntity(RouterId(context.newId()));
 		freeEntity.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity.setType(&rockType);
 		freeEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(-1, 1, 9);
@@ -835,7 +835,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->addEntity(freeEntity);
 
 		//Should not be in water
-		Entity freeEntity2(RouterId(context.newId()));
+		LocatedEntity freeEntity2(RouterId(context.newId()));
 		freeEntity2.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity2.setType(&rockType);
 		freeEntity2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(9, 1, 1);
@@ -846,7 +846,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		plantedProp.set("planted");
 		ModeDataProperty modeDataProp{};
 		modeDataProp.setPlantedData({lake.getIdAsInt()});
-		Entity floatingEntity(RouterId(context.newId()));
+		LocatedEntity floatingEntity(RouterId(context.newId()));
 		floatingEntity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(plantedProp.copy()));
 		floatingEntity.setProperty(ModeDataProperty::property_name, std::unique_ptr<PropertyBase>(modeDataProp.copy()));
 
@@ -866,11 +866,11 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 
 	void test_lake(TestContext& context) {
-		struct TestEntity : public Entity {
-			explicit TestEntity(long intId) : Entity(intId) {
+		struct TestEntity : public LocatedEntity {
+			explicit TestEntity(long intId) : LocatedEntity(intId) {
 			}
 
-			explicit TestEntity(RouterId id) : Entity(id) {
+			explicit TestEntity(RouterId id) : LocatedEntity(id) {
 			}
 
 			decltype(LocatedEntity::propertyApplied)& test_propertyApplied() {
@@ -898,7 +898,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		modeFixedProperty.set("fixed");
 
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		rootEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
 		rootEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-64, -64, -64), WFMath::Point<3>(64, 64, 64));
@@ -913,7 +913,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		lake.requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
 		domain->addEntity(lake);
 
-		Entity freeEntity(context.newId());
+		LocatedEntity freeEntity(context.newId());
 		freeEntity.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity.setType(&rockType);
 		freeEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(20, 2, 0);
@@ -921,7 +921,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->addEntity(freeEntity);
 
 		//The second entity is placed in water, and should be submerged from the start
-		Entity freeEntity2(context.newId());
+		LocatedEntity freeEntity2(context.newId());
 		freeEntity2.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity2.setType(&rockType);
 		freeEntity2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(20, -2, 2);
@@ -929,7 +929,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->addEntity(freeEntity2);
 
 		//The third entity is placed outside of the lake, and should never be submerged.
-		Entity freeEntity3(context.newId());
+		LocatedEntity freeEntity3(context.newId());
 		freeEntity3.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity3.setType(&rockType);
 		freeEntity3.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(-20, 2, 0);
@@ -1022,13 +1022,13 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		rockType.injectProperty("mode", std::unique_ptr<PropertyBase>(modeFreeProperty.copy()));
 
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		rootEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
 		rootEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-64, -64, -64), WFMath::Point<3>(64, 64, 64));
 		std::unique_ptr<TestPhysicalDomain> domain(new TestPhysicalDomain(rootEntity));
 
-		Entity ocean(context.newId());
+		LocatedEntity ocean(context.newId());
 		ocean.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modeFixedProperty.copy()));
 		ocean.setType(&oceanType);
 		ocean.setProperty("water_body", std::unique_ptr<PropertyBase>(waterBodyProp.copy()));
@@ -1036,7 +1036,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		ocean.requirePropertyClassFixed<OrientationProperty<LocatedEntity>>().data() = WFMath::Quaternion::IDENTITY();
 		domain->addEntity(ocean);
 
-		Entity freeEntity(context.newId());
+		LocatedEntity freeEntity(context.newId());
 		freeEntity.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity.setType(&rockType);
 		freeEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(0, 2, 0);
@@ -1044,7 +1044,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->addEntity(freeEntity);
 
 		//The second entity is placed in water, and should be submerged from the start
-		Entity freeEntity2(context.newId());
+		LocatedEntity freeEntity2(context.newId());
 		freeEntity2.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity2.setType(&rockType);
 		freeEntity2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(10, -10, 0);
@@ -1096,7 +1096,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		modeProperty.set("fixed");
 
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		rootEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
 		rootEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-64, -64, -64), WFMath::Point<3>(64, 64, 64));
@@ -1104,7 +1104,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		// btDiscreteDynamicsWorld* bulletWorld = domain->test_getBulletWorld();
 
-		auto verifyBboxes = [&](Entity& entity) {
+		auto verifyBboxes = [&](LocatedEntity& entity) {
 			btRigidBody* rigidBody = domain->test_getRigidBody(entity.getIdAsInt());
 			btVector3 aabbMin, aabbMax;
 			rigidBody->getAabb(aabbMin, aabbMax);
@@ -1142,7 +1142,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		};
 
 
-		auto performPlacementTests = [&](Entity& entity) {
+		auto performPlacementTests = [&](LocatedEntity& entity) {
 			verifyBboxes(entity);
 			std::set<LocatedEntity*> transformedEntities;
 
@@ -1168,7 +1168,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		//Start with a box centered at origo, with no orientation
 		{
-			Entity entity(context.newId());
+			LocatedEntity entity(context.newId());
 			entity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modeProperty.copy()));
 			entity.setType(&rockType);
 			entity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(10, -20, 1);
@@ -1181,7 +1181,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		//Start with a box centered at origo, with 45 degrees orientation
 		{
-			Entity entity(context.newId());
+			LocatedEntity entity(context.newId());
 			entity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modeProperty.copy()));
 			entity.setType(&rockType);
 			entity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(10, -20, 1);
@@ -1196,7 +1196,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		//A box not centered at origo, with no orientation
 		{
-			Entity entity(context.newId());
+			LocatedEntity entity(context.newId());
 			entity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modeProperty.copy()));
 			entity.setType(&rockType);
 			entity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(10, -20, 1);
@@ -1209,7 +1209,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		//A box not centered at origo, with 45 degrees orientation
 		{
-			Entity entity(context.newId());
+			LocatedEntity entity(context.newId());
 			entity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modeProperty.copy()));
 			entity.setType(&rockType);
 			entity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(10, -20, 1);
@@ -1228,7 +1228,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		std::chrono::milliseconds tickSize(1000 / 15);
 		std::chrono::milliseconds time(0);
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		rootEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
 		rootEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-64, -64, -64), WFMath::Point<3>(64, 64, 64));
@@ -1240,14 +1240,14 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		TypeNode<LocatedEntity> rockType("rock");
 
 
-		Entity freeEntity(context.newId());
+		LocatedEntity freeEntity(context.newId());
 		freeEntity.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity.setType(&rockType);
 		freeEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
 		freeEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-1, 0, -1), WFMath::Point<3>(1, 1, 1));
 		domain->addEntity(freeEntity);
 
-		Entity fixedEntity(context.newId());
+		LocatedEntity fixedEntity(context.newId());
 		fixedEntity.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 
 		ModeProperty modeProperty{};
@@ -1280,7 +1280,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		std::chrono::milliseconds tickSize(1000 / 15);
 		std::chrono::milliseconds time(0);
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		rootEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
 		rootEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-64, -64, -64), WFMath::Point<3>(64, 64, 64));
@@ -1292,14 +1292,14 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		TypeNode<LocatedEntity> rockType("rock");
 
 
-		Entity freeEntity(context.newId());
+		LocatedEntity freeEntity(context.newId());
 		freeEntity.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity.setType(&rockType);
 		freeEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(0, 1, 0);
 		freeEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-1, 0, -1), WFMath::Point<3>(1, 1, 1));
 		domain->addEntity(freeEntity);
 
-		Entity fixedEntity(context.newId());
+		LocatedEntity fixedEntity(context.newId());
 		fixedEntity.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 
 		ModeProperty modeProperty{};
@@ -1324,7 +1324,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		std::chrono::milliseconds tickSize(1000 / 15);
 		std::chrono::milliseconds time(0);
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		TerrainProperty terrainProperty{};
 		rootEntity.setProperty("terrain", std::unique_ptr<PropertyBase>(terrainProperty.copy()));
@@ -1343,14 +1343,14 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		TypeNode<LocatedEntity> rockType("rock");
 
 
-		Entity freeEntity(context.newId());
+		LocatedEntity freeEntity(context.newId());
 		freeEntity.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity.setType(&rockType);
 		freeEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(10, 20, 10);
 		freeEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-1, 0, -1), WFMath::Point<3>(1, 1, 1));
 		domain->addEntity(freeEntity);
 
-		Entity plantedEntity(context.newId());
+		LocatedEntity plantedEntity(context.newId());
 		plantedEntity.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 
 		ModeProperty modeProperty{};
@@ -1398,7 +1398,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		speedGroundProperty.data() = 5.0;
 
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		TerrainProperty terrainProperty{};
 		rootEntity.setProperty("terrain", std::unique_ptr<PropertyBase>(terrainProperty.copy()));
@@ -1426,7 +1426,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		angularZeroFactorProperty.data() = WFMath::Vector<3>::ZERO();
 
 
-		Entity freeEntity(context.newId());
+		LocatedEntity freeEntity(context.newId());
 		freeEntity.setProperty(PropelProperty::property_name, std::unique_ptr<PropertyBase>(propelProperty.copy()));
 		freeEntity.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity.setProperty("friction", std::unique_ptr<PropertyBase>(zeroFrictionProperty.copy()));
@@ -1438,7 +1438,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->addEntity(freeEntity);
 
-		Entity plantedEntity(context.newId());
+		LocatedEntity plantedEntity(context.newId());
 		plantedEntity.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 
 		ModeProperty modeProperty{};
@@ -1494,7 +1494,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		modeFreeProperty.set("");
 		TypeNode<LocatedEntity> rockType("rock");
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		TerrainProperty terrainProperty{};
 		rootEntity.setProperty("terrain", std::unique_ptr<PropertyBase>(terrainProperty.copy()));
@@ -1510,7 +1510,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		Property<double, LocatedEntity> massProp{};
 		massProp.data() = 100;
 
-		Entity freeEntity1(RouterId(context.newId()));
+		LocatedEntity freeEntity1(RouterId(context.newId()));
 		freeEntity1.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity1.setType(&rockType);
 		freeEntity1.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(10, 30, 10);
@@ -1520,7 +1520,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		ASSERT_EQUAL(freeEntity1.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data(), WFMath::Point<3>(10, 30, 10));
 
 		//The other free entity is placed below the terrain; it's expected to then be clamped to the terrain
-		Entity freeEntity2(context.newId());
+		LocatedEntity freeEntity2(context.newId());
 		freeEntity2.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		freeEntity2.setType(&rockType);
 		freeEntity2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(20, -10, 20);
@@ -1528,7 +1528,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->addEntity(freeEntity2);
 		ASSERT_FUZZY_EQUAL(freeEntity2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data(), WFMath::Point<3>(20, 22.6006, 20), epsilon);
 
-		Entity plantedEntity(context.newId());
+		LocatedEntity plantedEntity(context.newId());
 		plantedEntity.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		plantedEntity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 		plantedEntity.setType(&rockType);
@@ -1538,7 +1538,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		ASSERT_FUZZY_EQUAL(plantedEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data(), WFMath::Point<3>(30, 18.4325, 30), epsilon);
 
 
-		Entity fixedEntity(context.newId());
+		LocatedEntity fixedEntity(context.newId());
 		fixedEntity.setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 		fixedEntity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modeFixedProperty.copy()));
 		fixedEntity.setType(&rockType);
@@ -1570,7 +1570,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		TypeNode<LocatedEntity> rockType("rock");
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		TerrainProperty terrainProperty{};
 		rootEntity.setProperty("terrain", std::unique_ptr<PropertyBase>(terrainProperty.copy()));
@@ -1586,11 +1586,11 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		Property<double, LocatedEntity> massProp{};
 		massProp.data() = 100;
 
-		std::vector<Ref<Entity>> entities;
+		std::vector<Ref<LocatedEntity>> entities;
 
 		for (size_t i = 0; i < 10; ++i) {
 			for (size_t j = 0; j < 10; ++j) {
-				Ref<Entity> freeEntity(new Entity(context.newId()));
+				Ref<LocatedEntity> freeEntity(new LocatedEntity(context.newId()));
 				freeEntity->setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 				freeEntity->setType(&rockType);
 				freeEntity->requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(i, j, i + j);
@@ -1630,7 +1630,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		Property<double, LocatedEntity> plantedOffsetBase{};
 		plantedOffsetBase.data() = -2;
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		TerrainProperty terrainProperty{};
 		rootEntity.setProperty("terrain", std::unique_ptr<PropertyBase>(terrainProperty.copy()));
@@ -1646,7 +1646,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		TestWorld testWorld(&rootEntity);
 
 
-		Entity plantedEntity(RouterId(context.newId()));
+		LocatedEntity plantedEntity(RouterId(context.newId()));
 		plantedEntity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 		plantedEntity.setType(&rockType);
 		plantedEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(30, 10, 30);
@@ -1671,7 +1671,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		Property<double, LocatedEntity> plantedScaledOffsetBase{};
 		plantedScaledOffsetBase.data() = -0.2;
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		TerrainProperty terrainProperty{};
 		rootEntity.setProperty("terrain", std::unique_ptr<PropertyBase>(terrainProperty.copy()));
@@ -1687,7 +1687,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		TestWorld testWorld(&rootEntity);
 
 
-		Entity plantedEntity(RouterId(context.newId()));
+		LocatedEntity plantedEntity(RouterId(context.newId()));
 		plantedEntity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 		plantedEntity.setType(&rockType);
 		plantedEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(30, 10, 30);
@@ -1714,7 +1714,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		visibilityProperty.set(1000.f);
 
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		rootEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
 		rootEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-64, 0, -64), WFMath::Point<3>(64, 64, 64));
@@ -1722,14 +1722,14 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		TestWorld testWorld(&rootEntity);
 
-		Entity smallEntity1(RouterId(context.newId()));
+		LocatedEntity smallEntity1(RouterId(context.newId()));
 		smallEntity1.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 		smallEntity1.setType(&rockType);
 		smallEntity1.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(30, 0, 30);
 		smallEntity1.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-0.2f, 0, -0.2f), WFMath::Point<3>(0.2, 0.4, 0.2));
 		domain->addEntity(smallEntity1);
 
-		Entity smallEntity2(RouterId(context.newId()));
+		LocatedEntity smallEntity2(RouterId(context.newId()));
 		smallEntity2.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 		smallEntity2.setType(&rockType);
 		smallEntity2.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(-31, 0, -31);
@@ -1737,7 +1737,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->addEntity(smallEntity2);
 
 		//This entity should always be seen, as "visibility" is specified.
-		Entity smallVisibleEntity(RouterId(context.newId()));
+		LocatedEntity smallVisibleEntity(RouterId(context.newId()));
 		smallVisibleEntity.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 		smallVisibleEntity.setType(&rockType);
 		smallVisibleEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(-63, 0, -63);
@@ -1745,14 +1745,14 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		smallVisibleEntity.setProperty(VisibilityDistanceProperty::property_name, std::unique_ptr<PropertyBase>(visibilityProperty.copy()));
 		domain->addEntity(smallVisibleEntity);
 
-		Entity largeEntity1(RouterId(context.newId()));
+		LocatedEntity largeEntity1(RouterId(context.newId()));
 		largeEntity1.setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 		largeEntity1.setType(&rockType);
 		largeEntity1.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(0, 0, 0);
 		largeEntity1.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-10.f, 0, -10.f), WFMath::Point<3>(10, 20, 10));
 		domain->addEntity(largeEntity1);
 
-		Entity observerEntity(RouterId(context.newId()));
+		LocatedEntity observerEntity(RouterId(context.newId()));
 		observerEntity.setType(&humanType);
 		observerEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>(-30, 0, -30);
 		observerEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-0.2f, 0, -0.2f), WFMath::Point<3>(0.2, 2, 0.2));
@@ -1828,7 +1828,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		humanType.injectProperty("speed_ground", std::unique_ptr<PropertyBase>(speedGroundProperty.copy()));
 
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		rootEntity.requirePropertyClassFixed<PositionProperty<LocatedEntity>>().data() = WFMath::Point<3>::ZERO();
 		rootEntity.requirePropertyClassFixed<BBoxProperty<LocatedEntity>>().data() = WFMath::AxisBox<3>(WFMath::Point<3>(-64, 0, -64), WFMath::Point<3>(64, 64, 64));
@@ -1837,10 +1837,10 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		TestWorld testWorld(&rootEntity);
 
 
-		std::vector<Ref<Entity>> stepElements;
+		std::vector<Ref<LocatedEntity>> stepElements;
 		//Create 10 entities at increasing height, forming a stair.
 		for (int i = 0; i < 10; ++i) {
-			Ref<Entity> stepElement(new Entity(context.newId()));
+			Ref<LocatedEntity> stepElement(new LocatedEntity(context.newId()));
 			stepElement->setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 			float height = 0.1f + (i * 0.1f);
 			float zPos = i * 0.2f;
@@ -1857,7 +1857,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		//First with an entity which doesn't step; it should collide and be kept in place
 		{
-			Ref<Entity> human = new Entity(RouterId{context.newId()});
+			Ref<LocatedEntity> human = new LocatedEntity(RouterId{context.newId()});
 			human->setProperty(AngularFactorProperty::property_name, std::unique_ptr<PropertyBase>(angularZeroFactorProperty.copy()));
 			human->setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
 			human->setProperty(PropelProperty::property_name, std::unique_ptr<PropertyBase>(propelProperty.copy()));
@@ -1876,7 +1876,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		//Then with an entity with a capsule geometry, it should step
 		{
-			Ref<Entity> human = new Entity(RouterId{context.newId()});
+			Ref<LocatedEntity> human = new LocatedEntity(RouterId{context.newId()});
 			//human->setProperty("step_factor", stepFactorProp));
 			human->setProperty(AngularFactorProperty::property_name, std::unique_ptr<PropertyBase>(angularZeroFactorProperty.copy()));
 			human->setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
@@ -1898,7 +1898,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		//The human entity shouldn't step up on the tilted entity
 		{
 
-			Ref<Entity> stepElement = new Entity(RouterId{context.newId()});
+			Ref<LocatedEntity> stepElement = new LocatedEntity(RouterId{context.newId()});
 			stepElement->setProperty(ModeProperty::property_name, std::unique_ptr<PropertyBase>(modePlantedProperty.copy()));
 			WFMath::Point<3> pos(20, 0, 0);
 			WFMath::AxisBox<3> bbox(WFMath::Point<3>(-0.4f, 0.f, 0), WFMath::Point<3>(0.4f, 1, 0.4f));
@@ -1910,7 +1910,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 			domain->addEntity(*stepElement);
 
-			Ref<Entity> human = new Entity(RouterId{context.newId()});
+			Ref<LocatedEntity> human = new LocatedEntity(RouterId{context.newId()});
 			//human->setProperty("step_factor", stepFactorProp));
 			human->setProperty(AngularFactorProperty::property_name, std::unique_ptr<PropertyBase>(angularZeroFactorProperty.copy()));
 			human->setProperty("mass", std::unique_ptr<PropertyBase>(massProp.copy()));
@@ -1933,7 +1933,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 	void test_terrainPrecision(TestContext& context) {
 
-		Entity rootEntity(context.newId());
+		LocatedEntity rootEntity(context.newId());
 		rootEntity.incRef();
 		TerrainProperty terrainProperty{};
 		rootEntity.setProperty("terrain", std::unique_ptr<PropertyBase>(terrainProperty.copy()));

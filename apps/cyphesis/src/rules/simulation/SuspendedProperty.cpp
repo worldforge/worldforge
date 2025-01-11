@@ -20,10 +20,9 @@
 #include "common/Property_impl.h"
 #include "rules/simulation/BaseWorld.h"
 #include "common/custom.h"
-#include "Entity.h"
+#include "LocatedEntity.h"
 
 #include <Atlas/Objects/SmartPtr.h>
-#include <Atlas/Objects/RootEntity.h>
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;

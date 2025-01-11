@@ -18,7 +18,11 @@
 
 using Atlas::Filters::Gzip;
 
-const int DEFAULT_LEVEL = 6;
+constexpr auto DEFAULT_LEVEL = 6;
+
+Gzip::Gzip(): incoming{}, outgoing{}, buf{}
+{
+}
 
 void Gzip::begin() {
 	incoming.next_in = Z_NULL;
@@ -53,7 +57,7 @@ std::string Gzip::encode(const std::string& data) {
 	outgoing.avail_in = (uInt) data.size();
 
 	do {
-		outgoing.next_out = buf;
+		outgoing.next_out = buf.data();
 		outgoing.avail_out = sizeof(buf);
 
 		status = deflate(&outgoing, Z_SYNC_FLUSH);
@@ -61,7 +65,7 @@ std::string Gzip::encode(const std::string& data) {
 		ASSERT(status == Z_OK);
 
 		if (status >= 0) {
-			out_string.append((char*) buf, sizeof(buf) - outgoing.avail_out);
+			out_string.append((char*) buf.data(), sizeof(buf) - outgoing.avail_out);
 		}
 	} while (outgoing.avail_out == 0);
 
@@ -82,7 +86,7 @@ std::string Gzip::decode(const std::string& data) {
 	incoming.avail_in = (uInt) data.size();
 
 	do {
-		incoming.next_out = buf;
+		incoming.next_out = buf.data();
 		incoming.avail_out = sizeof(buf);
 
 		int status = inflate(&incoming, Z_SYNC_FLUSH);
@@ -90,7 +94,7 @@ std::string Gzip::decode(const std::string& data) {
 		ASSERT(status == Z_OK);
 
 		if (status >= 0) {
-			out_string.append((char*) buf, sizeof(buf) - incoming.avail_out);
+			out_string.append((char*) buf.data(), sizeof(buf) - incoming.avail_out);
 		}
 	} while (incoming.avail_out == 0);
 

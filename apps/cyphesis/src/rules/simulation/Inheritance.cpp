@@ -20,12 +20,9 @@
 
 #include "common/log.h"
 #include "common/TypeNode_impl.h"
-#include "common/AtlasFactories.h"
 #include "common/custom_impl.h"
 
 #include <Atlas/Objects/Entity.h>
-#include <Atlas/Objects/RootOperation.h>
-#include <Atlas/Objects/Operation.h>
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -78,8 +75,8 @@ void Inheritance::flush() {
 	atlasObjects.clear();
 }
 
-const Root& Inheritance::getClass(const std::string& parent, Visibility visibility) const {
-	auto I = atlasObjects.find(parent);
+const Root& Inheritance::getClass(const std::string& typeName, Visibility visibility) const {
+	auto I = atlasObjects.find(typeName);
 	if (I == atlasObjects.end()) {
 		return noClass;
 	}
@@ -100,8 +97,8 @@ int Inheritance::updateClass(const std::string& parent,
 	return 0;
 }
 
-const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& parent) const {
-	auto I = atlasObjects.find(parent);
+const TypeNode<LocatedEntity>* Inheritance::getType(const std::string& typeName) const {
+	auto I = atlasObjects.find(typeName);
 	if (I == atlasObjects.end()) {
 		return nullptr;
 	}

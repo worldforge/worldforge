@@ -22,7 +22,7 @@
 
 #include "TerrainProperty.h"
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;

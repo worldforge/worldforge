@@ -16,8 +16,6 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#endif
 
 #include "rules/simulation/LocatedEntity.h"
 #include "common/operations/Update.h"
@@ -26,7 +24,7 @@
 #include "ModeDataProperty.h"
 
 VoidDomain::VoidDomain(LocatedEntity& entity)
-		: Domain(entity) {
+	: Domain(entity) {
 }
 
 bool VoidDomain::isEntityVisibleFor(const LocatedEntity& observingEntity, const LocatedEntity& observedEntity) const {
@@ -60,11 +58,11 @@ void VoidDomain::removeEntity(LocatedEntity& entity) {
 
 }
 
-bool VoidDomain::isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const {
+bool VoidDomain::isEntityReachable(const LocatedEntity& reachingEntity, double, const LocatedEntity&, const WFMath::Point<3>&) const {
+	//Inside the void we can only reach ourselves (if even that).
 	return &reachingEntity == &m_entity;
 }
 
 std::optional<std::function<void()>> VoidDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
 	return {};
 }
-

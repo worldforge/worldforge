@@ -26,7 +26,7 @@
 #include "../TestBase.h"
 #include "../TestWorld.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/Property_impl.h"
 #include "common/PropertyManager.h"
@@ -38,13 +38,14 @@
 #include <server/EntityBuilder.h>
 #include <server/ArchetypeFactory.h>
 #include <server/EntityFactory_impl.h>
-#include <rules/simulation/World.h>
 #include <rules/simulation/Inheritance.h>
 
 
 #include <Atlas/Objects/Decoder.h>
 #include <Atlas/Codecs/XML.h>
 #include <common/Monitors.h>
+#include <rules/simulation/LocatedEntity.h>
+
 #include "rules/simulation/AtlasProperties.h"
 #include <server/ArchetypeRuleHandler.h>
 #include <server/EntityRuleHandler.h>
@@ -54,7 +55,7 @@ using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 
 template
-class EntityFactory<Entity>;
+class EntityFactory<LocatedEntity>;
 
 #include "server/EntityFactory_impl.h"
 #include "../DatabaseNull.h"
@@ -105,7 +106,7 @@ struct Tested : public Cyphesis::TestBase {
 
 	struct TestContext {
 		DatabaseNull database;
-		Ref<World> world;
+		Ref<LocatedEntity> world;
 		Inheritance inheritance;
 		TestWorld testWorld;
 
@@ -116,15 +117,15 @@ struct Tested : public Cyphesis::TestBase {
 
 
 		TestContext() :
-				world(new World()),
+				world(new LocatedEntity(0)),
 				inheritance(),
 				testWorld(world),
 				eb(),
 				entityRuleHandler(eb, propertyManager),
 				archetypeRuleHandler(eb, propertyManager) {
-			eb.installBaseFactory("thing", "game_entity", std::make_unique<EntityFactory<Thing>>());
+			eb.installBaseFactory("thing", "game_entity", std::make_unique<EntityFactory<LocatedEntity>>());
 			// Set up a type description for a new type, and install it
-			auto type1Factory = std::make_unique<EntityFactory<Entity>>();
+			auto type1Factory = std::make_unique<EntityFactory<LocatedEntity>>();
 			auto thing1 = R"("
 <atlas>
     <map>

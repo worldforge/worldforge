@@ -26,7 +26,7 @@
 #include "rules/simulation/EntityProperty.h"
 
 #include "rules/simulation/Task.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/RootOperation.h>
@@ -63,7 +63,7 @@ int main() {
 
 	{
 		// Check that setting the value to a pointer works
-		Entity ent(1);
+		LocatedEntity ent(1);
 
 		PropertyBase* pb = new EntityProperty;
 		pb->set(Atlas::Message::Element(&ent));
@@ -72,7 +72,7 @@ int main() {
 
 	{
 		// Check that setting the value to a pointer works can get retrieved
-		Entity ent(1);
+		LocatedEntity ent(1);
 		Element val;
 
 		PropertyBase* pb = new EntityProperty;
@@ -147,7 +147,7 @@ int main() {
 
 	{
 		// Check that adding the value to a message works.
-		Entity ent(1);
+		LocatedEntity ent(1);
 		MapType map;
 		static const std::string key = "foo";
 
@@ -168,7 +168,7 @@ int main() {
 
 	{
 		// Check that adding the value to an argument works.
-		Entity ent(1);
+		LocatedEntity ent(1);
 		Anonymous arg;
 		static const std::string key = "foo";
 		Element val;
@@ -190,7 +190,7 @@ int main() {
 
 	{
 		// Check that adding the value to an argument as a hard attribute works
-		Entity ent(1);
+		LocatedEntity ent(1);
 		Anonymous arg;
 		static const std::string key = "id";
 		Element val;

@@ -20,7 +20,6 @@
 #define CYPHESIS_CONTAINERSACTIVEPROPERTY_H
 
 #include "PropertyBase.h"
-#include "rules/simulation/LocatedEntity.h"
 #include <set>
 
 /**

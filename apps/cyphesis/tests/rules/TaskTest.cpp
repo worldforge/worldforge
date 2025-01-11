@@ -27,7 +27,7 @@
 
 #include "rules/simulation/Task.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 #include "rules/Script.h"
 
 #include <Atlas/Objects/Generic.h>
@@ -104,7 +104,7 @@ Tasktest::Tasktest() {
 void Tasktest::setup() {
 	Script_operation_called = false;
 
-	chr = new Entity(3);
+	chr = new LocatedEntity(3);
 	usageInstance = UsageInstance{};
 	usageInstance.actor = chr;
 	script = Py::Dict();

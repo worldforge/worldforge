@@ -25,12 +25,6 @@
 /// The manual page is generated from docbook sources, so can
 /// also be converted into other formats.
 
-#ifdef HAVE_CONFIG_H
-
-#include "config.h"
-
-#endif
-
 #include "common/log.h"
 #include "common/globals.h"
 #include "common/system.h"

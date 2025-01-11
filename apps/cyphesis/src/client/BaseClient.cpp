@@ -41,7 +41,7 @@ using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::smart_dynamic_cast;
 
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 BaseClient::BaseClient(CommSocket& commSocket)
 		: Link(commSocket, RouterId{0}), m_serialNo(0) {

@@ -18,7 +18,7 @@
 
 #include "EntityFactory_impl.h"
 
-#include "rules/simulation/World.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/TypeNode_impl.h"
 
@@ -30,7 +30,7 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 EntityFactoryBase::EntityFactoryBase()
 		: m_parent(nullptr) {
@@ -40,14 +40,8 @@ EntityFactoryBase::EntityFactoryBase()
 EntityFactoryBase::~EntityFactoryBase() = default;
 
 
-template<>
-Ref<Entity> EntityFactory<World>::newEntity(RouterId id,
-											const Atlas::Objects::Entity::RootEntity& attributes) {
-	return nullptr;
-}
-
-void EntityFactoryBase::initializeEntity(Entity& thing,
-										 const Atlas::Objects::Entity::RootEntity& attributes) {
+void EntityFactoryBase::initializeEntity(LocatedEntity& thing,
+										 const Atlas::Objects::Entity::RootEntity& attributes) const {
 	thing.setType(m_type);
 
 	//Only apply attributes if the supplied attributes is valid.
@@ -104,10 +98,7 @@ void EntityFactoryBase::updateProperties(std::map<const TypeNode<LocatedEntity>*
 }
 
 template
-class EntityFactory<Thing>;
-
-template
-class EntityFactory<World>;
+class EntityFactory<LocatedEntity>;
 
 void ClassAttribute::combine(Atlas::Message::Element& existing) const {
 	if (!defaultValue.isNone()) {

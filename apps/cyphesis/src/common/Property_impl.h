@@ -109,7 +109,7 @@ void Property<T, EntityT>::add(const std::string& s,
 
 template<typename T, typename EntityT>
 Property<T, EntityT>* Property<T, EntityT>::copy() const {
-	return new Property<T, EntityT>(*this);
+	return new Property(*this);
 }
 
 
@@ -164,7 +164,7 @@ void BoolProperty<EntityT>::set(const Atlas::Message::Element& ent) {
 
 template<typename EntityT>
 BoolProperty<EntityT>* BoolProperty<EntityT>::copy() const {
-	return new BoolProperty<EntityT>(*this);
+	return new BoolProperty(*this);
 }
 
 template<typename EntityT>

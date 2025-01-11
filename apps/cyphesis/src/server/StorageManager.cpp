@@ -46,7 +46,7 @@ using Atlas::Message::MapType;
 using Atlas::Message::Element;
 
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 StorageManager::StorageManager(WorldRouter& world,
 							   Database& db,

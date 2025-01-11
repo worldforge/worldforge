@@ -46,7 +46,7 @@ using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::Entity::RootEntity;
 
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 /// \brief Admin constructor
 Admin::Admin(Connection* conn,

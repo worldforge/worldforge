@@ -19,15 +19,13 @@
 
 #include "ArchetypeFactory.h"
 
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include "common/debug.h"
 #include "rules/simulation/Inheritance.h"
 #include "common/Monitors.h"
 #include "common/Variable.h"
 #include "common/type_utils.h"
-
-#include <Atlas/Objects/RootOperation.h>
 
 #include <utility>
 
@@ -37,7 +35,7 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 EntityBuilder::EntityBuilder() {
 	installBaseFactory("archetype", "root_entity", std::make_unique<ArchetypeFactory>(*this));
@@ -56,7 +54,7 @@ EntityBuilder::~EntityBuilder() = default;
 /// @param intId The integer identifier of the new entity.
 /// @param type The string specifying the type of entity.
 /// @param attributes A mapping of attribute values to set on the entity.
-Ref<Entity> EntityBuilder::newEntity(RouterId id, const std::string& type, const RootEntity& attributes) const {
+Ref<LocatedEntity> EntityBuilder::newEntity(RouterId id, const std::string& type, const RootEntity& attributes) const {
 	try {
 		return newChildEntity(id, type, attributes);
 	} catch (const std::exception& ex) {
@@ -66,7 +64,7 @@ Ref<Entity> EntityBuilder::newEntity(RouterId id, const std::string& type, const
 	}
 }
 
-Ref<Entity> EntityBuilder::newChildEntity(RouterId id,
+Ref<LocatedEntity> EntityBuilder::newChildEntity(RouterId id,
 										  const std::string& type,
 										  const Atlas::Objects::Entity::RootEntity& attributes) const {
 	cy_debug_print("EntityFactor::newEntity()")

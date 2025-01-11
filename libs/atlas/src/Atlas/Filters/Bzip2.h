@@ -9,12 +9,10 @@
 
 #include <Atlas/Filter.h>
 
-// my version of bzlib.h does not have extern "C" in the header file,
-// like it should
-// dmitryd 05/08/200
 extern "C" {
 #include <bzlib.h>
 }
+#include <array>
 
 
 namespace Atlas::Filters {
@@ -22,9 +20,11 @@ namespace Atlas::Filters {
 class Bzip2 : public Filter {
 	bz_stream incoming;
 	bz_stream outgoing;
-	char buf[4096];
+	std::array<char, 4096> buf;
 
 public:
+
+	Bzip2();
 
 	void begin() override;
 

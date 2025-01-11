@@ -36,6 +36,7 @@
 #include "../TestPropertyManager.h"
 
 #include <cassert>
+#include <common/Monitors.h>
 
 template
 class TypeNode<LocatedEntity>;
@@ -44,6 +45,8 @@ using Atlas::Message::Element;
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 
+
+Monitors m;
 class LocatedEntitytest : public Cyphesis::TestBase {
 private:
 	Ref<LocatedEntity> m_entity;

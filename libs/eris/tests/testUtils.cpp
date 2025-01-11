@@ -1,7 +1,3 @@
-#ifdef HAVE_CONFIG_H
-    #include "config.h"
-#endif
-
 #include <Atlas/Message/Element.h>
 #include "testUtils.h"
 #include <Eris/Connection.h>

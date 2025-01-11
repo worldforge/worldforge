@@ -25,8 +25,6 @@
 /// manual page. The manual page is generated from docbook sources, so can
 /// also be converted into other formats.
 
-#ifdef HAVE_CONFIG_H
-#endif
 
 #include "common/Storage.h"
 #include "common/globals.h"

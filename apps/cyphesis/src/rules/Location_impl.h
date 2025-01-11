@@ -32,7 +32,7 @@ using Atlas::Message::Element;
 using Atlas::Message::MapType;
 using Atlas::Objects::Entity::Anonymous;
 
-static const bool debug_flag = false;
+static constexpr auto debug_flag = false;
 
 template<typename EntityT>
 Location<EntityT>::Location() :

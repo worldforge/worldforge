@@ -33,7 +33,7 @@
 #include "../TestPropertyManager.h"
 
 #include "pythonbase/Python_API.h"
-#include "rules/simulation/Entity.h"
+#include "rules/simulation/LocatedEntity.h"
 
 #include <cassert>
 #include <rules/simulation/Inheritance.h>
@@ -41,7 +41,7 @@
 #include <rules/simulation/python/CyPy_LocatedEntity_impl.h>
 #include <rules/simulation/python/CyPy_UsageInstance.h>
 #include <rules/simulation/python/CyPy_Server.h>
-#include <rules/simulation/python/CyPy_Entity.h>
+#include <rules/simulation/python/CyPy_LocatedEntity.h>
 #include <Atlas/Objects/Operation.h>
 #include <rules/python/CyPy_Atlas.h>
 #include <rules/python/CyPy_Physics.h>
@@ -71,7 +71,7 @@ int main() {
 		run_python_string("from atlas import Oplist");
 
 		UsageInstance usageInstance;
-		usageInstance.actor = new Entity(100);
+		usageInstance.actor = new LocatedEntity(100);
 		usageInstance.op = Atlas::Objects::Operation::Action();
 
 		Py::Module serverModule("server");
@@ -79,32 +79,32 @@ int main() {
 
 		//Check that reference handling is correct.
 		{
-			Ref<Entity> entity = new Entity(2);
+			Ref<LocatedEntity> entity = new LocatedEntity(2);
 			assert(entity->checkRef() == 1);
 			{
 				auto wrap1 = CyPy_LocatedEntity::wrap(entity);
-				assert(CyPy_Entity::check(wrap1));
+				assert(CyPy_LocatedEntity::check(wrap1));
 				assert(entity->checkRef() == 2);
 				{
 					//Since the Python object is cached another call to "wrap" should _not_ increase the count,
 					// since no new Python object is creatd.
 					auto wrap2 = CyPy_LocatedEntity::wrap(entity);
 					assert(entity->checkRef() == 2);
-					assert(CyPy_Entity::check(wrap2));
+					assert(CyPy_LocatedEntity::check(wrap2));
 				}
 				assert(entity->checkRef() == 2);
 			}
 			assert(entity->checkRef() == 1);
 		}
 
-		Ref<Entity> e = new Entity(1);
+		Ref<LocatedEntity> e = new LocatedEntity(1);
 
 		{
 			auto prop = std::make_unique<SoftProperty<LocatedEntity>>();
 			prop->set("bar");
 			e->setProperty("foo", std::move(prop));
 		}
-		Ref<Entity> wrld = new Entity(0);
+		Ref<LocatedEntity> wrld = new LocatedEntity(0);
 		e->m_parent = wrld.get();
 		e->m_parent->makeContainer();
 		assert(e->m_parent->m_contains != nullptr);
@@ -117,7 +117,7 @@ int main() {
 		assert(CyPy_LocatedEntity::check(wrap_e_again));
 		assert(wrap_e == wrap_e_again);
 
-		Ref<Entity> c = new Entity(2);
+		Ref<LocatedEntity> c = new LocatedEntity(2);
 		auto wrap_c = CyPy_LocatedEntity::wrap(c);
 		assert(CyPy_LocatedEntity::check(wrap_c));
 

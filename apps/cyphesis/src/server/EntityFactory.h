@@ -76,8 +76,8 @@ struct ClassAttribute {
 class EntityFactoryBase : public EntityKit {
 protected:
 
-	void initializeEntity(Entity& thing,
-						  const Atlas::Objects::Entity::RootEntity& attributes);
+	void initializeEntity(LocatedEntity& thing,
+						  const Atlas::Objects::Entity::RootEntity& attributes) const;
 
 public:
 
@@ -109,7 +109,7 @@ public:
 template<class T>
 class EntityFactory : public EntityFactoryBase {
 protected:
-	EntityFactory(EntityFactory<T>& o);
+	EntityFactory(EntityFactory& o);
 
 public:
 
@@ -117,7 +117,7 @@ public:
 
 	~EntityFactory() override;
 
-	Ref<Entity> newEntity(RouterId id,
+	Ref<LocatedEntity> newEntity(RouterId id,
 						  const Atlas::Objects::Entity::RootEntity& attributes) override;
 
 	std::unique_ptr<EntityFactoryBase> duplicateFactory() override;

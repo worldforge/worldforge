@@ -19,7 +19,6 @@
 
 #include "rules/simulation/LocatedEntity.h"
 
-#include "common/debug.h"
 #include <Atlas/Objects/RootEntity.h>
 
 #include <wfmath/atlasconv.h>
@@ -28,8 +27,6 @@ using Atlas::Message::Element;
 using Atlas::Message::MapType;
 using Atlas::Objects::Entity::RootEntity;
 
-
-static const bool debug_flag = false;
 
 int AngularFactorProperty::get(Element& val) const {
 	if (m_data.isValid()) {

@@ -16,9 +16,6 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#endif
-
 #include "AwareMindFactory.h"
 #include "AwareMind.h"
 

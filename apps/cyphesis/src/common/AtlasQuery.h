@@ -39,7 +39,7 @@ public:
 };
 
 template<typename T>
-inline void AtlasQuery::find(const Atlas::Message::Element& element, const std::string& name, const std::function<void(const T&)>& callback) {
+ void AtlasQuery::find(const Atlas::Message::Element& element, const std::string& name, const std::function<void(const T&)>& callback) {
 	if (element.isMap()) {
 		find(element.Map(), name, callback);
 	}
