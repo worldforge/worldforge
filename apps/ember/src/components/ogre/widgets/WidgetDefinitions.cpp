@@ -108,7 +108,7 @@ void WidgetDefinitions::registerWidgets(GUIManager& guiManager) {
 void WidgetDefinitions::registerPluginWithName(GUIManager& guiManager, const std::string& pluginName) {
 	auto pluginDirPath = ConfigService::getSingleton().getPluginDirectory();
 
-	auto pluginPath = pluginDirPath / (std::string(PLUGIN_PREFIX) + pluginName + std::string(PLUGIN_SUFFIX));
+	auto pluginPath = pluginDirPath / (pluginName + std::string(PLUGIN_SUFFIX));
 
 	registerPlugin(guiManager, pluginPath);
 }

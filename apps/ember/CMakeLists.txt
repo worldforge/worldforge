@@ -32,6 +32,9 @@ macro(wf_add_plugin _LIB_NAME _SOURCE_FILES)
     install(TARGETS ${_LIB_NAME}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/ember/widgets
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/ember/widgets)
+    set_target_properties(${_LIB_NAME} PROPERTIES
+            PREFIX ""  # Remove "lib" prefix on Unix
+    )
 
     if (WIN32)
         #We need to tell msvc to ignore any problems with resolving symbols since they will be resolved when the plugin is loaded.
@@ -44,7 +47,10 @@ macro(wf_add_plugin _LIB_NAME _SOURCE_FILES)
     message(STATUS "Registered widget plugin ${_LIB_NAME}")
 
 
-    target_link_libraries(${_LIB_NAME} ember-shared)
+    target_link_libraries(${_LIB_NAME} PRIVATE ember-shared)
+    target_compile_definitions(${_LIB_NAME} PRIVATE
+        OGRE_STATIC_LIB=0
+    )
 endmacro()
 
 if (WIN32)

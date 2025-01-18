@@ -173,4 +173,4 @@ if (MSVC)
     target_compile_options(ember-BindingsRepresentations PRIVATE "/bigobj")
 endif ()
 
-target_compile_definitions(ember-widgets PUBLIC PLUGIN_SUFFIX="${CMAKE_SHARED_LIBRARY_SUFFIX}" PLUGIN_PREFIX="${CMAKE_SHARED_LIBRARY_PREFIX}")
+target_compile_definitions(ember-widgets PUBLIC PLUGIN_SUFFIX="${CMAKE_SHARED_LIBRARY_SUFFIX}")
