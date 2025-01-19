@@ -23,6 +23,7 @@
 
 // Author: Ron Steinke
 
+#include "float.h"
 #include <cmath>
 
 
