@@ -39,6 +39,8 @@
 #include "IngameChatWidget.h"
 #include "EntityCreatorWidget.h"
 #include "AssetsSyncWidget.h"
+#else
+#include "framework/MainLoopController.h"
 
 #endif
 
@@ -66,30 +68,32 @@ void WidgetDefinitions::registerWidgets(GUIManager& guiManager) {
 	mPlugins.emplace("AssetsSyncWidget", PluginEntry{AssetsSyncWidget::registerWidget(guiManager)});
 #else
 	auto pluginDirPath = ConfigService::getSingleton().getPluginDirectory();
-	Ember::FileSystemObserver::getSingleton().add_directory(pluginDirPath, [&](const Ember::FileSystemObserver::FileSystemEvent& event) {
-		if (event.ev.type == boost::asio::dir_monitor_event::added || event.ev.type == boost::asio::dir_monitor_event::modified) {
-			auto I = mPlugins.find(event.ev.path);
-			if (I != mPlugins.end()) {
-				//Mark the path and wait two seconds for file system to settle down.
-				mDirtyPluginPaths.emplace(event.ev.path);
-				MainLoopController::getSingleton().getEventService().runOnMainThreadDelayed([&]() {
-					for (auto& path: mDirtyPluginPaths) {
-						auto J = mPlugins.find(path);
-						if (J != mPlugins.end()) {
-							logger->info("Reloading plugin {}''.", path.string());
-							//First remove the existing plugin.
-							mPlugins.erase(J);
-							CEGUI::WindowManager::getSingleton().cleanDeadPool(); //Need to make sure there's no reference to the erased plugin.
-							//Then add the new one
-							registerPlugin(guiManager, path);
-						}
-					}
-					mDirtyPluginPaths.clear();
+	Ember::FileSystemObserver::getSingleton().add_directory(pluginDirPath,
+		[&](const Ember::FileSystemObserver::FileSystemEvent& event) {
+			if (event.ev.type == boost::asio::dir_monitor_event::added || event.ev.type == boost::asio::dir_monitor_event::modified) {
+				auto I = mPlugins.find(event.ev.path);
+				if (I != mPlugins.end()) {
+					//Mark the path and wait two seconds for file system to settle down.
+					mDirtyPluginPaths.emplace(event.ev.path);
+					MainLoopController::getSingleton().getEventService().runOnMainThreadDelayed([&]() {
+							for (auto& path: mDirtyPluginPaths) {
+								auto J = mPlugins.find(path);
+								if (J != mPlugins.end()) {
+									logger->info("Reloading plugin {}''.", path.string());
+									//First remove the existing plugin.
+									mPlugins.erase(J);
+									CEGUI::WindowManager::getSingleton().cleanDeadPool(); //Need to make sure there's no reference to the erased plugin.
+									//Then add the new one
+									registerPlugin(guiManager, path);
+								}
+							}
+							mDirtyPluginPaths.clear();
 
-				}, std::chrono::seconds(2));
+						},
+						std::chrono::seconds(2));
+				}
 			}
-		}
-	});
+		});
 
 
 	logger->info("Loading Widgets dynamically");
@@ -119,7 +123,8 @@ void WidgetDefinitions::registerPlugin(GUIManager& guiManager, const std::filesy
 
 	try {
 		auto registerFn = boost::dll::import_alias<std::function<void()>(GUIManager&)>(
-				{pluginPath}, "registerWidget"
+			{pluginPath},
+			"registerWidget"
 		);
 		logger->info("Creating Widget Plugin from '{}'.", pluginPath.string());
 		auto disconnectFn = registerFn(guiManager);
@@ -143,5 +148,3 @@ WidgetDefinitions::PluginEntry::~PluginEntry() {
 }
 
 }
-
-
