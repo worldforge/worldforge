@@ -109,7 +109,7 @@ void LocatedEntity::changeContainer(const Ref<LocatedEntity>& new_loc) {
 	m_parent = new_loc.get();
 	assert(m_parent->checkRef() > 0);
 
-	onContainered(oldLoc);
+	containered.emit(oldLoc);
 }
 
 void LocatedEntity::broadcast(const Atlas::Objects::Operation::RootOperation& op, OpVector& res, Visibility visibility) const {

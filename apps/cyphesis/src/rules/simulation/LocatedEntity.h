@@ -41,6 +41,8 @@
 
 #include <set>
 
+#include "LocatedEntityState.h"
+
 class Domain;
 
 class LocatedEntity;
@@ -54,28 +56,28 @@ class TypeNode;
 template<typename, typename>
 class Property;
 
-/**
- * Stores a property. Since all properties are modifiable we need to handle modifications.
- */
-struct ModifiableProperty {
-	/**
-	 * The property.
-	 */
-	std::unique_ptr<PropertyBase> property;
-
-	/**
-	 * An optional base value, in the case of modifiers being applied.
-	 * If so, this value is the "base" value set on the property before any modifiers are applied.
-	 */
-	Atlas::Message::Element baseValue;
-
-	/**
-	 * A list of optionally modifiers to apply.
-	 * If the list contains modifiers, they must be applied together with the baseValue whenever the property is set.
-	 * If the list is empty, the baseValue can be ignored and the value can be fetched or set directly on the property.
-	 */
-	std::vector<std::pair<Modifier*, LocatedEntity*>> modifiers;
-};
+// /**
+//  * Stores a property. Since all properties are modifiable we need to handle modifications.
+//  */
+// struct ModifiableProperty {
+// 	/**
+// 	 * The property.
+// 	 */
+// 	std::unique_ptr<PropertyBase> property;
+//
+// 	/**
+// 	 * An optional base value, in the case of modifiers being applied.
+// 	 * If so, this value is the "base" value set on the property before any modifiers are applied.
+// 	 */
+// 	Atlas::Message::Element baseValue;
+//
+// 	/**
+// 	 * A list of optionally modifiers to apply.
+// 	 * If the list contains modifiers, they must be applied together with the baseValue whenever the property is set.
+// 	 * If the list is empty, the baseValue can be ignored and the value can be fetched or set directly on the property.
+// 	 */
+// 	std::vector<std::pair<Modifier*, LocatedEntity*>> modifiers;
+// };
 
 typedef std::set<Ref<LocatedEntity>> LocatedEntitySet;
 
@@ -164,15 +166,15 @@ static constexpr std::uint32_t entity_visibility_private = 1u << 17u;
  */
 static constexpr std::uint32_t entity_update_broadcast_queued = 1u << 18u;
 
-struct EntityState {
-	/// Map of properties
-	std::map<std::string, ModifiableProperty> m_properties;
-
-	std::map<RouterId, std::set<std::pair<std::string, Modifier*>>> m_activeModifiers;
-
-	/// Class of which this is an instance
-	const TypeNode<LocatedEntity>* m_type;
-};
+// struct EntityState {
+// 	/// Map of properties
+// 	std::map<std::string, ModifiableProperty> m_properties;
+//
+// 	std::map<RouterId, std::set<std::pair<std::string, Modifier*>>> m_activeModifiers;
+//
+// 	/// Class of which this is an instance
+// 	const TypeNode<LocatedEntity>* m_type;
+// };
 
 /// \brief This is the base class from which in-game and in-memory objects
 /// inherit.
@@ -191,17 +193,19 @@ private:
 	static const std::set<std::string>& immutables();
 
 protected:
-	/// Map of properties
-	std::map<std::string, ModifiableProperty> m_properties;
 
-	std::map<RouterId, std::set<std::pair<std::string, Modifier*>>> m_activeModifiers;
+	LocatedEntityState m_state;
+
+	// /// Map of properties
+	// std::map<std::string, ModifiableProperty> m_properties;
+	//
+	// std::map<RouterId, std::set<std::pair<std::string, Modifier*>>> m_activeModifiers;
+	//
+	// /// Class of which this is an instance
+	// const TypeNode<LocatedEntity>* m_type;
 
 	/// Sequence number
 	int m_seq;
-
-	/// Class of which this is an instance
-	const TypeNode<LocatedEntity>* m_type;
-
 
     /// Map of delegate properties.
     std::multimap<int, std::string> m_delegates;
@@ -415,10 +419,6 @@ public:
 	 void installDelegate(int, const std::string&);
 
 	 void removeDelegate(int, const std::string&);
-
-	 void onContainered(const Ref<LocatedEntity>& oldLocation);
-
-	 void onUpdated();
 
 	 //"virtual" for testing, see if we can remove it
 	 virtual void destroy();

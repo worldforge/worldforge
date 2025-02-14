@@ -146,7 +146,7 @@ void LocatedEntitytest::test_coverage() {
 	// Installing a second one should delete the first.
 	m_entity->setScript(std::make_unique<Script<LocatedEntity>>());
 
-	m_entity->onContainered(nullptr);
+	m_entity->containered.emit(nullptr);
 	m_entity->onUpdated();
 
 	EntityExerciser ee(m_entity);

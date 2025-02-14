@@ -181,7 +181,7 @@ void LocatedEntity::changeContainer(const Ref<LocatedEntity>& new_loc) {
 	m_parent = new_loc.get();
 	assert(m_parent->checkRef() > 0);
 
-	onContainered(oldLoc);
+	containered.emit(oldLoc);
 }
 
 void addToEntity(const Point3D& p, std::vector<double>& vd) {

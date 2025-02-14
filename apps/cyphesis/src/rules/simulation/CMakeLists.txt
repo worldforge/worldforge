@@ -59,6 +59,7 @@ add_library(cyphesis-rulessimulation
         ScriptsProperty.cpp
         AtlasProperties.cpp
         LocatedEntity.cpp
+        LocatedEntityState.cpp
         EntityProperties.cpp
         Domain.cpp
         PropertyBase.cpp

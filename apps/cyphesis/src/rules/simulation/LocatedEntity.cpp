@@ -442,7 +442,7 @@ void LocatedEntity::updateProperties(const Operation& op, OpVector& res) {
 	if (hadChanges) {
 		m_seq++;
 		if (!hasFlags(entity_clean)) {
-			onUpdated();
+			updated();
 		}
 	}
 	removeFlags(entity_update_broadcast_queued);
@@ -456,7 +456,7 @@ void LocatedEntity::UpdateOperation(const Operation& op, OpVector& res) {
 		return;
 	}
 
-	onUpdated();
+	updated();
 }
 
 bool LocatedEntity::lookAtEntity(const Operation& op, OpVector& res, const LocatedEntity& watcher) const {
@@ -781,7 +781,7 @@ void LocatedEntity::moveOurselves(const Operation& op, const RootEntity& ent, Op
 
 	m_seq++;
 
-	onUpdated();
+	updated();
 }
 
 
@@ -838,7 +838,7 @@ std::unique_ptr<PropertyBase> LocatedEntity::createProperty(const std::string& p
 
 
 void LocatedEntity::setType(const TypeNode<LocatedEntity>* t) {
-	m_type = t;
+	m_state.m_type = t;
 
 	if (t) {
 		s_monitorsMap.withState([&](auto state) {
@@ -1102,14 +1102,6 @@ void LocatedEntity::callOperation(const Operation& op, OpVector& res) {
 	}
 }
 
-void LocatedEntity::onContainered(const Ref<LocatedEntity>& oldLocation) {
-	containered.emit(oldLocation);
-}
-
-void LocatedEntity::onUpdated() {
-	updated.emit();
-}
-
 Ref<LocatedEntity> LocatedEntity::createNewEntity(const Operation& op, OpVector& res) const {
 	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
@@ -1132,7 +1124,7 @@ Ref<LocatedEntity> LocatedEntity::createNewEntity(const Operation& op, OpVector&
 		obj->addToEntity(new_ent);
 
 		if (!op->isDefaultSerialno()) {
-			Atlas::Objects::Operation::Info i;
+			Info i;
 			i->setArgs1(new_ent);
 			i->setTo(op->getFrom());
 			i->setRefno(op->getSerialno());
@@ -1506,7 +1498,7 @@ void LocatedEntity::changeContainer(const Ref<LocatedEntity>& new_loc) {
 
 	applyProperty(LocationProperty::property_name, *m_properties[LocationProperty::property_name].property);
 
-	onContainered(oldLoc);
+	containered.emit(oldLoc);
 }
 
 void LocatedEntity::broadcast(const Atlas::Objects::Operation::RootOperation& op, OpVector& res, Visibility visibility) const {
@@ -1615,7 +1607,7 @@ void LocatedEntity::addChild(LocatedEntity& childEntity) {
 	bool was_empty = m_contains->empty();
 	m_contains->insert(&childEntity);
 	if (was_empty) {
-		onUpdated();
+		updated.emit();
 	}
 
 	childEntity.m_parent = this;
@@ -1635,7 +1627,7 @@ void LocatedEntity::removeChild(LocatedEntity& childEntity) {
 
 	m_contains->erase(&childEntity);
 	if (m_contains->empty()) {
-		onUpdated();
+		updated.emit();
 	}
 }
 
