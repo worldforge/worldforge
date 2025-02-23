@@ -86,14 +86,14 @@ class Worldforge(ConanFile):
         if self.options.with_server:
             self.requires("worldforge-worlds/0.1.0@worldforge")
             self.requires("libgcrypt/1.10.3")
-            self.requires("sqlite3/3.47.1", force=True)
+            self.requires("sqlite3/3.48.0", force=True)
             self.requires("readline/8.2")
             self.requires("cpython/3.12.7")
 
         # self.requires("avahi/0.8")
 
         self.test_requires("cppunit/1.15.1")
-        self.test_requires("catch2/3.7.1")
+        self.test_requires("catch2/3.8.0")
 
     def generate(self):
         deps = CMakeDeps(self)
