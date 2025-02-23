@@ -39,7 +39,7 @@ jobs:
                 run: echo "PROFILE_CONAN=conan-default" >> $GITHUB_ENV
 
             -   name: Cache media
-                uses: actions/cache@v4.2.0
+                uses: actions/cache@v4.2.1
                 with:
                     path: |
                         ~/install/usr/share/cyphesis/assets
@@ -51,7 +51,7 @@ jobs:
                     key: ${{ github.job }}-${{ matrix.os }}
 
             -   name: "Install packages"
-                uses: awalsh128/cache-apt-pkgs-action@v1.4.2
+                uses: awalsh128/cache-apt-pkgs-action@v1.4.3
                 if: runner.os == 'Linux'
                 with:
                     #Needed for the assets processing step in Cyphesis
@@ -192,7 +192,7 @@ jobs:
 
             -   name: Store Snaps
                 if: env.BUILD_SNAP == 'true'
-                uses: actions/upload-artifact@v4.3.4
+                uses: actions/upload-artifact@v4.6.1
                 with:
                     compression-level: 0 #It's already compressed
                     name: snap
@@ -200,7 +200,7 @@ jobs:
 
             -   name: Store NSIS
                 if: env.BUILD_EMBER_NSIS == 'true'
-                uses: actions/upload-artifact@v4.3.4
+                uses: actions/upload-artifact@v4.6.1
                 with:
                     compression-level: 0 #It's already compressed
                     name: NSIS
@@ -214,7 +214,7 @@ jobs:
 
             -   name: Store AppImage
                 if: env.BUILD_APPIMAGE == 'true'
-                uses: actions/upload-artifact@v4.3.4
+                uses: actions/upload-artifact@v4.6.1
                 with:
                     name: AppImage
                     path: Ember-x86_64.AppImage
