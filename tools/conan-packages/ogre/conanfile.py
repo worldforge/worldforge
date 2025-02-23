@@ -10,7 +10,7 @@ from conan.tools.microsoft import is_msvc
 
 class OgreConan(ConanFile):
     name = 'ogre'
-    upstream_version = "14.3.2"
+    upstream_version = "14.3.4"
     package_revision = ""
     version = "{0}{1}".format(upstream_version, package_revision)
 
