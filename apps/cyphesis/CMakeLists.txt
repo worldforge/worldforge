@@ -92,6 +92,7 @@ if (SUBVERSION_CMD)
     #We'll only checkout the "assets" directory by default, and without any "source" directories.
     add_custom_command(
             TARGET mediarepo-checkout
+            POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E echo "Using Subversion to do sparse checkout https://svn.worldforge.org:886/svn/media/trunk to ${MEDIAREPO_DIR}/trunk, with a subset of files."
             COMMAND ${CMAKE_COMMAND} -E make_directory ${MEDIAREPO_DIR}
             COMMAND [ ! -d ${MEDIAREPO_DIR}/trunk ] && ${SUBVERSION_CMD} checkout https://svn.worldforge.org:886/svn/media/trunk ${MEDIAREPO_DIR}/trunk --depth files || true
@@ -100,6 +101,7 @@ if (SUBVERSION_CMD)
     #This will do a full checkout of all assets. Useful if you intend to do development where you edit media.
     add_custom_command(
             TARGET mediarepo-checkout-full
+            POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E echo "Using Subversion to checkout https://svn.worldforge.org:886/svn/media/trunk to ${MEDIAREPO_DIR}/trunk."
             COMMAND ${CMAKE_COMMAND} -E make_directory ${MEDIAREPO_DIR}
             COMMAND ${SUBVERSION_CMD} checkout https://svn.worldforge.org:886/svn/media/trunk ${MEDIAREPO_DIR}/trunk --depth infinity
@@ -108,6 +110,7 @@ if (SUBVERSION_CMD)
 else (SUBVERSION_CMD)
     add_custom_command(
             TARGET mediarepo-checkout
+            POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E echo "Could not find the Subversion command 'svn'. The target 'mediarepo-checkout' is disabled."
     )
 endif (SUBVERSION_CMD)
@@ -121,6 +124,7 @@ add_custom_target(media-process-install)
 if (Python3_EXECUTABLE)
     add_custom_command(
             TARGET media-process-install
+            POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E echo "Processing media in '${MEDIAREPO_DIR}/trunk' and placing it in '${MEDIAREPO_PROCESSED_DIR}'."
             COMMAND ${CMAKE_COMMAND} -E echo "NOTE: this will make Cyphesis use the processed media in '${MEDIAREPO_PROCESSED_DIR}' instead of the raw media in '${MEDIAREPO_DIR}/trunk'."
             COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tools/scripts/make_dist_media.py ${MEDIAREPO_DIR}/trunk ${MEDIAREPO_PROCESSED_DIR} ${MEDIA_PROCESS_TEXTURE_MAX_SIZE}
@@ -128,6 +132,7 @@ if (Python3_EXECUTABLE)
 else (Python3_EXECUTABLE)
     add_custom_command(
             TARGET media-process-install
+            POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E echo "Could not find the Python command 'python'. The target 'mediarepo-process' is disabled."
     )
 endif (Python3_EXECUTABLE)
@@ -136,6 +141,7 @@ add_custom_target(media-download-rsync)
 if (RSYNC_CMD)
     add_custom_command(
             TARGET media-download-rsync
+            POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E echo "I will now use rsync to install the assets from amber.worldforge.org into ${MEDIAREPO_PROCESSED_DIR}."
             COMMAND ${CMAKE_COMMAND} -E make_directory ${MEDIAREPO_PROCESSED_DIR}
             COMMAND rsync -rtzu amber.worldforge.org::worldforge-media ${MEDIAREPO_PROCESSED_DIR}
@@ -144,6 +150,7 @@ if (RSYNC_CMD)
 else (RSYNC_CMD)
     add_custom_command(
             TARGET media-download-rsync
+            POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E echo "Could not find the Rsync command. The target 'assets-download' is disabled."
     )
 endif (RSYNC_CMD)
@@ -184,6 +191,7 @@ if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     add_custom_target(snap-build-cyphesis)
     add_custom_command(
             TARGET snap-build-cyphesis
+            POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E echo "First I need to copy the Python scripts needed for the base Python installation from ${PYTHONHOME}/lib."
             COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/lib
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${PYTHONHOME}/lib ${CMAKE_INSTALL_PREFIX}/lib

@@ -126,8 +126,11 @@ add_subdirectory(src)
 
 file(GLOB MODELDEFINITIONS_FILES data/dural/*.modeldef)
 foreach (FILE ${MODELDEFINITIONS_FILES})
-    add_custom_command(TARGET check
-            COMMAND "${XMLLINT}" --schema "${PROJECT_SOURCE_DIR}/data/modeldefinition.xsd" --nonet --noout "${FILE}")
+    add_custom_command(
+            TARGET check
+            POST_BUILD
+            COMMAND "${XMLLINT}" --schema "${PROJECT_SOURCE_DIR}/data/modeldefinition.xsd" --nonet --noout "${FILE}"
+    )
 endforeach ()
 
 configure_file(tools/Version.tmpl.h generated/Version.h @ONLY)
@@ -162,6 +165,7 @@ if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     add_custom_target(snap-build-ember)
     add_custom_command(
             TARGET snap-build-ember
+            POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E echo "I will now copy the snapfile to the installation directory and run 'snapcraft'."
             COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/snap
             COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/snap/snapcraft.yaml ${CMAKE_INSTALL_PREFIX}/snap/snapcraft.yaml
