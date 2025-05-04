@@ -87,7 +87,7 @@ public:
         iocp_(init_iocp()),
         run_(true),
         work_thread_(&boost::asio::basic_dir_monitor_service<DirMonitorImplementation>::work_thread, this),
-        async_monitor_work_(std::make_unique<boost::asio::io_context::work>(async_monitor_io_context_)),
+        async_monitor_work_(boost::asio::make_work_guard(async_monitor_io_context_)),
         async_monitor_thread_(boost::bind(&boost::asio::io_context::run, &async_monitor_io_context_))
     {
     }
@@ -156,7 +156,7 @@ public:
         monitor_operation(implementation_type &impl, boost::asio::io_context &io_context_in, Handler handler)
             : impl_(impl),
             io_context_(io_context_in),
-            work_(io_context_in),
+            work_(make_work_guard(io_context_in)),
             handler_(handler)
         {
         }
@@ -180,7 +180,7 @@ public:
                 boost::condition_variable post_conditional_variable;
                 bool post_cancel = false;
 
-                this->io_context_.post(
+            	boost::asio::post(this->io_context_,
                     [&] {
                         handler_(ec, ev);
                         boost::unique_lock<boost::mutex> lock(post_mutex);
@@ -197,7 +197,7 @@ public:
     private:
         std::weak_ptr<DirMonitorImplementation> impl_;
         boost::asio::io_context &io_context_;
-        boost::asio::io_context::work work_;
+        boost::asio::executor_work_guard<boost::asio::io_context::executor_type> work_;
         Handler handler_;
     };
 
@@ -205,9 +205,9 @@ public:
     void async_monitor(implementation_type &impl, Handler handler)
     {
 #if BOOST_VERSION < 106600
-        this->async_monitor_io_context_.post(monitor_operation<Handler>(impl, this->get_io_service(), handler));
+        boost::asio::post(this->async_monitor_io_context_, monitor_operation<Handler>(impl, this->get_io_service(), handler));
 #else
-        this->async_monitor_io_context_.post(monitor_operation<Handler>(impl, this->get_io_context(), handler));
+        boost::asio::post(this->async_monitor_io_context_, monitor_operation<Handler>(impl, this->get_io_context(), handler));
 #endif
     }
 
@@ -256,7 +256,7 @@ private:
             catch (...)
             {
                 last_work_thread_exception_ptr_ = std::current_exception();
-                this->get_io_context().post(boost::bind(&boost::asio::basic_dir_monitor_service<DirMonitorImplementation>::throw_work_exception_handler, this));
+				boost::asio::post(this->get_io_context(), boost::bind(&boost::asio::basic_dir_monitor_service<DirMonitorImplementation>::throw_work_exception_handler, this));
             }
         }
     }
@@ -348,7 +348,7 @@ private:
     bool run_;
     boost::thread work_thread_;
     boost::asio::io_context async_monitor_io_context_;
-    std::unique_ptr<boost::asio::io_context::work> async_monitor_work_;
+	boost::asio::executor_work_guard<boost::asio::io_context::executor_type> async_monitor_work_;
     boost::thread async_monitor_thread_;
 };
 
