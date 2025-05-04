@@ -40,7 +40,7 @@ struct ConnectionDecoder : Atlas::Objects::ObjectsDecoder {
 	}
 };
 
-Connection::Connection(boost::asio::io_service& io_service,
+Connection::Connection(boost::asio::io_context& io_service,
 					   EventService& eventService,
 					   std::string clientName,
 					   const std::string& host,
@@ -58,7 +58,7 @@ Connection::Connection(boost::asio::io_service& io_service,
 	_port = port;
 }
 
-Connection::Connection(boost::asio::io_service& io_service,
+Connection::Connection(boost::asio::io_context& io_service,
 					   EventService& eventService,
 					   std::string clientName,
 					   std::string socket) :

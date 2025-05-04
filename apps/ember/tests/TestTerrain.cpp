@@ -287,7 +287,7 @@ public:
 
 class TerrainSetup {
 public:
-	boost::asio::io_service io_service;
+	boost::asio::io_context io_service;
 	Eris::EventService es;
 	DummyCompilerTechniqueProvider compilerTechniqueProvider;
 	TestTerrainHandler terrainHandler;

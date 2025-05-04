@@ -80,7 +80,7 @@ void Juncture::onSocketFailed() {
 	assert(m_peer == nullptr);
 	assert(!m_socket.expired());
 	if (m_connection != nullptr) {
-		if (++m_address.i != boost::asio::ip::tcp::resolver::iterator()) {
+		if (++m_address.iterator != m_address.entries.end()) {
 			if (attemptConnect("foo", 6767) == 0) {
 				return;
 			}
@@ -115,7 +115,7 @@ int Juncture::attemptConnect(const std::string& hostname, int port) {
 										   AtlasFactories::factories);
 	m_socket = std::weak_ptr<CommPeer>(peer);
 
-	peer->connect(*m_address.i);
+	peer->connect(m_address.iterator->endpoint());
 
 	m_host = hostname;
 	m_port = port;
@@ -268,10 +268,10 @@ void Juncture::customConnectOperation(const Operation& op, OpVector& res) {
 	m_address = PeerAddress{};
 
 	boost::asio::ip::tcp::resolver resolver(m_connection->m_commSocket.m_io_context);
-	boost::asio::ip::tcp::resolver::query query(hostname, fmt::format("{}", port));
 
 	try {
-		m_address.i = resolver.resolve(query);
+		m_address.entries = resolver.resolve(hostname, fmt::format("{}", port));
+		m_address.iterator = m_address.entries.begin();
 	} catch (const std::exception& e) {
 		error(op, "Could not connect to peer host.", res, getIdAsString());
 		return;

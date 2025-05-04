@@ -23,7 +23,7 @@
 #include "Singleton.h"
 #include <Eris/ActiveMarker.h>
 
-#include <boost/asio/io_service.hpp>
+#include <boost/asio/io_context.hpp>
 #include <memory>
 #include <map>
 
@@ -50,7 +50,7 @@ public:
 		const std::filesystem::path relativePath;
 	};
 
-	explicit FileSystemObserver(boost::asio::io_service& ioService);
+	explicit FileSystemObserver(boost::asio::io_context& ioService);
 
 	~FileSystemObserver() override;
 

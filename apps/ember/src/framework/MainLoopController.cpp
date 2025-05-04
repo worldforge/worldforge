@@ -56,7 +56,7 @@ Eris::EventService& MainLoopController::getEventService() {
 	return mSession.m_event_service;
 }
 
-boost::asio::io_service& MainLoopController::getIoService() {
+boost::asio::io_context& MainLoopController::getIoService() {
 	return mSession.m_io_service;
 }
 

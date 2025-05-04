@@ -43,7 +43,7 @@
 
 class TestConnection : public Eris::Connection {
 public:
-	TestConnection(boost::asio::io_service& io_service,
+	TestConnection(boost::asio::io_context& io_service,
 				   Eris::EventService& eventService,
 				   const std::string& cnm,
 				   const std::string& host,
@@ -114,7 +114,7 @@ int main() {
 
 	// Test constructor
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -127,7 +127,7 @@ int main() {
 
 	// Test destructor
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -141,7 +141,7 @@ int main() {
 
 	// Test deactivate()
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -156,7 +156,7 @@ int main() {
 
 	// Test touch() of something
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		TestConnection con(io_service, event_service, "name",
 						   "localhost", 6767);
@@ -178,7 +178,7 @@ int main() {
 
 	// Test say() of a message
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -196,7 +196,7 @@ int main() {
 
 	// Test sayTo() of a message, with one addressed
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -218,7 +218,7 @@ int main() {
 
 	// Test sayTo() of a message, with two addressed
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -241,7 +241,7 @@ int main() {
 
 	// Test sayTo() of a message, with none addressed (still valid)
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -260,7 +260,7 @@ int main() {
 
 	// Test emote() of a message
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -278,7 +278,7 @@ int main() {
 
 	// Test moveToPoint()
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -298,7 +298,7 @@ int main() {
 
 	// Test moveInDirection() with zero velocity
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -318,7 +318,7 @@ int main() {
 
 	// Test moveInDirection() with vertical velocity
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -338,7 +338,7 @@ int main() {
 
 	// Test moveInDirection() with high velocity
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -360,7 +360,7 @@ int main() {
 
 	// Test moveInDirection()
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -380,7 +380,7 @@ int main() {
 
 	// Test place() of something
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -402,7 +402,7 @@ int main() {
 
 	// Test place() of something as admin
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -425,7 +425,7 @@ int main() {
 
 	// Test place() of something with no pos
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -447,7 +447,7 @@ int main() {
 
 	// Test place() of something with orientation
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -471,7 +471,7 @@ int main() {
 
 	// Test useStop()
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		Eris::Connection con(io_service, event_service, "name",
 							 "localhost", 6767);
@@ -491,7 +491,7 @@ int main() {
 
 	// Test onEntityAppear() for avatar entity
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		TestConnection con(io_service, event_service, "name",
 						   "localhost", 6767);
@@ -513,7 +513,7 @@ int main() {
 
 	// Test onEntityAppear() for a different entity
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		TestConnection con(io_service, event_service, "name",
 						   "localhost", 6767);
@@ -535,7 +535,7 @@ int main() {
 
 	// Test getConnection()
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		TestConnection con(io_service, event_service, "name",
 						   "localhost", 6767);
@@ -550,7 +550,7 @@ int main() {
 
 	// Test logoutResponse() with a non-info operation
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		TestConnection con(io_service, event_service, "name",
 						   "localhost", 6767);
@@ -571,7 +571,7 @@ int main() {
 
 	// Test logoutResponse() with an empty info operation
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		TestConnection con(io_service, event_service, "name",
 						   "localhost", 6767);
@@ -592,7 +592,7 @@ int main() {
 
 	// Test logoutResponse() with an info operation with bad arg
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		TestConnection con(io_service, event_service, "name",
 						   "localhost", 6767);
@@ -615,7 +615,7 @@ int main() {
 
 	// Test logoutResponse() with an empty info logout operation
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		TestConnection con(io_service, event_service, "name",
 						   "localhost", 6767);
@@ -638,7 +638,7 @@ int main() {
 
 	// Test logoutResponse() with a non-empty info logout operation
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		TestConnection con(io_service, event_service, "name",
 						   "localhost", 6767);
@@ -663,7 +663,7 @@ int main() {
 
 	// Test logoutResponse() with a non-empty info logout operation
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		TestConnection con(io_service, event_service, "name",
 						   "localhost", 6767);
@@ -692,7 +692,7 @@ int main() {
 
 	// Test logoutRequested() without any transfer info
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		TestConnection con(io_service, event_service, "name",
 						   "localhost", 6767);
@@ -716,7 +716,7 @@ int main() {
 
 	// Test logoutRequested() with a transfer info
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService event_service(io_service);
 		TestConnection con(io_service, event_service, "name",
 						   "localhost", 6767);

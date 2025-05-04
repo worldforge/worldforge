@@ -32,7 +32,7 @@ namespace Eris {
 
 template<typename ProtocolT>
 AsioStreamSocket<ProtocolT>::AsioStreamSocket(
-		boost::asio::io_service& io_service, const std::string& client_name,
+		boost::asio::io_context& io_service, const std::string& client_name,
 		Atlas::Bridge& bridge, StreamSocket::Callbacks callbacks) :
 		StreamSocket(io_service, client_name, bridge, std::move(callbacks)),
 		m_socket(io_service) {
@@ -63,7 +63,7 @@ typename ProtocolT::socket& AsioStreamSocket<ProtocolT>::getAsioSocket() {
 
 template<typename ProtocolT>
 ResolvableAsioStreamSocket<ProtocolT>::ResolvableAsioStreamSocket(
-		boost::asio::io_service& io_service, const std::string& client_name,
+		boost::asio::io_context& io_service, const std::string& client_name,
 		Atlas::Bridge& bridge, StreamSocket::Callbacks callbacks) :
 		AsioStreamSocket<ProtocolT>(io_service, client_name, bridge, std::move(callbacks)),
 		m_resolver(io_service) {
@@ -71,25 +71,26 @@ ResolvableAsioStreamSocket<ProtocolT>::ResolvableAsioStreamSocket(
 
 
 template<typename ProtocolT>
-void ResolvableAsioStreamSocket<ProtocolT>::connectWithQuery(
-		const typename ProtocolT::resolver::query& query) {
+void ResolvableAsioStreamSocket<ProtocolT>::connect(
+		std::string_view host, std::string_view port) {
 	auto self(this->shared_from_this());
-	m_resolver.async_resolve(query,
-							 [&, self](const boost::system::error_code& ec, typename ProtocolT::resolver::iterator iterator) {
+	m_resolver.async_resolve(host, port,
+							 [&, self](const boost::system::error_code& ec, typename ProtocolT::resolver::results_type iterator) {
 								 if (this->_callbacks.stateChanged) {
-									 if (!ec && iterator != typename ProtocolT::resolver::iterator()) {
-										 this->connect(*iterator);
+									 if (!ec && !iterator.empty()) {
+									 	auto endpoint = iterator.begin()->endpoint();
+										this->connectToEndpoint(endpoint);
 									 } else {
-										 this->_callbacks.stateChanged(StreamSocket::CONNECTING_FAILED);
+										this->_callbacks.stateChanged(StreamSocket::CONNECTING_FAILED);
 									 }
 								 }
 							 });
 }
 
 template<typename ProtocolT>
-void AsioStreamSocket<ProtocolT>::connect(
+void AsioStreamSocket<ProtocolT>::connectToEndpoint(
 		const typename ProtocolT::endpoint& endpoint) {
-	_connectTimer.expires_from_now(
+	_connectTimer.expires_after(
 			std::chrono::seconds(CONNECT_TIMEOUT_SECONDS));
 	auto self(this->shared_from_this());
 	_connectTimer.async_wait([&, self](boost::system::error_code ec) {
@@ -113,6 +114,7 @@ void AsioStreamSocket<ProtocolT>::connect(
 							   }
 						   });
 }
+
 
 template<typename ProtocolT>
 void AsioStreamSocket<ProtocolT>::negotiate_read() {

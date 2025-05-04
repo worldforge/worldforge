@@ -20,7 +20,7 @@
 #define SESSION_H_
 
 #include <Eris/EventService.h>
-#include <boost/asio/io_service.hpp>
+#include <boost/asio/io_context.hpp>
 #include <boost/noncopyable.hpp>
 
 namespace Ember {
@@ -28,7 +28,7 @@ namespace Ember {
 /**
  * @brief Acts as a single entrypoint to Eris.
  *
- * This class wraps up both an instance of boost::asio::io_service as well as
+ * This class wraps up both an instance of boost::asio::io_context as well as
  * an instance of EventService. These two classes are the two required classes for
  * the Eris system to work.
  *
@@ -36,7 +36,7 @@ namespace Ember {
  * life.
  */
 struct Session : boost::noncopyable {
-	boost::asio::io_service m_io_service;
+	boost::asio::io_context m_io_service;
 	Eris::EventService m_event_service = Eris::EventService(m_io_service);
 
 };

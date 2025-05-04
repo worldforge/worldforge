@@ -13,7 +13,7 @@ using WFMath::TimeStamp;
 
 namespace Eris {
 
-MetaQuery::MetaQuery(boost::asio::io_service& io_service,
+MetaQuery::MetaQuery(boost::asio::io_context& io_service,
 					 Atlas::Bridge& bridge,
 					 Meta& meta,
 					 const std::string& host,
@@ -46,7 +46,7 @@ void MetaQuery::onConnect() {
 	// save our serial-no (so we can identify replies)
 	_queryNo = gt->getSerialno();
 
-	m_completeTimer.expires_from_now(std::chrono::seconds(10));
+	m_completeTimer.expires_after(std::chrono::seconds(10));
 	m_completeTimer.async_wait([&](boost::system::error_code ec) {
 		if (!ec) {
 			this->onQueryTimeout();

@@ -62,7 +62,7 @@ struct MetaDecoder : Atlas::Objects::ObjectsDecoder {
 	}
 };
 
-Meta::Meta(boost::asio::io_service& io_service,
+Meta::Meta(boost::asio::io_context& io_service,
 		   EventService& eventService,
 		   std::string metaServer,
 		   unsigned int maxQueries) :
@@ -181,11 +181,10 @@ size_t Meta::getGameServerCount() const {
 }
 
 void Meta::connect() {
-	boost::asio::ip::udp::resolver::query query(m_metaHost, META_SERVER_PORT);
-	m_resolver.async_resolve(query,
-							 [&](const boost::system::error_code& ec, boost::asio::ip::udp::resolver::iterator iterator) {
-								 if (!ec && iterator != boost::asio::ip::udp::resolver::iterator()) {
-									 this->connect(*iterator);
+	m_resolver.async_resolve(m_metaHost, META_SERVER_PORT,
+							 [&](const boost::system::error_code& ec, boost::asio::ip::udp::resolver::results_type iterator) {
+								 if (!ec && !iterator.empty()) {
+									 this->connect(*iterator.begin());
 								 } else {
 									 this->disconnect();
 								 }
@@ -222,7 +221,7 @@ void Meta::disconnect() {
 
 void Meta::startTimeout() {
 	m_metaTimer.cancel();
-	m_metaTimer.expires_from_now(std::chrono::seconds(8));
+	m_metaTimer.expires_after(std::chrono::seconds(8));
 	m_metaTimer.async_wait([&](boost::system::error_code ec) {
 		if (!ec) {
 			this->metaTimeout();

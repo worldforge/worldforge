@@ -308,7 +308,7 @@ int main(int argc, char** argv) {
 			connectToServer(io_context, mindFactory);
 
 			/// \brief Use a "work" instance to make sure the io_context never runs out of work and is stopped.
-			boost::asio::io_context::work m_io_work(io_context);
+			auto m_io_work = boost::asio::make_work_guard(io_context);
 
 			io_context.run();
 

@@ -59,7 +59,7 @@ public:
 	active at any one time. 10 is a sensible value, too low and querying will
 	take a long time, too high and .... I'm not sure.
 	*/
-	Meta(boost::asio::io_service& io_service,
+	Meta(boost::asio::io_context& io_service,
 		 EventService& eventService,
 		 std::string msv,
 		 unsigned int maxQueries);
@@ -172,7 +172,7 @@ private:
 
 	void startTimeout();
 
-	boost::asio::io_service& m_io_service;
+	boost::asio::io_context& m_io_service;
 
 	EventService& m_event_service;
 

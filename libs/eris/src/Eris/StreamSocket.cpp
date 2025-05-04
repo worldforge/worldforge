@@ -29,7 +29,7 @@ static const int NEGOTIATE_TIMEOUT_SECONDS = 5;
 
 namespace Eris {
 
-StreamSocket::StreamSocket(io_service& io_service,
+StreamSocket::StreamSocket(io_context& io_service,
 						   const std::string& client_name,
 						   Atlas::Bridge& bridge,
 						   Callbacks callbacks) :
@@ -57,8 +57,7 @@ void StreamSocket::detach() {
 
 void StreamSocket::startNegotiation() {
 	auto self(this->shared_from_this());
-	_negotiateTimer.expires_from_now(
-			std::chrono::seconds(NEGOTIATE_TIMEOUT_SECONDS));
+	_negotiateTimer.expires_after(std::chrono::seconds(NEGOTIATE_TIMEOUT_SECONDS));
 	_negotiateTimer.async_wait([this, self](const boost::system::error_code& ec) {
 		//If the negotiator still exists after the deadline it means that the negotation hasn't
 		//completed yet; we'll consider that a "timeout".

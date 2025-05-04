@@ -31,7 +31,7 @@
 using namespace Eris;
 
 int main() {
-	boost::asio::io_service io_service;
+	boost::asio::io_context io_service;
 
 	{
 		Eris::EventService ted(io_service);
@@ -39,7 +39,7 @@ int main() {
 	}
 
 	{
-		io_service.reset();
+		io_service.restart();
 		Eris::EventService ted(io_service);
 		bool called = false;
 		Eris::TimedEvent te(ted, std::chrono::seconds(0), [&]() { called = true; });
@@ -48,7 +48,7 @@ int main() {
 	}
 
 	{
-		io_service.reset();
+		io_service.restart();
 		Eris::EventService ted(io_service);
 		bool called = false;
 		ted.runOnMainThread([&]() { called = true; });
@@ -58,7 +58,7 @@ int main() {
 	}
 
 	{
-		io_service.reset();
+		io_service.restart();
 		Eris::EventService ted(io_service);
 		bool called = false;
 		ted.runOnMainThread([&]() { called = true; });
@@ -68,7 +68,7 @@ int main() {
 	}
 
 	{
-		io_service.reset();
+		io_service.restart();
 		Eris::EventService ted(io_service);
 		bool called = false;
 		std::unique_ptr<ActiveMarker> activeMarker(new ActiveMarker());
@@ -80,7 +80,7 @@ int main() {
 	}
 
 	{
-		io_service.reset();
+		io_service.restart();
 		Eris::EventService ted(io_service);
 		bool called = false;
 		std::unique_ptr<ActiveMarker> activeMarker(new ActiveMarker());
@@ -91,7 +91,7 @@ int main() {
 	}
 
 	{
-		io_service.reset();
+		io_service.restart();
 		Eris::EventService ted(io_service);
 		bool called = false;
 		auto sharedMarker = std::make_shared<bool>(true);
@@ -102,7 +102,7 @@ int main() {
 	}
 
 	{
-		io_service.reset();
+		io_service.restart();
 		Eris::EventService ted(io_service);
 		bool called = false;
 		auto sharedMarker = std::make_shared<bool>(true);

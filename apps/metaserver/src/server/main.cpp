@@ -34,6 +34,7 @@
 #include <cstdlib> /* getenv() because boost po env parsing sucks */
 #include <fstream>
 #include <filesystem>
+#include <MetaServerVersion.hpp>
 #include <boost/exception/all.hpp>
 #include <spdlog/spdlog.h>
 
@@ -42,7 +43,7 @@
 */
 int main(int argc, char** argv) {
 
-	boost::asio::io_service io_service;
+	boost::asio::io_context io_service;
 	boost::program_options::variables_map vm;
 
 	int port = 8453;

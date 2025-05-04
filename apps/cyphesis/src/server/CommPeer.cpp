@@ -48,7 +48,7 @@ CommPeer::~CommPeer() = default;
 void CommPeer::connect(const std::string& host, int port) {
 	connect(
 			boost::asio::ip::tcp::endpoint(
-					boost::asio::ip::address::from_string(host), port));
+					boost::asio::ip::make_address(host), port));
 }
 
 /// \brief Connect to a remote peer wath a specific address info

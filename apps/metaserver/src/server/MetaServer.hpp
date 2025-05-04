@@ -27,7 +27,6 @@
  * Local Includes
  */
 #include "MetaServerPacket.hpp"
-#include "MetaServerVersion.hpp"
 #include "DataObject.hpp"
 
 /*
@@ -35,7 +34,7 @@
  */
 #include <boost/program_options.hpp>
 #include <boost/enable_shared_from_this.hpp>
-#include <boost/asio/io_service.hpp>
+#include <boost/asio/io_context.hpp>
 #include <boost/asio/deadline_timer.hpp>
 #include <filesystem>
 
@@ -88,7 +87,7 @@ public:
 
 	void initLogger();
 
-	void initTimers(boost::asio::io_service& ios);
+	void initTimers(boost::asio::io_context& ios);
 
 	std::string getLogFile() { return m_Logfile; }
 

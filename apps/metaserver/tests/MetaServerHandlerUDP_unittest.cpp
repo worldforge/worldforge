@@ -52,7 +52,7 @@ public:
 		ms_udp = NULL;
 	}
 
-	boost::asio::io_service io;
+	boost::asio::io_context io;
 	std::string host;
 	MetaServer* ms;
 	MetaServerHandlerUDP* ms_udp;

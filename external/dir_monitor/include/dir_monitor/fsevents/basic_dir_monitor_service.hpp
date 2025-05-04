@@ -143,7 +143,7 @@ public:
     }
 
 private:
-    void shutdown_service() override
+    void shutdown() override
     {}
 
     boost::asio::io_context async_monitor_io_context_;

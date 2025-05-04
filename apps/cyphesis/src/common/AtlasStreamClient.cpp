@@ -425,7 +425,7 @@ int AtlasStreamClient::connect(const std::string& host, unsigned short port) {
 	m_socket.reset();
 	try {
 		std::function<void()> dispatcher = [&] { this->dispatch(); };
-		m_socket = std::make_unique<TcpStreamClientSocket>(m_io_context, dispatcher, ip::tcp::endpoint(boost::asio::ip::address::from_string(host), port));
+		m_socket = std::make_unique<TcpStreamClientSocket>(m_io_context, dispatcher, ip::tcp::endpoint(ip::make_address(host), port));
 	} catch (const std::exception& e) {
 		return -1;
 	}

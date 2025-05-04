@@ -11,7 +11,7 @@ TimedEvent::TimedEvent(EventService& eventService,
 					   const std::function<void()>& callback) :
 		m_timer(eventService.createTimer()) {
 	assert(m_timer);
-	m_timer->expires_from_now(duration);
+	m_timer->expires_after(duration);
 	m_timer->async_wait([&, callback](const boost::system::error_code& ec) {
 		if (!ec) {
 			callback();
@@ -21,9 +21,9 @@ TimedEvent::TimedEvent(EventService& eventService,
 
 TimedEvent::~TimedEvent() = default;
 
-EventService::EventService(boost::asio::io_service& io_service) :
+EventService::EventService(boost::asio::io_context& io_service) :
 		m_io_service(io_service),
-		m_work(new boost::asio::io_service::work(io_service)),
+		m_work(boost::asio::make_work_guard(io_service)),
 		m_background_handlers_queue(new WaitFreeQueue<std::function<void()>>()) {
 }
 
@@ -51,7 +51,7 @@ void EventService::runOnMainThreadDelayed(const std::function<void()>& handler,
 										  const std::chrono::steady_clock::duration& duration,
 										  std::shared_ptr<bool> activeMarker) {
 	auto timer = std::make_shared<boost::asio::steady_timer>(m_io_service);
-	timer->expires_from_now(duration);
+	timer->expires_after(duration);
 	timer->async_wait([&, handler, activeMarker, timer](const boost::system::error_code& ec) {
 		if (!ec) {
 			runOnMainThread(handler, activeMarker);

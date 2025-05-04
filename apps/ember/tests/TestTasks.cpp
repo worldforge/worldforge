@@ -149,7 +149,7 @@ class TaskTestCase : public CppUnit::TestFixture {
 
 	CPPUNIT_TEST_SUITE_END();
 
-	boost::asio::io_service io_service;
+	boost::asio::io_context io_service;
 public:
 	void testSimpleTaskRun() {
 		int counter = 0;

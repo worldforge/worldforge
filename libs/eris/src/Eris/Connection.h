@@ -50,7 +50,7 @@ public:
 	is sent during Atlas negotiation of the connection.
 	@param debug Perform extra (slower) validation on the connection
 	*/
-	Connection(boost::asio::io_service& io_service,
+	Connection(boost::asio::io_context& io_service,
 			   EventService& eventService,
 			   std::string clientName,
 			   const std::string& host,
@@ -60,7 +60,7 @@ public:
 	is sent during Atlas negotiation of the connection.
 	@param debug Perform extra (slower) validation on the connection
 	*/
-	Connection(boost::asio::io_service& io_service,
+	Connection(boost::asio::io_context& io_service,
 			   EventService& eventService,
 			   std::string clientName,
 			   std::string socket);

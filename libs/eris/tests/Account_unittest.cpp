@@ -36,7 +36,7 @@
 int main() {
 	// Constructor
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService eventService(io_service);
 		Eris::Connection c(io_service, eventService, "", "", 0);
 		Eris::Account account(c);
@@ -44,7 +44,7 @@ int main() {
 
 	// Destructor
 	{
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 		Eris::EventService eventService(io_service);
 		Eris::Connection c(io_service, eventService, "", "", 0);
 		Eris::Account ac(c);

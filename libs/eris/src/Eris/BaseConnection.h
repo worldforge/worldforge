@@ -9,7 +9,7 @@
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
-#include <boost/asio/io_service.hpp>
+#include <boost/asio/io_context.hpp>
 
 #include <string>
 #include <memory>
@@ -96,7 +96,7 @@ protected:
 	/** Create a new connection, with the client-name  string specified. The client-name
 	is sent during Atlas negotiation of the connection. Id is a unique string to identify
 	timeouts created by the connection (and potentially errors in the future) */
-	BaseConnection(boost::asio::io_service& io_service, std::string clientName, std::string id);
+	BaseConnection(boost::asio::io_context& io_service, std::string clientName, std::string id);
 
 	void stateChanged(StreamSocket::Status status);
 
@@ -121,7 +121,7 @@ protected:
 	/// @emit specified whether the change of state should be signalled
 	void hardDisconnect(bool emit);
 
-	boost::asio::io_service& _io_service;
+	boost::asio::io_context& _io_service;
 	std::unique_ptr<Atlas::Objects::Factories> _factories;
 	std::shared_ptr<StreamSocket> _socket;
 

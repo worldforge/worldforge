@@ -32,7 +32,7 @@ public:
 
     explicit basic_dir_monitor_service(boost::asio::io_context &io_context_in)
         : boost::asio::io_context::service(io_context_in),
-        async_monitor_work_(new boost::asio::io_context::work(async_monitor_io_context_)),
+        async_monitor_work_(boost::asio::make_work_guard(async_monitor_io_context_)),
           async_monitor_thread_([&]() {
 #ifndef _WIN32
 #ifdef __APPLE__
@@ -88,7 +88,7 @@ public:
         monitor_operation(implementation_type &impl, boost::asio::io_context &io_context_in, Handler handler)
             : impl_(impl),
             io_context_(io_context_in),
-            work_(io_context_in),
+            work_(make_work_guard(io_context_in)),
             handler_(handler)
         {
         }
@@ -111,7 +111,7 @@ public:
                 std::condition_variable post_condition_variable;
                 bool post_cancel = false;
 
-                this->io_context_.post(
+            	boost::asio::post(this->io_context_,
                     [&] {
                         handler_(ec, ev);
                         std::lock_guard<std::mutex> lock(post_mutex);
@@ -128,7 +128,7 @@ public:
     private:
         std::weak_ptr<DirMonitorImplementation> impl_;
         boost::asio::io_context &io_context_;
-        boost::asio::io_context::work work_;
+        boost::asio::executor_work_guard<boost::asio::io_context::executor_type> work_;
         Handler handler_;
     };
 
@@ -138,12 +138,12 @@ public:
 #if BOOST_VERSION < 106600
         this->async_monitor_io_context_.post(monitor_operation<Handler>(impl, this->get_io_service(), handler));
 #else
-        this->async_monitor_io_context_.post(monitor_operation<Handler>(impl, this->get_io_context(), handler));
+        boost::asio::post(this->async_monitor_io_context_, monitor_operation<Handler>(impl, this->get_io_context(), handler));
 #endif
     }
 
 private:
-    virtual void shutdown_service() override
+    virtual void shutdown() override
     {
         // The async_monitor thread will finish when async_monitor_work_ is reset as all asynchronous
         // operations have been aborted and were discarded before (in destroy).
@@ -161,7 +161,7 @@ private:
     }
 
     boost::asio::io_context async_monitor_io_context_;
-    std::unique_ptr<boost::asio::io_context::work> async_monitor_work_;
+    boost::asio::executor_work_guard<boost::asio::io_context::executor_type> async_monitor_work_;
     std::thread async_monitor_thread_;
 };
 

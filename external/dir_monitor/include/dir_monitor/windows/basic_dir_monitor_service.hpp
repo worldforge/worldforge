@@ -212,7 +212,7 @@ public:
     }
 
 private:
-    virtual void shutdown_service() override
+    virtual void shutdown() override
     {
         // The async_monitor thread will finish when async_monitor_work_ is reset as all asynchronous
         // operations have been aborted and were discarded before (in destroy).

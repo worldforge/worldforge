@@ -34,10 +34,10 @@
 #include <spdlog/spdlog.h>
 
 MetaServerHandlerUDP::MetaServerHandlerUDP(MetaServer& ms,
-										   boost::asio::io_service& ios,
+										   boost::asio::io_context& ios,
 										   const std::string& address,
-										   const unsigned int port)
-		: m_Socket(ios, boost::asio::ip::udp::udp::endpoint(boost::asio::ip::address::from_string(address), port)),
+										   unsigned int port)
+		: m_Socket(ios, boost::asio::ip::udp::udp::endpoint(boost::asio::ip::make_address(address), port)),
 		  m_recvBuffer{},
 //     m_Socket(ios, boost::asio::ip::udp::udp::endpoint(boost::asio::ip::udp::udp::v6(),port)),
 		  m_outboundTimer(std::make_unique<boost::asio::steady_timer>(ios, std::chrono::seconds(1))),
@@ -169,7 +169,7 @@ MetaServerHandlerUDP::process_outbound(const boost::system::error_code&) {
 
 	m_outboundTick = tick;
 
-	m_outboundTimer->expires_from_now(std::chrono::milliseconds(delay));
+	m_outboundTimer->expires_after(std::chrono::milliseconds(delay));
 	m_outboundTimer->async_wait([this](const boost::system::error_code& error) { this->process_outbound(error); });
 }
 

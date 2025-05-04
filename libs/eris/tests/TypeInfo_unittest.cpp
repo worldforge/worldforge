@@ -49,7 +49,7 @@
 using namespace Eris;
 using namespace Atlas::Objects::Operation;
 
-boost::asio::io_service io_service;
+boost::asio::io_context io_service;
 Eris::EventService event_service(io_service);
 
 class TestConnection : public Eris::Connection {

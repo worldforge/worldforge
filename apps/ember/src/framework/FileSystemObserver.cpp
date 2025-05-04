@@ -23,7 +23,7 @@
 
 namespace Ember {
 
-FileSystemObserver::FileSystemObserver(boost::asio::io_service& ioService) {
+FileSystemObserver::FileSystemObserver(boost::asio::io_context& ioService) {
 	try {
 		mDirectoryMonitor = std::make_unique<boost::asio::dir_monitor>(ioService);
 		observe();

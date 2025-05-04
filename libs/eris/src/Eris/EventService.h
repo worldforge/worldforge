@@ -1,9 +1,7 @@
 #ifndef ERIS_EVENT_SERVICE_H
 #define ERIS_EVENT_SERVICE_H
 
-#include <sigc++/signal.h>
-
-#include <boost/asio/io_service.hpp>
+#include <boost/asio/io_context.hpp>
 #include <boost/asio/steady_timer.hpp>
 #include <boost/noncopyable.hpp>
 
@@ -39,14 +37,14 @@ class WaitFreeQueue;
  * Call runEvents in your main loop.
  * Use runOnMainThread to posts function from background threads.
  */
-class EventService : private boost::noncopyable {
+class EventService : boost::noncopyable {
 public:
 
 	/**
 	 * @brief Ctor.
 	 * @param io_service The main io_service of the system.
 	 */
-	explicit EventService(boost::asio::io_service& io_service);
+	explicit EventService(boost::asio::io_context& io_service);
 
 	/**
 	 * @brief Dtor.
@@ -98,8 +96,8 @@ private:
 
 	friend class TimedEvent;
 
-	boost::asio::io_service& m_io_service;
-	std::unique_ptr<boost::asio::io_service::work> m_work;
+	boost::asio::io_context& m_io_service;
+	boost::asio::executor_work_guard<boost::asio::io_context::executor_type> m_work;
 
 	/**
 	 * @brief A queue of handlers which are to be run on the main thread.

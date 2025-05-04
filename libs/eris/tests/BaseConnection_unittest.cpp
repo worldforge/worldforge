@@ -42,7 +42,7 @@
 
 class TestStreamClientSocketBase : public Eris::StreamSocket {
 public:
-    TestStreamClientSocketBase(boost::asio::io_service& io_service, const std::string& client_name, Atlas::Bridge& bridge, Callbacks& callbacks)
+    TestStreamClientSocketBase(boost::asio::io_context& io_service, const std::string& client_name, Atlas::Bridge& bridge, Callbacks& callbacks)
 : Eris::StreamSocket(io_service, client_name, bridge, callbacks)
 {}
     virtual void write(){}
@@ -56,7 +56,7 @@ class TestBaseConnection : public Eris::BaseConnection {
     bool failure;
     bool timeout;
 
-    TestBaseConnection(boost::asio::io_service& io_service, Atlas::Bridge * b) : Eris::BaseConnection(io_service, "test", "1"), failure(false), timeout(false) {
+    TestBaseConnection(boost::asio::io_context& io_service, Atlas::Bridge * b) : Eris::BaseConnection(io_service, "test", "1"), failure(false), timeout(false) {
     	_bridge = b;
     }
 
@@ -103,7 +103,7 @@ class TestBaseConnection : public Eris::BaseConnection {
 int main()
 {
 
-    boost::asio::io_service io_service;
+    boost::asio::io_context io_service;
 
     {
 		Atlas::Message::QueuedDecoder bridge;

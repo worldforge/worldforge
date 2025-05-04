@@ -80,7 +80,7 @@ public:
 		std::function<void(Status)> stateChanged;
 	};
 
-	StreamSocket(boost::asio::io_service& io_service,
+	StreamSocket(boost::asio::io_context& io_service,
 				 const std::string& client_name,
 				 Atlas::Bridge& bridge,
 				 Callbacks callbacks);
@@ -180,13 +180,13 @@ protected:
 template<typename ProtocolT>
 class AsioStreamSocket : public StreamSocket {
 public:
-	AsioStreamSocket(boost::asio::io_service& io_service,
+	AsioStreamSocket(boost::asio::io_context& io_service,
 					 const std::string& client_name, Atlas::Bridge& bridge,
 					 StreamSocket::Callbacks callbacks);
 
 	~AsioStreamSocket() override;
 
-	void connect(const typename ProtocolT::endpoint& endpoint);
+	void connectToEndpoint(const typename ProtocolT::endpoint& endpoint);
 
 	void write() override;
 
@@ -208,11 +208,11 @@ protected:
 template<typename ProtocolT>
 class ResolvableAsioStreamSocket : public AsioStreamSocket<ProtocolT> {
 public:
-	ResolvableAsioStreamSocket(boost::asio::io_service& io_service,
+	ResolvableAsioStreamSocket(boost::asio::io_context& io_service,
 							   const std::string& client_name, Atlas::Bridge& bridge,
 							   StreamSocket::Callbacks callbacks);
 
-	void connectWithQuery(const typename ProtocolT::resolver::query& query);
+	void connect(std::string_view host, std::string_view port);
 
 protected:
 	typename ProtocolT::resolver m_resolver;

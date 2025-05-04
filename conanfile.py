@@ -61,10 +61,10 @@ class Worldforge(ConanFile):
             self.requires("pkgconf/2.2.0", force=True)
 
         self.requires("libsigcpp/3.0.7")
-        self.requires("libcurl/8.11.1")
-        self.requires("spdlog/1.15.0")
-        self.requires("cli11/2.4.2")
-        self.requires("boost/1.86.0")
+        self.requires("libcurl/8.12.1")
+        self.requires("spdlog/1.15.1")
+        self.requires("cli11/2.5.0")
+        self.requires("boost/1.87.0")
         self.requires("ms-gsl/4.1.0")
 
         self.requires("zlib/1.3.1")
@@ -86,7 +86,7 @@ class Worldforge(ConanFile):
         if self.options.with_server:
             self.requires("worldforge-worlds/0.1.0@worldforge")
             self.requires("libgcrypt/1.10.3")
-            self.requires("sqlite3/3.48.0", force=True)
+            self.requires("sqlite3/3.49.1", force=True)
             self.requires("readline/8.2")
             self.requires("cpython/3.12.7")
 

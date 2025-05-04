@@ -25,18 +25,16 @@
 #include "MetaServer.hpp"
 #include "MetaServerHandlerUDP.hpp"
 #include "Network.h"
+#include "MetaServerVersion.hpp"
 
 /*
  * System Includes
  */
-#include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
 #include <filesystem>
 #include <istream>
-#include <boost/asio/placeholders.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
-#include <boost/date_time/gregorian/gregorian_types.hpp>
 
 //#include <json/writer.h>
 #include <spdlog/spdlog.h>
@@ -1311,7 +1309,7 @@ MetaServer::initLogger() {
 }
 
 void
-MetaServer::initTimers(boost::asio::io_service& ios) {
+MetaServer::initTimers(boost::asio::io_context& ios) {
 	spdlog::info("Timer initiation");
 
 	if (m_expiryTimer) {

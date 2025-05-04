@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	boost::asio::io_service io_service;
+	boost::asio::io_context io_service;
 	Eris::EventService event_service(io_service);
 
 	for (int i = optind; i < argc; ++i) {

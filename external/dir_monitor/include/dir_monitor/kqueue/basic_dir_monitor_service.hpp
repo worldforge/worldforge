@@ -156,7 +156,7 @@ public:
     }
 
 private:
-    void shutdown_service()
+    void shutdown()
     {
     }
 

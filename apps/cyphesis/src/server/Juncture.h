@@ -35,7 +35,8 @@ class LocatedEntity;
 class Peer;
 
 struct PeerAddress {
-	boost::asio::ip::tcp::resolver::iterator i;
+	boost::asio::ip::tcp::resolver::results_type entries;
+	boost::asio::ip::tcp::resolver::results_type::const_iterator iterator;
 };
 
 /// \brief Class managing and persisting connections to another server that

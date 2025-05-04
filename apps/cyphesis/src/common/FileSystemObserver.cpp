@@ -35,7 +35,7 @@ FileSystemObserver::FileSystemObserver(boost::asio::io_context& ioService)
 	try {
 		mDirectoryMonitor = std::make_unique<boost::asio::dir_monitor>(ioService);
 		observe();
-	} catch (const boost::exception& e) {
+	} catch (const boost::exception&) {
 		spdlog::warn("Could not initialize file system observer; probably due to running out of file descriptors.");
 	}
 }

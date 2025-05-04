@@ -229,7 +229,7 @@ int main(int argc, char* argv[])
 		}
     }
     
-    boost::asio::io_service io_service;
+    boost::asio::io_context io_service;
     Eris::EventService eventService(io_service);
 
     // maximum of 5 simultaneous queries

@@ -5,9 +5,7 @@
 #include "Log.h"
 #include "StreamSocket_impl.h"
 
-#include <Atlas/Codec.h>
 #include <Atlas/Net/Stream.h>
-#include <Atlas/Objects/Encoder.h>
 
 #include <sstream>
 #include <Atlas/Objects/Factories.h>
@@ -18,7 +16,7 @@ namespace Eris {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////    
 
-BaseConnection::BaseConnection(io_service& io_service,
+BaseConnection::BaseConnection(io_context& io_service,
 							   std::string clientName,
 							   std::string id) :
 		_io_service(io_service),
@@ -56,14 +54,13 @@ int BaseConnection::connectRemote(const std::string& host, short port) {
 					}
 					this->stateChanged(state);
 				};
-		auto socket = new ResolvableAsioStreamSocket<ip::tcp>(_io_service, _clientName,
+		auto socket = std::make_shared<ResolvableAsioStreamSocket<ip::tcp>>(_io_service, _clientName,
 															  *_bridge, callbacks);
-		_socket.reset(socket);
+		_socket = socket;
 		std::stringstream ss;
 		ss << port;
-		ip::tcp::resolver::query query(host, ss.str());
 		setStatus(CONNECTING);
-		socket->connectWithQuery(query);
+		socket->connect(host, std::to_string(port));
 	} catch (const std::exception& e) {
 		logger->error("Error when trying to connect to {} on port {}: {}", host, port, e.what());
 		hardDisconnect(true);
@@ -85,12 +82,12 @@ int BaseConnection::connectLocal(const std::string& filename) {
 		callbacks.dispatch = [&] { this->dispatch(); };
 		callbacks.stateChanged =
 				[&](StreamSocket::Status state) { this->stateChanged(state); };
-		auto socket = new AsioStreamSocket<local::stream_protocol>(
+		const auto socket = std::make_shared<AsioStreamSocket<local::stream_protocol>>(
 				_io_service, _clientName, *_bridge, callbacks);
-		_socket.reset(socket);
+		_socket = socket;
 		setStatus(CONNECTING);
-		socket->connect(local::stream_protocol::endpoint(filename));
-	} catch (const std::exception& e) {
+		socket->connectToEndpoint(local::stream_protocol::endpoint(filename));
+	} catch (const std::exception&) {
 		hardDisconnect(true);
 		return -1;
 	}

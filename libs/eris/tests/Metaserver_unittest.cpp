@@ -47,7 +47,7 @@ static const std::string TEST_INVALID_IP("327.0.0.1");
 //}
 
 int main() {
-	boost::asio::io_service io_service;
+	boost::asio::io_context io_service;
 	Eris::EventService event_service(io_service);
 	{
 		Meta* m = new Meta(io_service, event_service, TEST_METASERVER, 20);
@@ -157,7 +157,7 @@ int main() {
 
 namespace Eris {
 
-MetaQuery::MetaQuery(boost::asio::io_service& io_service,
+MetaQuery::MetaQuery(boost::asio::io_context& io_service,
 					 Atlas::Bridge& bridge,
 					 Meta& meta,
 					 const std::string& host,
@@ -193,7 +193,7 @@ long MetaQuery::getElapsed() {
 	return 0L;
 }
 
-BaseConnection::BaseConnection(boost::asio::io_service& io_service, std::string cnm,
+BaseConnection::BaseConnection(boost::asio::io_context& io_service, std::string cnm,
 							   std::string id) :
 		_io_service(io_service),
 		_status(DISCONNECTED),
@@ -225,8 +225,8 @@ void ServerInfo::processServer(const Atlas::Objects::Entity::RootEntity& svr) {
 }
 
 
-EventService::EventService(boost::asio::io_service& io_service)
-		: m_io_service(io_service) {}
+EventService::EventService(boost::asio::io_context& io_service)
+		: m_io_service(io_service), m_work(boost::asio::make_work_guard(io_service)) {}
 
 EventService::~EventService() {
 }

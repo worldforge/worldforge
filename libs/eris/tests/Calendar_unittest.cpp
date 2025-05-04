@@ -73,7 +73,7 @@ struct TestCalendar : public Eris::Calendar {
 
 class TestConnection : public Eris::Connection {
   public:
-    TestConnection(boost::asio::io_service& io_service,
+    TestConnection(boost::asio::io_context& io_service,
     		Eris::EventService& eventService,
             const std::string &cnm,
             const std::string& host,

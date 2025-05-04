@@ -105,7 +105,7 @@ public:
 
 	Eris::EventService& getEventService();
 
-	boost::asio::io_service& getIoService();
+	boost::asio::io_context& getIoService();
 
 	/**
 	 * @brief Emitted before processing input. This event is emitted continuously.

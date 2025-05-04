@@ -43,7 +43,7 @@
 #include <iostream>
 
 namespace {
-    boost::asio::io_service io_service;
+    boost::asio::io_context io_service;
     Eris::EventService event_service(io_service);
 }
 
@@ -167,7 +167,7 @@ public:
 };
 
 int main() {
-	boost::asio::io_service io_service;
+	boost::asio::io_context io_service;
 	Eris::EventService tes(io_service);
 
 	// Test constructor

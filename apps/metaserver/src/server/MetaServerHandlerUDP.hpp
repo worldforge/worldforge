@@ -27,7 +27,7 @@
 /*
  * System Includes
  */
-#include <boost/asio/io_service.hpp>
+#include <boost/asio/io_context.hpp>
 #include <boost/asio/ip/udp.hpp>
 #include <boost/asio/steady_timer.hpp>
 
@@ -42,7 +42,7 @@ class MetaServerHandlerUDP {
 
 public:
 
-	MetaServerHandlerUDP(MetaServer& ms, boost::asio::io_service& ios, const std::string& address, const unsigned int port);
+	MetaServerHandlerUDP(MetaServer& ms, boost::asio::io_context& ios, const std::string& address, unsigned int port);
 
 	~MetaServerHandlerUDP();
 

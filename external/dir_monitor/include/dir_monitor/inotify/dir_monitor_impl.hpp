@@ -33,7 +33,7 @@ public:
     dir_monitor_impl()
         : fd_(init_fd()),
         run_(true),
-        inotify_work_(new boost::asio::io_context::work(inotify_io_context_)),
+        inotify_work_(boost::asio::make_work_guard(inotify_io_context_)),
         inotify_work_thread_([&](){
 #ifndef _WIN32
 #ifdef __APPLE__
@@ -215,7 +215,7 @@ private:
     int fd_;
     bool run_;
     boost::asio::io_context inotify_io_context_;
-    std::unique_ptr<boost::asio::io_context::work> inotify_work_;
+    boost::asio::executor_work_guard<boost::asio::io_context::executor_type> inotify_work_;
     std::thread inotify_work_thread_;
 
     std::unique_ptr<boost::asio::posix::stream_descriptor> stream_descriptor_;

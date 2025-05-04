@@ -37,7 +37,7 @@
 
 class TestConnection : public Eris::Connection {
   public:
-    TestConnection(boost::asio::io_service& io_service, 
+    TestConnection(boost::asio::io_context& io_service,
     		Eris::EventService& eventService, 
     		const std::string &cnm, 
     		const std::string& host,
@@ -59,14 +59,14 @@ int main()
 
     // Test constructor and destructor
     {
-        boost::asio::io_service io_service;
+        boost::asio::io_context io_service;
         Eris::EventService event_service(io_service);
         Eris::Connection c(io_service, event_service, "name", "localhost", 6767);
     }
 
     // Test getTypeService()
     {
-        boost::asio::io_service io_service;
+        boost::asio::io_context io_service;
         Eris::EventService event_service(io_service);
         Eris::Connection c(io_service, event_service, " name", "localhost", 6767);
 
@@ -75,7 +75,7 @@ int main()
 
     // Test connect()
     {
-        boost::asio::io_service io_service;
+        boost::asio::io_context io_service;
         Eris::EventService event_service(io_service);
         Eris::Connection c(io_service, event_service, " name", "localhost", 6767);
         
@@ -86,7 +86,7 @@ int main()
 
     // Test connect() with socket
     {
-        boost::asio::io_service io_service;
+        boost::asio::io_context io_service;
         Eris::EventService event_service(io_service);
         Eris::Connection c(io_service, event_service, " name", "localhost", 6767);
 
@@ -97,7 +97,7 @@ int main()
 
     // Test disconnect() when disconnected
     {
-        boost::asio::io_service io_service;
+        boost::asio::io_context io_service;
         Eris::EventService event_service(io_service);
         Eris::Connection c(io_service, event_service, " name", "localhost", 6767);
 
@@ -106,7 +106,7 @@ int main()
 
     // Test disconnect() when disconnecting
     {
-        boost::asio::io_service io_service;
+        boost::asio::io_context io_service;
         Eris::EventService event_service(io_service);
         TestConnection c(io_service, event_service, " name", "localhost", 6767);
 
@@ -119,7 +119,7 @@ int main()
 
     // Test disconnect() when connecting
     {
-        boost::asio::io_service io_service;
+        boost::asio::io_context io_service;
         Eris::EventService event_service(io_service);
         TestConnection c(io_service, event_service, " name", "localhost", 6767);
 
@@ -134,7 +134,7 @@ int main()
 
     // Test dispatch()
     {
-        boost::asio::io_service io_service;
+        boost::asio::io_context io_service;
         Eris::EventService event_service(io_service);
         TestConnection c(io_service, event_service, " name", "localhost", 6767);
 
@@ -145,7 +145,7 @@ int main()
 
     // Test send()
     {
-        boost::asio::io_service io_service;
+        boost::asio::io_context io_service;
         Eris::EventService event_service(io_service);
         Eris::Connection c(io_service, event_service, " name", "localhost", 6767);
 

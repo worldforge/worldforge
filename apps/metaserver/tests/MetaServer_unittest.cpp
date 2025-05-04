@@ -61,7 +61,7 @@ public:
 	}
 
 	void testInitTimers() {
-		boost::asio::io_service ios;
+		boost::asio::io_context ios;
 		MetaServer* ms = new MetaServer();
 
 		ms->initTimers(ios);

@@ -98,7 +98,7 @@ void MainLoop::run(bool daemon,
 
 
 	//Make sure that the io_context never runs out of work.
-	boost::asio::io_context::work work(io_context);
+	auto work = boost::asio::make_work_guard(io_context);
 	//This timer is used to wake the io_context when next op needs to be handled.
 	boost::asio::steady_timer nextOpTimer(io_context);
 	//This timer will set a deadline for any mind persistence during soft exits.

@@ -13,7 +13,6 @@ endif ()
 set(MONOREPO_BUILD "TRUE")
 
 include(GNUInstallDirs)
-include(FindPkgConfig)
 include(CMakeDependentOption)
 
 #If no VERSION is set externally, and we can't figure out the Git version, we'll use this version as fallback.
@@ -112,7 +111,7 @@ add_custom_target(dox)
 #Since there are multiple instances where boost is required we specify this macro to keep the version in sync.
 macro(wf_find_boost COMPONENTS)
     find_package(Boost
-            1.86.0
+            1.87.0
             EXACT
             REQUIRED
             COMPONENTS ${COMPONENTS})

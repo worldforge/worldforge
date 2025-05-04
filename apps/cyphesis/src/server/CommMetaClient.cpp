@@ -73,16 +73,17 @@ int CommMetaClient::setup(const std::string& mserver) {
 	 */
 	updateAttributes();
 
-	ip::udp::resolver::query query(ip::udp::v4(), mserver, "8453");
-	mResolver.async_resolve(query,
-							[this, mserver](boost::system::error_code ec, ip::udp::resolver::iterator iterator) {
+	mResolver.async_resolve(mserver, "8453",
+							[this, mserver](boost::system::error_code ec, ip::udp::resolver::results_type iterator) {
 								if (!ec) {
 									spdlog::debug("Connected to meta server at {}.", mserver);
-									mHasEndpoint = true;
-									mDestination = *iterator;
-									this->metaserverKeepalive();
-									this->do_receive();
-									this->keepalive();
+									if (!iterator.empty()) {
+										mHasEndpoint = true;
+										mDestination = iterator.begin()->endpoint();
+										this->metaserverKeepalive();
+										this->do_receive();
+										this->keepalive();
+									}
 								}
 							});
 
@@ -104,13 +105,16 @@ void CommMetaClient::keepalive() {
 	mKeepaliveTimer.expires_after(std::chrono::seconds(m_heartbeatTime));
 	mKeepaliveTimer.async_wait([this](boost::system::error_code ec) {
 		if (!ec) {
-			ip::udp::resolver::query query(ip::udp::v4(), m_server, "8453");
-			mResolver.async_resolve(query,
-									[this](boost::system::error_code ecInner, ip::udp::resolver::iterator iterator) {
+			mResolver.async_resolve(m_server, "8453",
+									[this](boost::system::error_code ecInner, ip::udp::resolver::results_type iterator) {
 										if (!ecInner) {
 											rmt_ScopedCPUSample(MetaClientKeepAlive, 0)
-											mDestination = *iterator;
-											mHasEndpoint = true;
+											if (!iterator.empty()) {
+												mDestination = iterator.begin()->endpoint();
+												mHasEndpoint = true;
+											} else {
+												mHasEndpoint = false;
+											}
 											this->metaserverKeepalive();
 										}
 									});

@@ -267,7 +267,7 @@ Application::~Application() {
 	//Process all handlers again before shutting down.
 	mSession->m_event_service.processAllHandlers();
 	mSession->m_io_service.stop();
-	mSession->m_io_service.reset();
+	mSession->m_io_service.restart();
 
 	mOgreView.reset();
 
