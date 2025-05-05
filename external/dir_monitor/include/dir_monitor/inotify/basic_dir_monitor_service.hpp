@@ -136,7 +136,7 @@ public:
     void async_monitor(implementation_type &impl, Handler handler)
     {
 #if BOOST_VERSION < 106600
-        this->async_monitor_io_context_.post(monitor_operation<Handler>(impl, this->get_io_service(), handler));
+        boost::asio::post(this->async_monitor_io_context_, monitor_operation<Handler>(impl, this->get_io_service(), handler));
 #else
         boost::asio::post(this->async_monitor_io_context_, monitor_operation<Handler>(impl, this->get_io_context(), handler));
 #endif

@@ -34,7 +34,7 @@ public:
 
     explicit basic_dir_monitor_service(boost::asio::io_context &io_context_in)
         : boost::asio::io_context::service(io_context_in),
-        async_monitor_work_(new boost::asio::io_context::work(async_monitor_io_context_)),
+        async_monitor_work_(boost::asio::make_work_guard(async_monitor_io_context_)),
         async_monitor_thread_(boost::bind(&boost::asio::io_context::run, &async_monitor_io_context_))
     {
     }
@@ -114,11 +114,11 @@ public:
             {
                 boost::system::error_code ec;
                 dir_monitor_event ev = impl->popfront_event(ec);
-                this->io_context_.post(boost::asio::detail::bind_handler(handler_, ec, ev));
+                boost::asio::post(this->io_context_, boost::asio::detail::bind_handler(handler_, ec, ev));
             }
             else
             {
-                this->io_context_.post(boost::asio::detail::bind_handler(handler_, boost::asio::error::operation_aborted, dir_monitor_event()));
+                boost::asio::post(this->io_context_, boost::asio::detail::bind_handler(handler_, boost::asio::error::operation_aborted, dir_monitor_event()));
             }
         }
 
@@ -136,9 +136,9 @@ public:
     void async_monitor(implementation_type &impl, Handler handler)
     {
 #if BOOST_VERSION < 106600
-        this->async_monitor_io_context_.post(monitor_operation<Handler>(impl, this->get_io_service(), handler));
+        boost::asio::post(this->async_monitor_io_context_, monitor_operation<Handler>(impl, this->get_io_service(), handler));
 #else
-        this->async_monitor_io_context_.post(monitor_operation<Handler>(impl, this->get_io_context(), handler));
+        boost::asio::post(this->async_monitor_io_context_, monitor_operation<Handler>(impl, this->get_io_context(), handler));
 #endif
     }
 
@@ -147,7 +147,7 @@ private:
     {}
 
     boost::asio::io_context async_monitor_io_context_;
-    boost::scoped_ptr<boost::asio::io_context::work> async_monitor_work_;
+	boost::asio::executor_work_guard<boost::asio::io_context::executor_type> async_monitor_work_;
     boost::thread async_monitor_thread_;
 };
 
