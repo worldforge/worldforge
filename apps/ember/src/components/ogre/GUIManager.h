@@ -29,7 +29,7 @@
 
 #include <OgreFrameListener.h>
 #include <sigc++/trackable.h>
-#include <SDL_keyboard.h>
+#include <SDL3/SDL_keyboard.h>
 
 
 namespace CEGUI {
@@ -388,6 +388,13 @@ protected:
 
 	std::unique_ptr<Gui::WidgetDefinitions> mWidgetDefinitions;
 
+	struct InputCaptureWindow {
+		CEGUI::Window* window = nullptr;
+		std::vector<CEGUI::Event::Connection> connections;
+	};
+
+	InputCaptureWindow mInputCaptureWindow;
+
 	/**
 	 *    hooked to OgreView::EventCreatedAvatarEntity, switches the input mode to movement mode
 	 * @param entity
@@ -398,7 +405,7 @@ protected:
 
 	void EmberOgre_WorldBeingDestroyed();
 
-	void pressedKey(const SDL_Keysym& key, Input::InputMode inputMode);
+	void pressedKey(const SDL_KeyboardEvent& key, Input::InputMode inputMode);
 
 	/**
 	 * @brief Called when a new View instance is created.

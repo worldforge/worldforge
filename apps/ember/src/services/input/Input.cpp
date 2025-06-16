@@ -38,8 +38,7 @@
 #include "platform/platform_windows.h"
 #endif
 
-#include <SDL.h>
-#include <SDL_syswm.h>
+#include <SDL3/SDL.h>
 
 #include <sstream>
 #include <spdlog/spdlog.h>
@@ -91,7 +90,7 @@ Input::Input() :
 Input::~Input() {
 	shutdownInteraction();
 	if (mIconSurface) {
-		SDL_FreeSurface(mIconSurface);
+		SDL_DestroySurface(mIconSurface);
 	}
 }
 
@@ -99,7 +98,7 @@ std::string Input::createWindow(unsigned int width, unsigned int height, bool fu
 
 
 	mHandleOpenGL = handleOpenGL;
-	unsigned int flags = SDL_WINDOW_SHOWN;
+	unsigned int flags = 0;
 
 	if (resizable) {
 		flags |= SDL_WINDOW_RESIZABLE;
@@ -110,7 +109,7 @@ std::string Input::createWindow(unsigned int width, unsigned int height, bool fu
 	}
 
 	if (fullscreen) {
-		flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+		flags |= SDL_WINDOW_FULLSCREEN;
 	}
 
 	if (mMainVideoSurface) {
@@ -119,19 +118,14 @@ std::string Input::createWindow(unsigned int width, unsigned int height, bool fu
 		mMainWindowId = 0;
 	}
 	mMainVideoSurface = SDL_CreateWindow("Ember",
-										 SDL_WINDOWPOS_CENTERED,
-										 SDL_WINDOWPOS_CENTERED,
 										 (int) width,
 										 (int) height,
 										 flags); // create an SDL window
+	SDL_SetWindowPosition(mMainVideoSurface, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 	createIcon();
 
 	mMainWindowId = SDL_GetWindowID(mMainVideoSurface);
 	SDL_GetWindowSize(mMainVideoSurface, &mScreenWidth, &mScreenHeight);
-	SDL_SysWMinfo info;
-	SDL_VERSION(&info.version)
-
-	SDL_GetWindowWMInfo(mMainVideoSurface, &info);
 
 #ifdef _WIN32
 	// When SDL is centering the window, it doesn't take into account the tray bar.
@@ -159,23 +153,29 @@ std::string Input::createWindow(unsigned int width, unsigned int height, bool fu
 #endif
 
 
-	SDL_ShowCursor(0);
+	SDL_HideCursor();
 //	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
-
-	std::stringstream ss;
-#ifdef __APPLE__
-	//On OSX we'll tell Ogre to use the current OpenGL context; thus we don't need to return the window id
-#elif defined(_WIN32)
-	ss << (size_t)info.info.win.window;
-#else
-	ss << info.info.x11.window;
-#endif
-
 
 	setGeometry((int) width, (int) height);
 
+	std::string handle;
+#ifdef __APPLE__
+	//On OSX we'll tell Ogre to use the current OpenGL context; thus we don't need to return the window id
+#elif defined(_WIN32)
+	HWND hwnd = (HWND)SDL_GetPointerProperty(SDL_GetWindowProperties(mMainVideoSurface), SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
+	if (hwnd) {
+		handle = std::to_string((unsigned long long)hwnd);
+	}
+#else
+	std::cout << SDL_GetCurrentVideoDriver() << std::endl;
+	auto xwindow = (unsigned long)SDL_GetNumberProperty(SDL_GetWindowProperties(mMainVideoSurface), SDL_PROP_WINDOW_X11_WINDOW_NUMBER, 0);
+	handle = std::to_string(xwindow);
+#endif
 
-	return ss.str();
+
+
+
+	return handle;
 }
 
 void Input::shutdownInteraction() {
@@ -186,7 +186,7 @@ void Input::shutdownInteraction() {
 	}
 
 	//Release the mouse for safety's sake.
-	SDL_SetWindowGrab(mMainVideoSurface, SDL_FALSE);
+	SDL_SetWindowMouseGrab(mMainVideoSurface, false);
 }
 
 void Input::createIcon() {
@@ -205,7 +205,8 @@ void Input::createIcon() {
 
 	//We'll use the emberIcon struct. This isn't needed on WIN32 or OSX as the icon is provided through different means.
 	if (!mIconSurface) {
-		mIconSurface = SDL_CreateRGBSurfaceFrom(emberIcon.pixel_data, 64, 64, 24, 64 * 3, rmask, gmask, bmask, 0);
+		auto pixelFormat = SDL_GetPixelFormatForMasks(24,  rmask, gmask, bmask, 0);
+		mIconSurface = SDL_CreateSurfaceFrom(64, 64, pixelFormat, emberIcon.pixel_data, 64 * 3);
 	}
 	if (mIconSurface) {
 		SDL_SetWindowIcon(mMainVideoSurface, mIconSurface);
@@ -253,7 +254,7 @@ InputCommandMapper* Input::getMapperForState(const std::string& state) {
 
 
 bool Input::isApplicationVisible() {
-	return SDL_GetWindowFlags(mMainVideoSurface) & SDL_WINDOW_SHOWN;
+	return !(SDL_GetWindowFlags(mMainVideoSurface) & SDL_WINDOW_MINIMIZED);
 }
 
 bool Input::isApplicationFocused() {
@@ -290,7 +291,7 @@ void Input::processInput(const std::chrono::steady_clock::time_point currentTime
 
 void Input::pollMouse(float secondsSinceLast) {
 	SDL_PumpEvents(); // Loop through all pending system events to get the latest mouse position.
-	int mouseX, mouseY, mouseRelativeX, mouseRelativeY;
+	float mouseX, mouseY, mouseRelativeX, mouseRelativeY;
 	mMouseState = SDL_GetMouseState(&mouseX, &mouseY);
 	if (mCurrentInputMode == IM_GUI) {
 		mouseRelativeX = (mMousePosition.xPixelPosition - mouseX);
@@ -349,8 +350,8 @@ void Input::pollMouse(float secondsSinceLast) {
 			} else {
 				mMousePosition.xPixelPosition = mouseX;
 				mMousePosition.yPixelPosition = mouseY;
-				mMousePosition.xRelativePosition = (float) mouseX / (float) mScreenWidth;
-				mMousePosition.yRelativePosition = (float) mouseY / (float) mScreenHeight;
+				mMousePosition.xRelativePosition = mouseX / static_cast<float>(mScreenWidth);
+				mMousePosition.yRelativePosition = mouseY / static_cast<float>(mScreenHeight);
 			}
 
 		}
@@ -365,21 +366,21 @@ void Input::pollEvents(float secondsSinceLast) {
 		EventSDLEventReceived(event);
 		switch (event.type) {
 			/* Look for a keypress */
-			case SDL_KEYDOWN:
-			case SDL_KEYUP:
+			case SDL_EVENT_KEY_DOWN:
+			case SDL_EVENT_KEY_UP:
 				keyChanged(event.key);
 				break;
-			case SDL_TEXTINPUT:
+			case SDL_EVENT_TEXT_INPUT:
 				textInput(event.text);
 				break;
-			case SDL_QUIT:
+			case SDL_EVENT_QUIT:
 				if (mMainLoopController) {
 					mMainLoopController->quit();
 				}
 				break;
-			case SDL_MOUSEBUTTONDOWN:
-			case SDL_MOUSEBUTTONUP:
-				if (event.button.state == SDL_RELEASED) {
+			case SDL_EVENT_MOUSE_BUTTON_DOWN:
+			case SDL_EVENT_MOUSE_BUTTON_UP:
+				if (event.button.down == false) {
 					if (event.button.button == SDL_BUTTON_RIGHT) {
 						//right mouse button released
 						mTimeSinceLastRightMouseClick = 0.0f;
@@ -445,7 +446,7 @@ void Input::pollEvents(float secondsSinceLast) {
 					}
 				}
 				break;
-			case SDL_MOUSEWHEEL:
+			case SDL_EVENT_MOUSE_WHEEL:
 				if (event.wheel.y > 0) {
 					EventMouseButtonPressed.emit(MouseWheelUp, mCurrentInputMode);
 					for (auto I = mAdapters.begin(); I != mAdapters.end();) {
@@ -464,36 +465,32 @@ void Input::pollEvents(float secondsSinceLast) {
 					}
 				}
 				break;
-			case SDL_WINDOWEVENT:
-				if (event.window.windowID == mMainWindowId) {
-					switch (event.window.event) {
-						case SDL_WINDOWEVENT_SHOWN: {
-							EventWindowActive.emit(true);
-							break;
-						}
-						case SDL_WINDOWEVENT_HIDDEN: {
-							EventWindowActive.emit(false);
-							//On Windows we get a corrupted screen if we just switch to non-fullscreen here.
-#ifndef _WIN32
-							lostFocus();
-#endif
-							break;
-						}
-						case SDL_WINDOWEVENT_RESIZED: {
-							setGeometry(event.window.data1, event.window.data2);
-							break;
-						}
-						case SDL_WINDOWEVENT_LEAVE: {
-							SDL_EnableScreenSaver();
-							break;
-						}
-						case SDL_WINDOWEVENT_ENTER: {
-							SDL_DisableScreenSaver();
-							break;
-						}
-					}
-				}
+
+			case SDL_EVENT_WINDOW_SHOWN: {
+				EventWindowActive.emit(true);
 				break;
+			}
+			case SDL_EVENT_WINDOW_HIDDEN: {
+				EventWindowActive.emit(false);
+				//On Windows we get a corrupted screen if we just switch to non-fullscreen here.
+#ifndef _WIN32
+				lostFocus();
+#endif
+				break;
+			}
+			case SDL_EVENT_WINDOW_RESIZED: {
+				setGeometry(event.window.data1, event.window.data2);
+				break;
+			}
+			case SDL_EVENT_WINDOW_MOUSE_LEAVE: {
+				SDL_EnableScreenSaver();
+				break;
+			}
+			case SDL_EVENT_WINDOW_MOUSE_ENTER: {
+				SDL_DisableScreenSaver();
+				break;
+			}
+
 			default:
 				break;
 		}
@@ -529,19 +526,19 @@ void Input::textInput(const SDL_TextInputEvent& textEvent) {
 void Input::keyChanged(const SDL_KeyboardEvent& keyEvent) {
 //On windows the OS will handle alt-tab independently, so we don't need to check here
 #ifndef _WIN32
-	if ((keyEvent.keysym.mod & KMOD_LALT) && (keyEvent.keysym.sym == SDLK_TAB)) {
-		if (keyEvent.type == SDL_KEYDOWN) {
+	if ((keyEvent.key & SDL_KMOD_LALT) && (keyEvent.key == SDLK_TAB)) {
+		if (keyEvent.type == SDL_EVENT_KEY_DOWN) {
 			lostFocus();
 		}
 #else
 		if (false) {
 #endif
 	} else {
-		if (keyEvent.type == SDL_KEYDOWN) {
-			mKeysPressed.insert(keyEvent.keysym.scancode);
+		if (keyEvent.type == SDL_EVENT_KEY_DOWN) {
+			mKeysPressed.insert(keyEvent.scancode);
 			keyPressed(keyEvent);
 		} else {
-			mKeysPressed.erase(keyEvent.keysym.scancode);
+			mKeysPressed.erase(keyEvent.scancode);
 			keyReleased(keyEvent);
 		}
 	}
@@ -560,12 +557,12 @@ void Input::keyPressed(const SDL_KeyboardEvent& keyEvent) {
 		for (auto I = mAdapters.begin(); I != mAdapters.end() && !mSuppressForCurrentEvent;) {
 			IInputAdapter* adapter = *I;
 			++I;
-			if (!(adapter)->injectKeyDown(keyEvent.keysym.scancode))
+			if (!(adapter)->injectKeyDown(keyEvent.scancode))
 				break;
 		}
 	}
 	if (!mSuppressForCurrentEvent) {
-		EventKeyPressed(keyEvent.keysym, mCurrentInputMode);
+		EventKeyPressed(keyEvent, mCurrentInputMode);
 	}
 	mSuppressForCurrentEvent = false;
 
@@ -577,12 +574,12 @@ void Input::keyReleased(const SDL_KeyboardEvent& keyEvent) {
 		for (auto I = mAdapters.begin(); I != mAdapters.end() && !mSuppressForCurrentEvent;) {
 			IInputAdapter* adapter = *I;
 			++I;
-			if (!(adapter)->injectKeyUp(keyEvent.keysym.scancode))
+			if (!(adapter)->injectKeyUp(keyEvent.scancode))
 				break;
 		}
 	}
 	if (!mSuppressForCurrentEvent) {
-		EventKeyReleased(keyEvent.keysym, mCurrentInputMode);
+		EventKeyReleased(keyEvent, mCurrentInputMode);
 	}
 	mSuppressForCurrentEvent = false;
 }
@@ -623,6 +620,14 @@ void Input::setMainLoopController(MainLoopController* mainLoopController) {
 	mMainLoopController = mainLoopController;
 }
 
+void Input::enableTextInput() const {
+	SDL_StartTextInput(mMainVideoSurface);
+}
+
+void Input::disableTextInput() const {
+	SDL_StopTextInput(mMainVideoSurface);
+}
+
 MainLoopController* Input::getMainLoopController() const {
 	return mMainLoopController;
 }
@@ -649,7 +654,7 @@ void Input::Config_InvertCamera(const std::string& section, const std::string& k
 }
 
 void Input::setFullscreen(bool enabled) {
-	SDL_SetWindowFullscreen(mMainVideoSurface, enabled ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+	SDL_SetWindowFullscreen(mMainVideoSurface, enabled);
 }
 
 void Input::toggleFullscreen() {
@@ -670,8 +675,7 @@ void Input::lostFocus() {
 void Input::setMouseGrab(bool enabled) {
 	logger->debug("mouse grab: {}", enabled);
 
-	auto result = SDL_SetRelativeMouseMode(enabled ? SDL_TRUE : SDL_FALSE);
-	if (result != 0) {
+	if (auto result = SDL_SetWindowRelativeMouseMode(mMainVideoSurface, enabled); !result) {
 		logger->warn("Setting relative mouse mode doesn't work.");
 	}
 

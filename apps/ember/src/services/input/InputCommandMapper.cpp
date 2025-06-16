@@ -26,7 +26,7 @@
 #include "services/config/ConfigService.h"
 #include "framework/Log.h"
 
-#include <SDL_keyboard.h>
+#include <SDL3/SDL_events.h>
 #include <algorithm>
 
 namespace Ember {
@@ -64,7 +64,7 @@ void InputCommandMapper::readFromConfigSection(const std::string& sectionName) {
 
 }
 
-void InputCommandMapper::Input_EventKeyPressed(const SDL_Keysym& key, Input::InputMode inputMode) {
+void InputCommandMapper::Input_EventKeyPressed(const SDL_KeyboardEvent& key, Input::InputMode inputMode) {
 	if (mEnabled && isActiveForInputMode(inputMode)) {
 		//check if we have any key with a matching command
 		auto keyI = mKeymap.find(key.scancode);
@@ -82,7 +82,7 @@ void InputCommandMapper::Input_EventKeyPressed(const SDL_Keysym& key, Input::Inp
 }
 
 
-void InputCommandMapper::Input_EventKeyReleased(const SDL_Keysym& key, Input::InputMode inputMode) {
+void InputCommandMapper::Input_EventKeyReleased(const SDL_KeyboardEvent& key, Input::InputMode inputMode) {
 	if (mEnabled && isActiveForInputMode(inputMode)) {
 		//check if we have any key with a matching command
 		//only check for commands that start with a "+"
@@ -162,13 +162,13 @@ void InputCommandMapper::unbindCommand(const std::string& key, const std::string
 //   const std::string & plainName = I->second;
 //   std::string decoratedName = plainName;
 //
-//   if (key.mod & KMOD_SHIFT)
+//   if (key.mod & SDL_KMOD_SHIFT)
 //     decoratedName = "shift_" + decoratedName;
 //
-//   if (key.mod & KMOD_ALT)
+//   if (key.mod & SDL_KMOD_ALT)
 //     decoratedName = "alt_" + decoratedName;
 //
-//   if (key.mod & KMOD_CTRL)
+//   if (key.mod & SDL_KMOD_CTRL)
 //     decoratedName = "ctrl_" + decoratedName;
 //
 //   m_bindings->clean(decoratedName);

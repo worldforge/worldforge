@@ -22,9 +22,9 @@ class SquallConan(ConanFile):
 
     def requirements(self):
         self.requires("libcurl/8.12.1")
-        self.requires("spdlog/1.15.1")
+        self.requires("spdlog/1.15.3")
         self.requires("cli11/2.5.0")
-        self.test_requires("catch2/3.8.0")
+        self.test_requires("catch2/3.8.1")
 
     def export_sources(self):
         folder = os.path.join(self.recipe_folder, "../..")

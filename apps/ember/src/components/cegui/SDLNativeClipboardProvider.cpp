@@ -17,7 +17,7 @@
  */
 
 #include "SDLNativeClipboardProvider.h"
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 
 namespace Ember::Cegui {
@@ -40,7 +40,7 @@ void SDLNativeClipboardProvider::sendToClipboard(const CEGUI::String& mimeType, 
 
 void SDLNativeClipboardProvider::retrieveFromClipboard(CEGUI::String& mimeType, void*& buffer, size_t& size) {
 
-	if (SDL_HasClipboardText() == SDL_TRUE) {
+	if (SDL_HasClipboardText() == true) {
 		mimeType = "text/plain";
 		SDL_free(m_buffer);
 

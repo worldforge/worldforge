@@ -65,7 +65,7 @@ if (WF_USE_WIDGET_PLUGINS)
     wf_find_boost(dll)
 endif ()
 
-find_package(SDL2 REQUIRED EXACT 2.30.9)
+find_package(SDL3 REQUIRED EXACT 3.2.14 COMPONENTS SDL3)
 
 find_package(sigc++-3 3.0.7 REQUIRED)
 

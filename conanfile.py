@@ -62,7 +62,7 @@ class Worldforge(ConanFile):
 
         self.requires("libsigcpp/3.0.7")
         self.requires("libcurl/8.12.1")
-        self.requires("spdlog/1.15.1")
+        self.requires("spdlog/1.15.3")
         self.requires("cli11/2.5.0")
         self.requires("boost/1.87.0")
         self.requires("ms-gsl/4.1.0")
@@ -76,7 +76,7 @@ class Worldforge(ConanFile):
         if self.options.with_client:
             self.requires("cegui/0.8.7@worldforge")
             self.requires("ogre/14.3.2@worldforge")
-            self.requires("sdl/2.30.9")
+            self.requires("sdl/3.2.14")
             self.requires("lua/5.3.6")
             self.requires("vorbis/1.3.7")
 
@@ -93,7 +93,7 @@ class Worldforge(ConanFile):
         # self.requires("avahi/0.8")
 
         self.test_requires("cppunit/1.15.1")
-        self.test_requires("catch2/3.8.0")
+        self.test_requires("catch2/3.8.1")
 
     def generate(self):
         deps = CMakeDeps(self)

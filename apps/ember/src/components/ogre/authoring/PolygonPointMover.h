@@ -145,9 +145,9 @@ private:
 	 */
 	WFMath::Point<2> mInitialPosition;
 
-	void input_KeyPressed(const SDL_Keysym& key, Input::InputMode mode);
+	void input_KeyPressed(const SDL_KeyboardEvent& key, Input::InputMode mode);
 
-	void input_KeyReleased(const SDL_Keysym& key, Input::InputMode mode);
+	void input_KeyReleased(const SDL_KeyboardEvent& key, Input::InputMode mode);
 
 	/**
 	 * @brief Switch to new point mode.

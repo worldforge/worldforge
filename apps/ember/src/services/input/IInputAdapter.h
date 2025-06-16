@@ -25,7 +25,7 @@
 
 #include "Input.h"
 
-#include <SDL_scancode.h>
+#include <SDL3/SDL_scancode.h>
 
 
 namespace Ember {

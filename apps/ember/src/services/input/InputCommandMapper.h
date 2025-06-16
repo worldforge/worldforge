@@ -25,7 +25,7 @@
 #define EMBEROGREINPUTCOMMANDMAPPER_H
 
 #include "Input.h"
-#include <SDL_scancode.h>
+#include <SDL3/SDL_scancode.h>
 #include <utility>
 #include <vector>
 #include <map>
@@ -134,14 +134,14 @@ protected:
 	 * @param key
 	 * @param inputMode
 	 */
-	void Input_EventKeyPressed(const SDL_Keysym& key, Input::InputMode inputMode);
+	void Input_EventKeyPressed(const SDL_KeyboardEvent& key, Input::InputMode inputMode);
 
 	/**
 	 * @brief At keyrelease time, see if there's a command prefixed with "+", such as "+run", which should have its "-" twin command sent out.
 	 * @param key
 	 * @param inputMode
 	 */
-	void Input_EventKeyReleased(const SDL_Keysym& key, Input::InputMode inputMode);
+	void Input_EventKeyReleased(const SDL_KeyboardEvent& key, Input::InputMode inputMode);
 
 	/**
 	 * @brief A store of the mapping between keys and commands.

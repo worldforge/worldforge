@@ -63,7 +63,7 @@
 
 #endif
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <Ogre.h>
 #include <RTShaderSystem/OgreShaderGenerator.h>
 #include <filesystem>
@@ -323,7 +323,7 @@ void OgreSetup::configure() {
 
 
 	mRenderWindow->setActive(true);
-	//We'll control the rendering ourself and need to turn off the autoupdating.
+	//We'll control the rendering ourselves and need to turn off the autoupdating.
 	mRenderWindow->setAutoUpdated(false);
 	mRenderWindow->setVisible(true);
 
@@ -465,20 +465,18 @@ void OgreSetup::registerOpenGLContextFix() {
 	if (ogreGLcontext) {
 		logger->info("Registering OpenGL context loss fix.");
 		Input::getSingleton().EventSDLEventReceived.connect([=](const SDL_Event& event) {
-			if (event.type == SDL_WINDOWEVENT) {
-				switch (event.window.event) {
-					case SDL_WINDOWEVENT_SHOWN:
-					case SDL_WINDOWEVENT_HIDDEN:
-					case SDL_WINDOWEVENT_RESIZED:
-					case SDL_WINDOWEVENT_SIZE_CHANGED:
-					case SDL_WINDOWEVENT_MINIMIZED:
-					case SDL_WINDOWEVENT_MAXIMIZED:
-					case SDL_WINDOWEVENT_RESTORED:
-						ogreGLcontext->setCurrent();
-						break;
-					default:
-						break;
-				}
+			switch (event.type) {
+				case SDL_EVENT_WINDOW_SHOWN:
+				case SDL_EVENT_WINDOW_HIDDEN:
+				case SDL_EVENT_WINDOW_RESIZED:
+				case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+				case SDL_EVENT_WINDOW_MINIMIZED:
+				case SDL_EVENT_WINDOW_MAXIMIZED:
+				case SDL_EVENT_WINDOW_RESTORED:
+					ogreGLcontext->setCurrent();
+					break;
+				default:
+					break;
 			}
 		});
 	}

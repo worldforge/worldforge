@@ -25,6 +25,7 @@
 #include <framework/Service.h>
 #include <services/server/ServerService.h>
 #include <Eris/Account.h>
+#include <SDL3/SDL_events.h>
 
 
 namespace Ember::OgreView::Gui {
@@ -64,15 +65,14 @@ CEGUI::Window& WorldLoadingScreen::getWindow() {
 
 void WorldLoadingScreen::showScreen() {
 	//Allow ESC to remove the screen.
-	Input::getSingleton().EventKeyReleased.connect([&](const SDL_Keysym& keysym, Input::InputMode) {
-		if (keysym.sym == SDLK_ESCAPE) {
+	Input::getSingleton().EventKeyReleased.connect([&](const SDL_KeyboardEvent& keysym, Input::InputMode) {
+		if (keysym.key == SDLK_ESCAPE) {
 			hideScreen();
 		}
 	});
 
-	auto account = Ember::ServerService::getSingleton().getAccount();
-	if (account) {
-		account->AvatarFailure.connect(sigc::hide(sigc::mem_fun(*this, &Ember::OgreView::Gui::WorldLoadingScreen::hideScreen)));
+	if (auto account = ServerService::getSingleton().getAccount()) {
+		account->AvatarFailure.connect(sigc::hide(sigc::mem_fun(*this, &WorldLoadingScreen::hideScreen)));
 	}
 	if (!mLoadingWindow->getParent()) {
 		/*

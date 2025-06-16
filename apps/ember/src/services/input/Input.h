@@ -28,7 +28,7 @@
 #include <sigc++/slot.h>
 #include <sigc++/signal.h>
 
-#include <SDL_scancode.h>
+#include <SDL3/SDL_scancode.h>
 
 #include <set>
 #include <list>
@@ -41,7 +41,6 @@
 
 struct SDL_KeyboardEvent;
 struct SDL_TextInputEvent;
-struct SDL_Keysym;
 struct SDL_Surface;
 struct SDL_Window;
 union SDL_Event;
@@ -121,11 +120,11 @@ struct MousePosition {
 	/**
 	 * @brief The horizontal position of the mouse in pixels.
 	 */
-	int xPixelPosition;
+	float xPixelPosition;
 	/**
 	 * @brief The vertical position of the mouse in pixels.
 	 */
-	int yPixelPosition;
+	float yPixelPosition;
 
 	/**
 	 * @brief The relative horizontal position of the mouse.
@@ -258,6 +257,10 @@ public:
 	 */
 	void setMainLoopController(MainLoopController* mainLoopController);
 
+	void enableTextInput() const;
+
+	void disableTextInput() const;
+
 	/**
 	 * @brief Gets the main loop controller.
 	 *
@@ -269,13 +272,13 @@ public:
 	 * @param the key event
 	 * @param true if the application is in gui mode
 	 */
-	sigc::signal<void(const SDL_Keysym&, Input::InputMode)> EventKeyPressed;
+	sigc::signal<void(const SDL_KeyboardEvent&, Input::InputMode)> EventKeyPressed;
 
 	/** @brief Emitted when a key has been released in movement mode.
 	 * @param the key event
 	 * @param true if the application is in gui mode
 	 */
-	sigc::signal<void(const SDL_Keysym&, Input::InputMode)> EventKeyReleased;
+	sigc::signal<void(const SDL_KeyboardEvent&, Input::InputMode)> EventKeyReleased;
 
 	/** @brief Emitted when the mouse has moved.
 	 * Note that when in non-gui mode, the x and y position for the mouse will always be the same for consecutive signals although the relative position will have changed.

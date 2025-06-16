@@ -62,6 +62,8 @@
 #include <fmt/ostream.h>
 #include "CEGUIOgreRenderer/ResourceProvider.h"
 
+#include <SDL3/SDL_events.h>
+
 #ifdef _WIN32
 #include "platform/platform_windows.h"
 #endif
@@ -190,7 +192,14 @@ GUIManager::~GUIManager() {
 
 void GUIManager::render() const {
 	if (mEnabled) {
-		CEGUI::System::getSingleton().renderAllGUIContexts();
+		mCeguiSetup.getSystem().renderAllGUIContexts();
+		auto captureWindow = mCeguiSetup.getSystem().getDefaultGUIContext().getRootWindow()->getActiveChild();
+
+		if (captureWindow && captureWindow->getType() == "EmberLook/Editbox") {
+			Input::getSingleton().enableTextInput();
+		}else {
+			Input::getSingleton().disableTextInput();
+		}
 	}
 }
 
@@ -373,13 +382,13 @@ bool GUIManager::isInGUIMode() const {
 	return getInput().getInputMode() == Input::IM_GUI;
 }
 
-void GUIManager::pressedKey(const SDL_Keysym& key, Input::InputMode inputMode) {
-	if (((key.mod & KMOD_CTRL) || (key.mod & KMOD_LCTRL) || (key.mod & KMOD_RCTRL))) {
-		if (key.sym == SDLK_c) {
+void GUIManager::pressedKey(const SDL_KeyboardEvent& key, Input::InputMode inputMode) {
+	if (((key.mod & SDL_KMOD_CTRL) || (key.mod & SDL_KMOD_LCTRL) || (key.mod & SDL_KMOD_RCTRL))) {
+		if (key.key == SDLK_C) {
 			mCeguiSetup.getSystem().getDefaultGUIContext().injectCopyRequest();
-		} else if (key.sym == SDLK_x) {
+		} else if (key.key == SDLK_X) {
 			mCeguiSetup.getSystem().getDefaultGUIContext().injectCutRequest();
-		} else if (key.sym == SDLK_v) {
+		} else if (key.key == SDLK_V) {
 			mCeguiSetup.getSystem().getDefaultGUIContext().injectPasteRequest();
 		}
 	}
