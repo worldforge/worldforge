@@ -47,7 +47,7 @@ Make sure you have installed a c++ compiler (g++ or clang), Conan, CMake, Subver
 the server).
 
 ```bash
-conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan-local
 conan install . --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 cmake --preset conan-release -DCMAKE_INSTALL_PREFIX=./build/install/release
 cmake --build --preset conan-release -j --target all
@@ -72,7 +72,7 @@ If your CMake tool is an earlier version, < 3.23, you can't use the "presets" sy
 issue these commands:
 
 ```bash
-conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan-local
 conan install . --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 mkdir -p build/Release && cd build/Release
 cmake ../.. -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install/release

@@ -10,7 +10,7 @@ build_script:
       pip.exe install conan
       conan profile detect
       conan --version
-      conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+      conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan-local
            
       conan create "cegui" --build missing
       conan create "ogre" --build missing

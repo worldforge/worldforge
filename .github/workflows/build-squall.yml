@@ -66,7 +66,7 @@ jobs:
                     conan profile detect
                     #Set the default profile to use g++ 17 it it's not detected
                     sed -i.backup 's/compiler.cppstd=14/compiler.cppstd=17/g' ~/.conan2/profiles/default
-                    conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+                    conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan-local
 
             -   name: Alter Conan config for Ubuntu 20.04
                 if: ${{ matrix.os == 'ubuntu-20.04' }}

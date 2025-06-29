@@ -14,7 +14,7 @@ The libraries are automatically built by GitHub Actions and uploaded to the "wor
 at https://artifactory.ogenvik.org/ui/repos/tree/General/conan%2Fworldforge. To use them, configure conan as such
 
 ```
-conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan-local
 ```
 
 Note that some packages require that Conan is run with Python 3.

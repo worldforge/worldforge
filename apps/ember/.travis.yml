@@ -59,7 +59,7 @@ before_install:
   - sudo pip3 install --upgrade pip wheel setuptools jinja2
   - sudo pip3 install conan
   - conan user
-  - conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+  - conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan-local
 script:
   - mkdir -p build && cd build
   - conan profile new default --detect
