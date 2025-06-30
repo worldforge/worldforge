@@ -74,7 +74,7 @@ Input::Input() :
 	mMousePosition.yRelativePosition = 0.0f;
 
 #if defined(_WIN32) || defined(__APPLE__)
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
+	SDL_InitSubSystem(SDL_INIT_VIDEO);
 #endif
 	mLastTick = std::chrono::steady_clock::now();
 
@@ -127,30 +127,31 @@ std::string Input::createWindow(unsigned int width, unsigned int height, bool fu
 	mMainWindowId = SDL_GetWindowID(mMainVideoSurface);
 	SDL_GetWindowSize(mMainVideoSurface, &mScreenWidth, &mScreenHeight);
 
-#ifdef _WIN32
-	// When SDL is centering the window, it doesn't take into account the tray bar.
-	// This approach will center the window to the work area.
-	HWND hwnd = info.info.win.window;
-	HMONITOR hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
-	if (hMonitor) {
-		MONITORINFO mon;
-		memset(&mon, 0, sizeof(MONITORINFO));
-		mon.cbSize = sizeof(MONITORINFO);
-		GetMonitorInfo(hMonitor, &mon);
-
-		RECT r;
-		GetWindowRect(hwnd, &r);
-
-		int winWidth = r.right - r.left;
-		int winLeft = mon.rcWork.left + (mon.rcWork.right - mon.rcWork.left) / 2 - winWidth / 2;
-
-		int winHeight = r.bottom - r.top;
-		int winTop = mon.rcWork.top + (mon.rcWork.bottom - mon.rcWork.top) / 2 - winHeight / 2;
-		winTop = std::max(winTop, 0);
-
-		SetWindowPos(hwnd, 0, winLeft, winTop, 0, 0, SWP_NOSIZE);
-	}
-#endif
+	//Perhaps the centering code below isn't needed with SDL3?
+// #ifdef _WIN32
+// 	// When SDL is centering the window, it doesn't take into account the tray bar.
+// 	// This approach will center the window to the work area.
+// 	HWND hwnd = info.info.win.window;
+// 	HMONITOR hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+// 	if (hMonitor) {
+// 		MONITORINFO mon;
+// 		memset(&mon, 0, sizeof(MONITORINFO));
+// 		mon.cbSize = sizeof(MONITORINFO);
+// 		GetMonitorInfo(hMonitor, &mon);
+//
+// 		RECT r;
+// 		GetWindowRect(hwnd, &r);
+//
+// 		int winWidth = r.right - r.left;
+// 		int winLeft = mon.rcWork.left + (mon.rcWork.right - mon.rcWork.left) / 2 - winWidth / 2;
+//
+// 		int winHeight = r.bottom - r.top;
+// 		int winTop = mon.rcWork.top + (mon.rcWork.bottom - mon.rcWork.top) / 2 - winHeight / 2;
+// 		winTop = std::max(winTop, 0);
+//
+// 		SetWindowPos(hwnd, 0, winLeft, winTop, 0, 0, SWP_NOSIZE);
+// 	}
+// #endif
 
 
 	SDL_HideCursor();
@@ -167,7 +168,6 @@ std::string Input::createWindow(unsigned int width, unsigned int height, bool fu
 		handle = std::to_string((unsigned long long)hwnd);
 	}
 #else
-	std::cout << SDL_GetCurrentVideoDriver() << std::endl;
 	auto xwindow = (unsigned long)SDL_GetNumberProperty(SDL_GetWindowProperties(mMainVideoSurface), SDL_PROP_WINDOW_X11_WINDOW_NUMBER, 0);
 	handle = std::to_string(xwindow);
 #endif
