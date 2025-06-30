@@ -111,7 +111,7 @@ jobs:
                     #We've gotten problems with building the Python package because it tries to access /etc/ssl/openssl.cnf on the host machine, which might be in a different format than expected.
                     #Avoid this by setting OPENSSL_CONF
                     export OPENSSL_CONF=/dev/null
-                    conan install . -pr default --build=missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
+                    conan install . -pr default --build=missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True --lockfile-partial
                     if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
                       conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
                       conan upload "*" -r worldforge -c
