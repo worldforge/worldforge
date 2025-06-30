@@ -1,0 +1,25 @@
+diff --git a/Components/RTShaderSystem/include/OgreShaderGenerator.h b/Components/RTShaderSystem/include/OgreShaderGenerator.h
+index e7bfd1add4..b7beed2e76 100644
+--- a/Components/RTShaderSystem/include/OgreShaderGenerator.h
++++ b/Components/RTShaderSystem/include/OgreShaderGenerator.h
+@@ -445,8 +445,6 @@ public:
+     /// mark the given texture unit as non-FFP
+     static void _markNonFFP(const TextureUnitState* tu);
+ 
+-    /// same as @ref MSN_SHADERGEN
+-    static String DEFAULT_SCHEME_NAME;
+ private:
+     class SGPass;
+     class SGTechnique;
+diff --git a/Components/RTShaderSystem/src/OgreShaderGenerator.cpp b/Components/RTShaderSystem/src/OgreShaderGenerator.cpp
+index aa544b72e7..933efafbe1 100644
+--- a/Components/RTShaderSystem/src/OgreShaderGenerator.cpp
++++ b/Components/RTShaderSystem/src/OgreShaderGenerator.cpp
+@@ -109,7 +109,6 @@ protected:
+     ShaderGenerator* mOwner;
+ };
+ 
+-String ShaderGenerator::DEFAULT_SCHEME_NAME     = MSN_SHADERGEN;
+ String ShaderGenerator::SGTechnique::UserKey    = "SGTechnique";
+ 
+ //-----------------------------------------------------------------------

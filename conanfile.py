@@ -72,10 +72,11 @@ class Worldforge(ConanFile):
 
         if self.options.with_client or self.options.with_server:
             self.requires("bullet3/2.89")
+            self.requires("libffi/3.4.8", force=True) #Needed to resolve conflict between cpython and sdl
 
         if self.options.with_client:
             self.requires("cegui/0.8.7@worldforge")
-            self.requires("ogre/14.3.2@worldforge")
+            self.requires("ogre/14.3.4@worldforge")
             self.requires("sdl/3.2.14")
             self.requires("lua/5.3.6")
             self.requires("vorbis/1.3.7")
@@ -88,7 +89,7 @@ class Worldforge(ConanFile):
             self.requires("libgcrypt/1.10.3")
             self.requires("sqlite3/3.49.1", force=True)
             self.requires("readline/8.2")
-            self.requires("cpython/3.12.7")
+            self.requires("cpython/3.12.2")
 
         # self.requires("avahi/0.8")
 

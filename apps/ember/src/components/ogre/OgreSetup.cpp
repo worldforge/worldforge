@@ -311,8 +311,7 @@ void OgreSetup::configure() {
 		auto cacheFilePath = configService.getHomeDirectory(BaseDirType_CACHE) / ("gpu-" EMBER_VERSION ".cache");
 		if (std::ifstream(cacheFilePath.string()).good()) {
 			try {
-				auto cacheStream = Ogre::Root::openFileStream(cacheFilePath.string());
-				if (cacheStream) {
+				if (auto cacheStream = Ogre::Root::openFileStream(cacheFilePath.string())) {
 					Ogre::GpuProgramManager::getSingleton().loadMicrocodeCache(cacheStream);
 				}
 			} catch (...) {
@@ -359,7 +358,7 @@ void OgreSetup::setStandardValues() {
 
 	Ogre::RTShader::ShaderGenerator::initialize();
 
-	struct GenerateShadersListener : public Ogre::MaterialManager::Listener {
+	struct GenerateShadersListener : Ogre::MaterialManager::Listener {
 		Ogre::RTShader::ShaderGenerator* shaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
 
 		Ogre::Technique* handleSchemeNotFound(unsigned short schemeIndex,
@@ -405,8 +404,8 @@ void OgreSetup::setStandardValues() {
 		}
 
 		bool afterIlluminationPassesCreated(Ogre::Technique* tech) override {
-			if (tech->getSchemeName() == Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME) {
-				Ogre::Material* mat = tech->getParent();
+			if (tech->getSchemeName() == Ogre::MSN_SHADERGEN) {
+				const auto mat = tech->getParent();
 				shaderGenerator->validateMaterialIlluminationPasses(tech->getSchemeName(),
 																	mat->getName(), mat->getGroup());
 				return true;
@@ -415,8 +414,8 @@ void OgreSetup::setStandardValues() {
 		}
 
 		bool beforeIlluminationPassesCleared(Ogre::Technique* tech) override {
-			if (tech->getSchemeName() == Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME) {
-				Ogre::Material* mat = tech->getParent();
+			if (tech->getSchemeName() == Ogre::MSN_SHADERGEN) {
+				const auto mat = tech->getParent();
 				shaderGenerator->invalidateMaterialIlluminationPasses(tech->getSchemeName(),
 																	  mat->getName(), mat->getGroup());
 				return true;
@@ -435,7 +434,7 @@ void OgreSetup::parseWindowGeometry(const Ogre::ConfigOptionMap& config, unsigne
 	auto opt = config.find("Video Mode");
 	if (opt != config.end()) {
 		Ogre::String val = opt->second.currentValue;
-		Ogre::String::size_type pos = val.find('x');
+		auto pos = val.find('x');
 		if (pos != Ogre::String::npos) {
 
 			width = Ogre::StringConverter::parseUnsignedInt(val.substr(0, pos));
