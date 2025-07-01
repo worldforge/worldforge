@@ -79,7 +79,7 @@ jobs:
                 working-directory: libs/squall
                 run: |
                     export PATH=~/.local/bin:$PATH
-                    conan install tools/conan -pr default --build=missing
+                    conan install tools/conan -pr default --build=missing --lockfile-partial
                     if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
                       conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
                       conan upload "*" -r worldforge -c

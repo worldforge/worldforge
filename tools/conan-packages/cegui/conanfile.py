@@ -19,7 +19,6 @@ class CeguiConan(ConanFile):
     # Packages the license for the conanfile.py
     exports = ["LICENSE.md"]
 
-    # Remove following lines if the target lib does not use cmake.
     exports_sources = ["patches*"]
 
     # Options may need to change depending on the packaged library.

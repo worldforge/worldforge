@@ -27,7 +27,7 @@
 
 #include "../Convert.h"
 #include <OgreSceneNode.h>
-#include <SDL_keyboard.h>
+#include <SDL3/SDL_events.h>
 
 namespace Ember::OgreView::Authoring {
 
@@ -115,22 +115,22 @@ PolygonPoint* PolygonPointMover::getActivePoint() const {
 	return &mPoint;
 }
 
-void PolygonPointMover::input_KeyPressed(const SDL_Keysym& key, Input::InputMode /*mode*/) {
-	if (key.sym == SDLK_LCTRL || key.sym == SDLK_RCTRL) {
+void PolygonPointMover::input_KeyPressed(const SDL_KeyboardEvent& key, Input::InputMode /*mode*/) {
+	if (key.key == SDLK_LCTRL || key.key == SDLK_RCTRL) {
 		if (!mNewPoint) {
 			switchToNewPointMode();
 		}
-	} else if (key.sym == SDLK_LALT || key.sym == SDLK_RALT) {
+	} else if (key.key == SDLK_LALT || key.key == SDLK_RALT) {
 		switchToDeleteMode();
 	}
 }
 
-void PolygonPointMover::input_KeyReleased(const SDL_Keysym& key, Input::InputMode /*mode*/) {
-	if (key.sym == SDLK_LCTRL || key.sym == SDLK_RCTRL) {
+void PolygonPointMover::input_KeyReleased(const SDL_KeyboardEvent& key, Input::InputMode /*mode*/) {
+	if (key.key == SDLK_LCTRL || key.key == SDLK_RCTRL) {
 		if (mNewPoint) {
 			switchToExistingPointMode();
 		}
-	} else if (key.sym == SDLK_LALT || key.sym == SDLK_RALT) {
+	} else if (key.key == SDLK_LALT || key.key == SDLK_RALT) {
 		switchToExistingPointMode();
 	}
 }
